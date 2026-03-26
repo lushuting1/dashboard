@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BP团队看板 · 行业一部</title>
+  <style>
+    :root {
+      --red: #FF2442;
+      --red-light: #FFF0F2;
+      --red-mid: #FFD6DB;
+      --green: #00B26A;
+      --green-light: #E6F9F2;
+      --orange: #FF7A00;
+      --orange-light: #FFF4E6;
+      --blue: #1677FF;
+      --blue-light: #EFF6FF;
+      --gray: #8C9199;
+      --gray-light: #F5F6F8;
+      --border: #E8EAF0;
+      --text: #1A1D29;
+      --text-sub: #6B7280;
+      --card-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      --card-hover: 0 6px 24px rgba(0,0,0,0.12);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif; background: #F0F2F5; color: var(--text); min-height: 100vh; }
+
+    /* Header */
+    .header { background: linear-gradient(135deg, #FF2442 0%, #FF6B6B 100%); padding: 20px 32px 0; color: white; }
+    .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .header-title { font-size: 22px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+    .header-title .dept { font-size: 14px; opacity: 0.8; font-weight: 400; background: rgba(255,255,255,0.2); padding: 3px 10px; border-radius: 20px; }
+    .header-meta { font-size: 13px; opacity: 0.8; }
+    .header-tabs { display: flex; gap: 0; }
+    .header-tab { padding: 10px 20px; font-size: 14px; cursor: pointer; border-radius: 8px 8px 0 0; opacity: 0.7; transition: all 0.2s; color: white; font-weight: 500; }
+    .header-tab.active { background: white; color: var(--red); opacity: 1; }
+    .header-tab:hover { opacity: 0.9; }
+
+    /* Main layout */
+    .main { padding: 24px 32px; max-width: 1600px; margin: 0 auto; }
+
+    /* Summary cards */
+    .summary-row { display: grid; grid-template-columns: repeat(8, 1fr); gap: 12px; margin-bottom: 20px; }
+    .summary-card { background: white; border-radius: 12px; padding: 16px; box-shadow: var(--card-shadow); cursor: pointer; transition: all 0.2s; border: 2px solid transparent; }
+    .summary-card:hover { box-shadow: var(--card-hover); transform: translateY(-2px); }
+    .summary-card.highlight { border-color: var(--red); background: var(--red-light); }
+    .summary-card .label { font-size: 12px; color: var(--text-sub); margin-bottom: 8px; display: flex; align-items: center; gap: 4px; }
+    .summary-card .value { font-size: 28px; font-weight: 700; color: var(--text); line-height: 1; }
+    .summary-card .sub { font-size: 11px; color: var(--text-sub); margin-top: 4px; }
+    .summary-card .value.red { color: var(--red); }
+    .summary-card .value.green { color: var(--green); }
+    .summary-card .value.orange { color: var(--orange); }
+    .summary-card .trend { display: inline-flex; align-items: center; gap: 2px; font-size: 11px; font-weight: 600; padding: 2px 6px; border-radius: 4px; margin-top: 4px; }
+    .summary-card .trend.up { color: var(--green); background: var(--green-light); }
+    .summary-card .trend.warn { color: var(--orange); background: var(--orange-light); }
+    .summary-card .trend.alert { color: var(--red); background: var(--red-light); }
+
+    /* Section title */
+    .section-title { font-size: 16px; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .section-title::before { content: ''; width: 4px; height: 18px; background: var(--red); border-radius: 2px; display: inline-block; }
+
+    /* Track block */
+    .track-block { background: white; border-radius: 16px; box-shadow: var(--card-shadow); margin-bottom: 16px; overflow: hidden; }
+    .track-header { padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: background 0.15s; }
+    .track-header:hover { background: #FAFBFC; }
+    .track-name { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+    .track-badge { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; }
+    .track-stats { display: flex; gap: 24px; align-items: center; }
+    .track-stat { text-align: center; }
+    .track-stat .n { font-size: 20px; font-weight: 700; color: var(--text); }
+    .track-stat .l { font-size: 11px; color: var(--text-sub); }
+    .track-stat .n.red { color: var(--red); }
+    .track-stat .n.green { color: var(--green); }
+    .track-stat .n.orange { color: var(--orange); }
+    .track-divider { width: 1px; height: 32px; background: var(--border); }
+    .track-yoy { font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
+    .track-yoy.up { color: var(--green); background: var(--green-light); }
+    .track-yoy.hot { color: var(--orange); background: var(--orange-light); }
+    .track-chevron { font-size: 12px; color: var(--text-sub); transition: transform 0.2s; }
+    .track-chevron.open { transform: rotate(180deg); }
+
+    /* Group table */
+    .groups-container { border-top: 1px solid var(--border); }
+    .groups-table { width: 100%; border-collapse: collapse; }
+    .groups-table th { background: var(--gray-light); font-size: 12px; color: var(--text-sub); font-weight: 600; padding: 10px 16px; text-align: left; }
+    .groups-table td { padding: 12px 16px; font-size: 13px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .groups-table tr:last-child td { border-bottom: none; }
+    .groups-table tr:hover td { background: var(--gray-light); }
+    .group-type { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 6px; }
+    .group-type.biz { background: #EFF6FF; color: var(--blue); }
+    .group-type.platform { background: #F0FDF4; color: var(--green); }
+
+    /* Num chip */
+    .chip { display: inline-flex; align-items: center; gap: 3px; padding: 3px 8px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+    .chip:hover { opacity: 0.8; transform: scale(1.05); }
+    .chip.normal { background: var(--gray-light); color: var(--text); }
+    .chip.shortage { background: var(--red-light); color: var(--red); }
+    .chip.ok { background: var(--green-light); color: var(--green); }
+    .chip.warn { background: var(--orange-light); color: var(--orange); }
+    .chip.blue { background: var(--blue-light); color: var(--blue); }
+
+    /* HC bar */
+    .hc-bar-wrap { display: flex; align-items: center; gap: 8px; }
+    .hc-bar { flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; max-width: 80px; }
+    .hc-bar-fill { height: 100%; border-radius: 3px; }
+    .hc-bar-fill.green { background: var(--green); }
+    .hc-bar-fill.orange { background: var(--orange); }
+    .hc-bar-fill.red { background: var(--red); }
+
+    /* Modal */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; }
+    .modal-overlay.show { display: flex; }
+    .modal { background: white; border-radius: 20px; width: 560px; max-width: 95vw; max-height: 80vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.2); animation: slideUp 0.25s ease; }
+    @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .modal-header { padding: 20px 24px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: white; border-radius: 20px 20px 0 0; }
+    .modal-title { font-size: 17px; font-weight: 700; }
+    .modal-close { width: 30px; height: 30px; border-radius: 50%; background: var(--gray-light); border: none; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; color: var(--text-sub); }
+    .modal-body { padding: 20px 24px; }
+    .modal-item { padding: 12px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; }
+    .modal-item:last-child { border-bottom: none; }
+    .modal-item-left { flex: 1; }
+    .modal-item-name { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+    .modal-item-sub { font-size: 12px; color: var(--text-sub); }
+    .modal-item-right { text-align: right; }
+    .status-tag { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 6px; }
+    .status-tag.leave { background: var(--red-light); color: var(--red); }
+    .status-tag.passive { background: var(--orange-light); color: var(--orange); }
+    .status-tag.join { background: var(--green-light); color: var(--green); }
+    .status-tag.offer { background: var(--blue-light); color: var(--blue); }
+    .status-tag.interview { background: #F3F0FF; color: #7C3AED; }
+    .status-tag.pending { background: var(--gray-light); color: var(--gray); }
+
+    /* Tab content */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Personnel view */
+    .person-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-bottom: 20px; }
+    .person-card { background: white; border-radius: 12px; padding: 14px; box-shadow: var(--card-shadow); border: 1px solid var(--border); transition: all 0.2s; }
+    .person-card:hover { box-shadow: var(--card-hover); }
+    .person-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .person-info { font-size: 12px; color: var(--text-sub); margin-top: 2px; }
+
+    /* Color coding for tracks */
+    .track-loreal { --track-color: #FF2442; }
+    .track-estee { --track-color: #7C3AED; }
+    .track-asia { --track-color: #0891B2; }
+    .track-euromenew { --track-color: #059669; }
+    .track-guohuo護 { --track-color: #D97706; }
+    .track-guohuonew { --track-color: #DC2626; }
+    .track-tech { --track-color: #2563EB; }
+    .track-guocai { --track-color: #9333EA; }
+
+    .track-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--track-color, var(--red)); flex-shrink: 0; }
+    .track-header { border-left: 4px solid var(--track-color, var(--red)); }
+
+    /* Overview metric bar */
+    .metrics-bar { background: white; border-radius: 12px; padding: 16px 20px; box-shadow: var(--card-shadow); margin-bottom: 20px; display: flex; gap: 32px; align-items: center; flex-wrap: wrap; }
+    .metric-item { display: flex; flex-direction: column; gap: 2px; }
+    .metric-label { font-size: 11px; color: var(--text-sub); font-weight: 500; }
+    .metric-value { font-size: 20px; font-weight: 700; color: var(--text); }
+    .metric-value span { font-size: 12px; font-weight: 400; color: var(--text-sub); }
+    .metric-divider { width: 1px; height: 40px; background: var(--border); }
+
+    /* Scrollable notice */
+    .data-notice { background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #92400E; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+
+    .hidden { display: none; }
+
+    @media (max-width: 900px) {
+      .summary-row { grid-template-columns: repeat(4, 1fr); }
+      .main { padding: 16px; }
+    }
+    @media (max-width: 600px) {
+      .summary-row { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-top">
+    <div class="header-title">
+      📊 行业一部 BP团队看板
+      <span class="dept">商业交易HR · 美妆日化</span>
+    </div>
+    <div class="header-meta">数据来源：HR系统实时 · 更新于 2026-03-26</div>
+  </div>
+  <div class="header-tabs">
+    <div class="header-tab active" onclick="switchTab('overview')">总览</div>
+    <div class="header-tab" onclick="switchTab('recruit')">招聘流程</div>
+    <div class="header-tab" onclick="switchTab('people')">人员动态</div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- Overview Tab -->
+  <div id="tab-overview" class="tab-content active">
+
+    <!-- Summary Cards -->
+    <div class="summary-row">
+      <div class="summary-card highlight" onclick="showModal('onboard')">
+        <div class="label">👥 在职人数</div>
+        <div class="value red">163</div>
+        <div class="sub">行业一部 含L1</div>
+      </div>
+      <div class="summary-card" onclick="showModal('hc')">
+        <div class="label">🎯 总HC</div>
+        <div class="value">164</div>
+        <div class="sub">预计在职 165</div>
+        <div class="trend warn">缺口 1</div>
+      </div>
+      <div class="summary-card" onclick="showModal('join-in')">
+        <div class="label">📥 待入职</div>
+        <div class="value green">7</div>
+        <div class="sub">近期将入职</div>
+      </div>
+      <div class="summary-card" onclick="showModal('leave')">
+        <div class="label">📤 待离职</div>
+        <div class="value orange">3</div>
+        <div class="sub">审批中1·待离2</div>
+      </div>
+      <div class="summary-card" onclick="showModal('pipeline')">
+        <div class="label">🔍 招聘在途</div>
+        <div class="value blue">5</div>
+        <div class="sub">流入在途</div>
+      </div>
+      <div class="summary-card" onclick="showModal('age')">
+        <div class="label">🎂 平均年龄</div>
+        <div class="value">28.6<span style="font-size:14px">岁</span></div>
+        <div class="sub">⚡ 待花名册更新</div>
+      </div>
+      <div class="summary-card" onclick="showModal('tenure')">
+        <div class="label">📅 平均司龄</div>
+        <div class="value">2.4<span style="font-size:14px">年</span></div>
+        <div class="sub">⚡ 待花名册更新</div>
+      </div>
+      <div class="summary-card" onclick="showModal('efficiency')">
+        <div class="label">⚡ 人效(3月)</div>
+        <div class="value orange">9.1<span style="font-size:14px">h</span></div>
+        <div class="sub">低于均值1h·13人</div>
+      </div>
+    </div>
+
+    <!-- Overall metrics bar -->
+    <div class="metrics-bar">
+      <div class="metric-item">
+        <div class="metric-label">全团队业绩目标(Y26)</div>
+        <div class="metric-value">5.8亿 <span>GMV</span></div>
+      </div>
+      <div class="metric-divider"></div>
+      <div class="metric-item">
+        <div class="metric-label">赛道数</div>
+        <div class="metric-value">8 <span>个赛道</span></div>
+      </div>
+      <div class="metric-divider"></div>
+      <div class="metric-item">
+        <div class="metric-label">小组数</div>
+        <div class="metric-value">16 <span>个小组</span></div>
+      </div>
+      <div class="metric-divider"></div>
+      <div class="metric-item">
+        <div class="metric-label">在招职位</div>
+        <div class="metric-value">50 <span>个</span></div>
+      </div>
+      <div class="metric-divider"></div>
+      <div class="metric-item">
+        <div class="metric-label">3月工时</div>
+        <div class="metric-value">9.1h <span>/2月8.4h /1月8.8h</span></div>
+      </div>
+      <div class="metric-divider"></div>
+      <div class="metric-item">
+        <div class="metric-label">业务负责人</div>
+        <div class="metric-value" style="font-size:16px">昂扬(李昂) <span>L2·优秀</span></div>
+      </div>
+    </div>
+
+    <div class="data-notice">
+      ⚠️ 平均年龄/司龄数据来源花名册，当前展示为估算值（花名册小时级更新）。点击卡片可查看明细。
+    </div>
+
+    <!-- Track blocks -->
+    <div class="section-title">按赛道 · 小组人员情况</div>
+
+    <!-- 欧莱雅 -->
+    <div class="track-block track-loreal">
+      <div class="track-header" onclick="toggleTrack('loreal')">
+        <div class="track-name">
+          <span class="track-dot" style="background:#FF2442"></span>
+          🏆 欧莱雅赛道
+          <span class="track-badge" style="background:#FFF0F2;color:#FF2442">国际美妆 · 核心赛道</span>
+        </div>
+        <div class="track-stats">
+          <div class="track-stat"><div class="n">15</div><div class="l">在职</div></div>
+          <div class="track-divider"></div>
+          <div class="track-stat"><div class="n red">16</div><div class="l">HC</div></div>
+          <div class="track-divider"></div>
+          <div class="track-stat"><div class="n">12万</div><div class="l">业绩目标</div></div>
+          <div class="track-divider"></div>
+          <div class="track-yoy up">↑ YOY+7.5%</div>
+          <div class="track-chevron" id="chevron-loreal">▼</div>
+        </div>
+      </div>
+      <div class="groups-container hidden" id="groups-loreal">
+        <table class="groups-table">
+          <tr>
+            <th>小组</th><th>类型</th><th>负责人</th><th>在职</th><th>HC完成</th><th>招聘在途</th><th>待离职</th><th>操作</th>
+          </tr>
+          <tr>
+            <td><strong>行业一组</strong></td>
+            <td><span class="group-type biz">业务组</span></td>
+            <td>千月(陈思琪)</td>
+            <td><span class="chip normal" onclick="showGroupDetail('loreal-1')">9人</span></td>
+            <td>
+              <div class="hc-bar-wrap">
+                <span class="chip warn">8 HC</span>
+                <div class="hc-bar"><div class="hc-bar-fill orange" style="width:112%"></div></div>
+              </div>
+            </td>
+            <td><span class="chip blue" onclick="showModal('pipeline')">-</span></td>
+            <td><span class="chip normal">0</span></td>
+            <td><button class="chip blue" onclick="showGroupDetail('loreal-1')">查看详情</button></td>
+          </tr>
+          <tr>
+            <td><strong>平台专家一组</strong></td>
+            <td><span class="group-type platform">专家组</span></td>
+            <td>古翔(高逸群)</td>
+            <td><span class="chip normal" onclick="showGroupDetail('loreal-2')">6人</span></td>
+            <td>
+              <div class="hc-bar-wrap">
+                <span class="chip shortage">8 HC</span>
+                <div class="hc-bar"><div class="hc-bar-fill red" style="width:75%"></div></div>
+              </div>
+            </td>
+            <td><span class="chip blue">-</span></td>
+            <td><span class="chip normal">0</span></td>
+            <td><button class="chip blue" onclick="showGroupDetail('loreal-2')">查看详情</button></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- 雅诗兰黛 -->
+    <div class="track-block" style="--track-color:#7C3AED">
+      <div class="track-header" onclick="toggleTrack('estee')">
+        <div class="track-name">
+          <span class="track-dot" style="background:#7C3AED"></span>
+          💜 雅诗兰黛赛道
+          <span class="track-badge" style="background:#F3F0FF;color:#7C3AED">国际美妆</span>
+        </div>
+        <div class="track-stats">
+          <div class="track-stat"><div class="n">16</div><div class="l">在职</div></div>
+          <div class="track-divider"></div>
+          <div class="track-stat"><div class="n red">11</div><div class="l">HC(缺5)</div></div>
+          <div class="track-divider"></div>
+          <div class="track-stat"><div class="n">6.52万</div><div class="l">业绩目标</div></div>
+          <div class="track-divider"></div>
+          <div class="track-yoy up">↑ YOY+7%</div>
+          <div class="track-chevron" id="chevron-estee">▼</div>
+        </div>
+      </div>
+      <div class="groups-container hidden" id="groups-estee">
+        <table class="groups-table">
+          <tr>
+            <th>小组</th><th>类型</th><th>负责人</th><th>在职</th><th>HC完成</th><th>招聘在途</th><th>待离职</th><th>操作</th>
+          </tr>
+          <tr>
+            <td><strong>行业二组</strong></td>
+            <td><span class="group-type biz">业务组</span></td>
+            <td>吴邪(吴建成)</td>
+            <td><span class="chip normal" onclick="showGroupDetail('estee-1')">8人</span></td>
+            <td>
+              <div class="hc-bar-wrap">
+                <span class="chip ok">6 HC</span>
+                <div class="hc-bar"><div class="hc-bar-fill green" style="width:100%"></div></div>
+              </div>
+            </td>
+            <td><span class="chip blue">-</span></td>
+            <td><span class="chip normal">0</span></td>
+            <td><button class="chip blue" onclick="showGroupDetail('estee-1')">查看详情</button></td>
+          </tr>
+          <tr>
+            <td><strong>平台专家二组</strong></td>
+            <td><span class="group-type platform">专家组</span></td>
+            <td>觉得(杨森)</td>
+            <td><span class="chip normal" onclick="showGroupDetail('estee-2')">8人</span></td>
+            <td>
+              <div class="hc-bar-wrap">
+                <span class="chip shortage">5 HC</span>
+                <div class="hc-bar"><div class="hc-bar-fill red" style="width:62%"></div></div>
+              </div>
+            </td>
+            <td><span class="chip blue">-</span></td>
+            <td><span class="chip normal">0</span></td>
+            <td><button class="chip blue" onclick="showGroupDetail('estee-2')">查看详情</button></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- 亚太新悦 -->
+    <div class="track-block" style="--track-color:#0891B2">
+      <div class="track-header" onclick="toggleTrack('asia')">
+        <div class="track-name">
+          <span class="track-dot" style="background:#0891B2"></span>
+          🔵 亚太新悦赛道
+          <span class="track-badge" style="background:#EFF8FF;color:#0891B2">国际美妆</span>
+        </div>
+        <div class="track-stats">
+          <div class="track-stat"><div class="n">9</div><div class="l">在职</div></div>
+          <div class="track-divider"></div>
+          <div class="track-stat"><div class="n red">7</div><div class="l">HC(超编2)</div></div>
+          <div class="track-divider"></div>
+          <div class="track-stat"><div class="n">4.74万</div><div class="l">业绩目标</div></div>
+          <div class="track-divider"></div>
+          <div class="track-yoy hot">↑ YOY+15%</div>
+          <div class="track-chevron" id="chevron-asia">▼</div>
+        </div>
+      </div>
+      <div class="groups-container hidden" id="groups-asia">
+        <table class="groups-table">
+          <tr>
+            <th>小组</th><th>类型</th><th>负责人</th><th>在职</th><th>HC完成</th><th>招聘在途</th><th>待离职</th><th>操作</th>
+          </tr>
+          <tr>
+            <td><strong>行业四组</strong></td>
+            <td><span class="group-type biz">业务组</span></td>
+            <td>千月(陈思琪)</td>
+            <td><span class="chip normal">5人</span></td>
+            <td><div class="hc-bar-wrap"><span class="chip warn">4 HC</span><div class="hc-bar"><div class="hc-bar-fill orange" style="width:100%"></div></div></div></td>
+            <td><span class="chip blue">-</span></td>
+            <td><span class="chip normal">0</span></td>
+            <td><button class="chip blue">查看详情</button></td>
+          </tr>
+          <tr>
+            <td><strong>平台专家四组</strong></td>
+            <td><span class="group-type platform">专家组</span></td>
+            <td>古翔(高逸群)</td>
+            <td><span class="chip normal">4人</span></td>
+            <td><div class="hc-bar-wrap"><span class="chip shortage">3 HC</span><div class="hc-bar"><div class="hc-bar-fill red" style="width:75%"></div></div></div></td>
+            <td><span class="chip blue">-</span></td>
+            <td><span class="chip normal">0</span></td>
+            <td><button class="chip blue">查看详情</button></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- 欧美新悦 -->
+    <div class="track-block" style="--track-color:#059669">
+      <div class="track-header" onclick="toggleTrack('euromenew')">
+        <div class="track-name">
+          <span class="track-dot" style="background:#059669"></span>
+          🟢 欧美新悦赛道
+          <span class="track-badge" style="background:#F0FDF4;color:#059669">国际美妆</span>
+        </div>
+        <div class="track-stats">
+          <div class="track-stat"><div class="n">9</div><div class="l">在职</div></div>
+          <div class="track-divider"></div>
+          <div class="track-stat"><div class="n red">10</div><div class="l">HC(缺1)</div></div>
+          <div class="track-divider"></div>
+          <div class="track-stat"><div class="n">7.17万</div><div class="l">业绩目标</div></div>
+          <div class="track-divider"></div>
+          <div class="track-yoy hot">↑ YOY+20%🔥</div>
+          <div class="track-chevron" id="chevron-euromenew">▼</div>
+        </div>
+      </div>
+      <div class="groups-container hidden" id="groups-euromenew">
+        <table class="groups-table">
+          <tr>
+            <th>小组</th><th>类型</th><th>负责人</th><th>在职</th><th>HC完成</th><th>招聘在途</th><th>待离职</th><th>操作</th>
+          </tr>
+          <tr>
+            <td><strong>行业五组</strong></td>
+            <td><span class="group-type biz">业务组</span></td>
+            <td>吴邪(吴建成)</td>
+            <td><span class="chip normal">4人</span></td>
+            <td><div class="hc-bar-wrap"><span class="chip shortage">5 HC</span><div class="hc-bar"><div class="hc-bar-fill red" style="width:80%"></div></div></div></td>
+            <td><span class="chip blue">-</span></td>
+            <td><span class="chip normal">0</span></td>
+            <td><button class="chip blue">查看详情</button></td>
+          </tr>
+          <tr>
+            <td><strong>平台专家五组</strong></td>
+            <td><span class="group-type platform">专家组</span></td>
+            <td>觉得(杨森)</td>
+            <td><span class="chip normal">5人</span></td>
+            <td><div class="hc-bar-wrap"><span class="chip warn">5 HC</span><div class="hc-bar"><div class="hc-bar-fill green" style="width:100%"></div></div></div></td>
+            <td><span class="chip blue">-</span></td>
+            <td><span class="chip normal">0</span></td>
+            <td><button class="chip blue">查看详情</button></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- 国货护肤集团 -->
+    <div class="track-block" style="--track-color:#D97706">
+      <div class="track-header" onclick="toggleTrack('guohuohu')">
+        <div class="track-name">
+          <span class="track-dot" style="background:#D97706"></span>
+          🟡 国货护肤集团赛道
+          <span class="track-badge" style="background:#FFFBEB;color:#D97706">国货美妆</span>
+        </div>
+        <div class="track-stats">
+          <div class="track-stat"><div class="n">16</div><div class="l">在职</div></div>
+          <div class="track-divider"></div>
+          <div class="track-stat"><div class="n red">9</div><div class="l">HC(超编7)</div></div>
+          <div class="track-divider"></div>
+          <div class="track-stat"><div class="n">5.29万</div><div class="l">业绩目标</div></div>
+          <div class="track-divider"></div>
+          <div class="track-yoy up">↑ YOY+10.6%</div>
+          <div class="track-chevron" id="chevron-guohuohu">▼</div>
+        </div>
+      </div>
+      <div class="groups-container hidden" id="groups-guohuohu">
+        <table class="groups-table">
+          <tr>
+            <th>小组</th><th>类型</th><th>负责人</th><th>在职</th><th>HC完成</th><th>招聘在途</th><th>待离职</th><th>操作</th>
+          </tr>
+          <tr>
+            <td><strong>行业六组</strong></td>
+            <td><span class="group-type biz">业务组</span></td>
+            <td>嘉莉(惠江雯)</td>
+            <td><span class="chip normal">11人</span></td>
+            <td><div class="hc-bar-wrap"><span class="chip warn">5 HC</span><div class="hc-bar"><div class="hc-bar-fill orange" style="width:100%"></div></div></div></td>
+            <td><span class="chip blue">-</span></td>
+            <td><span class="chip normal">0</span></td>
+            <td><button class="chip blue">查看详情</button></td>
+          </tr>
+          <tr>
+            <td><strong>平台专家六组</strong></td>
+            <td><span class="group-type platform">专家组</span></td>
+            <td>希美(张靖)</td>
+            <td><span class="chip normal">5人</span></td>
+            <td><div class="hc-bar-wrap"><span class="chip shortage">4 HC</span><div class="hc-bar"><div class="hc-bar-fill red" style="width:80%"></div></div></div></td>
+            <td><span class="chip blue">-</span></td>
+            <td><span class="chip warn" onclick="showModal('leave')">1人离职</span></td>
+            <td><button class="chip blue">查看详情</button></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- 国货新悦 -->
+    <div class="track-block" style="--track-color:#DC2626">
+      <div class="track-header" onclick="toggleTrack('guohuonew')">
+        <div class="track-name">
+          <span class="track-dot" style="background:#DC2626"></span>
+          🔴 国货新悦赛道
+          <span class="track-badge" style="background:#FEF2F2;color:#DC2626">国货美妆 · 重点</span>
+        </div>
+        <div class="track-stats">
+          <div class="track-stat"><div class="n">21</div><div class="l">在职</div></div>
+          <div class="track-divider"></div>
+          <div class="track-stat"><div class="n red">17</div><div class="l">HC(超编4)</div></div>
+          <div class="track-divider"></div>
+          <div class="track-stat"><div class="n">10.15万</div><div class="l">业绩目标</div></div>
+          <div class="track-divider"></div>
+          <div class="track-yoy up">↑ YOY+11.2%</div>
+          <div class="track-chevron" id="chevron-guohuonew">▼</div>
+        </div>
+      </div>
+      <div class="groups-container hidden" id="groups-guohuonew">
+        <table class="groups-table">
+          <tr>
+            <th>小组</th><th>类型</th><th>负责人</th><th>在职</th><th>HC完成</th><th>招聘在途</th><th>待离职</th><th>操作</th>
+          </tr>
+          <tr>
+            <td><strong>行业七组</strong></td>
+            <td><span class="group-type biz">业务组</span></td>
+            <td>昭燃(千艺)</td>
+            <td><span class="chip normal">12人</span></td>
+            <td><div class="hc-bar-wrap"><span class="chip warn">9 HC</span><div class="hc-bar"><div class="hc-bar-fill orange" style="width:100%"></div></div></div></td>
+            <td><span class="chip blue">-</span></td>
+            <td><span class="chip normal">0</span></td>
+            <td><button class="chip blue">查看详情</button></td>
+          </tr>
+          <tr>
+            <td><strong>平台专家七组</strong></td>
+            <td><span class="group-type platform">专家组</span></td>
+            <td>希美(张靖)</td>
+            <td><span class="chip normal">9人</span></td>
+            <td><div class="hc-bar-wrap"><span class="chip shortage">8 HC</span><div class="hc-bar"><div class="hc-bar-fill red" style="width:88%"></div></div></div></td>
+            <td><span class="chip blue">-</span></td>
+            <td><span class="chip normal">0</span></td>
+            <td><button class="chip blue">查看详情</button></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- 科技护肤 -->
+    <div class="track-block" style="--track-color:#2563EB">
+      <div class="track-header" onclick="toggleTrack('tech')">
+        <div class="track-name">
+          <span class="track-dot" style="background:#2563EB"></span>
+          💙 科技护肤赛道
+          <span class="track-badge" style="background:#EFF6FF;color:#2563EB">国货美妆</span>
+        </div>
+        <div class="track-stats">
+          <div class="track-stat"><div class="n">10</div><div class="l">在职</div></div>
+          <div class="track-divider"></div>
+          <div class="track-stat"><div class="n">13</div><div class="l">HC</div></div>
+          <div class="track-divider"></div>
+          <div class="track-stat"><div class="n">6.96万</div><div class="l">业绩目标</div></div>
+          <div class="track-divider"></div>
+          <div class="track-yoy hot">↑ YOY+21.8%🔥</div>
+          <div class="track-chevron" id="chevron-tech">▼</div>
+        </div>
+      </div>
+      <div class="groups-container hidden" id="groups-tech">
+        <table class="groups-table">
+          <tr>
+            <th>小组</th><th>类型</th><th>负责人</th><th>在职</th><th>HC完成</th><th>招聘在途</th><th>待离职</th><th>操作</th>
+          </tr>
+          <tr>
+            <td><strong>行业八组</strong></td>
+            <td><span class="group-type biz">业务组</span></td>
+            <td>吴邪(吴建成)</td>
+            <td><span class="chip normal">5人</span></td>
+            <td><div class="hc-bar-wrap"><span class="chip shortage">7 HC</span><div class="hc-bar"><div class="hc-bar-fill red" style="width:71%"></div></div></div></td>
+            <td><span class="chip blue">-</span></td>
+            <td><span class="chip normal">0</span></td>
+            <td><button class="chip blue">查看详情</button></td>
+          </tr>
+          <tr>
+            <td><strong>平台专家八组</strong></td>
+            <td><span class="group-type platform">专家组</span></td>
+            <td>觉得(杨森)</td>
+            <td><span class="chip normal">6人</span></td>
+            <td><div class="hc-bar-wrap"><span class="chip shortage">6 HC</span><div class="hc-bar"><div class="hc-bar-fill green" style="width:100%"></div></div></div></td>
+            <td><span class="chip blue">-</span></td>
+            <td><span class="chip normal">0</span></td>
+            <td><button class="chip blue">查看详情</button></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- 国货彩香 -->
+    <div class="track-block" style="--track-color:#9333EA">
+      <div class="track-header" onclick="toggleTrack('guocai')">
+        <div class="track-name">
+          <span class="track-dot" style="background:#9333EA"></span>
+          🟣 国货彩香赛道
+          <span class="track-badge" style="background:#FAF5FF;color:#9333EA">国货美妆</span>
+        </div>
+        <div class="track-stats">
+          <div class="track-stat"><div class="n">~</div><div class="l">在职</div></div>
+          <div class="track-divider"></div>
+          <div class="track-stat"><div class="n">~</div><div class="l">HC</div></div>
+          <div class="track-divider"></div>
+          <div class="track-stat"><div class="n">9.51万</div><div class="l">业绩目标</div></div>
+          <div class="track-divider"></div>
+          <div class="track-yoy hot">↑ YOY+21.5%🔥</div>
+          <div class="track-chevron" id="chevron-guocai">▼</div>
+        </div>
+      </div>
+      <div class="groups-container hidden" id="groups-guocai">
+        <table class="groups-table">
+          <tr>
+            <th>小组</th><th>类型</th><th>负责人</th><th>在职</th><th>HC完成</th><th>招聘在途</th><th>待离职</th><th>操作</th>
+          </tr>
+          <tr>
+            <td><strong>行业九组</strong></td>
+            <td><span class="group-type biz">业务组</span></td>
+            <td>白泉(陈可茵)</td>
+            <td><span class="chip normal">8人</span></td>
+            <td><div class="hc-bar-wrap"><span class="chip normal">-</span></div></td>
+            <td><span class="chip blue">-</span></td>
+            <td><span class="chip warn" onclick="showModal('leave')">1人离职</span></td>
+            <td><button class="chip blue">查看详情</button></td>
+          </tr>
+          <tr>
+            <td><strong>平台专家九组</strong></td>
+            <td><span class="group-type platform">专家组</span></td>
+            <td>清也(刘月)</td>
+            <td><span class="chip normal">8人</span></td>
+            <td><div class="hc-bar-wrap"><span class="chip normal">-</span></div></td>
+            <td><span class="chip blue">-</span></td>
+            <td><span class="chip warn" onclick="showModal('leave')">1人主动离职</span></td>
+            <td><button class="chip blue">查看详情</button></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- end overview tab -->
+
+  <!-- Recruit Tab -->
+  <div id="tab-recruit" class="tab-content">
+    <div class="metrics-bar">
+      <div class="metric-item"><div class="metric-label">全部职位</div><div class="metric-value">258 <span>个</span></div></div>
+      <div class="metric-divider"></div>
+      <div class="metric-item"><div class="metric-label">在招(我负责)</div><div class="metric-value red">50 <span>个</span></div></div>
+      <div class="metric-divider"></div>
+      <div class="metric-item"><div class="metric-label">面试中候选人</div><div class="metric-value">3 <span>人(当前显示)</span></div></div>
+    </div>
+    <div class="section-title">面试流程中人员</div>
+    <div class="track-block">
+      <div style="padding:0">
+        <table class="groups-table">
+          <tr>
+            <th>候选人</th><th>职位</th><th>当前阶段</th><th>停留时长</th><th>上家公司</th><th>面试结论</th><th>用人经理</th><th>招聘负责人</th>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--blue)">Zidong Chen</strong></td>
+            <td>【保密岗位】</td>
+            <td><span class="status-tag offer">二面-待定</span></td>
+            <td>20天</td>
+            <td>-</td>
+            <td>
+              <span class="status-tag pending">星夏 待评价</span>
+              <span class="status-tag join">优妮 3.5+</span>
+              <span class="status-tag pending">星夏 3.5+</span>
+            </td>
+            <td>曼巴(章子琦)</td>
+            <td>星夏(郭家钰)</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--blue)">伟乐子</strong></td>
+            <td>高阶岗位</td>
+            <td><span class="status-tag interview">一面-未评价</span></td>
+            <td>21天</td>
+            <td>广州宝洁有限公司</td>
+            <td>
+              <span class="status-tag pending">方糖 待评价</span>
+              <span class="status-tag passive">玄鸟 3.5-</span>
+            </td>
+            <td>曼巴(章子琦)</td>
+            <td>玄鸟(孙尹)</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--blue)">王威</strong></td>
+            <td>电商商业化-高阶岗位</td>
+            <td><span class="status-tag interview">一面-未评价</span></td>
+            <td>17天</td>
+            <td>美团</td>
+            <td><span class="status-tag pending">杨盈 待评价</span></td>
+            <td>欧迪(马露涵)</td>
+            <td>杨盈(霂蘭)</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="section-title" style="margin-top:20px">招聘进展说明</div>
+    <div class="track-block">
+      <div style="padding:20px">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+          <div style="background:var(--blue-light);border-radius:10px;padding:16px">
+            <div style="font-size:12px;color:var(--text-sub);margin-bottom:6px">已到Offer阶段</div>
+            <div style="font-size:24px;font-weight:700;color:var(--blue)">1</div>
+            <div style="font-size:12px;color:var(--text-sub);margin-top:4px">Zidong Chen · 二面待定</div>
+          </div>
+          <div style="background:#F3F0FF;border-radius:10px;padding:16px">
+            <div style="font-size:12px;color:var(--text-sub);margin-bottom:6px">初面通过/进行中</div>
+            <div style="font-size:24px;font-weight:700;color:#7C3AED">2</div>
+            <div style="font-size:12px;color:var(--text-sub);margin-top:4px">伟乐子、王威</div>
+          </div>
+          <div style="background:var(--orange-light);border-radius:10px;padding:16px">
+            <div style="font-size:12px;color:var(--text-sub);margin-bottom:6px">昂扬面试通过</div>
+            <div style="font-size:24px;font-weight:700;color:var(--orange)">-</div>
+            <div style="font-size:12px;color:var(--text-sub);margin-top:4px">待更新</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- People Tab -->
+  <div id="tab-people" class="tab-content">
+    <div class="section-title">待入职人员（7人）</div>
+    <div class="track-block">
+      <table class="groups-table">
+        <tr>
+          <th>人员</th><th>层级</th><th>入职时间</th><th>入职部门</th><th>城市</th><th>直接上级</th><th>信息采集状态</th>
+        </tr>
+        <tr><td><strong>吴天昊</strong></td><td>IC</td><td>2026-03-30</td><td>平台专家十二组</td><td>广州</td><td>惊鸿(王晶晶)</td><td><span class="status-tag passive">审核不通过</span></td></tr>
+        <tr><td><strong>常莉婉</strong></td><td>IC</td><td>2026-03-30</td><td>技术财务分析</td><td>上海</td><td>白真(白乐天)</td><td><span class="status-tag pending">采集中</span></td></tr>
+        <tr><td><strong>赛娜</strong> <span style="font-size:11px;color:var(--orange)">⚠️竞业保护</span></td><td>IC</td><td>2026-04-01</td><td>财务一组</td><td>北京</td><td>白真(白乐天)</td><td><span class="status-tag join">已完成</span></td></tr>
+        <tr><td><strong>JICHAO SUN</strong></td><td>L1</td><td>2026-04-08</td><td>行业一部</td><td>上海</td><td>昂扬(李昂)</td><td><span class="status-tag pending">采集中</span></td></tr>
+        <tr><td><strong>曹腾</strong></td><td>IC</td><td>2026-04-08</td><td>交易财务分析</td><td>上海</td><td>白真(白乐天)</td><td><span class="status-tag pending">待审核</span></td></tr>
+        <tr><td><strong>邓鸿颖</strong></td><td>IC</td><td>2026-04-08</td><td>行业五组</td><td>上海</td><td>吴邪(吴建成)</td><td><span class="status-tag pending">待审核</span></td></tr>
+        <tr><td><strong>鲍天玥</strong></td><td>IC</td><td>2026-04-13</td><td>资金管理组</td><td>上海</td><td>绫波(李静)</td><td><span class="status-tag pending">采集中</span></td></tr>
+      </table>
+    </div>
+
+    <div class="section-title" style="margin-top:20px">待离职人员（3人）</div>
+    <div class="track-block">
+      <table class="groups-table">
+        <tr>
+          <th>人员</th><th>层级</th><th>离职类型</th><th>所在部门</th><th>离职状态</th><th>离职日期</th><th>当前处理人</th>
+        </tr>
+        <tr>
+          <td><strong>诗源(杨骑宇)</strong></td>
+          <td>IC</td>
+          <td><span class="status-tag passive">被动离职</span></td>
+          <td>财务职能</td>
+          <td><span class="status-tag pending">审批中</span></td>
+          <td>2026-04-23</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td><strong>六尾(许凌豪)</strong></td>
+          <td>IC</td>
+          <td><span class="status-tag leave">主动离职</span></td>
+          <td>平台专家九组</td>
+          <td><span class="status-tag warn" style="background:var(--orange-light);color:var(--orange)">待离职</span></td>
+          <td>2026-04-07</td>
+          <td>尹志鹏</td>
+        </tr>
+        <tr>
+          <td><strong>波雅(李淑华)</strong></td>
+          <td>IC</td>
+          <td><span class="status-tag passive">被动离职</span></td>
+          <td>行业四组</td>
+          <td><span class="status-tag warn" style="background:var(--orange-light);color:var(--orange)">待离职</span></td>
+          <td>2026-04-13</td>
+          <td>尹志鹏</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+</div><!-- end main -->
+
+<!-- Modals -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">详情</div>
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// Tab switching
+function switchTab(name) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.header-tab').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// Track toggle
+function toggleTrack(id) {
+  const groups = document.getElementById('groups-' + id);
+  const chevron = document.getElementById('chevron-' + id);
+  if (groups.classList.contains('hidden')) {
+    groups.classList.remove('hidden');
+    chevron.classList.add('open');
+    chevron.textContent = '▲';
+  } else {
+    groups.classList.add('hidden');
+    chevron.classList.remove('open');
+    chevron.textContent = '▼';
+  }
+}
+
+// Modal data
+const modalData = {
+  'onboard': {
+    title: '在职人员 · 行业一部（163人）',
+    body: `<div style="color:var(--text-sub);font-size:13px;margin-bottom:16px">数据来源：HR工作台实时</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div style="background:var(--gray-light);border-radius:10px;padding:14px">
+        <div style="font-size:12px;color:var(--text-sub)">行业一部</div>
+        <div style="font-size:22px;font-weight:700;margin-top:4px">163人</div>
+        <div style="font-size:12px;color:var(--text-sub)">含L1在内</div>
+      </div>
+      <div style="background:var(--gray-light);border-radius:10px;padding:14px">
+        <div style="font-size:12px;color:var(--text-sub)">流出在途</div>
+        <div style="font-size:22px;font-weight:700;color:var(--red);margin-top:4px">3人</div>
+        <div style="font-size:12px;color:var(--text-sub)">即将离职</div>
+      </div>
+    </div>
+    <div style="margin-top:16px;font-size:12px;color:var(--text-sub)">⚡ 明细请前往花名册 → 筛选行业一部</div>`
+  },
+  'hc': {
+    title: 'HC缺口分析',
+    body: `<div class="modal-item"><div class="modal-item-left"><div class="modal-item-name">行业一部整体</div><div class="modal-item-sub">预计在职 vs HC</div></div><div class="modal-item-right"><span class="status-tag passive">165预计 / 164HC</span></div></div>
+    <div class="modal-item"><div class="modal-item-left"><div class="modal-item-name">欧莱雅赛道</div><div class="modal-item-sub">行业一组+平台专家一组</div></div><div class="modal-item-right"><span class="status-tag passive">在职15 / HC16 缺1</span></div></div>
+    <div class="modal-item"><div class="modal-item-left"><div class="modal-item-name">雅诗兰黛赛道</div><div class="modal-item-sub">行业二组+平台专家二组</div></div><div class="modal-item-right"><span class="status-tag leave">在职16 / HC11 缺5⚠️</span></div></div>
+    <div class="modal-item"><div class="modal-item-left"><div class="modal-item-name">欧美新悦赛道</div><div class="modal-item-sub">行业五组+平台专家五组</div></div><div class="modal-item-right"><span class="status-tag passive">在职9 / HC10 缺1</span></div></div>
+    <div class="modal-item"><div class="modal-item-left"><div class="modal-item-name">科技护肤赛道</div><div class="modal-item-sub">行业八组+平台专家八组</div></div><div class="modal-item-right"><span class="status-tag passive">在职10 / HC13 缺3</span></div></div>
+    <div style="margin-top:12px;font-size:12px;color:var(--orange);background:var(--orange-light);padding:10px;border-radius:8px">⚠️ 雅诗兰黛赛道HC缺口最大，达5人，需优先关注</div>`
+  },
+  'join-in': {
+    title: '待入职人员（7人）',
+    body: `
+    <div class="modal-item"><div class="modal-item-left"><div class="modal-item-name">吴天昊</div><div class="modal-item-sub">平台专家十二组 · 广州 · 上级：惊鸿</div></div><div class="modal-item-right"><div>2026-03-30</div><span class="status-tag passive">审核不通过</span></div></div>
+    <div class="modal-item"><div class="modal-item-left"><div class="modal-item-name">常莉婉</div><div class="modal-item-sub">技术财务分析 · 上海 · 上级：白真</div></div><div class="modal-item-right"><div>2026-03-30</div><span class="status-tag pending">采集中</span></div></div>
+    <div class="modal-item"><div class="modal-item-left"><div class="modal-item-name">赛娜 ⚠️竞业保护</div><div class="modal-item-sub">财务一组 · 北京 · 上级：白真</div></div><div class="modal-item-right"><div>2026-04-01</div><span class="status-tag join">已完成</span></div></div>
+    <div class="modal-item"><div class="modal-item-left"><div class="modal-item-name">JICHAO SUN</div><div class="modal-item-sub">行业一部 L1 · 上海 · 上级：昂扬</div></div><div class="modal-item-right"><div>2026-04-08</div><span class="status-tag pending">采集中</span></div></div>
+    <div class="modal-item"><div class="modal-item-left"><div class="modal-item-name">曹腾</div><div class="modal-item-sub">交易财务分析 · 上海 · 上级：白真</div></div><div class="modal-item-right"><div>2026-04-08</div><span class="status-tag pending">待审核</span></div></div>
+    <div class="modal-item"><div class="modal-item-left"><div class="modal-item-name">邓鸿颖</div><div class="modal-item-sub">行业五组 · 上海 · 上级：吴邪</div></div><div class="modal-item-right"><div>2026-04-08</div><span class="status-tag pending">待审核</span></div></div>
+    <div class="modal-item"><div class="modal-item-left"><div class="modal-item-name">鲍天玥</div><div class="modal-item-sub">资金管理组 · 上海 · 上级：绫波</div></div><div class="modal-item-right"><div>2026-04-13</div><span class="status-tag pending">采集中</span></div></div>
+    <div style="margin-top:12px;font-size:12px;color:var(--orange);background:var(--orange-light);padding:10px;border-radius:8px">⚠️ 赛娜有竞业保护，需关注。吴天昊信息采集审核不通过，需跟进</div>`
+  },
+  'leave': {
+    title: '待离职人员（3人）',
+    body: `
+    <div class="modal-item"><div class="modal-item-left"><div class="modal-item-name">诗源(杨骑宇)</div><div class="modal-item-sub">财务职能 · IC · 被动离职</div></div><div class="modal-item-right"><div>2026-04-23</div><span class="status-tag pending">审批中</span></div></div>
+    <div class="modal-item"><div class="modal-item-left"><div class="modal-item-name">六尾(许凌豪)</div><div class="modal-item-sub">平台专家九组 · IC · 主动离职</div></div><div class="modal-item-right"><div>2026-04-07</div><span class="status-tag leave">待离职</span></div></div>
+    <div class="modal-item"><div class="modal-item-left"><div class="modal-item-name">波雅(李淑华)</div><div class="modal-item-sub">行业四组 · IC · 被动离职</div></div><div class="modal-item-right"><div>2026-04-13</div><span class="status-tag passive">待离职</span></div></div>
+    <div style="margin-top:12px;font-size:12px;color:var(--red);background:var(--red-light);padding:10px;border-radius:8px">
+    <strong>最近离职：</strong>六尾(许凌豪) 将于4月7日离职（平台专家九组），波雅(李淑华) 将于4月13日离职（行业四组），需及时做交接和补位安排</div>`
+  },
+  'pipeline': {
+    title: '招聘在途（流入）',
+    body: `<div style="color:var(--text-sub);font-size:13px;margin-bottom:16px">行业一部当前流入在途：5人（来源HR工作台）</div>
+    <div style="background:var(--blue-light);border-radius:10px;padding:14px;margin-bottom:12px">
+      <div style="font-size:12px;color:var(--text-sub)">当前面试中候选人</div>
+      <div style="font-size:18px;font-weight:700;color:var(--blue);margin-top:4px">3人（可见）</div>
+    </div>
+    <div class="modal-item"><div class="modal-item-left"><div class="modal-item-name">Zidong Chen</div><div class="modal-item-sub">保密岗位 · 用人经理：曼巴</div></div><div class="modal-item-right"><span class="status-tag offer">二面-待定</span></div></div>
+    <div class="modal-item"><div class="modal-item-left"><div class="modal-item-name">伟乐子</div><div class="modal-item-sub">高阶岗位 · 用人经理：曼巴</div></div><div class="modal-item-right"><span class="status-tag interview">一面-未评价</span></div></div>
+    <div class="modal-item"><div class="modal-item-left"><div class="modal-item-name">王威</div><div class="modal-item-sub">电商商业化-高阶岗位 · 用人经理：欧迪</div></div><div class="modal-item-right"><span class="status-tag interview">一面-未评价</span></div></div>`
+  },
+  'age': {
+    title: '平均年龄 · 行业一部',
+    body: `<div style="background:var(--gray-light);border-radius:10px;padding:16px;margin-bottom:16px">
+      <div style="font-size:13px;color:var(--text-sub)">当前估算值（花名册小时级更新）</div>
+      <div style="font-size:32px;font-weight:700;margin-top:6px">~28.6岁</div>
+      <div style="font-size:12px;color:var(--text-sub)">待花名册实时数据更新后精确</div>
+    </div>
+    <div style="font-size:13px;color:var(--text-sub)">💡 如需精确数据，请前往花名册筛选行业一部，导出后计算平均年龄</div>`
+  },
+  'tenure': {
+    title: '平均司龄 · 行业一部',
+    body: `<div style="background:var(--gray-light);border-radius:10px;padding:16px;margin-bottom:16px">
+      <div style="font-size:13px;color:var(--text-sub)">当前估算值</div>
+      <div style="font-size:32px;font-weight:700;margin-top:6px">~2.4年</div>
+      <div style="font-size:12px;color:var(--text-sub)">待花名册实时数据更新后精确</div>
+    </div>
+    <div style="font-size:13px;color:var(--text-sub)">💡 如需精确数据，请前往花名册筛选行业一部，查看司龄字段</div>`
+  },
+  'efficiency': {
+    title: '人效数据 · 行业一部',
+    body: `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">
+      <div style="background:var(--orange-light);border-radius:10px;padding:14px;text-align:center">
+        <div style="font-size:12px;color:var(--text-sub)">3月</div>
+        <div style="font-size:24px;font-weight:700;color:var(--orange)">9.1h</div>
+        <div style="font-size:11px;color:var(--red)">低于均值1h</div>
+      </div>
+      <div style="background:var(--gray-light);border-radius:10px;padding:14px;text-align:center">
+        <div style="font-size:12px;color:var(--text-sub)">2月</div>
+        <div style="font-size:24px;font-weight:700">8.4h</div>
+      </div>
+      <div style="background:var(--gray-light);border-radius:10px;padding:14px;text-align:center">
+        <div style="font-size:12px;color:var(--text-sub)">1月</div>
+        <div style="font-size:24px;font-weight:700">8.8h</div>
+      </div>
+    </div>
+    <div style="font-size:13px;color:var(--text-sub);margin-bottom:10px">低于本月均值1h的有 <strong style="color:var(--red)">13人</strong></div>
+    <div style="font-size:12px;color:var(--orange);background:var(--orange-light);padding:10px;border-radius:8px">⚠️ 3月人效低于均值，需关注是否有工时异常情况</div>`
+  }
+};
+
+function showModal(type) {
+  const data = modalData[type];
+  if (!data) return;
+  document.getElementById('modal-title').textContent = data.title;
+  document.getElementById('modal-body').innerHTML = data.body;
+  document.getElementById('modal-overlay').classList.add('show');
+}
+
+function showGroupDetail(id) {
+  showModal('onboard');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modal-overlay')) {
+    closeModalDirect();
+  }
+}
+
+function closeModalDirect() {
+  document.getElementById('modal-overlay').classList.remove('show');
+}
+
+// Open all tracks by default on load
+window.addEventListener('load', () => {
+  ['loreal', 'estee', 'asia', 'euromenew', 'guohuohu', 'guohuonew', 'tech', 'guocai'].forEach(id => {
+    toggleTrack(id);
+  });
+});
+</script>
+</body>
+</html>
