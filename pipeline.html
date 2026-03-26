@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>美妆日化 · 面试漏斗看板 2026</title>
+  <style>
+    :root {
+      --primary: #166534;
+      --yellow: #FFC107;
+      --yellow-bg: #FFFDE7;
+      --yellow-border: #F9A825;
+      --green-light: #4CAF50;
+      --green-light-bg: #E8F5E9;
+      --green-light-border: #81C784;
+      --green-deep: #1B5E20;
+      --green-deep-bg: #DCFCE7;
+      --green-deep-border: #166534;
+      --gray: #9E9E9E;
+      --gray-bg: #FAFAFA;
+      --gray-border: #E0E0E0;
+      --red: #D32F2F;
+      --red-bg: #FFEBEE;
+      --red-border: #EF9A9A;
+      --text: #1A1D29;
+      --text-sub: #6B7280;
+      --border: #E8EAF0;
+      --shadow: 0 2px 8px rgba(0,0,0,0.08);
+      --shadow-hover: 0 6px 20px rgba(0,0,0,0.15);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, 'PingFang SC', sans-serif; background: #F0F4F0; color: var(--text); line-height: 1.5; min-height: 100vh; }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #166534 0%, #15803D 100%);
+      color: white; padding: 20px 32px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .header-left h1 { font-size: 20px; font-weight: 700; }
+    .header-left p { font-size: 13px; opacity: 0.8; margin-top: 4px; }
+    .header-right { display: flex; gap: 12px; align-items: center; }
+    .header-link { background: rgba(255,255,255,0.2); padding: 6px 14px; border-radius: 20px; font-size: 12px; color: white; text-decoration: none; cursor: pointer; transition: background 0.2s; }
+    .header-link:hover { background: rgba(255,255,255,0.35); }
+
+    /* Summary bar */
+    .summary-bar {
+      background: white; margin: 0 32px;
+      padding: 16px 24px; border-radius: 0 0 16px 16px;
+      box-shadow: var(--shadow); display: flex; gap: 32px;
+      margin-bottom: 24px;
+    }
+    .sum-item { text-align: center; }
+    .sum-num { font-size: 28px; font-weight: 700; line-height: 1; }
+    .sum-label { font-size: 12px; color: var(--text-sub); margin-top: 4px; }
+    .sum-item.offer .sum-num { color: var(--primary); }
+    .sum-item.final .sum-num { color: var(--green-light); }
+    .sum-item.yang .sum-num { color: #E65100; }
+    .sum-item.lost .sum-num { color: var(--gray); }
+    .sum-divider { width: 1px; background: var(--border); }
+
+    /* Legend */
+    .legend { display: flex; gap: 16px; align-items: center; margin: 0 32px 16px; flex-wrap: wrap; }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-sub); }
+    .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+
+    /* Funnel columns */
+    .funnel { display: flex; gap: 16px; padding: 0 32px 32px; }
+    .funnel-col { flex: 1; min-width: 220px; }
+    .col-header {
+      padding: 10px 16px; border-radius: 12px 12px 0 0;
+      font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;
+    }
+    .col-header .count { 
+      margin-left: auto; background: rgba(255,255,255,0.5); 
+      border-radius: 10px; padding: 1px 8px; font-size: 12px;
+    }
+    .col-header.stage-offer { background: var(--green-deep-bg); color: var(--green-deep); border: 1px solid var(--green-deep-border); }
+    .col-header.stage-final { background: var(--green-light-bg); color: var(--green-light); border: 1px solid var(--green-light-border); }
+    .col-header.stage-yang { background: var(--yellow-bg); color: #E65100; border: 1px solid var(--yellow-border); }
+    .col-header.stage-lost { background: var(--gray-bg); color: var(--gray); border: 1px solid var(--gray-border); }
+    
+    .col-cards { 
+      background: rgba(255,255,255,0.5); border-radius: 0 0 12px 12px;
+      border: 1px solid var(--border); border-top: none;
+      min-height: 200px; padding: 12px; display: flex; flex-direction: column; gap: 10px;
+    }
+
+    /* Candidate card */
+    .cand-card {
+      background: white; border-radius: 12px; padding: 14px 16px;
+      box-shadow: var(--shadow); cursor: pointer;
+      transition: all 0.2s; border-left: 4px solid transparent;
+      position: relative;
+    }
+    .cand-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+    .cand-card.offer { border-left-color: var(--primary); }
+    .cand-card.final { border-left-color: var(--green-light); }
+    .cand-card.yang { border-left-color: var(--yellow-border); }
+    .cand-card.lost { border-left-color: var(--gray); opacity: 0.75; }
+
+    .cand-name { font-size: 16px; font-weight: 700; color: var(--text); }
+    .cand-track { font-size: 12px; color: var(--primary); font-weight: 600; margin-top: 2px; }
+    .cand-meta { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+    .meta-chip {
+      font-size: 11px; padding: 2px 8px; border-radius: 10px;
+      font-weight: 500;
+    }
+    .chip-func { background: #E3F2FD; color: #1565C0; }
+    .chip-grade-375 { background: var(--green-deep-bg); color: var(--primary); }
+    .chip-grade-35 { background: #E8F5E9; color: #2E7D32; }
+    .chip-date { background: #F5F5F5; color: var(--text-sub); }
+    .cand-note { font-size: 11px; color: var(--text-sub); margin-top: 6px; font-style: italic; }
+    .cand-ta { font-size: 11px; color: var(--text-sub); margin-top: 4px; }
+    
+    .search-btn {
+      display: inline-flex; align-items: center; gap: 4px;
+      margin-top: 10px; font-size: 11px; color: var(--primary);
+      padding: 4px 10px; border-radius: 8px; border: 1px solid var(--primary);
+      background: var(--green-deep-bg); cursor: pointer; text-decoration: none;
+      font-weight: 600; transition: all 0.2s;
+    }
+    .search-btn:hover { background: var(--primary); color: white; }
+
+    /* Modal */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5); z-index: 1000;
+      align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: white; border-radius: 20px; padding: 28px;
+      max-width: 520px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      position: relative;
+    }
+    .modal-close {
+      position: absolute; top: 16px; right: 16px;
+      width: 28px; height: 28px; border-radius: 50%;
+      background: #f0f0f0; border: none; cursor: pointer;
+      font-size: 14px; display: flex; align-items: center; justify-content: center;
+    }
+    .modal-name { font-size: 22px; font-weight: 700; }
+    .modal-track { font-size: 14px; color: var(--primary); font-weight: 600; margin-top: 4px; }
+    .modal-stage { display: inline-block; margin-top: 10px; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+    .modal-stage.offer { background: var(--green-deep-bg); color: var(--primary); }
+    .modal-stage.final { background: var(--green-light-bg); color: var(--green-light); }
+    .modal-stage.yang { background: var(--yellow-bg); color: #E65100; }
+    .modal-stage.lost { background: var(--gray-bg); color: var(--gray); }
+    .modal-divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+    .modal-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; }
+    .modal-row-label { color: var(--text-sub); }
+    .modal-row-value { font-weight: 600; }
+    .modal-actions { margin-top: 20px; display: flex; gap: 10px; }
+    .modal-btn {
+      flex: 1; padding: 10px; border-radius: 10px; border: none;
+      font-size: 14px; font-weight: 600; cursor: pointer;
+      transition: all 0.2s; text-decoration: none;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .modal-btn.primary { background: var(--primary); color: white; }
+    .modal-btn.primary:hover { background: #14532D; }
+    .modal-btn.secondary { background: var(--gray-bg); color: var(--text-sub); border: 1px solid var(--border); }
+    .modal-btn.secondary:hover { background: #EEEEEE; }
+    .timeline { margin-top: 16px; }
+    .timeline-step {
+      display: flex; align-items: center; gap: 10px;
+      padding: 6px 0; font-size: 13px;
+    }
+    .tl-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .tl-dot.done { background: var(--primary); }
+    .tl-dot.current { background: #FF9800; box-shadow: 0 0 0 3px #FFE0B2; }
+    .tl-dot.pending { background: #E0E0E0; }
+    .tl-label { color: var(--text-sub); }
+    .tl-label.done { color: var(--primary); font-weight: 600; }
+    .tl-label.current { color: #E65100; font-weight: 600; }
+    .tl-line { width: 2px; height: 12px; background: var(--border); margin-left: 4px; }
+    .tl-line.done { background: var(--primary); }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>🎯 美妆日化 · 面试漏斗看板 2026</h1>
+    <p>数据来源：面试专场 Sheet（26年3月 tab） · 更新：2026-03-26</p>
+  </div>
+  <div class="header-right">
+    <a class="header-link" href="https://docs.xiaohongshu.com/sheet/90a4b5845918709650c78402a6fef3a9?smParams=4FoVLeYo5O5SalH0KFfBynBNVd" target="_blank">📋 原始 Sheet</a>
+    <a class="header-link" href="https://lushuting1.github.io/dashboard/" target="_blank">🏠 团队看板</a>
+    <a class="header-link" href="https://hr.xiaohongshu.com/position-manage/social" target="_blank">🔍 招聘系统</a>
+  </div>
+</div>
+
+<div class="summary-bar">
+  <div class="sum-item offer">
+    <div class="sum-num">2</div>
+    <div class="sum-label">✅ Offer 环节</div>
+  </div>
+  <div class="sum-divider"></div>
+  <div class="sum-item final">
+    <div class="sum-num">2</div>
+    <div class="sum-label">🟢 Final 通过</div>
+  </div>
+  <div class="sum-divider"></div>
+  <div class="sum-item yang">
+    <div class="sum-num">5</div>
+    <div class="sum-label">🟡 昂扬通过 待final</div>
+  </div>
+  <div class="sum-divider"></div>
+  <div class="sum-item" style="color:var(--text-sub)">
+    <div class="sum-num" style="color:var(--text-sub)">9</div>
+    <div class="sum-label">活跃在途合计</div>
+  </div>
+  <div class="sum-divider"></div>
+  <div class="sum-item lost">
+    <div class="sum-num">3</div>
+    <div class="sum-label">❌ Final fail / Turn down</div>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#166534"></div>深绿 = Offer 环节</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#4CAF50"></div>浅绿 = Final 面试通过</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#FFC107"></div>黄色 = 昂扬二面通过，待 Final</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#E0E0E0"></div>灰色 = Final fail / Offer turn down</div>
+  <div class="legend-item" style="margin-left:auto;font-size:12px;color:var(--text-sub)">点击人选卡片查看详情 + 跳转简历</div>
+</div>
+
+<div class="funnel">
+  <!-- Offer 环节 -->
+  <div class="funnel-col">
+    <div class="col-header stage-offer">✅ Offer 环节 <span class="count">2人</span></div>
+    <div class="col-cards">
+      <div class="cand-card offer" onclick="openModal('liuyilin')">
+        <div class="cand-name">刘一霖</div>
+        <div class="cand-track">🏷 宝洁汉高</div>
+        <div class="cand-meta">
+          <span class="meta-chip chip-func">平台专家</span>
+          <span class="meta-chip chip-grade-375">3.75 ✓</span>
+          <span class="meta-chip chip-date">3月12日</span>
+        </div>
+        <div class="cand-ta">TA: 欧然 | 面：若琳</div>
+        <a class="search-btn" href="https://hr.xiaohongshu.com/position-manage/social" target="_blank" onclick="event.stopPropagation()">🔗 查简历</a>
+      </div>
+      <div class="cand-card offer" onclick="openModal('hongfangzhi')">
+        <div class="cand-name">洪方芝</div>
+        <div class="cand-track">🏷 日化（整体）</div>
+        <div class="cand-meta">
+          <span class="meta-chip chip-func">策划</span>
+          <span class="meta-chip chip-grade-35">3.5+ ✓</span>
+          <span class="meta-chip chip-date">3月17日</span>
+        </div>
+        <div class="cand-ta">TA: 蒂蒂 | 面：惊鸿</div>
+        <a class="search-btn" href="https://hr.xiaohongshu.com/position-manage/social" target="_blank" onclick="event.stopPropagation()">🔗 查简历</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Final 通过 -->
+  <div class="funnel-col">
+    <div class="col-header stage-final">🟢 Final 通过 <span class="count">2人</span></div>
+    <div class="col-cards">
+      <div class="cand-card final" onclick="openModal('wangzhenzhen')">
+        <div class="cand-name">王真真</div>
+        <div class="cand-track">🏷 Personal Care</div>
+        <div class="cand-meta">
+          <span class="meta-chip chip-func">CBD</span>
+          <span class="meta-chip chip-grade-375">3.75 ✓</span>
+          <span class="meta-chip chip-date">3月24日</span>
+        </div>
+        <div class="cand-ta">TA: 天雪 | 面：南舟</div>
+        <a class="search-btn" href="https://hr.xiaohongshu.com/position-manage/social" target="_blank" onclick="event.stopPropagation()">🔗 查简历</a>
+      </div>
+      <div class="cand-card final" onclick="openModal('yangke')">
+        <div class="cand-name">杨珂</div>
+        <div class="cand-track">🏷 雅诗兰黛</div>
+        <div class="cand-meta">
+          <span class="meta-chip chip-func">CBD</span>
+          <span class="meta-chip chip-grade-35">3.5+ ✓</span>
+          <span class="meta-chip chip-date">3月25日</span>
+        </div>
+        <div class="cand-ta">TA: 贵音 | 面：吴邪</div>
+        <a class="search-btn" href="https://hr.xiaohongshu.com/applicant-evaluation?talentId=699425&interviewId=6305303&interviewScheduleId=690632" target="_blank" onclick="event.stopPropagation()">🔗 查简历</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 昂扬通过 待final -->
+  <div class="funnel-col" style="flex:1.6">
+    <div class="col-header stage-yang">🟡 昂扬二面通过 · 待 Final <span class="count">5人</span></div>
+    <div class="col-cards">
+      <div class="cand-card yang" onclick="openModal('dumingzhe')">
+        <div class="cand-name">杜明哲</div>
+        <div class="cand-track">🏷 欧美新悦</div>
+        <div class="cand-meta">
+          <span class="meta-chip chip-func">策划</span>
+          <span class="meta-chip chip-grade-375">3.75 ✓</span>
+          <span class="meta-chip chip-date">3月19日</span>
+        </div>
+        <div class="cand-note">💡 定位专家</div>
+        <div class="cand-ta">TA: 瑶妮 | 面：箱得</div>
+        <a class="search-btn" href="https://hr.xiaohongshu.com/position-manage/social" target="_blank" onclick="event.stopPropagation()">🔗 查简历</a>
+      </div>
+      <div class="cand-card yang" onclick="openModal('hexiaojing')">
+        <div class="cand-name">何小婧</div>
+        <div class="cand-track">🏷 欧美新悦</div>
+        <div class="cand-meta">
+          <span class="meta-chip chip-func">策划</span>
+          <span class="meta-chip chip-grade-375">3.75 ✓</span>
+          <span class="meta-chip chip-date">3月19日</span>
+        </div>
+        <div class="cand-note">💡 定位专家</div>
+        <div class="cand-ta">TA: 瑶妮 | 面：箱得</div>
+        <a class="search-btn" href="https://hr.xiaohongshu.com/position-manage/social" target="_blank" onclick="event.stopPropagation()">🔗 查简历</a>
+      </div>
+      <div class="cand-card yang" onclick="openModal('panglitong')">
+        <div class="cand-name">庞丽彤</div>
+        <div class="cand-track">🏷 欧美新悦</div>
+        <div class="cand-meta">
+          <span class="meta-chip chip-func">运营</span>
+          <span class="meta-chip chip-grade-375">3.75 ✓</span>
+          <span class="meta-chip chip-date">3月19日</span>
+        </div>
+        <div class="cand-ta">TA: 瑶妮 | 面：箱得</div>
+        <a class="search-btn" href="https://hr.xiaohongshu.com/position-manage/social" target="_blank" onclick="event.stopPropagation()">🔗 查简历</a>
+      </div>
+      <div class="cand-card yang" onclick="openModal('zhubaiqi')">
+        <div class="cand-name">朱柏其</div>
+        <div class="cand-track">🏷 国货新悦</div>
+        <div class="cand-meta">
+          <span class="meta-chip chip-func">运营</span>
+          <span class="meta-chip chip-grade-35">3.5+ ✓</span>
+          <span class="meta-chip chip-date">3月19日</span>
+        </div>
+        <div class="cand-ta">TA: 天雪 | 面：希莫</div>
+        <a class="search-btn" href="https://hr.xiaohongshu.com/position-manage/social" target="_blank" onclick="event.stopPropagation()">🔗 查简历</a>
+      </div>
+      <div class="cand-card yang" onclick="openModal('lidi')">
+        <div class="cand-name">李迪</div>
+        <div class="cand-track">🏷 国货美妆</div>
+        <div class="cand-meta">
+          <span class="meta-chip chip-func">CBD</span>
+          <span class="meta-chip chip-grade-375">3.75 ✓</span>
+          <span class="meta-chip chip-date">3月25日</span>
+        </div>
+        <div class="cand-ta">TA: 粥粥 | 面：昭燃</div>
+        <a class="search-btn" href="https://hr.xiaohongshu.com/position-manage/social" target="_blank" onclick="event.stopPropagation()">🔗 查简历</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 已淘汰 -->
+  <div class="funnel-col">
+    <div class="col-header stage-lost">❌ 已淘汰 <span class="count">3人</span></div>
+    <div class="col-cards">
+      <div class="cand-card lost" onclick="openModal('qinyalian')">
+        <div class="cand-name">覃雅莲</div>
+        <div class="cand-track">🏷 国货护肤集团</div>
+        <div class="cand-meta">
+          <span class="meta-chip chip-func">CBD</span>
+          <span class="meta-chip chip-grade-375">3.75</span>
+          <span class="meta-chip chip-date">3月4日</span>
+        </div>
+        <div class="cand-note">Final fail · 已给职级，待人才库跟进</div>
+      </div>
+      <div class="cand-card lost" onclick="openModal('tanshuile')">
+        <div class="cand-name">谭水乐</div>
+        <div class="cand-track">🏷 亚太新悦</div>
+        <div class="cand-meta">
+          <span class="meta-chip chip-func">运营</span>
+          <span class="meta-chip chip-grade-375">3.75</span>
+          <span class="meta-chip chip-date">3月9日</span>
+        </div>
+        <div class="cand-note">Final fail</div>
+      </div>
+      <div class="cand-card lost" onclick="openModal('wangxinyi')">
+        <div class="cand-name">王欣怡</div>
+        <div class="cand-track">🏷 国际美护</div>
+        <div class="cand-meta">
+          <span class="meta-chip chip-func">策划</span>
+          <span class="meta-chip chip-grade-35">3.5+</span>
+          <span class="meta-chip chip-date">3月12日</span>
+        </div>
+        <div class="cand-note">Offer turn down</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<script>
+const candidates = {
+  liuyilin: {
+    name: '刘一霖', track: '宝洁汉高', func: '平台专家', grade: '3.75',
+    date: '2026/3/12', stage: 'offer', stageLabel: '✅ Offer 环节',
+    interviewer: '若琳', ta: '欧然', note: '',
+    searchUrl: 'https://hr.xiaohongshu.com/position-manage/social',
+    remark: '宝洁方向平台专家，375以上评级，进入offer环节',
+    steps: ['l1一面', '昂扬二面 ✓', 'Final面试 ✓', 'Offer沟通 ← 当前']
+  },
+  hongfangzhi: {
+    name: '洪方芝', track: '日化', func: '策划', grade: '3.5+',
+    date: '2026/3/17', stage: 'offer', stageLabel: '✅ Offer 环节',
+    interviewer: '惊鸿', ta: '蒂蒂', note: '',
+    searchUrl: 'https://hr.xiaohongshu.com/position-manage/social',
+    remark: '日化赛道策划，3.5+通过，进入offer',
+    steps: ['l1一面', '昂扬二面 ✓', 'Final面试 ✓', 'Offer沟通 ← 当前']
+  },
+  wangzhenzhen: {
+    name: '王真真', track: 'Personal Care (个护)', func: 'CBD', grade: '3.75',
+    date: '2026/3/24', stage: 'final', stageLabel: '🟢 Final 通过',
+    interviewer: '南舟', ta: '天雪', note: '',
+    searchUrl: 'https://hr.xiaohongshu.com/position-manage/social',
+    remark: 'PC赛道CBD，3.75评级，final已过，待推进offer',
+    steps: ['l1一面', '昂扬二面 ✓', 'Final面试 ✓', 'Offer沟通 ← 待推进']
+  },
+  yangke: {
+    name: '杨珂', track: '雅诗兰黛', func: 'CBD', grade: '3.5+',
+    date: '2026/3/25', stage: 'final', stageLabel: '🟢 Final 通过',
+    interviewer: '吴邪', ta: '贵音', note: '',
+    searchUrl: 'https://hr.xiaohongshu.com/applicant-evaluation?talentId=699425&interviewId=6305303&interviewScheduleId=690632',
+    remark: '雅诗兰黛CBD，3.5+通过，final已过，待推进offer',
+    steps: ['l1一面', '昂扬二面 ✓', 'Final面试 ✓', 'Offer沟通 ← 待推进']
+  },
+  dumingzhe: {
+    name: '杜明哲', track: '欧美新悦', func: '策划 → 定位专家', grade: '3.75',
+    date: '2026/3/19', stage: 'yang', stageLabel: '🟡 待 Final 面试',
+    interviewer: '箱得', ta: '瑶妮', note: '定位专家',
+    searchUrl: 'https://hr.xiaohongshu.com/position-manage/social',
+    remark: '欧美新悦，昂扬3.75通过，建议定位专家方向，待安排Final',
+    steps: ['l1一面', '昂扬二面 ✓', 'Final面试 ← 待安排', 'Offer沟通']
+  },
+  hexiaojing: {
+    name: '何小婧', track: '欧美新悦', func: '策划 → 定位专家', grade: '3.75',
+    date: '2026/3/19', stage: 'yang', stageLabel: '🟡 待 Final 面试',
+    interviewer: '箱得', ta: '瑶妮', note: '定位专家',
+    searchUrl: 'https://hr.xiaohongshu.com/position-manage/social',
+    remark: '欧美新悦，昂扬3.75通过，建议定位专家方向，待安排Final',
+    steps: ['l1一面', '昂扬二面 ✓', 'Final面试 ← 待安排', 'Offer沟通']
+  },
+  panglitong: {
+    name: '庞丽彤', track: '欧美新悦', func: '运营', grade: '3.75',
+    date: '2026/3/19', stage: 'yang', stageLabel: '🟡 待 Final 面试',
+    interviewer: '箱得', ta: '瑶妮', note: '',
+    searchUrl: 'https://hr.xiaohongshu.com/position-manage/social',
+    remark: '欧美新悦运营，昂扬3.75通过，待安排Final',
+    steps: ['l1一面', '昂扬二面 ✓', 'Final面试 ← 待安排', 'Offer沟通']
+  },
+  zhubaiqi: {
+    name: '朱柏其', track: '国货新悦', func: '运营', grade: '3.5+',
+    date: '2026/3/19', stage: 'yang', stageLabel: '🟡 待 Final 面试',
+    interviewer: '希莫', ta: '天雪', note: '',
+    searchUrl: 'https://hr.xiaohongshu.com/position-manage/social',
+    remark: '国货新悦运营，昂扬3.5+通过，待安排Final',
+    steps: ['l1一面', '昂扬二面 ✓', 'Final面试 ← 待安排', 'Offer沟通']
+  },
+  lidi: {
+    name: '李迪', track: '国货美妆', func: 'CBD', grade: '3.75',
+    date: '2026/3/25', stage: 'yang', stageLabel: '🟡 待 Final 面试',
+    interviewer: '昭燃', ta: '粥粥', note: '',
+    searchUrl: 'https://hr.xiaohongshu.com/position-manage/social',
+    remark: '国货美妆CBD，昂扬3.75通过，待安排Final',
+    steps: ['l1一面', '昂扬二面 ✓', 'Final面试 ← 待安排', 'Offer沟通']
+  },
+  qinyalian: {
+    name: '覃雅莲', track: '国货护肤集团', func: 'CBD', grade: '3.75',
+    date: '2026/3/4', stage: 'lost', stageLabel: '❌ Final Fail',
+    interviewer: '嘉莉', ta: '瑶思', note: 'final fail，给职级，人才库跟进',
+    searchUrl: 'https://hr.xiaohongshu.com/position-manage/social',
+    remark: '3.75通过昂扬，但final淘汰；已给职级建议，放入人才库持续跟进',
+    steps: ['l1一面', '昂扬二面 ✓', 'Final面试 ✗', 'Offer沟通']
+  },
+  tanshuile: {
+    name: '谭水乐', track: '亚太新悦', func: '运营', grade: '3.75',
+    date: '2026/3/9', stage: 'lost', stageLabel: '❌ Final Fail',
+    interviewer: '古翱', ta: '夏娜', note: 'final fail',
+    searchUrl: 'https://hr.xiaohongshu.com/position-manage/social',
+    remark: '3.75通过昂扬，final淘汰',
+    steps: ['l1一面', '昂扬二面 ✓', 'Final面试 ✗', 'Offer沟通']
+  },
+  wangxinyi: {
+    name: '王欣怡', track: '国际美护', func: '策划', grade: '3.5+',
+    date: '2026/3/12', stage: 'lost', stageLabel: '❌ Offer Turn Down',
+    interviewer: '古翱', ta: '粥粥', note: 'offer turn down',
+    searchUrl: 'https://hr.xiaohongshu.com/position-manage/social',
+    remark: '3.5+通过，成功进offer，但候选人拒绝',
+    steps: ['l1一面', '昂扬二面 ✓', 'Final面试 ✓', 'Offer沟通 ✗ turn down']
+  }
+};
+
+const stepStatus = ['l1一面', '昂扬二面', 'Final面试', 'Offer沟通'];
+
+function openModal(id) {
+  const c = candidates[id];
+  if (!c) return;
+  
+  const stepsHtml = c.steps.map((s, i) => {
+    const isDone = s.includes('✓');
+    const isFail = s.includes('✗');
+    const isCurrent = s.includes('←') || s.includes('当前') || s.includes('待');
+    let dotClass = 'pending', labelClass = '';
+    if (isDone) { dotClass = 'done'; labelClass = 'done'; }
+    else if (isFail) { dotClass = 'pending'; }
+    else if (isCurrent) { dotClass = 'current'; labelClass = 'current'; }
+    const lineHtml = i < c.steps.length-1 ? `<div class="tl-line ${isDone?'done':''}"></div>` : '';
+    return `<div style="display:flex;flex-direction:column;align-items:flex-start">
+      <div class="timeline-step">
+        <div class="tl-dot ${dotClass}"></div>
+        <span class="tl-label ${labelClass}">${s}</span>
+      </div>
+      ${lineHtml}
+    </div>`;
+  }).join('');
+
+  document.getElementById('modal-content').innerHTML = `
+    <div class="modal-name">${c.name}</div>
+    <div class="modal-track">${c.track}</div>
+    <span class="modal-stage ${c.stage}">${c.stageLabel}</span>
+    <hr class="modal-divider">
+    <div class="modal-row"><span class="modal-row-label">职能</span><span class="modal-row-value">${c.func}</span></div>
+    <div class="modal-row"><span class="modal-row-label">面试评级</span><span class="modal-row-value">${c.grade}</span></div>
+    <div class="modal-row"><span class="modal-row-label">昂扬面试日期</span><span class="modal-row-value">${c.date}</span></div>
+    <div class="modal-row"><span class="modal-row-label">前序面试官</span><span class="modal-row-value">${c.interviewer}</span></div>
+    <div class="modal-row"><span class="modal-row-label">TA</span><span class="modal-row-value">${c.ta}</span></div>
+    ${c.note ? `<div class="modal-row"><span class="modal-row-label">备注</span><span class="modal-row-value" style="color:#E65100">${c.note}</span></div>` : ''}
+    <hr class="modal-divider">
+    <div style="font-size:13px;color:var(--text-sub);margin-bottom:8px">面试进度</div>
+    <div class="timeline">${stepsHtml}</div>
+    <div style="margin-top:12px;padding:10px 12px;background:#F5F5F5;border-radius:8px;font-size:13px;color:var(--text-sub)">${c.remark}</div>
+    <div class="modal-actions">
+      <a class="modal-btn primary" href="${c.searchUrl}" target="_blank">🔗 查看简历</a>
+      <button class="modal-btn secondary" onclick="closeModal()">关闭</button>
+    </div>
+  `;
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
