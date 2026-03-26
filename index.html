@@ -79,6 +79,7 @@
     .track-card.intl .track-header { border-left-color: var(--green); }
     .track-card.domestic .track-header { border-left-color: var(--primary); }
     .track-card.daily .track-header { border-left-color: var(--purple); }
+    .track-card.solution .track-header { border-left-color: #9E9E9E; background: linear-gradient(135deg, #F5F5F5 0%, #FAFAFA 100%); }
 
     .track-title-wrap { flex: 1; }
     .track-title { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
@@ -135,7 +136,7 @@
     .strategy-text { font-size: 12px; color: var(--text-sub); line-height: 1.6; }
 
     /* Solution Banner */
-    .solution-banner { background: linear-gradient(135deg, #FF6B6B 0%, #FF2442 100%); color: white; padding: 24px 32px; border-radius: 16px; margin: 24px 0; display: flex; justify-content: space-between; align-items: center; }
+    .solution-banner { background: linear-gradient(135deg, #616161 0%, #757575 100%); color: white; padding: 24px 32px; border-radius: 16px; margin: 24px 0; display: flex; justify-content: space-between; align-items: center; }
     .solution-title { font-size: 18px; font-weight: 700; }
     .solution-sub { font-size: 13px; opacity: 0.9; margin-top: 4px; }
     .solution-leader { text-align: right; }
@@ -227,14 +228,14 @@
     <div class="stat-sub">近期到岗</div>
   </div>
   <div class="stat-card orange" onclick="showModal('leave')">
-    <div class="stat-value orange">3</div>
+    <div class="stat-value orange">2</div>
     <div class="stat-label">待离职</div>
     <div class="stat-sub">需交接</div>
   </div>
-  <div class="stat-card blue" onclick="showModal('recruit')">
-    <div class="stat-value" style="color:var(--blue)">50</div>
-    <div class="stat-label">在招职位</div>
-    <div class="stat-sub">我负责</div>
+  <div class="stat-card" onclick="showModal('young')">
+    <div class="stat-value green">40<span style="font-size:14px">%</span></div>
+    <div class="stat-label">年轻人才比例</div>
+    <div class="stat-sub">≤28岁占比</div>
   </div>
   <div class="stat-card" onclick="showModal('efficiency')">
     <div class="stat-value orange">9.1<span style="font-size:14px">h</span></div>
@@ -286,7 +287,7 @@
               <span class="chip chip-staff">15人</span>
               <span class="chip chip-hc-short">HC16 缺1</span>
             </div>
-            <div class="track-leaders">👤 千月·古翔 | 💰 12万</div>
+            <div class="track-leaders">👤 千月·古娴 | 💰 12.00亿</div>
           </div>
           <div class="expand-icon">▼</div>
         </div>
@@ -312,7 +313,7 @@
                 <span class="group-type expert">平台专家</span>
                 <div class="group-info">
                   <div class="group-name">平台专家一组</div>
-                  <div class="group-leader">负责人：古翔(高逸群)</div>
+                  <div class="group-leader">负责人：古娴(高逸群)</div>
                 </div>
                 <div class="group-stats">
                   <span class="chip chip-staff">6人</span>
@@ -352,7 +353,7 @@
               <span class="chip chip-staff">16人</span>
               <span class="chip chip-hc-over">HC11 超5</span>
             </div>
-            <div class="track-leaders">👤 吴邪·觉得 | 💰 6.52万</div>
+            <div class="track-leaders">👤 吴邪·菀得 | 💰 6.52亿</div>
           </div>
           <div class="expand-icon">▼</div>
         </div>
@@ -378,7 +379,7 @@
                 <span class="group-type expert">平台专家</span>
                 <div class="group-info">
                   <div class="group-name">平台专家二组</div>
-                  <div class="group-leader">负责人：觉得(杨森)</div>
+                  <div class="group-leader">负责人：菀得(杨森)</div>
                 </div>
                 <div class="group-stats">
                   <span class="chip chip-staff">8人</span>
@@ -418,7 +419,7 @@
               <span class="chip chip-staff">9人</span>
               <span class="chip chip-hc-over">HC7 超2</span>
             </div>
-            <div class="track-leaders">👤 千月·古翔 | 💰 4.74万</div>
+            <div class="track-leaders">👤 千月·古娴 | 💰 4.74亿</div>
           </div>
           <div class="expand-icon">▼</div>
         </div>
@@ -444,7 +445,7 @@
                 <span class="group-type expert">平台专家</span>
                 <div class="group-info">
                   <div class="group-name">平台专家四组</div>
-                  <div class="group-leader">负责人：古翔(高逸群)</div>
+                  <div class="group-leader">负责人：古娴(高逸群)</div>
                 </div>
                 <div class="group-stats">
                   <span class="chip chip-staff">4人</span>
@@ -484,7 +485,7 @@
               <span class="chip chip-staff">9人</span>
               <span class="chip chip-hc-short">HC10 缺1</span>
             </div>
-            <div class="track-leaders">👤 吴邪·觉得 | 💰 7.17万</div>
+            <div class="track-leaders">👤 吴邪·菀得 | 💰 7.17亿</div>
           </div>
           <div class="expand-icon">▼</div>
         </div>
@@ -510,7 +511,7 @@
                 <span class="group-type expert">平台专家</span>
                 <div class="group-info">
                   <div class="group-name">平台专家五组</div>
-                  <div class="group-leader">负责人：觉得(杨森)</div>
+                  <div class="group-leader">负责人：菀得(杨森)</div>
                 </div>
                 <div class="group-stats">
                   <span class="chip chip-staff">5人</span>
@@ -558,7 +559,7 @@
               <span class="chip chip-staff">16人</span>
               <span class="chip chip-hc-over">HC9 超7</span>
             </div>
-            <div class="track-leaders">👤 嘉莉·希美 | 💰 5.29万</div>
+            <div class="track-leaders">👤 嘉莉·希莫 | 💰 5.29亿</div>
           </div>
           <div class="expand-icon">▼</div>
         </div>
@@ -584,7 +585,7 @@
                 <span class="group-type expert">平台专家</span>
                 <div class="group-info">
                   <div class="group-name">平台专家六组</div>
-                  <div class="group-leader">负责人：希美(张靖)</div>
+                  <div class="group-leader">负责人：希莫(焦潞林)</div>
                 </div>
                 <div class="group-stats">
                   <span class="chip chip-staff">5人</span>
@@ -624,7 +625,7 @@
               <span class="chip chip-staff">21人</span>
               <span class="chip chip-hc-over">HC17 超4</span>
             </div>
-            <div class="track-leaders">👤 昭燃·希美 | 💰 10.15万</div>
+            <div class="track-leaders">👤 昭燃·希莫 | 💰 10.15亿</div>
           </div>
           <div class="expand-icon">▼</div>
         </div>
@@ -650,7 +651,7 @@
                 <span class="group-type expert">平台专家</span>
                 <div class="group-info">
                   <div class="group-name">平台专家七组</div>
-                  <div class="group-leader">负责人：希美(张靖)</div>
+                  <div class="group-leader">负责人：希莫(焦潞林)</div>
                 </div>
                 <div class="group-stats">
                   <span class="chip chip-staff">9人</span>
@@ -690,7 +691,7 @@
               <span class="chip chip-staff">11人</span>
               <span class="chip chip-hc-short">HC13 缺2</span>
             </div>
-            <div class="track-leaders">👤 吴邪·觉得 | 💰 6.96万</div>
+            <div class="track-leaders">👤 吴邪·菀得 | 💰 6.96亿</div>
           </div>
           <div class="expand-icon">▼</div>
         </div>
@@ -716,7 +717,7 @@
                 <span class="group-type expert">平台专家</span>
                 <div class="group-info">
                   <div class="group-name">平台专家八组</div>
-                  <div class="group-leader">负责人：觉得(杨森)</div>
+                  <div class="group-leader">负责人：菀得(杨森)</div>
                 </div>
                 <div class="group-stats">
                   <span class="chip chip-staff">6人</span>
@@ -745,7 +746,7 @@
       </div>
 
       <!-- 国货彩香 -->
-      <div class="track-card domestic" onclick="toggleTrack(this)">
+      <div class="track-card solution" onclick="toggleTrack(this)">
         <div class="track-header">
           <div class="track-title-wrap">
             <div class="track-title">
@@ -756,7 +757,7 @@
               <span class="chip chip-staff">~16人</span>
               <span class="chip" style="background:var(--gray-light);color:var(--gray)">HC待定</span>
             </div>
-            <div class="track-leaders">👤 白泉·银尘(清也产假) | 💰 9.51万</div>
+            <div class="track-leaders">👤 白泉·银尘(清也产假) | 💰 9.51亿</div>
           </div>
           <div class="expand-icon">▼</div>
         </div>
@@ -830,7 +831,7 @@
               <span class="chip chip-staff">~14人</span>
               <span class="chip" style="background:var(--gray-light);color:var(--gray)">HC待</span>
             </div>
-            <div class="track-leaders">👤 克斯·若琳 | 💰 8.2万</div>
+            <div class="track-leaders">👤 克斯·若琳 | 💰 8.20亿</div>
           </div>
           <div class="expand-icon">▼</div>
         </div>
@@ -896,7 +897,7 @@
               <span class="chip chip-staff">~14人</span>
               <span class="chip" style="background:var(--gray-light);color:var(--gray)">HC待</span>
             </div>
-            <div class="track-leaders">👤 昂扬(暂代vacant)·珠珠 | 💰 7.9万</div>
+            <div class="track-leaders">👤 昂扬(暂代vacant)·珠珠 | 💰 7.90亿</div>
           </div>
           <div class="expand-icon">▼</div>
         </div>
@@ -962,7 +963,7 @@
               <span class="chip chip-staff">~11人</span>
               <span class="chip" style="background:var(--gray-light);color:var(--gray)">HC待</span>
             </div>
-            <div class="track-leaders">👤 南舟·惊鸿(兼) | 💰 5.7万</div>
+            <div class="track-leaders">👤 南舟·惊鸿(兼) | 💰 5.70亿</div>
           </div>
           <div class="expand-icon">▼</div>
         </div>
@@ -1028,7 +1029,7 @@
               <span class="chip chip-staff">~7人</span>
               <span class="chip" style="background:var(--gray-light);color:var(--gray)">HC待</span>
             </div>
-            <div class="track-leaders">👤 希坦(跨组)·惊鸿 | 💰 2.9万</div>
+            <div class="track-leaders">👤 希坦(跨组)·惊鸿 | 💰 2.90亿</div>
           </div>
           <div class="expand-icon">▼</div>
         </div>
@@ -1128,14 +1129,7 @@
 
     <div class="personnel-card">
       <div class="personnel-header orange">
-        📤 待离职（3人）
-      </div>
-      <div class="person-item">
-        <div class="person-info">
-          <div class="person-name">诗源(杨骑宇)</div>
-          <div class="person-meta">财务职能 · 被动离职</div>
-        </div>
-        <span class="person-status pending">2026-04-23</span>
+        📤 待离职（2人）
       </div>
       <div class="person-item">
         <div class="person-info">
@@ -1155,36 +1149,58 @@
   </div>
 
   <!-- 面试流程 -->
-  <div class="section-title">面试流程中（3人）</div>
-  <div class="interview-grid">
-    <div class="interview-card">
-      <div class="interview-name">Zidong Chen</div>
-      <div class="interview-position">保密岗位</div>
-      <div class="interview-tags">
-        <span class="interview-tag" style="background:var(--blue-light);color:var(--blue)">二面-待定</span>
-        <span class="interview-tag">停留20天</span>
-        <span class="interview-tag">曼巴</span>
+  <div class="section-title" style="display:flex;align-items:center;gap:12px">
+    面试进展（Final通过 + Offer环节）
+    <a href="pipeline.html" style="font-size:12px;color:var(--primary);font-weight:600;text-decoration:none;padding:3px 10px;border:1px solid var(--primary);border-radius:8px">查看完整漏斗 →</a>
+  </div>
+  <div class="interview-grid" style="grid-template-columns: repeat(4,1fr)">
+    <div class="interview-card" style="border-left:4px solid #166534">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <div class="interview-name" style="margin-bottom:0">刘一霖</div>
+        <span style="font-size:11px;background:#DCFCE7;color:#166534;padding:2px 8px;border-radius:10px;font-weight:600">✅ Offer</span>
       </div>
+      <div class="interview-position">宝洁汉高 · 平台专家</div>
+      <div class="interview-tags">
+        <span class="interview-tag" style="background:#DCFCE7;color:#166534">3.75 ✓</span>
+        <span class="interview-tag">TA: 欧然</span>
+      </div>
+      <a href="https://hr.xiaohongshu.com/applicant-view/2424053/6064531/resume" target="_blank" style="display:inline-block;margin-top:10px;font-size:11px;color:var(--primary);padding:4px 10px;border-radius:8px;border:1px solid var(--primary);background:#DCFCE7;font-weight:600;text-decoration:none">🔗 查看简历</a>
     </div>
-    <div class="interview-card">
-      <div class="interview-name">伟乐子</div>
-      <div class="interview-position">高阶岗位</div>
-      <div class="interview-tags">
-        <span class="interview-tag" style="background:var(--orange-light);color:var(--orange)">一面-未评价</span>
-        <span class="interview-tag">停留21天</span>
-        <span class="interview-tag">曼巴</span>
-        <span class="interview-tag">广州宝洁</span>
+    <div class="interview-card" style="border-left:4px solid #166534">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <div class="interview-name" style="margin-bottom:0">洪方雯</div>
+        <span style="font-size:11px;background:#DCFCE7;color:#166534;padding:2px 8px;border-radius:10px;font-weight:600">✅ Offer</span>
       </div>
+      <div class="interview-position">日化 · 策划（女护口腔）</div>
+      <div class="interview-tags">
+        <span class="interview-tag" style="background:#DCFCE7;color:#166534">3.5+ ✓</span>
+        <span class="interview-tag">TA: 蒂蒂</span>
+      </div>
+      <a href="https://hr.xiaohongshu.com/applicant-view/1852810/6111007" target="_blank" style="display:inline-block;margin-top:10px;font-size:11px;color:var(--primary);padding:4px 10px;border-radius:8px;border:1px solid var(--primary);background:#DCFCE7;font-weight:600;text-decoration:none">🔗 查看简历</a>
     </div>
-    <div class="interview-card">
-      <div class="interview-name">王威</div>
-      <div class="interview-position">电商商业化-高阶岗位</div>
-      <div class="interview-tags">
-        <span class="interview-tag" style="background:var(--orange-light);color:var(--orange)">一面-未评价</span>
-        <span class="interview-tag">停留17天</span>
-        <span class="interview-tag">欧迪</span>
-        <span class="interview-tag">美团</span>
+    <div class="interview-card" style="border-left:4px solid #4CAF50">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <div class="interview-name" style="margin-bottom:0">欣然 <span style="font-size:11px;color:var(--text-sub);font-weight:400">（姓名待核）</span></div>
+        <span style="font-size:11px;background:#E8F5E9;color:#4CAF50;padding:2px 8px;border-radius:10px;font-weight:600">🟢 Final通过</span>
       </div>
+      <div class="interview-position">个护 · CBD</div>
+      <div class="interview-tags">
+        <span class="interview-tag" style="background:#E8F5E9;color:#2E7D32">3.75 ✓</span>
+        <span class="interview-tag">TA: 天雪 | 面: 南舟</span>
+      </div>
+      <a href="https://hr.xiaohongshu.com/position-manage/social" target="_blank" style="display:inline-block;margin-top:10px;font-size:11px;color:#4CAF50;padding:4px 10px;border-radius:8px;border:1px solid #4CAF50;background:#E8F5E9;font-weight:600;text-decoration:none">🔗 查看简历</a>
+    </div>
+    <div class="interview-card" style="border-left:4px solid #4CAF50">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <div class="interview-name" style="margin-bottom:0">杨珂</div>
+        <span style="font-size:11px;background:#E8F5E9;color:#4CAF50;padding:2px 8px;border-radius:10px;font-weight:600">🟢 Final通过</span>
+      </div>
+      <div class="interview-position">雅诗兰黛 · CBD</div>
+      <div class="interview-tags">
+        <span class="interview-tag" style="background:#E8F5E9;color:#2E7D32">3.5+ ✓</span>
+        <span class="interview-tag">TA: 贵音 | 面: 吴邪</span>
+      </div>
+      <a href="https://hr.xiaohongshu.com/applicant-evaluation?talentId=699425&interviewId=6305303&interviewScheduleId=690632" target="_blank" style="display:inline-block;margin-top:10px;font-size:11px;color:#4CAF50;padding:4px 10px;border-radius:8px;border:1px solid #4CAF50;background:#E8F5E9;font-weight:600;text-decoration:none">🔗 查看简历</a>
     </div>
   </div>
 
