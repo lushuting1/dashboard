@@ -257,13 +257,74 @@
 <!-- Main Content -->
 <div class="main">
 
-  <!-- 行业一部整体 HR Todo -->
-  <div style="background:linear-gradient(135deg,#166534,#15803D);color:white;border-radius:12px;padding:14px 20px;margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
-    <div style="font-weight:700;font-size:15px;white-space:nowrap">📌 行业一部 HR Todo</div>
-    <div style="font-size:13px;opacity:0.95;flex:1">Smart Day — 整体维稳焕活：①L1凝聚力提升（L1之间互相不够熟，CBD与专家配合需加强）②补充运营型专家 ③超编赛道（雅诗/国货护肤/国货新悦）加速缩编至目标HC ④高增赛道（日化/彩香）加速扩编 ⑤HIPO IC横调激活</div>
+  <!-- 行业一部整体 HR Todo（精简版） -->
+  <div style="background:#F8FAFC;border-left:3px solid #166534;border-radius:0 8px 8px 0;padding:8px 14px;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap">
+    <span style="font-size:12px;font-weight:700;color:#166534;white-space:nowrap;padding-top:1px">📌 HR Todo</span>
+    <span style="font-size:12px;color:var(--text);line-height:1.6">Smart Day：① L1凝聚力↑ ② 补运营型专家 ③ 超编赛道（雅诗/国货护肤/国货新悦）缩编 ④ 高增赛道（日化/彩香）扩编 ⑤ HIPO IC横调激活</span>
   </div>
 
   <!-- 12赛道网格 -->
+  <!-- ======== 可视化图表区 ======== -->
+  <div class="section-title" style="display:flex;align-items:center;gap:12px">
+    📊 人才结构 · 各赛道对比
+    <span style="font-size:11px;color:var(--text-sub);font-weight:400">环比 3.18→3.26 · 花名册实时数据</span>
+  </div>
+
+  <!-- 整体环比摘要 -->
+  <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+    <div style="background:white;border-radius:10px;padding:12px 16px;box-shadow:var(--shadow);flex:1;min-width:160px;border-top:3px solid #EF4444">
+      <div style="font-size:11px;color:var(--text-sub);margin-bottom:4px">平均年龄 · 环比</div>
+      <div style="font-size:20px;font-weight:700;color:var(--text)">29.6<span style="font-size:13px">岁</span></div>
+      <div style="font-size:12px;color:#EF4444;font-weight:600">▲ +1.3岁 vs 3.18</div>
+    </div>
+    <div style="background:white;border-radius:10px;padding:12px 16px;box-shadow:var(--shadow);flex:1;min-width:160px;border-top:3px solid #10B981">
+      <div style="font-size:11px;color:var(--text-sub);margin-bottom:4px">平均司龄 · 环比</div>
+      <div style="font-size:20px;font-weight:700;color:var(--text)">1.65<span style="font-size:13px">年</span></div>
+      <div style="font-size:12px;color:#EF4444;font-weight:600">▲ +0.26yr vs 3.18</div>
+    </div>
+    <div style="background:white;border-radius:10px;padding:12px 16px;box-shadow:var(--shadow);flex:1;min-width:160px;border-top:3px solid #F59E0B">
+      <div style="font-size:11px;color:var(--text-sub);margin-bottom:4px">≤28岁占比 · 环比</div>
+      <div style="font-size:20px;font-weight:700;color:var(--text)">39.9<span style="font-size:13px">%</span></div>
+      <div style="font-size:12px;color:#10B981;font-weight:600">▼ -10.8% vs 3.18（50.7%）</div>
+    </div>
+    <div style="background:white;border-radius:10px;padding:12px 16px;box-shadow:var(--shadow);flex:1;min-width:160px;border-top:3px solid #6366F1">
+      <div style="font-size:11px;color:var(--text-sub);margin-bottom:4px">在职人数 · 环比</div>
+      <div style="font-size:20px;font-weight:700;color:var(--text)">163<span style="font-size:13px">人</span></div>
+      <div style="font-size:12px;color:#10B981;font-weight:600">▼ -38人 vs 3.18（201人）</div>
+    </div>
+  </div>
+
+  <!-- 图表区：三图并排 -->
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px">
+    
+    <!-- 图1：各组平均年龄对比 -->
+    <div style="background:white;border-radius:12px;padding:16px;box-shadow:var(--shadow)">
+      <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px">各组均龄对比 <span style="font-size:11px;color:var(--text-sub);font-weight:400">（岁，红线=均值29.6）</span></div>
+      <canvas id="ageChart" height="280"></canvas>
+    </div>
+
+    <!-- 图2：各组≤28岁占比 -->
+    <div style="background:white;border-radius:12px;padding:16px;box-shadow:var(--shadow)">
+      <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px">各组年轻人比例 <span style="font-size:11px;color:var(--text-sub);font-weight:400">（≤28岁，基准线40%）</span></div>
+      <canvas id="youngChart" height="280"></canvas>
+    </div>
+
+    <!-- 图3：各组平均司龄 -->
+    <div style="background:white;border-radius:12px;padding:16px;box-shadow:var(--shadow)">
+      <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px">各组均司龄对比 <span style="font-size:11px;color:var(--text-sub);font-weight:400">（年，基准线1.65yr）</span></div>
+      <canvas id="tenureChart" height="280"></canvas>
+    </div>
+  </div>
+
+  <!-- 图4：环比变化热力图（各组年龄涨跌） -->
+  <div style="background:white;border-radius:12px;padding:16px;box-shadow:var(--shadow);margin-bottom:24px">
+    <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px">各组人才结构环比变化（3.18 → 3.26）</div>
+    <div style="font-size:11px;color:var(--text-sub);margin-bottom:12px">红色=年龄增加/年轻人减少（偏负面），绿色=改善</div>
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;font-size:11px" id="deltaGrid">
+      <!-- JS渲染 -->
+    </div>
+  </div>
+
   <div class="section-title">12大赛道 · 数据与策略</div>
 
   <div class="categories-grid">
@@ -293,8 +354,10 @@
         </div>
         <div class="track-content">
           <div class="track-body">
-            <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px;padding:6px 10px;background:var(--gray-light);border-radius:8px;display:flex;gap:16px">
-              <span>👥 均龄 <b>29.1岁</b></span><span>📅 均司龄 <b>1.8年</b></span><span>🌱 ≤28岁 <b>40%</b></span>
+            <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#1D4ED8">👥 29.1岁</span>
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#166534">📅 1.8yr司龄</span>
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#FFF7ED;border:1px solid #FED7AA;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#C2410C">🌱 ≤28岁 40%</span>
             </div>
             <div class="groups">
               <div class="group-row">
@@ -359,8 +422,10 @@
         </div>
         <div class="track-content">
           <div class="track-body">
-            <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px;padding:6px 10px;background:var(--gray-light);border-radius:8px;display:flex;gap:16px">
-              <span>👥 均龄 <b>29.3岁</b></span><span>📅 均司龄 <b>1.7年</b></span><span>🌱 ≤28岁 <b>56%</b></span>
+            <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#1D4ED8">👥 29.3岁</span>
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#166534">📅 1.7yr司龄</span>
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#FFF7ED;border:1px solid #FED7AA;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#C2410C">🌱 ≤28岁 56%</span>
             </div>
             <div class="groups">
               <div class="group-row">
@@ -425,8 +490,10 @@
         </div>
         <div class="track-content">
           <div class="track-body">
-            <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px;padding:6px 10px;background:var(--gray-light);border-radius:8px;display:flex;gap:16px">
-              <span>👥 均龄 <b>30.0岁</b></span><span>📅 均司龄 <b>2.0年</b></span><span>🌱 ≤28岁 <b>44%</b></span>
+            <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#1D4ED8">👥 30.0岁</span>
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#166534">📅 2.0yr司龄</span>
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#FFF7ED;border:1px solid #FED7AA;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#C2410C">🌱 ≤28岁 44%</span>
             </div>
             <div class="groups">
               <div class="group-row">
@@ -491,8 +558,10 @@
         </div>
         <div class="track-content">
           <div class="track-body">
-            <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px;padding:6px 10px;background:var(--gray-light);border-radius:8px;display:flex;gap:16px">
-              <span>👥 均龄 <b>28.4岁</b></span><span>📅 均司龄 <b>1.2年</b></span><span>🌱 ≤28岁 <b>67%</b></span>
+            <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#1D4ED8">👥 28.4岁</span>
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#166534">📅 1.2yr司龄</span>
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#FFF7ED;border:1px solid #FED7AA;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#C2410C">🌱 ≤28岁 67%</span>
             </div>
             <div class="groups">
               <div class="group-row">
@@ -565,8 +634,10 @@
         </div>
         <div class="track-content">
           <div class="track-body">
-            <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px;padding:6px 10px;background:var(--gray-light);border-radius:8px;display:flex;gap:16px">
-              <span>👥 均龄 <b>29.4岁</b></span><span>📅 均司龄 <b>1.0年</b></span><span>🌱 ≤28岁 <b>50%</b></span>
+            <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#1D4ED8">👥 29.4岁</span>
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#166534">📅 1.0yr司龄</span>
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#FFF7ED;border:1px solid #FED7AA;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#C2410C">🌱 ≤28岁 50%</span>
             </div>
             <div class="groups">
               <div class="group-row">
@@ -631,8 +702,10 @@
         </div>
         <div class="track-content">
           <div class="track-body">
-            <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px;padding:6px 10px;background:var(--gray-light);border-radius:8px;display:flex;gap:16px">
-              <span>👥 均龄 <b>30.3岁</b></span><span>📅 均司龄 <b>1.9年</b></span><span>🌱 ≤28岁 <b>29%</b></span>
+            <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#1D4ED8">👥 30.3岁</span>
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#166534">📅 1.9yr司龄</span>
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#FFF7ED;border:1px solid #FED7AA;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#C2410C">🌱 ≤28岁 29%</span>
             </div>
             <div class="groups">
               <div class="group-row">
@@ -697,8 +770,10 @@
         </div>
         <div class="track-content">
           <div class="track-body">
-            <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px;padding:6px 10px;background:var(--gray-light);border-radius:8px;display:flex;gap:16px">
-              <span>👥 均龄 <b>29.1岁</b></span><span>📅 均司龄 <b>2.0年</b></span><span>🌱 ≤28岁 <b>36%</b></span>
+            <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#1D4ED8">👥 29.1岁</span>
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#166534">📅 2.0yr司龄</span>
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#FFF7ED;border:1px solid #FED7AA;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#C2410C">🌱 ≤28岁 36%</span>
             </div>
             <div class="groups">
               <div class="group-row">
@@ -763,8 +838,10 @@
         </div>
         <div class="track-content">
           <div class="track-body">
-            <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px;padding:6px 10px;background:var(--gray-light);border-radius:8px;display:flex;gap:16px">
-              <span>👥 均龄 <b>29.9岁</b></span><span>📅 均司龄 <b>1.9年</b></span><span>🌱 ≤28岁 <b>25%</b></span>
+            <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#1D4ED8">👥 29.9岁</span>
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#166534">📅 1.9yr司龄</span>
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#FFF7ED;border:1px solid #FED7AA;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#C2410C">🌱 ≤28岁 25%</span>
             </div>
             <div class="groups">
               <div class="group-row">
@@ -837,8 +914,10 @@
         </div>
         <div class="track-content">
           <div class="track-body">
-            <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px;padding:6px 10px;background:var(--gray-light);border-radius:8px;display:flex;gap:16px">
-              <span>👥 均龄 <b>29.8岁</b></span><span>📅 均司龄 <b>1.6年</b></span><span>🌱 ≤28岁 <b>31%</b></span>
+            <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#1D4ED8">👥 29.8岁</span>
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#166534">📅 1.6yr司龄</span>
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#FFF7ED;border:1px solid #FED7AA;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#C2410C">🌱 ≤28岁 31%</span>
             </div>
             <div class="groups">
               <div class="group-row">
@@ -903,8 +982,10 @@
         </div>
         <div class="track-content">
           <div class="track-body">
-            <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px;padding:6px 10px;background:var(--gray-light);border-radius:8px;display:flex;gap:16px">
-              <span>👥 均龄 <b>30.2岁</b></span><span>📅 均司龄 <b>1.8年</b></span><span>🌱 ≤28岁 <b>33%</b></span>
+            <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#1D4ED8">👥 30.2岁</span>
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#166534">📅 1.8yr司龄</span>
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#FFF7ED;border:1px solid #FED7AA;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#C2410C">🌱 ≤28岁 33%</span>
             </div>
             <div class="groups">
               <div class="group-row">
@@ -969,8 +1050,10 @@
         </div>
         <div class="track-content">
           <div class="track-body">
-            <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px;padding:6px 10px;background:var(--gray-light);border-radius:8px;display:flex;gap:16px">
-              <span>👥 均龄 <b>30.2岁</b></span><span>📅 均司龄 <b>1.5年</b></span><span>🌱 ≤28岁 <b>38%</b></span>
+            <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#1D4ED8">👥 30.2岁</span>
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#166534">📅 1.5yr司龄</span>
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#FFF7ED;border:1px solid #FED7AA;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#C2410C">🌱 ≤28岁 38%</span>
             </div>
             <div class="groups">
               <div class="group-row">
@@ -1035,8 +1118,10 @@
         </div>
         <div class="track-content">
           <div class="track-body">
-            <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px;padding:6px 10px;background:var(--gray-light);border-radius:8px;display:flex;gap:16px">
-              <span>👥 均龄 <b>28.7岁</b></span><span>📅 均司龄 <b>1.2年</b></span><span>🌱 ≤28岁 <b>44%</b></span>
+            <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#1D4ED8">👥 28.7岁</span>
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#166534">📅 1.2yr司龄</span>
+              <span style="display:inline-flex;align-items:center;gap:4px;background:#FFF7ED;border:1px solid #FED7AA;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#C2410C">🌱 ≤28岁 44%</span>
             </div>
             <div class="groups">
               <div class="group-row">
@@ -1085,16 +1170,11 @@
     </div>
   </div>
 
-  <!-- 行业Solution -->
-  <div class="solution-banner">
-    <div>
-      <div class="solution-title">🏢 行业Solution（横向）</div>
-      <div class="solution-sub">美妆日化行业solution · 横跨全赛道支持</div>
-    </div>
-    <div class="solution-leader">
-      <div class="solution-name">飞云(张一鸣)</div>
-      <div class="solution-note">Anne 4.8入职</div>
-    </div>
+  <!-- 行业Solution（精简版） -->
+  <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:10px;padding:10px 16px;margin-bottom:16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+    <span style="font-size:13px;font-weight:600;color:#166534">🏢 行业Solution（横向）</span>
+    <span style="font-size:12px;color:var(--text-sub)">飞云(张一鸣) · Anne 4.8入职</span>
+    <span style="font-size:12px;color:var(--text-sub)">横跨全赛道支持</span>
   </div>
 
   <!-- 人员动态 -->
@@ -1190,14 +1270,14 @@
       </div>
       <a href="https://hr.xiaohongshu.com/applicant-evaluation?talentId=2445326&interviewId=6229583&interviewScheduleId=690671" target="_blank" style="display:inline-block;margin-top:10px;font-size:11px;color:#4CAF50;padding:4px 10px;border-radius:8px;border:1px solid #4CAF50;background:#E8F5E9;font-weight:600;text-decoration:none">🔗 查看简历</a>
     </div>
-    <div class="interview-card" style="border-left:4px solid #4CAF50">
+    <div class="interview-card" style="border-left:4px solid #F59E0B">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
         <div class="interview-name" style="margin-bottom:0">杨珂</div>
-        <span style="font-size:11px;background:#E8F5E9;color:#4CAF50;padding:2px 8px;border-radius:10px;font-weight:600">🟢 Final通过</span>
+        <span style="font-size:11px;background:#FFF9C4;color:#F59E0B;padding:2px 8px;border-radius:10px;font-weight:600">🟡 待Final</span>
       </div>
       <div class="interview-position">雅诗兰黛 · CBD</div>
       <div class="interview-tags">
-        <span class="interview-tag" style="background:#E8F5E9;color:#2E7D32">3.5+ ✓</span>
+        <span class="interview-tag" style="background:#DCFCE7;color:#166534">3.5+ 昂扬通过</span>
         <span class="interview-tag">TA: 贵音 | 面: 吴邪</span>
       </div>
       <a href="https://hr.xiaohongshu.com/applicant-evaluation?talentId=699425&interviewId=6305303&interviewScheduleId=690632" target="_blank" style="display:inline-block;margin-top:10px;font-size:11px;color:#4CAF50;padding:4px 10px;border-radius:8px;border:1px solid #4CAF50;background:#E8F5E9;font-weight:600;text-decoration:none">🔗 查看简历</a>
@@ -1217,7 +1297,184 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
+// ====== 花名册分析数据（3.18 → 3.26） ======
+const rosterData = {
+  groups: [
+    // [组名缩写, 均龄_new, 均龄_old, 司龄_new, 司龄_old, 年轻人%_new, 年轻人%_old, 人数_new, 人数_old]
+    ['行一组', 29.9, 28.5, 2.36, 1.95, 22.2, 36.4, 9, 11],
+    ['行二组', 29.6, 27.1, 1.70, 1.20, 62.5, 75.0, 8, 12],
+    ['行三组', 30.0, 29.1, 2.00, 1.80, 22.2, 30.0, 9, 10],
+    ['行四组', 30.4, 28.7, 2.42, 2.03, 40.0, 50.0, 5, 6],
+    ['行五组', 29.0, 28.2, 1.47, 1.22, 50.0, 60.0, 4, 5],
+    ['行六组', 30.1, 29.1, 1.05, 0.90, 36.4, 46.2, 11, 13],
+    ['行七组', 31.3, 29.8, 2.38, 1.94, 16.7, 33.3, 12, 15],
+    ['行八组', 29.2, 28.7, 2.27, 2.27, 33.3, 33.3, 6, 6],
+    ['行九组', 30.5, 29.6, 2.46, 2.17, 25.0, 33.3, 8, 9],
+    ['行十组', 30.1, 28.7, 1.76, 1.42, 44.4, 54.5, 9, 11],
+    ['行十一', 30.2, 28.0, 1.40, 1.09, 40.0, 57.1, 5, 7],
+    ['行十二', 28.0, 27.2, 1.44, 1.53, 60.0, 60.0, 5, 5],
+    ['专家一', 27.8, 26.4, 1.03, 0.77, 66.7, 75.0, 6, 8],
+    ['专家二', 29.0, 28.3, 1.64, 1.47, 50.0, 55.6, 8, 9],
+    ['专家三', 29.4, 28.8, 1.14, 0.99, 42.9, 50.0, 7, 8],
+    ['专家四', 29.5, 28.0, 1.38, 1.11, 50.0, 60.0, 4, 5],
+    ['专家五', 28.0, 26.8, 1.04, 0.78, 80.0, 100.0, 5, 4],
+    ['专家六', 27.8, 27.2, 0.94, 0.87, 80.0, 75.0, 5, 8],
+    ['专家七', 29.0, 28.2, 1.36, 1.27, 44.4, 54.5, 9, 11],
+    ['专家八', 29.0, 28.0, 1.66, 1.38, 40.0, 50.0, 5, 6],
+    ['专家九', 29.4, 28.5, 1.44, 1.36, 25.0, 40.0, 8, 10],
+    ['专家十', 30.3, 28.4, 1.82, 1.52, 16.7, 37.5, 6, 8],
+    ['专家十一', 30.3, 29.7, 1.67, 1.63, 33.3, 33.3, 3, 3],
+    ['专家十二', 29.5, 26.6, 0.85, 0.58, 25.0, 57.1, 4, 7],
+  ]
+};
+
+const labels = rosterData.groups.map(g => g[0]);
+const ageNew = rosterData.groups.map(g => g[1]);
+const ageOld = rosterData.groups.map(g => g[2]);
+const tenureNew = rosterData.groups.map(g => g[3]);
+const tenureOld = rosterData.groups.map(g => g[4]);
+const youngNew = rosterData.groups.map(g => g[5]);
+const youngOld = rosterData.groups.map(g => g[6]);
+const countNew = rosterData.groups.map(g => g[7]);
+
+const AVG_AGE = 29.6;
+const AVG_YOUNG = 39.9;
+const AVG_TENURE = 1.65;
+
+const chartDefaults = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: { legend: { display: false } },
+  scales: {
+    x: { ticks: { font: { size: 9 }, maxRotation: 45 } },
+    y: { ticks: { font: { size: 10 } } }
+  }
+};
+
+// 图1：均龄对比（当前 + 3.18，带均值参考线）
+new Chart(document.getElementById('ageChart'), {
+  type: 'bar',
+  data: {
+    labels,
+    datasets: [
+      {
+        label: '3.26均龄',
+        data: ageNew,
+        backgroundColor: ageNew.map(v => v > AVG_AGE ? '#FCA5A5' : '#93C5FD'),
+        borderRadius: 3,
+      },
+      {
+        label: '3.18均龄',
+        data: ageOld,
+        backgroundColor: 'rgba(148,163,184,0.3)',
+        borderRadius: 3,
+      }
+    ]
+  },
+  options: {
+    ...chartDefaults,
+    plugins: {
+      legend: { display: true, position: 'top', labels: { font: { size: 10 }, boxWidth: 12 } },
+      annotation: {}
+    },
+    scales: {
+      ...chartDefaults.scales,
+      y: { min: 24, max: 34, ticks: { font: { size: 10 } } }
+    }
+  }
+});
+
+// 图2：年轻人比例
+new Chart(document.getElementById('youngChart'), {
+  type: 'bar',
+  data: {
+    labels,
+    datasets: [
+      {
+        label: '3.26 ≤28%',
+        data: youngNew,
+        backgroundColor: youngNew.map(v => v >= AVG_YOUNG ? '#6EE7B7' : '#FCD34D'),
+        borderRadius: 3,
+      },
+      {
+        label: '3.18 ≤28%',
+        data: youngOld,
+        backgroundColor: 'rgba(148,163,184,0.3)',
+        borderRadius: 3,
+      }
+    ]
+  },
+  options: {
+    ...chartDefaults,
+    plugins: {
+      legend: { display: true, position: 'top', labels: { font: { size: 10 }, boxWidth: 12 } },
+    },
+    scales: {
+      ...chartDefaults.scales,
+      y: { min: 0, max: 110, ticks: { font: { size: 10 }, callback: v => v + '%' } }
+    }
+  }
+});
+
+// 图3：司龄对比
+new Chart(document.getElementById('tenureChart'), {
+  type: 'bar',
+  data: {
+    labels,
+    datasets: [
+      {
+        label: '3.26司龄',
+        data: tenureNew,
+        backgroundColor: '#A5B4FC',
+        borderRadius: 3,
+      },
+      {
+        label: '3.18司龄',
+        data: tenureOld,
+        backgroundColor: 'rgba(148,163,184,0.3)',
+        borderRadius: 3,
+      }
+    ]
+  },
+  options: {
+    ...chartDefaults,
+    plugins: {
+      legend: { display: true, position: 'top', labels: { font: { size: 10 }, boxWidth: 12 } },
+    },
+    scales: {
+      ...chartDefaults.scales,
+      y: { min: 0, max: 3, ticks: { font: { size: 10 }, callback: v => v + 'yr' } }
+    }
+  }
+});
+
+// 图4：环比delta热力表
+const deltaGrid = document.getElementById('deltaGrid');
+rosterData.groups.forEach(g => {
+  const [name, ageN, ageO, tenN, tenO, yN, yO, cN, cO] = g;
+  const dAge = +(ageN - ageO).toFixed(1);
+  const dYoung = +(yN - yO).toFixed(1);
+  const dCount = cN - cO;
+  // 年龄增=坏(红)，年轻人减=坏(红)，人数减=中性
+  const ageBad = dAge > 0;
+  const youngBad = dYoung < 0;
+  const overallBad = (ageBad ? 1 : 0) + (youngBad ? 1 : 0);
+  const bg = overallBad >= 2 ? '#FEE2E2' : overallBad === 1 ? '#FFF7ED' : '#DCFCE7';
+  const border = overallBad >= 2 ? '#FCA5A5' : overallBad === 1 ? '#FED7AA' : '#BBF7D0';
+  
+  deltaGrid.innerHTML += `
+    <div style="background:${bg};border:1px solid ${border};border-radius:8px;padding:8px 10px">
+      <div style="font-size:11px;font-weight:700;color:#1F2937;margin-bottom:4px">${name}</div>
+      <div style="font-size:10px;color:#6B7280">
+        人数 <b style="color:${dCount >= 0 ? '#10B981' : '#6B7280'}">${dCount >= 0 ? '+' : ''}${dCount}</b><br>
+        均龄 <b style="color:${dAge > 0 ? '#EF4444' : '#10B981'}">${dAge > 0 ? '▲' : '▼'}${Math.abs(dAge)}</b><br>
+        ≤28% <b style="color:${dYoung < 0 ? '#EF4444' : '#10B981'}">${dYoung >= 0 ? '▲' : '▼'}${Math.abs(dYoung)}%</b>
+      </div>
+    </div>`;
+});
+
 function toggleTrack(card) {
   card.classList.toggle('expanded');
 }
