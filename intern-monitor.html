@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>实习生比例监测 · 行业一部 · 2026-03-27</title>
+<title>实习生比例监测 · 行业一部</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -24,21 +25,9 @@
     flex-wrap: wrap;
     gap: 16px;
   }
-  .header-left h1 {
-    font-size: 18px;
-    font-weight: 600;
-    color: #1d1d1f;
-  }
-  .header-left .date {
-    font-size: 13px;
-    color: #86868b;
-    margin-top: 4px;
-  }
-  .overall-cards {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
+  .header-left h1 { font-size: 18px; font-weight: 600; }
+  .header-left .date { font-size: 13px; color: #86868b; margin-top: 4px; }
+  .overall-cards { display: flex; gap: 12px; flex-wrap: wrap; }
   .card {
     background: #fff;
     border-radius: 12px;
@@ -47,21 +36,13 @@
     box-shadow: 0 1px 4px rgba(0,0,0,0.08);
     min-width: 100px;
   }
-  .card .val {
-    font-size: 28px;
-    font-weight: 700;
-    line-height: 1.1;
-  }
+  .card .val { font-size: 28px; font-weight: 700; line-height: 1.1; }
   .card .val.ok { color: #34c759; }
   .card .val.warn { color: #ff3b30; }
-  .card .label {
-    font-size: 12px;
-    color: #86868b;
-    margin-top: 4px;
-  }
-  .card-blue .val { color: #007aff; }
-  .card-gray .val { color: #48484a; }
-
+  .card .val.blue { color: #007aff; }
+  .card .val.gray { color: #48484a; }
+  .card .val.orange { color: #ff9500; }
+  .card .label { font-size: 12px; color: #86868b; margin-top: 4px; }
   .section {
     background: #fff;
     border-radius: 16px;
@@ -70,116 +51,42 @@
     box-shadow: 0 1px 4px rgba(0,0,0,0.08);
   }
   .section h2 {
-    font-size: 14px;
-    font-weight: 600;
-    color: #86868b;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 16px;
+    font-size: 14px; font-weight: 600; color: #86868b;
+    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px;
   }
-
+  .chart-wrap { position: relative; height: 200px; }
   .bar-row {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    gap: 10px;
+    display: flex; align-items: center; margin-bottom: 10px; gap: 10px;
   }
-  .bar-label {
-    width: 110px;
-    font-size: 13px;
-    color: #1d1d1f;
-    text-align: right;
-    flex-shrink: 0;
-  }
+  .bar-label { width: 110px; font-size: 13px; text-align: right; flex-shrink: 0; }
   .bar-track {
-    flex: 1;
-    background: #f0f0f0;
-    border-radius: 6px;
-    height: 22px;
-    position: relative;
-    overflow: hidden;
+    flex: 1; background: #f0f0f0; border-radius: 6px; height: 22px;
+    position: relative; overflow: hidden;
   }
-  .bar-fill {
-    height: 100%;
-    border-radius: 6px;
-    transition: width 0.4s ease;
-    position: relative;
-  }
+  .bar-fill { height: 100%; border-radius: 6px; }
   .bar-fill.ok { background: linear-gradient(90deg, #34c759, #30d158); }
   .bar-fill.warn { background: linear-gradient(90deg, #ff9500, #ff3b30); }
   .bar-baseline {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: rgba(0,0,0,0.25);
-    z-index: 2;
+    position: absolute; top: 0; bottom: 0; width: 2px;
+    background: rgba(0,0,0,0.25); z-index: 2;
   }
-  .bar-pct {
-    width: 52px;
-    font-size: 13px;
-    font-weight: 600;
-    text-align: right;
-    flex-shrink: 0;
-  }
+  .bar-pct { width: 52px; font-size: 13px; font-weight: 600; text-align: right; flex-shrink: 0; }
   .bar-pct.ok { color: #34c759; }
   .bar-pct.warn { color: #ff3b30; }
-  .bar-detail {
-    width: 90px;
-    font-size: 11px;
-    color: #86868b;
-    flex-shrink: 0;
-  }
-
+  .bar-detail { width: 90px; font-size: 11px; color: #86868b; flex-shrink: 0; }
   .baseline-note {
-    font-size: 12px;
-    color: #86868b;
-    margin-top: 8px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    font-size: 12px; color: #86868b; margin-top: 8px;
+    display: flex; align-items: center; gap: 6px;
   }
   .baseline-note::before {
-    content: '';
-    display: inline-block;
-    width: 12px;
-    height: 2px;
-    background: rgba(0,0,0,0.25);
+    content: ''; display: inline-block; width: 12px; height: 2px; background: rgba(0,0,0,0.25);
   }
-
-  .legend {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 12px;
-    flex-wrap: wrap;
-  }
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    color: #48484a;
-  }
-  .legend-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-  }
+  .legend { display: flex; gap: 16px; margin-bottom: 12px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #48484a; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
   .dot-ok { background: #34c759; }
   .dot-warn { background: #ff3b30; }
-
-  .strategy-row {
-    border-top: 1px solid #f0f0f0;
-    margin-top: 10px;
-    padding-top: 10px;
-  }
-
-  .footer {
-    font-size: 12px;
-    color: #86868b;
-    text-align: center;
-    margin-top: 8px;
-  }
+  .footer { font-size: 12px; color: #86868b; text-align: center; margin-top: 8px; }
   .footer a { color: #007aff; text-decoration: none; }
 </style>
 </head>
@@ -195,282 +102,345 @@
       <div class="val ok">24.5%</div>
       <div class="label">整体占比</div>
     </div>
-    <div class="card card-blue">
-      <div class="val">40</div>
+    <div class="card">
+      <div class="val blue">40</div>
       <div class="label">实习生</div>
     </div>
-    <div class="card card-gray">
-      <div class="val">163</div>
+    <div class="card">
+      <div class="val gray">163</div>
       <div class="label">正式员工</div>
     </div>
     <div class="card">
-      <div class="val" style="color:#ff9500">10</div>
+      <div class="val orange">11</div>
       <div class="label">超标小组</div>
     </div>
   </div>
 </div>
 
-<!-- 行业组 -->
+<div class="section">
+  <h2>整体比例历史趋势</h2>
+  <div class="chart-wrap">
+    <canvas id="trendChart"></canvas>
+  </div>
+</div>
+
 <div class="section">
   <h2>行业组（1–12）</h2>
   <div class="legend">
     <div class="legend-item"><div class="legend-dot dot-ok"></div>正常 ≤24.7%</div>
-    <div class="legend-item"><div class="legend-dot dot-warn"></div>超标 &gt;24.7%</div>
-  </div>
-
-  <!-- 最大值取75，基准线位置 = 24.7/75 -->
-
-  <div class="bar-row">
-    <div class="bar-label">行业一组</div>
-    <div class="bar-track">
-      <div class="bar-fill ok" style="width:29.6%"></div>
-      <div class="bar-baseline" style="left:32.9%"></div>
-    </div>
-    <div class="bar-pct ok">22.2%</div>
-    <div class="bar-detail">实习2 / 正式9</div>
-  </div>
-  <div class="bar-row">
-    <div class="bar-label">行业二组</div>
-    <div class="bar-track">
-      <div class="bar-fill warn" style="width:66.7%"></div>
-      <div class="bar-baseline" style="left:32.9%"></div>
-    </div>
-    <div class="bar-pct warn">50%</div>
-    <div class="bar-detail">实习4 / 正式8</div>
-  </div>
-  <div class="bar-row">
-    <div class="bar-label">行业三组</div>
-    <div class="bar-track">
-      <div class="bar-fill ok" style="width:14.8%"></div>
-      <div class="bar-baseline" style="left:32.9%"></div>
-    </div>
-    <div class="bar-pct ok">11.1%</div>
-    <div class="bar-detail">实习1 / 正式9</div>
-  </div>
-  <div class="bar-row">
-    <div class="bar-label">行业四组</div>
-    <div class="bar-track">
-      <div class="bar-fill ok" style="width:26.7%"></div>
-      <div class="bar-baseline" style="left:32.9%"></div>
-    </div>
-    <div class="bar-pct ok">20%</div>
-    <div class="bar-detail">实习1 / 正式5</div>
-  </div>
-  <div class="bar-row">
-    <div class="bar-label">行业五组</div>
-    <div class="bar-track">
-      <div class="bar-fill warn" style="width:33.3%"></div>
-      <div class="bar-baseline" style="left:32.9%"></div>
-    </div>
-    <div class="bar-pct warn">25%</div>
-    <div class="bar-detail">实习1 / 正式4</div>
-  </div>
-  <div class="bar-row">
-    <div class="bar-label">行业六组</div>
-    <div class="bar-track">
-      <div class="bar-fill ok" style="width:24.3%"></div>
-      <div class="bar-baseline" style="left:32.9%"></div>
-    </div>
-    <div class="bar-pct ok">18.2%</div>
-    <div class="bar-detail">实习2 / 正式11</div>
+    <div class="legend-item"><div class="legend-dot dot-warn"></div>超标 >24.7%</div>
   </div>
   <div class="bar-row">
     <div class="bar-label">行业七组</div>
     <div class="bar-track">
-      <div class="bar-fill warn" style="width:44.4%"></div>
-      <div class="bar-baseline" style="left:32.9%"></div>
+      <div class="bar-fill warn" style="width:41.6%"></div>
+      <div class="bar-baseline" style="left:30.9%"></div>
     </div>
     <div class="bar-pct warn">33.3%</div>
     <div class="bar-detail">实习4 / 正式12</div>
   </div>
   <div class="bar-row">
-    <div class="bar-label">行业八组</div>
+    <div class="bar-label">行业六组</div>
     <div class="bar-track">
-      <div class="bar-fill ok" style="width:22.3%"></div>
-      <div class="bar-baseline" style="left:32.9%"></div>
+      <div class="bar-fill ok" style="width:22.7%"></div>
+      <div class="bar-baseline" style="left:30.9%"></div>
     </div>
-    <div class="bar-pct ok">16.7%</div>
-    <div class="bar-detail">实习1 / 正式6</div>
+    <div class="bar-pct ok">18.2%</div>
+    <div class="bar-detail">实习2 / 正式11</div>
   </div>
   <div class="bar-row">
-    <div class="bar-label">行业九组</div>
+    <div class="bar-label">行业二组</div>
     <div class="bar-track">
-      <div class="bar-fill ok" style="width:16.7%"></div>
-      <div class="bar-baseline" style="left:32.9%"></div>
+      <div class="bar-fill warn" style="width:62.5%"></div>
+      <div class="bar-baseline" style="left:30.9%"></div>
     </div>
-    <div class="bar-pct ok">12.5%</div>
-    <div class="bar-detail">实习1 / 正式8</div>
+    <div class="bar-pct warn">50.0%</div>
+    <div class="bar-detail">实习4 / 正式8</div>
   </div>
   <div class="bar-row">
-    <div class="bar-label">行业十组</div>
+    <div class="bar-label">行业一组</div>
     <div class="bar-track">
-      <div class="bar-fill ok" style="width:29.6%"></div>
-      <div class="bar-baseline" style="left:32.9%"></div>
+      <div class="bar-fill ok" style="width:27.7%"></div>
+      <div class="bar-baseline" style="left:30.9%"></div>
     </div>
     <div class="bar-pct ok">22.2%</div>
     <div class="bar-detail">实习2 / 正式9</div>
   </div>
   <div class="bar-row">
-    <div class="bar-label">行业十一组</div>
+    <div class="bar-label">行业十组</div>
     <div class="bar-track">
-      <div class="bar-fill ok" style="width:26.7%"></div>
-      <div class="bar-baseline" style="left:32.9%"></div>
+      <div class="bar-fill ok" style="width:27.7%"></div>
+      <div class="bar-baseline" style="left:30.9%"></div>
     </div>
-    <div class="bar-pct ok">20%</div>
-    <div class="bar-detail">实习1 / 正式5</div>
+    <div class="bar-pct ok">22.2%</div>
+    <div class="bar-detail">实习2 / 正式9</div>
   </div>
   <div class="bar-row">
-    <div class="bar-label">行业十二组</div>
+    <div class="bar-label">行业三组</div>
     <div class="bar-track">
-      <div class="bar-fill ok" style="width:26.7%"></div>
-      <div class="bar-baseline" style="left:32.9%"></div>
+      <div class="bar-fill ok" style="width:13.9%"></div>
+      <div class="bar-baseline" style="left:30.9%"></div>
     </div>
-    <div class="bar-pct ok">20%</div>
-    <div class="bar-detail">实习1 / 正式5</div>
-  </div>
-
-  <div class="baseline-note">竖线为基准值 24.7%</div>
-</div>
-
-<!-- 平台专家组 -->
-<div class="section">
-  <h2>平台专家组（1–12）</h2>
-  <div class="legend">
-    <div class="legend-item"><div class="legend-dot dot-ok"></div>正常 ≤24.7%</div>
-    <div class="legend-item"><div class="legend-dot dot-warn"></div>超标 &gt;24.7%</div>
-  </div>
-
-  <div class="bar-row">
-    <div class="bar-label">专家一组</div>
-    <div class="bar-track">
-      <div class="bar-fill warn" style="width:44.4%"></div>
-      <div class="bar-baseline" style="left:32.9%"></div>
-    </div>
-    <div class="bar-pct warn">33.3%</div>
-    <div class="bar-detail">实习2 / 正式6</div>
+    <div class="bar-pct ok">11.1%</div>
+    <div class="bar-detail">实习1 / 正式9</div>
   </div>
   <div class="bar-row">
-    <div class="bar-label">专家二组</div>
+    <div class="bar-label">行业九组</div>
     <div class="bar-track">
-      <div class="bar-fill ok" style="width:16.7%"></div>
-      <div class="bar-baseline" style="left:32.9%"></div>
+      <div class="bar-fill ok" style="width:15.6%"></div>
+      <div class="bar-baseline" style="left:30.9%"></div>
     </div>
     <div class="bar-pct ok">12.5%</div>
     <div class="bar-detail">实习1 / 正式8</div>
   </div>
   <div class="bar-row">
-    <div class="bar-label">专家三组</div>
+    <div class="bar-label">行业八组</div>
     <div class="bar-track">
-      <div class="bar-fill ok" style="width:19.1%"></div>
-      <div class="bar-baseline" style="left:32.9%"></div>
+      <div class="bar-fill ok" style="width:20.9%"></div>
+      <div class="bar-baseline" style="left:30.9%"></div>
     </div>
-    <div class="bar-pct ok">14.3%</div>
-    <div class="bar-detail">实习1 / 正式7</div>
+    <div class="bar-pct ok">16.7%</div>
+    <div class="bar-detail">实习1 / 正式6</div>
   </div>
   <div class="bar-row">
-    <div class="bar-label">专家四组</div>
+    <div class="bar-label">行业四组</div>
     <div class="bar-track">
-      <div class="bar-fill warn" style="width:33.3%"></div>
-      <div class="bar-baseline" style="left:32.9%"></div>
+      <div class="bar-fill ok" style="width:25.0%"></div>
+      <div class="bar-baseline" style="left:30.9%"></div>
     </div>
-    <div class="bar-pct warn">25%</div>
+    <div class="bar-pct ok">20.0%</div>
+    <div class="bar-detail">实习1 / 正式5</div>
+  </div>
+  <div class="bar-row">
+    <div class="bar-label">行业十二组</div>
+    <div class="bar-track">
+      <div class="bar-fill ok" style="width:25.0%"></div>
+      <div class="bar-baseline" style="left:30.9%"></div>
+    </div>
+    <div class="bar-pct ok">20.0%</div>
+    <div class="bar-detail">实习1 / 正式5</div>
+  </div>
+  <div class="bar-row">
+    <div class="bar-label">行业十一组</div>
+    <div class="bar-track">
+      <div class="bar-fill ok" style="width:25.0%"></div>
+      <div class="bar-baseline" style="left:30.9%"></div>
+    </div>
+    <div class="bar-pct ok">20.0%</div>
+    <div class="bar-detail">实习1 / 正式5</div>
+  </div>
+  <div class="bar-row">
+    <div class="bar-label">行业五组</div>
+    <div class="bar-track">
+      <div class="bar-fill warn" style="width:31.2%"></div>
+      <div class="bar-baseline" style="left:30.9%"></div>
+    </div>
+    <div class="bar-pct warn">25.0%</div>
     <div class="bar-detail">实习1 / 正式4</div>
   </div>
-  <div class="bar-row">
-    <div class="bar-label">专家五组</div>
-    <div class="bar-track">
-      <div class="bar-fill ok" style="width:0%"></div>
-      <div class="bar-baseline" style="left:32.9%"></div>
-    </div>
-    <div class="bar-pct ok">0%</div>
-    <div class="bar-detail">实习0 / 正式5</div>
+  <div class="baseline-note">竖线为基准值 24.7%</div>
+</div>
+
+<div class="section">
+  <h2>平台专家组（1–12）</h2>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot dot-ok"></div>正常 ≤24.7%</div>
+    <div class="legend-item"><div class="legend-dot dot-warn"></div>超标 >24.7%</div>
   </div>
   <div class="bar-row">
-    <div class="bar-label">专家六组</div>
+    <div class="bar-label">平台专家七组</div>
     <div class="bar-track">
-      <div class="bar-fill warn" style="width:53.3%"></div>
-      <div class="bar-baseline" style="left:32.9%"></div>
-    </div>
-    <div class="bar-pct warn">40%</div>
-    <div class="bar-detail">实习2 / 正式5</div>
-  </div>
-  <div class="bar-row">
-    <div class="bar-label">专家七组</div>
-    <div class="bar-track">
-      <div class="bar-fill warn" style="width:44.4%"></div>
-      <div class="bar-baseline" style="left:32.9%"></div>
+      <div class="bar-fill warn" style="width:41.6%"></div>
+      <div class="bar-baseline" style="left:30.9%"></div>
     </div>
     <div class="bar-pct warn">33.3%</div>
     <div class="bar-detail">实习3 / 正式9</div>
   </div>
   <div class="bar-row">
-    <div class="bar-label">专家八组</div>
+    <div class="bar-label">平台专家九组</div>
     <div class="bar-track">
-      <div class="bar-fill ok" style="width:26.7%"></div>
-      <div class="bar-baseline" style="left:32.9%"></div>
+      <div class="bar-fill warn" style="width:31.2%"></div>
+      <div class="bar-baseline" style="left:30.9%"></div>
     </div>
-    <div class="bar-pct ok">20%</div>
-    <div class="bar-detail">实习1 / 正式5</div>
-  </div>
-  <div class="bar-row">
-    <div class="bar-label">专家九组</div>
-    <div class="bar-track">
-      <div class="bar-fill warn" style="width:33.3%"></div>
-      <div class="bar-baseline" style="left:32.9%"></div>
-    </div>
-    <div class="bar-pct warn">25%</div>
+    <div class="bar-pct warn">25.0%</div>
     <div class="bar-detail">实习2 / 正式8</div>
   </div>
   <div class="bar-row">
-    <div class="bar-label">专家十组</div>
+    <div class="bar-label">平台专家二组</div>
     <div class="bar-track">
-      <div class="bar-fill warn" style="width:44.4%"></div>
-      <div class="bar-baseline" style="left:32.9%"></div>
+      <div class="bar-fill ok" style="width:15.6%"></div>
+      <div class="bar-baseline" style="left:30.9%"></div>
+    </div>
+    <div class="bar-pct ok">12.5%</div>
+    <div class="bar-detail">实习1 / 正式8</div>
+  </div>
+  <div class="bar-row">
+    <div class="bar-label">平台专家十组</div>
+    <div class="bar-track">
+      <div class="bar-fill warn" style="width:41.6%"></div>
+      <div class="bar-baseline" style="left:30.9%"></div>
     </div>
     <div class="bar-pct warn">33.3%</div>
     <div class="bar-detail">实习2 / 正式6</div>
   </div>
   <div class="bar-row">
-    <div class="bar-label">专家十一组</div>
+    <div class="bar-label">平台专家一组</div>
     <div class="bar-track">
-      <div class="bar-fill ok" style="width:0%"></div>
-      <div class="bar-baseline" style="left:32.9%"></div>
+      <div class="bar-fill warn" style="width:41.6%"></div>
+      <div class="bar-baseline" style="left:30.9%"></div>
     </div>
-    <div class="bar-pct ok">0%</div>
-    <div class="bar-detail">实习0 / 正式3</div>
+    <div class="bar-pct warn">33.3%</div>
+    <div class="bar-detail">实习2 / 正式6</div>
   </div>
   <div class="bar-row">
-    <div class="bar-label">专家十二组</div>
+    <div class="bar-label">平台专家三组</div>
     <div class="bar-track">
-      <div class="bar-fill warn" style="width:100%"></div>
-      <div class="bar-baseline" style="left:32.9%"></div>
+      <div class="bar-fill ok" style="width:17.9%"></div>
+      <div class="bar-baseline" style="left:30.9%"></div>
     </div>
-    <div class="bar-pct warn">75%</div>
+    <div class="bar-pct ok">14.3%</div>
+    <div class="bar-detail">实习1 / 正式7</div>
+  </div>
+  <div class="bar-row">
+    <div class="bar-label">平台专家六组</div>
+    <div class="bar-track">
+      <div class="bar-fill warn" style="width:50.0%"></div>
+      <div class="bar-baseline" style="left:30.9%"></div>
+    </div>
+    <div class="bar-pct warn">40.0%</div>
+    <div class="bar-detail">实习2 / 正式5</div>
+  </div>
+  <div class="bar-row">
+    <div class="bar-label">平台专家十二组</div>
+    <div class="bar-track">
+      <div class="bar-fill warn" style="width:93.8%"></div>
+      <div class="bar-baseline" style="left:30.9%"></div>
+    </div>
+    <div class="bar-pct warn">75.0%</div>
     <div class="bar-detail">实习3 / 正式4</div>
   </div>
-
+  <div class="bar-row">
+    <div class="bar-label">平台专家八组</div>
+    <div class="bar-track">
+      <div class="bar-fill ok" style="width:25.0%"></div>
+      <div class="bar-baseline" style="left:30.9%"></div>
+    </div>
+    <div class="bar-pct ok">20.0%</div>
+    <div class="bar-detail">实习1 / 正式5</div>
+  </div>
+  <div class="bar-row">
+    <div class="bar-label">平台专家四组</div>
+    <div class="bar-track">
+      <div class="bar-fill warn" style="width:31.2%"></div>
+      <div class="bar-baseline" style="left:30.9%"></div>
+    </div>
+    <div class="bar-pct warn">25.0%</div>
+    <div class="bar-detail">实习1 / 正式4</div>
+  </div>
+  <div class="bar-row">
+    <div class="bar-label">平台专家五组</div>
+    <div class="bar-track">
+      <div class="bar-fill ok" style="width:0.0%"></div>
+      <div class="bar-baseline" style="left:30.9%"></div>
+    </div>
+    <div class="bar-pct ok">0.0%</div>
+    <div class="bar-detail">实习0 / 正式5</div>
+  </div>
+  <div class="bar-row">
+    <div class="bar-label">平台专家十一组</div>
+    <div class="bar-track">
+      <div class="bar-fill ok" style="width:0.0%"></div>
+      <div class="bar-baseline" style="left:30.9%"></div>
+    </div>
+    <div class="bar-pct ok">0.0%</div>
+    <div class="bar-detail">实习0 / 正式3</div>
+  </div>
   <div class="baseline-note">竖线为基准值 24.7%</div>
 </div>
 
-<!-- 行业策略组 -->
 <div class="section">
   <h2>其他</h2>
-  <div class="bar-row strategy-row">
+  <div class="bar-row">
     <div class="bar-label">行业策略组</div>
     <div class="bar-track">
-      <div class="bar-fill warn" style="width:66.7%"></div>
-      <div class="bar-baseline" style="left:32.9%"></div>
+      <div class="bar-fill warn" style="width:62.5%"></div>
+      <div class="bar-baseline" style="left:30.9%"></div>
     </div>
-    <div class="bar-pct warn">50%</div>
+    <div class="bar-pct warn">50.0%</div>
     <div class="bar-detail">实习1 / 正式2</div>
   </div>
   <div class="baseline-note">竖线为基准值 24.7%</div>
 </div>
 
 <div class="footer">
-  数据来源：花名册-HRBP视图 ·
-  <a href="https://docs.xiaohongshu.com/doc/2b828a6952d2ebb0e06ad233baa4db22" target="_blank">📄 查看监测文档</a>
+  数据来源：花名册-HRBP视图（导出Excel精确计算）·
+  <a href="https://docs.xiaohongshu.com/doc/2b828a6952d2ebb0e06ad233baa4db22" target="_blank">📄 监测文档</a>
 </div>
 
+<script>
+const ctx = document.getElementById('trendChart').getContext('2d');
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: ["2026-03-27"],
+    datasets: [{
+      label: '整体实习生占比',
+      data: [24.5],
+      borderColor: '#007aff',
+      backgroundColor: 'rgba(0,122,255,0.08)',
+      borderWidth: 2,
+      pointRadius: 4,
+      pointBackgroundColor: '#007aff',
+      tension: 0.3,
+      fill: true
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => ctx.parsed.y + '%'
+        }
+      },
+      annotation: {}
+    },
+    scales: {
+      y: {
+        min: 0,
+        max: 40,
+        ticks: { callback: v => v + '%' },
+        grid: { color: '#f0f0f0' }
+      },
+      x: {
+        grid: { display: false }
+      }
+    }
+  },
+  plugins: [{
+    id: 'baseline',
+    beforeDraw(chart) {
+      const {ctx, chartArea: {top, bottom, left, right}, scales: {y}} = chart;
+      const yPos = y.getPixelForValue(24.7);
+      ctx.save();
+      ctx.beginPath();
+      ctx.setLineDash([6, 4]);
+      ctx.strokeStyle = 'rgba(255,59,48,0.6)';
+      ctx.lineWidth = 1.5;
+      ctx.moveTo(left, yPos);
+      ctx.lineTo(right, yPos);
+      ctx.stroke();
+      ctx.restore();
+      ctx.save();
+      ctx.font = '11px -apple-system, sans-serif';
+      ctx.fillStyle = 'rgba(255,59,48,0.8)';
+      ctx.fillText('基准 24.7%', right - 60, yPos - 4);
+      ctx.restore();
+    }
+  }]
+});
+</script>
 </body>
 </html>
