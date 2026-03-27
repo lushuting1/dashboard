@@ -32,7 +32,7 @@
     /* Header */
     .header { background: linear-gradient(135deg, #166534 0%, #15803D 100%); color: white; padding: 24px 32px; }
     .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-    .header-title { font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 12px; }
+    .header-title { font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 12px; justify-content: center; }
     .header-badge { background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 500; }
     .header-meta { font-size: 13px; opacity: 0.8; }
     .header-info { display: flex; gap: 24px; font-size: 13px; opacity: 0.9; }
@@ -56,7 +56,7 @@
     .main { padding: 0 32px 40px; max-width: 1600px; margin: 0 auto; }
 
     /* Section Title */
-    .section-title { font-size: 18px; font-weight: 700; margin: 32px 0 20px; display: flex; align-items: center; gap: 8px; }
+    .section-title { font-size: 18px; font-weight: 700; margin: 32px 0 20px; display: flex; align-items: center; gap: 8px; justify-content: center; }
     .section-title::before { content: ''; width: 4px; height: 20px; background: var(--primary); border-radius: 2px; }
 
     /* Three Columns Layout */
@@ -1234,58 +1234,211 @@
   </div>
 
   <!-- 面试流程 -->
-  <div class="section-title" style="display:flex;align-items:center;gap:12px">
-    面试进展（Final通过 + Offer环节）
-    <a href="pipeline.html" style="font-size:12px;color:var(--primary);font-weight:600;text-decoration:none;padding:3px 10px;border:1px solid var(--primary);border-radius:8px">查看完整漏斗 →</a>
+  <div class="section-title" style="display:flex;align-items:center;justify-content:space-between">
+    <span>面试漏斗 · Final+ 阶段追踪</span>
   </div>
-  <div class="interview-grid" style="grid-template-columns: repeat(4,1fr)">
-    <div class="interview-card" style="border-left:4px solid #166534">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-        <div class="interview-name" style="margin-bottom:0">刘一霖</div>
-        <span style="font-size:11px;background:#DCFCE7;color:#166534;padding:2px 8px;border-radius:10px;font-weight:600">✅ Offer</span>
+
+  <!-- ======== 面试漏斗（合并版） ======== -->
+  <style>
+    /* Pipeline styles - scoped */
+    .pipe-summary-bar { background:white;border-radius:12px;padding:16px 24px;box-shadow:var(--shadow);display:flex;gap:24px;flex-wrap:wrap;margin-bottom:16px;align-items:center }
+    .pipe-sum-item { text-align:center }
+    .pipe-sum-num { font-size:24px;font-weight:700;line-height:1 }
+    .pipe-sum-label { font-size:11px;color:var(--text-sub);margin-top:3px }
+    .pipe-sum-divider { width:1px;background:var(--border);align-self:stretch }
+    .pipe-legend { display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:14px;font-size:12px;color:var(--text-sub) }
+    .pipe-legend-dot { width:12px;height:12px;border-radius:3px;flex-shrink:0 }
+    .pipe-funnel { display:grid;grid-template-columns:repeat(3,1fr);gap:16px }
+    .pipe-col-header { padding:10px 14px;border-radius:10px 10px 0 0;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px }
+    .pipe-col-header .pipe-count { margin-left:auto;font-size:11px;opacity:0.8 }
+    .pipe-col-cards { background:#FAFAFA;border-radius:0 0 10px 10px;padding:10px;display:flex;flex-direction:column;gap:8px;min-height:60px }
+    .pipe-stage-offer { background:#DCFCE7;color:#166534 }
+    .pipe-stage-final { background:#E8F5E9;color:#2E7D32 }
+    .pipe-stage-yang { background:#FFFDE7;color:#F57F17 }
+    .pipe-stage-lost { background:#F5F5F5;color:#9E9E9E }
+    .pipe-cand { background:white;border-radius:10px;padding:12px;cursor:pointer;transition:all 0.2s;box-shadow:0 1px 4px rgba(0,0,0,0.06) }
+    .pipe-cand:hover { transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,0.12) }
+    .pipe-cand.offer { border-left:3px solid #166534 }
+    .pipe-cand.final { border-left:3px solid #4CAF50 }
+    .pipe-cand.yang { border-left:3px solid #FFC107 }
+    .pipe-cand.lost { border-left:3px solid #E0E0E0;opacity:0.7 }
+    .pipe-cand-name { font-size:14px;font-weight:700;margin-bottom:4px }
+    .pipe-cand-track { font-size:12px;color:var(--text-sub);margin-bottom:6px }
+    .pipe-chips { display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px }
+    .pipe-chip { font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600 }
+    .chip-func { background:#EFF6FF;color:#1D4ED8 }
+    .chip-375 { background:#DCFCE7;color:#166534 }
+    .chip-35 { background:#F0FDF4;color:#15803D }
+    .chip-date { background:#F5F5F5;color:#616161 }
+    .pipe-ta { font-size:11px;color:var(--text-sub);margin-bottom:6px }
+    .pipe-note { font-size:11px;color:#B45309;background:#FFF9C4;padding:3px 8px;border-radius:6px;margin-bottom:6px }
+    .pipe-link { display:inline-block;font-size:11px;color:var(--primary);padding:3px 10px;border:1px solid var(--primary);border-radius:6px;text-decoration:none;background:#F0FDF4;font-weight:600 }
+    .pipe-link:hover { background:var(--primary);color:white }
+    /* Modal */
+    #pipeModal { position:fixed;inset:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:10000 }
+    #pipeModal.open { display:flex }
+    .pipe-modal-box { background:white;border-radius:16px;padding:28px;max-width:460px;width:90%;max-height:80vh;overflow-y:auto;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.2) }
+    .pipe-modal-close { position:absolute;top:16px;right:16px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-sub) }
+    .pipe-modal-name { font-size:20px;font-weight:700;margin-bottom:4px }
+    .pipe-modal-track { font-size:13px;color:var(--text-sub);margin-bottom:10px }
+    .pipe-modal-row { display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px }
+    .pipe-modal-row:last-of-type { border:none }
+    .pipe-modal-label { color:var(--text-sub) }
+    .pipe-modal-actions { display:flex;gap:10px;margin-top:16px }
+    .pipe-modal-btn { flex:1;padding:10px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;text-align:center;text-decoration:none;border:none }
+    .pipe-modal-btn.primary { background:var(--primary);color:white }
+    .pipe-modal-btn.secondary { background:var(--border);color:var(--text) }
+    .pipe-tl { display:flex;gap:0;margin:12px 0 }
+    .pipe-tl-step { display:flex;flex-direction:column;align-items:center;flex:1 }
+    .pipe-tl-dot { width:16px;height:16px;border-radius:50%;border:2px solid #E5E7EB;background:white;flex-shrink:0;transition:all 0.2s }
+    .pipe-tl-dot.done { background:#166534;border-color:#166534 }
+    .pipe-tl-dot.current { background:#F59E0B;border-color:#F59E0B }
+    .pipe-tl-dot.fail { background:#EF4444;border-color:#EF4444 }
+    .pipe-tl-line { flex:1;height:2px;background:#E5E7EB;margin-top:7px }
+    .pipe-tl-line.done { background:#166534 }
+    .pipe-tl-label { font-size:10px;color:var(--text-sub);margin-top:4px;text-align:center }
+    .pipe-tl-label.done { color:#166534;font-weight:600 }
+    .pipe-tl-label.current { color:#F59E0B;font-weight:600 }
+  </style>
+
+  <!-- 汇总数字 -->
+  <div class="pipe-summary-bar">
+    <div class="pipe-sum-item"><div class="pipe-sum-num" style="color:#166534">2</div><div class="pipe-sum-label">✅ Offer 环节</div></div>
+    <div class="pipe-sum-divider"></div>
+    <div class="pipe-sum-item"><div class="pipe-sum-num" style="color:#4CAF50">2</div><div class="pipe-sum-label">🟢 Final 通过</div></div>
+    <div class="pipe-sum-divider"></div>
+    <div class="pipe-sum-item"><div class="pipe-sum-num" style="color:#F59E0B">5</div><div class="pipe-sum-label">🟡 待 Final</div></div>
+    <div class="pipe-sum-divider"></div>
+    <div class="pipe-sum-item"><div class="pipe-sum-num" style="color:var(--text-sub)">9</div><div class="pipe-sum-label">活跃在途合计</div></div>
+    <div class="pipe-sum-divider"></div>
+    <div class="pipe-sum-item"><div class="pipe-sum-num" style="color:#9E9E9E">3</div><div class="pipe-sum-label">❌ Final fail / Turn down</div></div>
+    <div style="margin-left:auto;font-size:12px;color:var(--text-sub)">点击卡片查看详情</div>
+  </div>
+
+  <!-- 图例 -->
+  <div class="pipe-legend">
+    <div style="display:flex;align-items:center;gap:6px"><div class="pipe-legend-dot" style="background:#166534"></div>深绿 = Offer 环节</div>
+    <div style="display:flex;align-items:center;gap:6px"><div class="pipe-legend-dot" style="background:#4CAF50"></div>浅绿 = Final 通过</div>
+    <div style="display:flex;align-items:center;gap:6px"><div class="pipe-legend-dot" style="background:#FFC107"></div>黄色 = 昂扬二面通过，待 Final</div>
+    <div style="display:flex;align-items:center;gap:6px"><div class="pipe-legend-dot" style="background:#E0E0E0"></div>灰色 = Final fail / Turn down</div>
+  </div>
+
+  <!-- 漏斗主体 -->
+  <div class="pipe-funnel">
+
+    <!-- Offer -->
+    <div>
+      <div class="pipe-col-header pipe-stage-offer">✅ Offer 环节 <span class="pipe-count">2人</span></div>
+      <div class="pipe-col-cards">
+        <div class="pipe-cand offer" onclick="pipeOpenModal('liuyilin')">
+          <div class="pipe-cand-name">刘一霖</div>
+          <div class="pipe-cand-track">🏷 宝洁汉高</div>
+          <div class="pipe-chips"><span class="pipe-chip chip-func">平台专家</span><span class="pipe-chip chip-375">3.75 ✓</span><span class="pipe-chip chip-date">3.12</span></div>
+          <div class="pipe-ta">TA: 欧然 | 面：若琳</div>
+          <a class="pipe-link" href="https://hr.xiaohongshu.com/applicant-view/2424053/6064531/resume" target="_blank" onclick="event.stopPropagation()">🔗 查简历</a>
+        </div>
+        <div class="pipe-cand offer" onclick="pipeOpenModal('hongfangwen')">
+          <div class="pipe-cand-name">洪方雯</div>
+          <div class="pipe-cand-track">🏷 日化（整体）</div>
+          <div class="pipe-chips"><span class="pipe-chip chip-func">策划</span><span class="pipe-chip chip-35">3.5+ ✓</span><span class="pipe-chip chip-date">3.17</span></div>
+          <div class="pipe-ta">TA: 蒂蒂 | 面：惊鸿</div>
+          <a class="pipe-link" href="https://hr.xiaohongshu.com/applicant-view/1852810/6111007" target="_blank" onclick="event.stopPropagation()">🔗 查简历</a>
+        </div>
       </div>
-      <div class="interview-position">宝洁汉高 · 平台专家</div>
-      <div class="interview-tags">
-        <span class="interview-tag" style="background:#DCFCE7;color:#166534">3.75 ✓</span>
-        <span class="interview-tag">TA: 欧然</span>
-      </div>
-      <a href="https://hr.xiaohongshu.com/applicant-view/2424053/6064531/resume" target="_blank" style="display:inline-block;margin-top:10px;font-size:11px;color:var(--primary);padding:4px 10px;border-radius:8px;border:1px solid var(--primary);background:#DCFCE7;font-weight:600;text-decoration:none">🔗 查看简历</a>
     </div>
-    <div class="interview-card" style="border-left:4px solid #166534">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-        <div class="interview-name" style="margin-bottom:0">洪方雯</div>
-        <span style="font-size:11px;background:#DCFCE7;color:#166534;padding:2px 8px;border-radius:10px;font-weight:600">✅ Offer</span>
+
+    <!-- Final通过 -->
+    <div>
+      <div class="pipe-col-header pipe-stage-final">🟢 Final 通过 <span class="pipe-count">2人</span></div>
+      <div class="pipe-col-cards">
+        <div class="pipe-cand final" onclick="pipeOpenModal('xinran')">
+          <div class="pipe-cand-name">王肖肖</div>
+          <div class="pipe-cand-track">🏷 Personal Care</div>
+          <div class="pipe-chips"><span class="pipe-chip chip-func">CBD</span><span class="pipe-chip chip-375">3.75 ✓</span><span class="pipe-chip chip-date">3.24</span></div>
+          <div class="pipe-ta">TA: 天雪 | 面：南舟</div>
+          <a class="pipe-link" href="https://hr.xiaohongshu.com/applicant-evaluation?talentId=2445326&interviewId=6229583&interviewScheduleId=690671" target="_blank" onclick="event.stopPropagation()">🔗 查简历</a>
+        </div>
+        <div class="pipe-cand yang" onclick="pipeOpenModal('yangke')">
+          <div class="pipe-cand-name">杨珂 <span style="font-size:10px;background:#FFF9C4;color:#F59E0B;padding:1px 6px;border-radius:8px;margin-left:4px">🟡 待Final</span></div>
+          <div class="pipe-cand-track">🏷 雅诗兰黛</div>
+          <div class="pipe-chips"><span class="pipe-chip chip-func">CBD</span><span class="pipe-chip chip-35">3.5+ ✓</span><span class="pipe-chip chip-date">3.25</span></div>
+          <div class="pipe-ta">TA: 贵音 | 面：吴邪</div>
+          <a class="pipe-link" href="https://hr.xiaohongshu.com/applicant-evaluation?talentId=699425&interviewId=6305303&interviewScheduleId=690632" target="_blank" onclick="event.stopPropagation()">🔗 查简历</a>
+        </div>
       </div>
-      <div class="interview-position">日化 · 策划（女护口腔）</div>
-      <div class="interview-tags">
-        <span class="interview-tag" style="background:#DCFCE7;color:#166534">3.5+ ✓</span>
-        <span class="interview-tag">TA: 蒂蒂</span>
-      </div>
-      <a href="https://hr.xiaohongshu.com/applicant-view/1852810/6111007" target="_blank" style="display:inline-block;margin-top:10px;font-size:11px;color:var(--primary);padding:4px 10px;border-radius:8px;border:1px solid var(--primary);background:#DCFCE7;font-weight:600;text-decoration:none">🔗 查看简历</a>
     </div>
-    <div class="interview-card" style="border-left:4px solid #4CAF50">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-        <div class="interview-name" style="margin-bottom:0">王肖肖</div>
-        <span style="font-size:11px;background:#E8F5E9;color:#4CAF50;padding:2px 8px;border-radius:10px;font-weight:600">🟢 Final通过</span>
+
+    <!-- 已淘汰 -->
+    <div>
+      <div class="pipe-col-header pipe-stage-lost">❌ 已淘汰 <span class="pipe-count">3人</span></div>
+      <div class="pipe-col-cards">
+        <div class="pipe-cand lost" onclick="pipeOpenModal('qinyalian')">
+          <div class="pipe-cand-name">覃雅莲</div>
+          <div class="pipe-cand-track">🏷 国货护肤集团</div>
+          <div class="pipe-chips"><span class="pipe-chip chip-func">CBD</span><span class="pipe-chip chip-375">3.75</span><span class="pipe-chip chip-date">3.4</span></div>
+          <div class="pipe-note">Final fail · 已给职级建议，放人才库</div>
+        </div>
+        <div class="pipe-cand lost" onclick="pipeOpenModal('tanshuile')">
+          <div class="pipe-cand-name">谭水乐</div>
+          <div class="pipe-cand-track">🏷 亚太新悦</div>
+          <div class="pipe-chips"><span class="pipe-chip chip-func">运营</span><span class="pipe-chip chip-375">3.75</span><span class="pipe-chip chip-date">3.9</span></div>
+          <div class="pipe-note">Final fail</div>
+        </div>
+        <div class="pipe-cand lost" onclick="pipeOpenModal('wangxinyi')">
+          <div class="pipe-cand-name">王欣怡</div>
+          <div class="pipe-cand-track">🏷 国际美护</div>
+          <div class="pipe-chips"><span class="pipe-chip chip-func">策划</span><span class="pipe-chip chip-35">3.5+</span><span class="pipe-chip chip-date">3.12</span></div>
+          <div class="pipe-note">Offer turn down</div>
+        </div>
       </div>
-      <div class="interview-position">个护 · CBD</div>
-      <div class="interview-tags">
-        <span class="interview-tag" style="background:#E8F5E9;color:#2E7D32">3.75 ✓</span>
-        <span class="interview-tag">TA: 欣然 | 面: 南舟</span>
-      </div>
-      <a href="https://hr.xiaohongshu.com/applicant-evaluation?talentId=2445326&interviewId=6229583&interviewScheduleId=690671" target="_blank" style="display:inline-block;margin-top:10px;font-size:11px;color:#4CAF50;padding:4px 10px;border-radius:8px;border:1px solid #4CAF50;background:#E8F5E9;font-weight:600;text-decoration:none">🔗 查看简历</a>
     </div>
-    <div class="interview-card" style="border-left:4px solid #F59E0B">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-        <div class="interview-name" style="margin-bottom:0">杨珂</div>
-        <span style="font-size:11px;background:#FFF9C4;color:#F59E0B;padding:2px 8px;border-radius:10px;font-weight:600">🟡 待Final</span>
+  </div>
+
+  <!-- 待Final展开区 -->
+  <div style="margin-top:12px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <span style="font-size:13px;font-weight:600;color:#F59E0B">🟡 待 Final · 5人（昂扬二面通过）</span>
+      <button onclick="this.closest('div').nextElementSibling.style.display = this.closest('div').nextElementSibling.style.display === 'none' ? 'grid' : 'none'; this.textContent = this.textContent.includes('展开') ? '收起' : '展开'" style="font-size:12px;padding:3px 10px;border-radius:8px;border:1px solid #F59E0B;color:#F59E0B;background:#FFFDE7;cursor:pointer;font-weight:600">展开</button>
+    </div>
+    <div style="display:none;grid-template-columns:repeat(5,1fr);gap:10px" id="yangFinalGrid">
+      <div class="pipe-cand yang" onclick="pipeOpenModal('dumingzhe')" style="border-left:3px solid #FFC107">
+        <div class="pipe-cand-name">杜明哲</div>
+        <div class="pipe-cand-track">🏷 欧美新悦</div>
+        <div class="pipe-chips"><span class="pipe-chip chip-func">策划→定位专家</span><span class="pipe-chip chip-375">3.75</span></div>
+        <div class="pipe-ta">TA: 瑶妮</div>
       </div>
-      <div class="interview-position">雅诗兰黛 · CBD</div>
-      <div class="interview-tags">
-        <span class="interview-tag" style="background:#DCFCE7;color:#166534">3.5+ 昂扬通过</span>
-        <span class="interview-tag">TA: 贵音 | 面: 吴邪</span>
+      <div class="pipe-cand yang" onclick="pipeOpenModal('hexiaojing')" style="border-left:3px solid #FFC107">
+        <div class="pipe-cand-name">何小婧</div>
+        <div class="pipe-cand-track">🏷 欧美新悦</div>
+        <div class="pipe-chips"><span class="pipe-chip chip-func">策划→定位专家</span><span class="pipe-chip chip-375">3.75</span></div>
+        <div class="pipe-ta">TA: 瑶妮</div>
       </div>
-      <a href="https://hr.xiaohongshu.com/applicant-evaluation?talentId=699425&interviewId=6305303&interviewScheduleId=690632" target="_blank" style="display:inline-block;margin-top:10px;font-size:11px;color:#4CAF50;padding:4px 10px;border-radius:8px;border:1px solid #4CAF50;background:#E8F5E9;font-weight:600;text-decoration:none">🔗 查看简历</a>
+      <div class="pipe-cand yang" onclick="pipeOpenModal('panglitong')" style="border-left:3px solid #FFC107">
+        <div class="pipe-cand-name">庞丽彤</div>
+        <div class="pipe-cand-track">🏷 欧美新悦</div>
+        <div class="pipe-chips"><span class="pipe-chip chip-func">运营</span><span class="pipe-chip chip-375">3.75</span></div>
+        <div class="pipe-ta">TA: 瑶妮</div>
+      </div>
+      <div class="pipe-cand yang" onclick="pipeOpenModal('zhubaiqi')" style="border-left:3px solid #FFC107">
+        <div class="pipe-cand-name">朱柏其</div>
+        <div class="pipe-cand-track">🏷 国货新悦</div>
+        <div class="pipe-chips"><span class="pipe-chip chip-func">运营</span><span class="pipe-chip chip-35">3.5+</span></div>
+        <div class="pipe-ta">TA: 天雪</div>
+      </div>
+      <div class="pipe-cand yang" onclick="pipeOpenModal('lidi')" style="border-left:3px solid #FFC107">
+        <div class="pipe-cand-name">李迪</div>
+        <div class="pipe-cand-track">🏷 国货美妆</div>
+        <div class="pipe-chips"><span class="pipe-chip chip-func">CBD</span><span class="pipe-chip chip-375">3.75</span></div>
+        <div class="pipe-ta">TA: 粥粥</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pipeline Modal -->
+  <div id="pipeModal" onclick="if(event.target===this)pipeCloseModal()">
+    <div class="pipe-modal-box">
+      <button class="pipe-modal-close" onclick="pipeCloseModal()">✕</button>
+      <div id="pipeModalContent"></div>
     </div>
   </div>
 
@@ -1539,6 +1692,55 @@ rosterData.groups.forEach(g => {
       </div>
     </div>`;
 });
+
+
+// ====== Pipeline Modal ======
+const pipeCandidates = {
+  liuyilin: { name:'刘一霖', track:'宝洁汉高', func:'平台专家', grade:'3.75', date:'3月12日', stage:'offer', stageLabel:'✅ Offer 环节', interviewer:'若琳', ta:'欧然', remark:'宝洁方向平台专家，375以上，已进offer环节', steps:['L1一面 ✓','昂扬二面 ✓','Final ✓','Offer ←当前'], url:'https://hr.xiaohongshu.com/applicant-view/2424053/6064531/resume' },
+  hongfangwen: { name:'洪方雯', track:'日化（整体）', func:'策划', grade:'3.5+', date:'3月17日', stage:'offer', stageLabel:'✅ Offer 环节', interviewer:'惊鸿', ta:'蒂蒂', remark:'日化赛道策划，3.5+通过，已进offer', steps:['L1一面 ✓','昂扬二面 ✓','Final ✓','Offer ←当前'], url:'https://hr.xiaohongshu.com/applicant-view/1852810/6111007' },
+  xinran: { name:'王肖肖', track:'Personal Care', func:'CBD', grade:'3.75', date:'3月24日', stage:'final', stageLabel:'🟢 Final 通过', interviewer:'南舟', ta:'天雪', remark:'PC赛道CBD，3.75，final已过，待推进offer', steps:['L1一面 ✓','昂扬二面 ✓','Final ✓','Offer ←待推进'], url:'https://hr.xiaohongshu.com/applicant-evaluation?talentId=2445326&interviewId=6229583&interviewScheduleId=690671' },
+  yangke: { name:'杨珂', track:'雅诗兰黛', func:'CBD', grade:'3.5+', date:'3月25日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'吴邪', ta:'贵音', remark:'雅诗兰黛CBD，昂扬3.5+通过，Final面试尚未通过', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'https://hr.xiaohongshu.com/applicant-evaluation?talentId=699425&interviewId=6305303&interviewScheduleId=690632' },
+  dumingzhe: { name:'杜明哲', track:'欧美新悦', func:'策划→定位专家', grade:'3.75', date:'3月19日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'箱得', ta:'瑶妮', remark:'昂扬3.75通过，建议定位专家方向，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'' },
+  hexiaojing: { name:'何小婧', track:'欧美新悦', func:'策划→定位专家', grade:'3.75', date:'3月19日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'箱得', ta:'瑶妮', remark:'昂扬3.75通过，建议定位专家方向，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'' },
+  panglitong: { name:'庞丽彤', track:'欧美新悦', func:'运营', grade:'3.75', date:'3月19日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'箱得', ta:'瑶妮', remark:'昂扬3.75通过，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'' },
+  zhubaiqi: { name:'朱柏其', track:'国货新悦', func:'运营', grade:'3.5+', date:'3月19日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'希莫', ta:'天雪', remark:'国货新悦运营，昂扬3.5+通过，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'' },
+  lidi: { name:'李迪', track:'国货美妆', func:'CBD', grade:'3.75', date:'3月25日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'昭燃', ta:'粥粥', remark:'国货美妆CBD，昂扬3.75通过，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'' },
+  qinyalian: { name:'覃雅莲', track:'国货护肤集团', func:'CBD', grade:'3.75', date:'3月4日', stage:'lost', stageLabel:'❌ Final Fail', interviewer:'嘉莉', ta:'瑶思', remark:'final淘汰；已给职级建议，放人才库持续跟进', steps:['L1一面 ✓','昂扬二面 ✓','Final ✗','Offer'], url:'' },
+  tanshuile: { name:'谭水乐', track:'亚太新悦', func:'运营', grade:'3.75', date:'3月9日', stage:'lost', stageLabel:'❌ Final Fail', interviewer:'古翱', ta:'夏娜', remark:'final淘汰', steps:['L1一面 ✓','昂扬二面 ✓','Final ✗','Offer'], url:'' },
+  wangxinyi: { name:'王欣怡', track:'国际美护', func:'策划', grade:'3.5+', date:'3月12日', stage:'lost', stageLabel:'❌ Offer Turn Down', interviewer:'古翱', ta:'粥粥', remark:'成功进offer但候选人拒绝', steps:['L1一面 ✓','昂扬二面 ✓','Final ✓','Offer ✗ turn down'], url:'' },
+};
+
+function pipeOpenModal(id) {
+  const c = pipeCandidates[id];
+  if (!c) return;
+  const stageColor = {offer:'#166534', final:'#4CAF50', yang:'#F59E0B', lost:'#9E9E9E'}[c.stage] || '#9E9E9E';
+  const stepHtml = c.steps.map((s,i) => {
+    const done = s.includes('✓'), fail = s.includes('✗'), cur = s.includes('←');
+    const dc = done?'done': fail?'fail': cur?'current':'';
+    const line = i<c.steps.length-1 ? `<div class="pipe-tl-line ${done?'done':''}"></div>` : '';
+    return `<div class="pipe-tl-step"><div class="pipe-tl-dot ${dc}"></div><div class="pipe-tl-label ${dc}">${s.replace(' ✓','').replace(' ✗','').replace(' ←当前','').replace(' ←待推进','').replace(' ←待安排','')}</div></div>${line}`;
+  }).join('');
+  document.getElementById('pipeModalContent').innerHTML = `
+    <div class="pipe-modal-name">${c.name}</div>
+    <div class="pipe-modal-track">${c.track}</div>
+    <span style="display:inline-block;font-size:12px;padding:3px 10px;border-radius:10px;background:${stageColor}22;color:${stageColor};font-weight:600;margin-bottom:14px">${c.stageLabel}</span>
+    <div class="pipe-modal-row"><span class="pipe-modal-label">职能</span><span>${c.func}</span></div>
+    <div class="pipe-modal-row"><span class="pipe-modal-label">面试评级</span><span>${c.grade}</span></div>
+    <div class="pipe-modal-row"><span class="pipe-modal-label">昂扬面试日期</span><span>${c.date}</span></div>
+    <div class="pipe-modal-row"><span class="pipe-modal-label">前序面试官</span><span>${c.interviewer}</span></div>
+    <div class="pipe-modal-row"><span class="pipe-modal-label">TA</span><span>${c.ta}</span></div>
+    <div style="font-size:12px;color:var(--text-sub);margin:12px 0 6px">面试进度</div>
+    <div class="pipe-tl">${stepHtml}</div>
+    <div style="margin-top:10px;padding:10px;background:#F5F6F8;border-radius:8px;font-size:12px;color:var(--text-sub)">${c.remark}</div>
+    <div class="pipe-modal-actions">
+      ${c.url ? `<a class="pipe-modal-btn primary" href="${c.url}" target="_blank">🔗 查看简历</a>` : ''}
+      <button class="pipe-modal-btn secondary" onclick="pipeCloseModal()">关闭</button>
+    </div>
+  `;
+  document.getElementById('pipeModal').classList.add('open');
+}
+function pipeCloseModal() { document.getElementById('pipeModal').classList.remove('open'); }
+document.addEventListener('keydown', e => { if(e.key==='Escape') pipeCloseModal(); });
 
 function toggleTrack(card) {
   card.classList.toggle('expanded');
