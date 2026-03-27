@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="refresh" content="3600">
   <title>行业一部 - 组织管理看板看板</title>
   <style>
     :root {
@@ -38,21 +39,10 @@
     .header-info { display: flex; gap: 24px; font-size: 13px; opacity: 0.9; }
 
     /* Global Stats */
-    .stats-bar { background: white; margin: -20px 32px 24px; padding: 20px 24px; border-radius: 16px; box-shadow: var(--shadow); display: flex; gap: 16px; overflow-x: auto; position: relative; z-index: 10; }
 
-    .stat-tooltip { position:fixed;display:none;background:rgba(15,23,42,0.93);color:white;padding:12px 16px;border-radius:12px;font-size:12px;pointer-events:none;z-index:9998;min-width:200px;max-width:300px;box-shadow:0 8px 24px rgba(0,0,0,0.3);line-height:1.8 }
-    .stat-card { flex: 1; min-width: 120px; text-align: center; padding: 16px 12px; border-radius: 12px; background: var(--gray-light); cursor: pointer; transition: all 0.2s; border: 2px solid transparent; }
-    .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
-    .stat-card.primary { background: var(--primary-light); border-color: var(--primary); }
-    .stat-card.green { background: var(--green-light); }
-    .stat-card.orange { background: var(--orange-light); }
-    .stat-card.blue { background: var(--blue-light); }
-    .stat-value { font-size: 28px; font-weight: 700; color: var(--text); line-height: 1; }
     .stat-value.primary { color: var(--primary); }
     .stat-value.green { color: var(--green); }
     .stat-value.orange { color: var(--orange); }
-    .stat-label { font-size: 12px; color: var(--text-sub); margin-top: 6px; font-weight: 500; }
-    .stat-sub { font-size: 11px; color: var(--gray); margin-top: 2px; }
 
     /* Main Content */
     .main { padding: 0 32px 40px; max-width: 1600px; margin: 0 auto; }
@@ -201,7 +191,7 @@
     </div>
     <div style="display:flex;align-items:center;gap:12px">
       <div class="header-meta">数据更新：2026-03-26</div>
-      <a href="pipeline.html" style="background:rgba(255,255,255,0.25);color:white;text-decoration:none;padding:4px 14px;border-radius:16px;font-size:13px;font-weight:600;border:1px solid rgba(255,255,255,0.4)">🎯 面试漏斗看板 →</a>
+
     </div>
   </div>
   <div class="header-info">
@@ -211,50 +201,7 @@
     <span>👥 12个赛道 · 26个小组</span>
   </div>
 </div>
-<div id="statTooltip" class="stat-tooltip"></div>
 
-<!-- Stats Bar -->
-<div class="stats-bar">
-  <div class="stat-card primary" onclick="showModal('onboard')" data-tip="onboard">
-    <div class="stat-value primary">163</div>
-    <div class="stat-label">在职人数</div>
-    <div class="stat-sub">含L1</div>
-  </div>
-  <div class="stat-card" onclick="showModal('hc')" data-tip="hc">
-    <div class="stat-value">164</div>
-    <div class="stat-label">总HC</div>
-    <div class="stat-sub">预计165</div>
-  </div>
-  <div class="stat-card green" onclick="showModal('join')" data-tip="join">
-    <div class="stat-value green">3</div>
-    <div class="stat-label">待入职</div>
-    <div class="stat-sub">近期到岗</div>
-  </div>
-  <div class="stat-card orange" onclick="showModal('leave')" data-tip="leave">
-    <div class="stat-value orange">2</div>
-    <div class="stat-label">待离职</div>
-    <div class="stat-sub">需交接</div>
-  </div>
-  <div class="stat-card" onclick="showModal('young')" data-tip="young">
-    <div class="stat-value green">40<span style="font-size:14px">%</span></div>
-    <div class="stat-label">年轻人才比例</div>
-    <div class="stat-sub">≤28岁占比</div>
-  </div>
-  <div class="stat-card" onclick="showModal('efficiency')" data-tip="efficiency">
-    <div class="stat-value orange">9.1<span style="font-size:14px">h</span></div>
-    <div class="stat-label">3月人效</div>
-    <div class="stat-sub">低于均值</div>
-  </div>
-  <div class="stat-card" onclick="showModal('age')" data-tip="age">
-    <div class="stat-value green">29.6<span style="font-size:14px">岁</span></div>
-    <div class="stat-label">平均年龄</div>
-  </div>
-  <div class="stat-card" onclick="showModal('tenure')" data-tip="tenure">
-    <div class="stat-value">1.7<span style="font-size:14px">年</span></div>
-    <div class="stat-label">平均司龄</div>
-    <div class="stat-sub">花名册实时数据</div>
-  </div>
-</div>
 
 <!-- Main Content -->
 <div class="main">
@@ -346,9 +293,8 @@
   <!-- tooltip -->
   <div id="chartTooltip" style="position:fixed;display:none;background:rgba(15,23,42,0.92);color:white;padding:10px 14px;border-radius:10px;font-size:12px;pointer-events:none;z-index:9999;min-width:160px;box-shadow:0 8px 24px rgba(0,0,0,0.3);line-height:1.8"></div>
 
-  <div class="section-title" style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center">
-    <span></span>
-    <span style="text-align:center">12大赛道 · 数据与策略</span>
+  <div class="section-title" style="display:flex;align-items:center;justify-content:space-between">
+    <span>12大赛道 · 数据与策略</span>
     <div style="display:flex;gap:8px;justify-content:flex-end">
       <button onclick="expandAll()" style="font-size:12px;padding:4px 12px;border-radius:8px;border:1px solid var(--primary);color:var(--primary);background:var(--primary-light);cursor:pointer;font-weight:600">全部展开</button>
       <button onclick="collapseAll()" style="font-size:12px;padding:4px 12px;border-radius:8px;border:1px solid var(--border);color:var(--text-sub);background:white;cursor:pointer;font-weight:600">全部收起</button>
@@ -1258,9 +1204,7 @@
   </div>
 
   <!-- 面试流程 -->
-  <div class="section-title" style="text-align:center;justify-content:center">
-    面试漏斗 · Final+ 阶段追踪
-  </div>
+  <div class="section-title">面试漏斗 · Final+ 阶段追踪</div>
 
   <!-- ======== 面试漏斗（合并版） ======== -->
   <style>
@@ -1279,7 +1223,6 @@
     .pipe-stage-offer { background:#DCFCE7;color:#166534 }
     .pipe-stage-final { background:#E8F5E9;color:#2E7D32 }
     .pipe-stage-yang { background:#FFFDE7;color:#F57F17 }
-    .pipe-stage-lost { background:#F5F5F5;color:#9E9E9E }
     .pipe-cand { background:white;border-radius:10px;padding:12px;cursor:pointer;transition:all 0.2s;box-shadow:0 1px 4px rgba(0,0,0,0.06) }
     .pipe-cand:hover { transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,0.12) }
     .pipe-cand.offer { border-left:3px solid #166534 }
@@ -1331,11 +1274,10 @@
     <div class="pipe-sum-divider"></div>
     <div class="pipe-sum-item"><div class="pipe-sum-num" style="color:#4CAF50">2</div><div class="pipe-sum-label">🟢 Final 通过</div></div>
     <div class="pipe-sum-divider"></div>
-    <div class="pipe-sum-item"><div class="pipe-sum-num" style="color:#F59E0B">5</div><div class="pipe-sum-label">🟡 待 Final</div></div>
+    <div class="pipe-sum-item"><div class="pipe-sum-num" style="color:#F59E0B">6</div><div class="pipe-sum-label">🟡 待 Final</div></div>
     <div class="pipe-sum-divider"></div>
-    <div class="pipe-sum-item"><div class="pipe-sum-num" style="color:var(--text-sub)">9</div><div class="pipe-sum-label">活跃在途合计</div></div>
-    <div class="pipe-sum-divider"></div>
-    <div class="pipe-sum-item"><div class="pipe-sum-num" style="color:#9E9E9E">3</div><div class="pipe-sum-label">❌ Final fail / Turn down</div></div>
+    <div class="pipe-sum-item"><div class="pipe-sum-num" style="color:var(--text-sub)">10</div><div class="pipe-sum-label">活跃在途合计</div></div>
+
     <div style="margin-left:auto;font-size:12px;color:var(--text-sub)">点击卡片查看详情</div>
   </div>
 
@@ -1344,7 +1286,6 @@
     <div style="display:flex;align-items:center;gap:6px"><div class="pipe-legend-dot" style="background:#166534"></div>深绿 = Offer 环节</div>
     <div style="display:flex;align-items:center;gap:6px"><div class="pipe-legend-dot" style="background:#4CAF50"></div>浅绿 = Final 通过</div>
     <div style="display:flex;align-items:center;gap:6px"><div class="pipe-legend-dot" style="background:#FFC107"></div>黄色 = 昂扬二面通过，待 Final</div>
-    <div style="display:flex;align-items:center;gap:6px"><div class="pipe-legend-dot" style="background:#E0E0E0"></div>灰色 = Final fail / Turn down</div>
   </div>
 
   <!-- 漏斗主体 -->
@@ -1386,49 +1327,50 @@
       </div>
     </div>
 
-    <!-- 已淘汰（仅计数，不展示明细） -->
-    <div>
-      <div class="pipe-col-header pipe-stage-lost">❌ Final fail / Turn down <span class="pipe-count">3人</span></div>
-      <div style="padding:16px;color:#9CA3AF;font-size:12px;text-align:center">不展示明细</div>
-    </div>
+
   </div>
 
   <!-- 待Final展开区 -->
   <div style="margin-top:12px">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
       <span style="font-size:13px;font-weight:600;color:#F59E0B">🟡 待 Final · 6人（昂扬二面通过）</span>
-      <button onclick="this.closest('div').nextElementSibling.style.display = this.closest('div').nextElementSibling.style.display === 'none' ? 'grid' : 'none'; this.textContent = this.textContent.includes('展开') ? '收起' : '展开'" style="font-size:12px;padding:3px 10px;border-radius:8px;border:1px solid #F59E0B;color:#F59E0B;background:#FFFDE7;cursor:pointer;font-weight:600">展开</button>
+
     </div>
-    <div style="display:none;grid-template-columns:repeat(6,1fr);gap:10px" id="yangFinalGrid">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px" id="yangFinalGrid">
       <div class="pipe-cand yang" onclick="pipeOpenModal('dumingzhe')" style="border-left:3px solid #FFC107">
         <div class="pipe-cand-name">杜明哲</div>
         <div class="pipe-cand-track">🏷 欧美新悦</div>
         <div class="pipe-chips"><span class="pipe-chip chip-func">策划→定位专家</span><span class="pipe-chip chip-375">3.75</span></div>
-        <div class="pipe-ta">TA: 瑞妮</div>
+        <div class="pipe-ta">TA: 瑞妮
+        <a class="pipe-link" href="https://hr.xiaohongshu.com/position-manage/social" target="_blank" onclick="event.stopPropagation()">🔗 简历</a></div>
       </div>
       <div class="pipe-cand yang" onclick="pipeOpenModal('hexiaojing')" style="border-left:3px solid #FFC107">
         <div class="pipe-cand-name">何小婧</div>
         <div class="pipe-cand-track">🏷 欧美新悦</div>
         <div class="pipe-chips"><span class="pipe-chip chip-func">策划→定位专家</span><span class="pipe-chip chip-375">3.75</span></div>
-        <div class="pipe-ta">TA: 瑞妮</div>
+        <div class="pipe-ta">TA: 瑞妮
+        <a class="pipe-link" href="https://hr.xiaohongshu.com/position-manage/social" target="_blank" onclick="event.stopPropagation()">🔗 简历</a></div>
       </div>
       <div class="pipe-cand yang" onclick="pipeOpenModal('panglitong')" style="border-left:3px solid #FFC107">
         <div class="pipe-cand-name">庞丽彤</div>
         <div class="pipe-cand-track">🏷 欧美新悦</div>
         <div class="pipe-chips"><span class="pipe-chip chip-func">运营</span><span class="pipe-chip chip-375">3.75</span></div>
-        <div class="pipe-ta">TA: 瑞妮</div>
+        <div class="pipe-ta">TA: 瑞妮
+        <a class="pipe-link" href="https://hr.xiaohongshu.com/position-manage/social" target="_blank" onclick="event.stopPropagation()">🔗 简历</a></div>
       </div>
       <div class="pipe-cand yang" onclick="pipeOpenModal('zhubaiqi')" style="border-left:3px solid #FFC107">
         <div class="pipe-cand-name">朱柏其</div>
         <div class="pipe-cand-track">🏷 国货新悦</div>
         <div class="pipe-chips"><span class="pipe-chip chip-func">运营</span><span class="pipe-chip chip-35">3.5+</span></div>
-        <div class="pipe-ta">TA: 天雪</div>
+        <div class="pipe-ta">TA: 天雪
+        <a class="pipe-link" href="https://hr.xiaohongshu.com/position-manage/social" target="_blank" onclick="event.stopPropagation()">🔗 简历</a></div>
       </div>
       <div class="pipe-cand yang" onclick="pipeOpenModal('lidi')" style="border-left:3px solid #FFC107">
         <div class="pipe-cand-name">李迪</div>
         <div class="pipe-cand-track">🏷 国货美妆</div>
         <div class="pipe-chips"><span class="pipe-chip chip-func">CBD</span><span class="pipe-chip chip-375">3.75</span></div>
-        <div class="pipe-ta">TA: 粥粥</div>
+        <div class="pipe-ta">TA: 粥粥
+        <a class="pipe-link" href="https://hr.xiaohongshu.com/position-manage/social" target="_blank" onclick="event.stopPropagation()">🔗 简历</a></div>
       </div>
       <div class="pipe-cand yang" onclick="pipeOpenModal('yangke')" style="border-left:3px solid #FFC107">
         <div class="pipe-cand-name">杨珂</div>
