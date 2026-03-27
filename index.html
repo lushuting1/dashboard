@@ -206,7 +206,35 @@
 <!-- Main Content -->
 <div class="main">
 
-  <!-- 行业一部整体 HR Todo（精简版） -->
+  <!-- 顶部4大状态卡片 -->
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:20px 32px 0;position:relative;z-index:10">
+  <!-- 在职人数 -->
+  <div onclick="showModal('onboard')" style="background:white;border-radius:14px;padding:18px 20px;box-shadow:0 2px 12px rgba(0,0,0,0.08);cursor:pointer;transition:all 0.2s;border-top:4px solid #166534" onmouseenter="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.14)'" onmouseleave="this.style.transform='';this.style.boxShadow='0 2px 12px rgba(0,0,0,0.08)'">
+    <div style="font-size:11px;color:#9CA3AF;margin-bottom:6px">在职人数</div>
+    <div style="font-size:28px;font-weight:800;color:#166534;line-height:1">163</div>
+    <div style="font-size:11px;color:#6B7280;margin-top:6px">含L1 · 点击看明细</div>
+  </div>
+  <!-- 总HC -->
+  <div onclick="showModal('hc')" style="background:white;border-radius:14px;padding:18px 20px;box-shadow:0 2px 12px rgba(0,0,0,0.08);cursor:pointer;transition:all 0.2s;border-top:4px solid #6366F1" onmouseenter="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.14)'" onmouseleave="this.style.transform='';this.style.boxShadow='0 2px 12px rgba(0,0,0,0.08)'">
+    <div style="font-size:11px;color:#9CA3AF;margin-bottom:6px">总HC编制</div>
+    <div style="font-size:28px;font-weight:800;color:#6366F1;line-height:1">164</div>
+    <div style="font-size:11px;color:#6B7280;margin-top:6px">缺7 / 超23 · 点击看明细</div>
+  </div>
+  <!-- 待入职 -->
+  <div onclick="showModal('join')" style="background:white;border-radius:14px;padding:18px 20px;box-shadow:0 2px 12px rgba(0,0,0,0.08);cursor:pointer;transition:all 0.2s;border-top:4px solid #10B981" onmouseenter="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.14)'" onmouseleave="this.style.transform='';this.style.boxShadow='0 2px 12px rgba(0,0,0,0.08)'">
+    <div style="font-size:11px;color:#9CA3AF;margin-bottom:6px">待入职</div>
+    <div style="font-size:28px;font-weight:800;color:#10B981;line-height:1">3</div>
+    <div style="font-size:11px;color:#6B7280;margin-top:6px">3.30/4.08 · 点击看名单</div>
+  </div>
+  <!-- 待离职 -->
+  <div onclick="showModal('leave')" style="background:white;border-radius:14px;padding:18px 20px;box-shadow:0 2px 12px rgba(0,0,0,0.08);cursor:pointer;transition:all 0.2s;border-top:4px solid #F59E0B" onmouseenter="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.14)'" onmouseleave="this.style.transform='';this.style.boxShadow='0 2px 12px rgba(0,0,0,0.08)'">
+    <div style="font-size:11px;color:#9CA3AF;margin-bottom:6px">待离职</div>
+    <div style="font-size:28px;font-weight:800;color:#F59E0B;line-height:1">2</div>
+    <div style="font-size:11px;color:#6B7280;margin-top:6px">4.07/4.13 · 点击看名单</div>
+  </div>
+</div>
+
+<!-- 行业一部整体 HR Todo（精简版） -->
   <div style="background:#F8FAFC;border-left:3px solid #166534;border-radius:0 8px 8px 0;padding:8px 14px;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap">
     <span style="font-size:12px;font-weight:700;color:#166534;white-space:nowrap;padding-top:1px">📌 HR Todo</span>
     <span style="font-size:12px;color:var(--text);line-height:1.6">Smart Day：① L1凝聚力↑ ② 补运营型专家 ③ 超编赛道（雅诗/国货护肤/国货新悦）缩编 ④ 高增赛道（日化/彩香）扩编 ⑤ HIPO IC横调激活</span>
@@ -294,7 +322,7 @@
   <div id="chartTooltip" style="position:fixed;display:none;background:rgba(15,23,42,0.92);color:white;padding:10px 14px;border-radius:10px;font-size:12px;pointer-events:none;z-index:9999;min-width:160px;box-shadow:0 8px 24px rgba(0,0,0,0.3);line-height:1.8"></div>
 
   <div class="section-title" style="display:flex;align-items:center;justify-content:space-between">
-    <span>12大赛道 · 数据与策略</span>
+    <span>赛道策略</span>
     <div style="display:flex;gap:8px;justify-content:flex-end">
       <button onclick="expandAll()" style="font-size:12px;padding:4px 12px;border-radius:8px;border:1px solid var(--primary);color:var(--primary);background:var(--primary-light);cursor:pointer;font-weight:600">全部展开</button>
       <button onclick="collapseAll()" style="font-size:12px;padding:4px 12px;border-radius:8px;border:1px solid var(--border);color:var(--text-sub);background:white;cursor:pointer;font-weight:600">全部收起</button>
@@ -1342,35 +1370,35 @@
         <div class="pipe-cand-track">🏷 欧美新悦</div>
         <div class="pipe-chips"><span class="pipe-chip chip-func">策划→定位专家</span><span class="pipe-chip chip-375">3.75</span></div>
         <div class="pipe-ta">TA: 瑞妮
-        <a class="pipe-link" href="https://hr.xiaohongshu.com/position-manage/social" target="_blank" onclick="event.stopPropagation()">🔗 简历</a></div>
+        <a class="pipe-link" href="https://hr.xiaohongshu.com/applicant-view/1076989/6164749/resume" target="_blank" onclick="event.stopPropagation()">🔗 简历</a></div>
       </div>
       <div class="pipe-cand yang" onclick="pipeOpenModal('hexiaojing')" style="border-left:3px solid #FFC107">
         <div class="pipe-cand-name">何小婧</div>
         <div class="pipe-cand-track">🏷 欧美新悦</div>
         <div class="pipe-chips"><span class="pipe-chip chip-func">策划→定位专家</span><span class="pipe-chip chip-375">3.75</span></div>
         <div class="pipe-ta">TA: 瑞妮
-        <a class="pipe-link" href="https://hr.xiaohongshu.com/position-manage/social" target="_blank" onclick="event.stopPropagation()">🔗 简历</a></div>
+        <a class="pipe-link" href="https://hr.xiaohongshu.com/next/applicant-manage/social" target="_blank" onclick="event.stopPropagation()">🔗 简历</a></div>
       </div>
       <div class="pipe-cand yang" onclick="pipeOpenModal('panglitong')" style="border-left:3px solid #FFC107">
         <div class="pipe-cand-name">庞丽彤</div>
         <div class="pipe-cand-track">🏷 欧美新悦</div>
         <div class="pipe-chips"><span class="pipe-chip chip-func">运营</span><span class="pipe-chip chip-375">3.75</span></div>
         <div class="pipe-ta">TA: 瑞妮
-        <a class="pipe-link" href="https://hr.xiaohongshu.com/position-manage/social" target="_blank" onclick="event.stopPropagation()">🔗 简历</a></div>
+        <a class="pipe-link" href="https://hr.xiaohongshu.com/next/applicant-manage/social" target="_blank" onclick="event.stopPropagation()">🔗 简历</a></div>
       </div>
       <div class="pipe-cand yang" onclick="pipeOpenModal('zhubaiqi')" style="border-left:3px solid #FFC107">
         <div class="pipe-cand-name">朱柏其</div>
         <div class="pipe-cand-track">🏷 国货新悦</div>
         <div class="pipe-chips"><span class="pipe-chip chip-func">运营</span><span class="pipe-chip chip-35">3.5+</span></div>
         <div class="pipe-ta">TA: 天雪
-        <a class="pipe-link" href="https://hr.xiaohongshu.com/position-manage/social" target="_blank" onclick="event.stopPropagation()">🔗 简历</a></div>
+        <a class="pipe-link" href="https://hr.xiaohongshu.com/next/applicant-manage/social" target="_blank" onclick="event.stopPropagation()">🔗 简历</a></div>
       </div>
       <div class="pipe-cand yang" onclick="pipeOpenModal('lidi')" style="border-left:3px solid #FFC107">
         <div class="pipe-cand-name">李迪</div>
         <div class="pipe-cand-track">🏷 国货美妆</div>
         <div class="pipe-chips"><span class="pipe-chip chip-func">CBD</span><span class="pipe-chip chip-375">3.75</span></div>
         <div class="pipe-ta">TA: 粥粥
-        <a class="pipe-link" href="https://hr.xiaohongshu.com/position-manage/social" target="_blank" onclick="event.stopPropagation()">🔗 简历</a></div>
+        <a class="pipe-link" href="https://hr.xiaohongshu.com/applicant-view/1572795/6289683/resume" target="_blank" onclick="event.stopPropagation()">🔗 简历</a></div>
       </div>
       <div class="pipe-cand yang" onclick="pipeOpenModal('yangke')" style="border-left:3px solid #FFC107">
         <div class="pipe-cand-name">杨珂</div>
@@ -1648,11 +1676,11 @@ const pipeCandidates = {
   hongfangwen: { name:'洪方雯', track:'日化（整体）', func:'策划', grade:'3.5+', date:'3月17日', stage:'offer', stageLabel:'✅ Offer 环节', interviewer:'惊鸿', ta:'蒂蒂', remark:'日化赛道策划，3.5+通过，已进offer', steps:['L1一面 ✓','昂扬二面 ✓','Final ✓','Offer ←当前'], url:'https://hr.xiaohongshu.com/applicant-view/1852810/6111007' },
   xinran: { name:'王肖肖', track:'Personal Care', func:'CBD', grade:'3.75', date:'3月24日', stage:'final', stageLabel:'🟢 Final 通过', interviewer:'南舟', ta:'天雪', remark:'PC赛道CBD，3.75，final已过，待推进offer', steps:['L1一面 ✓','昂扬二面 ✓','Final ✓','Offer ←待推进'], url:'https://hr.xiaohongshu.com/applicant-evaluation?talentId=2445326&interviewId=6229583&interviewScheduleId=690671' },
   yangke: { name:'杨珂', track:'雅诗兰黛', func:'CBD', grade:'3.5+', date:'3月25日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'吴邪', ta:'贵音', remark:'雅诗兰黛CBD，昂扬3.5+通过，Final面试尚未通过', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'https://hr.xiaohongshu.com/applicant-evaluation?talentId=699425&interviewId=6305303&interviewScheduleId=690632' },
-  dumingzhe: { name:'杜明哲', track:'欧美新悦', func:'策划→定位专家', grade:'3.75', date:'3月19日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'箱得', ta:'瑞妮', remark:'昂扬3.75通过，建议定位专家方向，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'' },
+  dumingzhe: { name:'杜明哲', track:'欧美新悦', func:'策划→定位专家', grade:'3.75', date:'3月19日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'箱得', ta:'瑞妮', remark:'昂扬3.75通过，建议定位专家方向，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'https://hr.xiaohongshu.com/applicant-view/1076989/6164749/resume' },
   hexiaojing: { name:'何小婧', track:'欧美新悦', func:'策划→定位专家', grade:'3.75', date:'3月19日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'箱得', ta:'瑞妮', remark:'昂扬3.75通过，建议定位专家方向，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'' },
   panglitong: { name:'庞丽彤', track:'欧美新悦', func:'运营', grade:'3.75', date:'3月19日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'箱得', ta:'瑞妮', remark:'昂扬3.75通过，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'' },
   zhubaiqi: { name:'朱柏其', track:'国货新悦', func:'运营', grade:'3.5+', date:'3月19日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'希莫', ta:'天雪', remark:'国货新悦运营，昂扬3.5+通过，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'' },
-  lidi: { name:'李迪', track:'国货美妆', func:'CBD', grade:'3.75', date:'3月25日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'昭燃', ta:'粥粥', remark:'国货美妆CBD，昂扬3.75通过，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'' },
+  lidi: { name:'李迪', track:'国货美妆', func:'CBD', grade:'3.75', date:'3月25日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'昭燃', ta:'粥粥', remark:'国货美妆CBD，昂扬3.75通过，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'https://hr.xiaohongshu.com/applicant-view/1572795/6289683/resume' },
   qinyalian: { name:'覃雅莲', track:'国货护肤集团', func:'CBD', grade:'3.75', date:'3月4日', stage:'lost', stageLabel:'❌ Final Fail', interviewer:'嘉莉', ta:'瑶思', remark:'final淘汰；已给职级建议，放人才库持续跟进', steps:['L1一面 ✓','昂扬二面 ✓','Final ✗','Offer'], url:'' },
   tanshuile: { name:'谭水乐', track:'亚太新悦', func:'运营', grade:'3.75', date:'3月9日', stage:'lost', stageLabel:'❌ Final Fail', interviewer:'古翱', ta:'夏娜', remark:'final淘汰', steps:['L1一面 ✓','昂扬二面 ✓','Final ✗','Offer'], url:'' },
   wangxinyi: { name:'王欣怡', track:'国际美护', func:'策划', grade:'3.5+', date:'3月12日', stage:'lost', stageLabel:'❌ Offer Turn Down', interviewer:'古翱', ta:'粥粥', remark:'成功进offer但候选人拒绝', steps:['L1一面 ✓','昂扬二面 ✓','Final ✓','Offer ✗ turn down'], url:'' },
