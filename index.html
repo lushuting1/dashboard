@@ -270,30 +270,50 @@
   <!-- ======== 可视化图表区 ======== -->
   <div class="section-title" style="display:flex;align-items:center;gap:12px">
     📊 人才结构 · 各赛道对比
-    <span style="font-size:11px;color:var(--text-sub);font-weight:400">环比 3.18→3.26 · 花名册实时数据</span>
+    <span style="font-size:11px;color:var(--text-sub);font-weight:400">花名册切片计算 · 环比1月 + 同比1年</span>
   </div>
 
-  <!-- 整体环比摘要 -->
-  <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
-    <div style="background:white;border-radius:10px;padding:12px 16px;box-shadow:var(--shadow);flex:1;min-width:160px;border-top:3px solid #EF4444">
-      <div style="font-size:11px;color:var(--text-sub);margin-bottom:4px">平均年龄 · 环比</div>
-      <div style="font-size:20px;font-weight:700;color:var(--text)">29.6<span style="font-size:13px">岁</span></div>
-      <div style="font-size:12px;color:#EF4444;font-weight:600">▲ +1.3岁 vs 3.18</div>
+  <!-- 整体对比摘要（环比1个月 + 同比1年） -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px">
+    <div style="background:white;border-radius:10px;padding:12px 16px;box-shadow:var(--shadow);border-top:3px solid #6366F1">
+      <div style="font-size:11px;color:var(--text-sub);margin-bottom:4px">在职人数</div>
+      <div style="font-size:22px;font-weight:700;color:var(--text)">163<span style="font-size:13px">人</span></div>
+      <div style="font-size:11px;margin-top:4px">
+        <span style="color:#10B981;font-weight:600">环比 ▲+5人</span>
+        <span style="color:#9CA3AF;margin:0 4px">·</span>
+        <span style="color:#10B981;font-weight:600">同比 ▲+41人</span>
+      </div>
+      <div style="font-size:10px;color:#9CA3AF;margin-top:2px">vs 26.2.26: 158人 · vs 25.2.28: 122人</div>
     </div>
-    <div style="background:white;border-radius:10px;padding:12px 16px;box-shadow:var(--shadow);flex:1;min-width:160px;border-top:3px solid #10B981">
-      <div style="font-size:11px;color:var(--text-sub);margin-bottom:4px">平均司龄 · 环比</div>
-      <div style="font-size:20px;font-weight:700;color:var(--text)">1.65<span style="font-size:13px">年</span></div>
-      <div style="font-size:12px;color:#EF4444;font-weight:600">▲ +0.26yr vs 3.18</div>
+    <div style="background:white;border-radius:10px;padding:12px 16px;box-shadow:var(--shadow);border-top:3px solid #EF4444">
+      <div style="font-size:11px;color:var(--text-sub);margin-bottom:4px">平均年龄</div>
+      <div style="font-size:22px;font-weight:700;color:var(--text)">29.6<span style="font-size:13px">岁</span></div>
+      <div style="font-size:11px;margin-top:4px">
+        <span style="color:#10B981;font-weight:600">环比 ▼-0.1岁</span>
+        <span style="color:#9CA3AF;margin:0 4px">·</span>
+        <span style="color:#10B981;font-weight:600">同比 ▼-0.5岁</span>
+      </div>
+      <div style="font-size:10px;color:#9CA3AF;margin-top:2px">vs 26.2.26: 29.7岁 · vs 25.2.28: 30.1岁</div>
     </div>
-    <div style="background:white;border-radius:10px;padding:12px 16px;box-shadow:var(--shadow);flex:1;min-width:160px;border-top:3px solid #F59E0B">
-      <div style="font-size:11px;color:var(--text-sub);margin-bottom:4px">≤28岁占比 · 环比</div>
-      <div style="font-size:20px;font-weight:700;color:var(--text)">39.9<span style="font-size:13px">%</span></div>
-      <div style="font-size:12px;color:#10B981;font-weight:600">▼ -10.8% vs 3.18（50.7%）</div>
+    <div style="background:white;border-radius:10px;padding:12px 16px;box-shadow:var(--shadow);border-top:3px solid #F59E0B">
+      <div style="font-size:11px;color:var(--text-sub);margin-bottom:4px">≤28岁占比</div>
+      <div style="font-size:22px;font-weight:700;color:var(--text)">39.9<span style="font-size:13px">%</span></div>
+      <div style="font-size:11px;margin-top:4px">
+        <span style="color:#10B981;font-weight:600">环比 ▲+1.9%</span>
+        <span style="color:#9CA3AF;margin:0 4px">·</span>
+        <span style="color:#10B981;font-weight:600">同比 ▲+11.2%</span>
+      </div>
+      <div style="font-size:10px;color:#9CA3AF;margin-top:2px">vs 26.2.26: 38.0% · vs 25.2.28: 28.7%</div>
     </div>
-    <div style="background:white;border-radius:10px;padding:12px 16px;box-shadow:var(--shadow);flex:1;min-width:160px;border-top:3px solid #6366F1">
-      <div style="font-size:11px;color:var(--text-sub);margin-bottom:4px">在职人数 · 环比</div>
-      <div style="font-size:20px;font-weight:700;color:var(--text)">163<span style="font-size:13px">人</span></div>
-      <div style="font-size:12px;color:#10B981;font-weight:600">▼ -38人 vs 3.18（201人）</div>
+    <div style="background:white;border-radius:10px;padding:12px 16px;box-shadow:var(--shadow);border-top:3px solid #10B981">
+      <div style="font-size:11px;color:var(--text-sub);margin-bottom:4px">平均司龄</div>
+      <div style="font-size:22px;font-weight:700;color:var(--text)">1.65<span style="font-size:13px">年</span></div>
+      <div style="font-size:11px;margin-top:4px">
+        <span style="color:#10B981;font-weight:600">环比 ▲+0.01yr</span>
+        <span style="color:#9CA3AF;margin:0 4px">·</span>
+        <span style="color:#10B981;font-weight:600">同比 ▲+0.18yr</span>
+      </div>
+      <div style="font-size:10px;color:#9CA3AF;margin-top:2px">vs 26.2.26: 1.64yr · vs 25.2.28: 1.47yr</div>
     </div>
   </div>
 
@@ -301,17 +321,17 @@
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px">
     <div style="background:white;border-radius:12px;padding:16px;box-shadow:var(--shadow)">
       <div style="font-size:13px;font-weight:600;margin-bottom:4px">各组均龄对比</div>
-      <div style="font-size:11px;color:var(--text-sub);margin-bottom:8px">红色=高于均值29.6岁 · 灰色=3.18基准</div>
+      <div style="font-size:11px;color:var(--text-sub);margin-bottom:8px">红色=高于均值29.6岁 · 灰色=26.2.26基准</div>
       <canvas id="ageChart" width="0" height="220" style="width:100%;cursor:crosshair"></canvas>
     </div>
     <div style="background:white;border-radius:12px;padding:16px;box-shadow:var(--shadow)">
       <div style="font-size:13px;font-weight:600;margin-bottom:4px">各组年轻人比例</div>
-      <div style="font-size:11px;color:var(--text-sub);margin-bottom:8px">≤28岁占比 · 橙色=低于基准40%</div>
+      <div style="font-size:11px;color:var(--text-sub);margin-bottom:8px">≤28岁占比 · 橙色=低于40% · 灰色=26.2.26</div>
       <canvas id="youngChart" width="0" height="220" style="width:100%;cursor:crosshair"></canvas>
     </div>
     <div style="background:white;border-radius:12px;padding:16px;box-shadow:var(--shadow)">
       <div style="font-size:13px;font-weight:600;margin-bottom:4px">各组均司龄对比</div>
-      <div style="font-size:11px;color:var(--text-sub);margin-bottom:8px">紫色柱=3.26 · 灰色=3.18基准</div>
+      <div style="font-size:11px;color:var(--text-sub);margin-bottom:8px">紫色柱=3.26 · 灰色=26.2.26基准</div>
       <canvas id="tenureChart" width="0" height="220" style="width:100%;cursor:crosshair"></canvas>
     </div>
   </div>
@@ -1462,16 +1482,16 @@
 
 // ====== Canvas图表数据 ======
 const G = [
-  ['行一组', 29.9, 28.5, 2.36, 1.95, 22.2, 36.4, 9, 11, '欧莱雅', '千月'],
-  ['行二组', 29.6, 27.1, 1.70, 1.20, 62.5, 75.0, 8, 12, '雅诗兰黛', '吴邪'],
-  ['行三组', 30.0, 29.1, 2.00, 1.80, 22.2, 30.0, 9, 10, '宝洁汉高', '克斯'],
+  ['行一组', 29.9, 30.4, 2.36, 1.72, 22.2, 12.5, 9, 8, '欧莱雅', '千月'],
+  ['行二组', 29.6, 29.6, 1.70, 1.44, 62.5, 62.5, 8, 8, '雅诗兰黛', '吴邪'],
+  ['行三组', 30.0, 30.2, 2.00, 1.74, 22.2, 12.5, 9, 8, '宝洁汉高', '克斯'],
   ['行四组', 30.4, 28.7, 2.42, 2.03, 40.0, 50.0, 5,  6, '亚太新悦', '千月(兼)'],
   ['行五组', 29.0, 28.2, 1.47, 1.22, 50.0, 60.0, 4,  5, '欧美新悦', '吴邪(兼)'],
-  ['行六组', 30.1, 29.1, 1.05, 0.90, 36.4, 46.2, 11, 13, '国货护肤集团', '嘉莉'],
-  ['行七组', 31.3, 29.8, 2.38, 1.94, 16.7, 33.3, 12, 15, '国货新悦', '昭燃'],
+  ['行六组', 30.1, 30.3, 1.05, 0.79, 36.4, 30.0, 11, 10, '国货护肤集团', '嘉莉'],
+  ['行七组', 31.3, 31.5, 2.38, 2.12, 16.7, 15.4, 12, 13, '国货新悦', '昭燃'],
   ['行八组', 29.2, 28.7, 2.27, 2.27, 33.3, 33.3,  6,  6, '欧美新悦(专)', '嘉莉(兼)'],
   ['行九组', 30.5, 29.6, 2.46, 2.17, 25.0, 33.3,  8,  9, '国货彩香', '白泉'],
-  ['行十组', 30.1, 28.7, 1.76, 1.42, 44.4, 54.5,  9, 11, '联合利华', '昂扬(暂代)'],
+  ['行十组', 30.1, 30.1, 1.76, 1.5, 44.4, 44.4,  9, 9, '联合利华', '昂扬(暂代)'],
   ['行十一', 30.2, 28.0, 1.40, 1.09, 40.0, 57.1,  5,  7, 'Personal Care', '南舟'],
   ['行十二', 28.0, 27.2, 1.44, 1.53, 60.0, 60.0,  5,  5, 'Home Care', '希坦(跨组)'],
   ['专家一', 27.8, 26.4, 1.03, 0.77, 66.7, 75.0,  6,  8, '欧莱雅', '古娴'],
@@ -1480,9 +1500,9 @@ const G = [
   ['专家四', 29.5, 28.0, 1.38, 1.11, 50.0, 60.0,  4,  5, '亚太新悦', '古娴(兼)'],
   ['专家五', 28.0, 26.8, 1.04, 0.78, 80.0,100.0,  5,  4, '欧美新悦', '觉得'],
   ['专家六', 27.8, 27.2, 0.94, 0.87, 80.0, 75.0,  5,  8, '国货护肤集团', '希美'],
-  ['专家七', 29.0, 28.2, 1.36, 1.27, 44.4, 54.5,  9, 11, '国货新悦', '希美(兼)'],
+  ['专家七', 29.0, 29.0, 1.36, 1.1, 44.4, 44.4,  9, 9, '国货新悦', '希美(兼)'],
   ['专家八', 29.0, 28.0, 1.66, 1.38, 40.0, 50.0,  5,  6, '科技护肤', '觉得(兼)'],
-  ['专家九', 29.4, 28.5, 1.44, 1.36, 25.0, 40.0,  8, 10, '国货彩香', '银尘'],
+  ['专家九', 29.4, 28.9, 1.44, 1.18, 25.0, 28.6,  8, 7, '国货彩香', '银尘'],
   ['专家十', 30.3, 28.4, 1.82, 1.52, 16.7, 37.5,  6,  8, '联合利华', '珠珠'],
   ['专家十一', 30.3, 29.7, 1.67, 1.63, 33.3, 33.3, 3,  3, 'Personal Care', '惊鸿'],
   ['专家十二', 29.5, 26.6, 0.85, 0.58, 25.0, 57.1, 4,  7, 'Home Care', '惊鸿(兼)'],
