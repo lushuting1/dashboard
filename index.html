@@ -215,41 +215,41 @@
 
 <!-- Stats Bar -->
 <div class="stats-bar">
-  <div class="stat-card primary" onclick="showModal('onboard')" onmouseenter="showStatTip(event,'📍 <b>在职163人</b><br>国际美护49 | 国货美护64 | 日化46 | Solution 2<br><span style="color:#9CA3AF;font-size:11px">含L1，实时花名册数据</span>')" onmouseleave="hideStatTip()">
+  <div class="stat-card primary" onclick="showModal('onboard')" data-tip="onboard"color:#9CA3AF;font-size:11px">含L1，实时花名册数据</span>')">
     <div class="stat-value primary">163</div>
     <div class="stat-label">在职人数</div>
     <div class="stat-sub">含L1</div>
   </div>
-  <div class="stat-card" onclick="showModal('hc')" onmouseenter="showStatTip(event,'📊 <b>总HC 164</b><br>❌ 缺编：欧莱雅(1)+欧美新悦(1)+科技(2)+PC(3)=缺7<br>⚠️ 超编：雅诗(5)+亚太(2)+国护(7)+国新(4)+彩香(3)+联合(1)+HC(1)=超23<br><span style="color:#9CA3AF;font-size:11px">点击查看详情</span>')" onmouseleave="hideStatTip()">
+  <div class="stat-card" onclick="showModal('hc')" data-tip="hc"color:#9CA3AF;font-size:11px">点击查看详情</span>')">
     <div class="stat-value">164</div>
     <div class="stat-label">总HC</div>
     <div class="stat-sub">预计165</div>
   </div>
-  <div class="stat-card green" onclick="showModal('join')" onmouseenter="showStatTip(event,'📥 <b>待入职3人</b><br>吴天昊 — 专家十二组 · 3.30<br>JICHAO SUN — L1 · 4.08<br>邓鸿颖 — 行业五组 · 4.08')" onmouseleave="hideStatTip()">
+  <div class="stat-card green" onclick="showModal('join')" data-tip="join">
     <div class="stat-value green">3</div>
     <div class="stat-label">待入职</div>
     <div class="stat-sub">近期到岗</div>
   </div>
-  <div class="stat-card orange" onclick="showModal('leave')" onmouseenter="showStatTip(event,'📤 <b>待离职2人</b><br>六尾(许凌豪) — 专家九组 · 4.07 主动<br>波雅(李淑华) — 行业四组 · 4.13 被动')" onmouseleave="hideStatTip()">
+  <div class="stat-card orange" onclick="showModal('leave')" data-tip="leave">
     <div class="stat-value orange">2</div>
     <div class="stat-label">待离职</div>
     <div class="stat-sub">需交接</div>
   </div>
-  <div class="stat-card" onclick="showModal('young')" onmouseenter="showStatTip(event,'🌱 <b>≤28岁占比 39.9%</b><br>较3.18下降 ▼10.8%（原50.7%）<br>年轻人才流失较快，需重点关注')" onmouseleave="hideStatTip()">
+  <div class="stat-card" onclick="showModal('young')" data-tip="young">
     <div class="stat-value green">40<span style="font-size:14px">%</span></div>
     <div class="stat-label">年轻人才比例</div>
     <div class="stat-sub">≤28岁占比</div>
   </div>
-  <div class="stat-card" onclick="showModal('efficiency')" onmouseenter="showStatTip(event,'⏱ <b>3月人效 9.1h</b><br>低于本月均值约1h<br>13人低于均值 · 需关注工时异常')" onmouseleave="hideStatTip()">
+  <div class="stat-card" onclick="showModal('efficiency')" data-tip="efficiency">
     <div class="stat-value orange">9.1<span style="font-size:14px">h</span></div>
     <div class="stat-label">3月人效</div>
     <div class="stat-sub">低于均值</div>
   </div>
-  <div class="stat-card" onclick="showModal('age')" onmouseenter="showStatTip(event,'👥 <b>平均年龄 29.6岁</b><br>较3.18上升 ▲1.3岁<br>整体老龄化趋势，日化赛道尤甚')" onmouseleave="hideStatTip()">
+  <div class="stat-card" onclick="showModal('age')" data-tip="age">
     <div class="stat-value green">29.6<span style="font-size:14px">岁</span></div>
     <div class="stat-label">平均年龄</div>
   </div>
-  <div class="stat-card" onclick="showModal('tenure')" onmouseenter="showStatTip(event,'📅 <b>平均司龄 1.65年</b><br>较3.18上升 ▲0.26年<br>团队稳定性提升中')" onmouseleave="hideStatTip()">
+  <div class="stat-card" onclick="showModal('tenure')" data-tip="tenure">
     <div class="stat-value">1.7<span style="font-size:14px">年</span></div>
     <div class="stat-label">平均司龄</div>
     <div class="stat-sub">花名册实时数据</div>
@@ -1766,15 +1766,44 @@ function pipeCloseModal() { document.getElementById('pipeModal').classList.remov
 document.addEventListener('keydown', e => { if(e.key==='Escape') pipeCloseModal(); });
 
 
-function showStatTip(e, html) {
+function showStatTip(e, content) {
   const t = document.getElementById('statTooltip');
-  t.innerHTML = html;
+  t.innerHTML = content;
   t.style.display = 'block';
-  const x = e.clientX + 12, y = e.clientY - 10;
-  t.style.left = Math.min(x, window.innerWidth - 320) + 'px';
-  t.style.top = Math.max(y - t.offsetHeight, 10) + 'px';
+  moveTip(e);
+}
+function moveTip(e) {
+  const t = document.getElementById('statTooltip');
+  if (t.style.display === 'none') return;
+  const x = e.clientX + 14, y = e.clientY - 10;
+  t.style.left = Math.min(x, window.innerWidth - 260) + 'px';
+  t.style.top = Math.max(y - 10, 10) + 'px';
 }
 function hideStatTip() { document.getElementById('statTooltip').style.display = 'none'; }
+
+const STAT_TIPS = {
+  'onboard': '📍 在职163人<br>国际美护49 | 国货美护64 | 日化46 | Solution 2<br>含L1，实时花名册数据',
+  'hc': '📊 总HC 164<br>❌ 缺编：欧莱雅(1)+欧美(1)+科技(2)+PC(3)=缺7<br>⚠️ 超编：雅诗(5)+亚太(2)+国护(7)+国新(4)+彩香(3)+联合(1)+HC(1)=超23',
+  'join': '📥 待入职3人<br>吴天昊 — 专家十二组 · 3.30<br>JICHAO SUN — L1 · 4.08<br>邓鸿颖 — 行业五组 · 4.08',
+  'leave': '📤 待离职2人<br>六尾(许凌豪) — 专家九组 · 4.07 主动<br>波雅(李淑华) — 行业四组 · 4.13 被动',
+  'young': '🌱 ≤28岁占比 39.9%<br>环比+1.9%（vs 2.26: 38.0%）<br>同比+11.2%（vs 25.2: 28.7%）<br>一年来年轻化趋势显著',
+  'efficiency': '⏱ 3月人效 9.1h<br>低于本月均值约1h<br>13人低于均值 · 需关注工时异常',
+  'age': '👥 平均年龄 29.6岁<br>环比-0.1岁（vs 2.26: 29.7岁）<br>同比-0.5岁（vs 25.2: 30.1岁）<br>整体年轻化趋势良好',
+  'tenure': '📅 平均司龄 1.65年<br>环比+0.01yr（vs 2.26: 1.64yr）<br>同比+0.18yr（vs 25.2: 1.47yr）<br>团队稳定性持续提升'
+};
+
+// 事件委托：监听 stats-bar 内所有 data-tip 元素
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('[data-tip]').forEach(el => {
+    el.addEventListener('mouseenter', function(e) {
+      const tip = STAT_TIPS[this.dataset.tip];
+      if (tip) showStatTip(e, tip);
+    });
+    el.addEventListener('mouseleave', hideStatTip);
+    el.addEventListener('mousemove', moveTip);
+  });
+});
+
 function toggleTrack(card) {
   card.classList.toggle('expanded');
 }
