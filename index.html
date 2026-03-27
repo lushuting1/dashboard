@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>行业一部 · 美护by赛道组织策略看板</title>
+  <title>行业一部 - 组织管理看板看板</title>
   <style>
     :root {
       --primary: #166534;
@@ -32,13 +32,15 @@
     /* Header */
     .header { background: linear-gradient(135deg, #166534 0%, #15803D 100%); color: white; padding: 24px 32px; }
     .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-    .header-title { font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 12px; justify-content: center; }
+    .header-title { font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 12px; }
     .header-badge { background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 500; }
     .header-meta { font-size: 13px; opacity: 0.8; }
     .header-info { display: flex; gap: 24px; font-size: 13px; opacity: 0.9; }
 
     /* Global Stats */
     .stats-bar { background: white; margin: -20px 32px 24px; padding: 20px 24px; border-radius: 16px; box-shadow: var(--shadow); display: flex; gap: 16px; overflow-x: auto; position: relative; z-index: 10; }
+
+    .stat-tooltip { position:fixed;display:none;background:rgba(15,23,42,0.93);color:white;padding:12px 16px;border-radius:12px;font-size:12px;pointer-events:none;z-index:9998;min-width:200px;max-width:300px;box-shadow:0 8px 24px rgba(0,0,0,0.3);line-height:1.8 }
     .stat-card { flex: 1; min-width: 120px; text-align: center; padding: 16px 12px; border-radius: 12px; background: var(--gray-light); cursor: pointer; transition: all 0.2s; border: 2px solid transparent; }
     .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
     .stat-card.primary { background: var(--primary-light); border-color: var(--primary); }
@@ -56,7 +58,7 @@
     .main { padding: 0 32px 40px; max-width: 1600px; margin: 0 auto; }
 
     /* Section Title */
-    .section-title { font-size: 18px; font-weight: 700; margin: 32px 0 20px; display: flex; align-items: center; gap: 8px; justify-content: center; }
+    .section-title { font-size: 18px; font-weight: 700; margin: 32px 0 20px; display: flex; align-items: center; gap: 8px; }
     .section-title::before { content: ''; width: 4px; height: 20px; background: var(--primary); border-radius: 2px; }
 
     /* Three Columns Layout */
@@ -172,7 +174,7 @@
     .interview-tag { font-size: 11px; padding: 3px 10px; border-radius: 6px; background: var(--gray-light); }
 
     /* Modal */
-    .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+    .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 1000; align-items: center;  padding: 20px; }
     .modal-backdrop.show { display: flex; }
     .modal { background: white; border-radius: 20px; width: 100%; max-width: 560px; max-height: 80vh; overflow: hidden; animation: modalUp 0.25s ease; }
     @keyframes modalUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
@@ -194,7 +196,7 @@
 <div class="header">
   <div class="header-top">
     <div class="header-title">
-      行业一部 · 美护by赛道组织策略
+      行业一部 - 组织管理看板
       <span class="header-badge">Y26</span>
     </div>
     <div style="display:flex;align-items:center;gap:12px">
@@ -209,45 +211,45 @@
     <span>👥 12个赛道 · 26个小组</span>
   </div>
 </div>
+<div id="statTooltip" class="stat-tooltip"></div>
 
 <!-- Stats Bar -->
 <div class="stats-bar">
-  <div class="stat-card primary" onclick="showModal('onboard')">
+  <div class="stat-card primary" onclick="showModal('onboard')" onmouseenter="showStatTip(event,'📍 <b>在职163人</b><br>国际美护49 | 国货美护64 | 日化46 | Solution 2<br><span style="color:#9CA3AF;font-size:11px">含L1，实时花名册数据</span>')" onmouseleave="hideStatTip()">
     <div class="stat-value primary">163</div>
     <div class="stat-label">在职人数</div>
     <div class="stat-sub">含L1</div>
   </div>
-  <div class="stat-card" onclick="showModal('hc')">
+  <div class="stat-card" onclick="showModal('hc')" onmouseenter="showStatTip(event,'📊 <b>总HC 164</b><br>❌ 缺编：欧莱雅(1)+欧美新悦(1)+科技(2)+PC(3)=缺7<br>⚠️ 超编：雅诗(5)+亚太(2)+国护(7)+国新(4)+彩香(3)+联合(1)+HC(1)=超23<br><span style="color:#9CA3AF;font-size:11px">点击查看详情</span>')" onmouseleave="hideStatTip()">
     <div class="stat-value">164</div>
     <div class="stat-label">总HC</div>
     <div class="stat-sub">预计165</div>
   </div>
-  <div class="stat-card green" onclick="showModal('join')">
+  <div class="stat-card green" onclick="showModal('join')" onmouseenter="showStatTip(event,'📥 <b>待入职3人</b><br>吴天昊 — 专家十二组 · 3.30<br>JICHAO SUN — L1 · 4.08<br>邓鸿颖 — 行业五组 · 4.08')" onmouseleave="hideStatTip()">
     <div class="stat-value green">3</div>
     <div class="stat-label">待入职</div>
     <div class="stat-sub">近期到岗</div>
   </div>
-  <div class="stat-card orange" onclick="showModal('leave')">
+  <div class="stat-card orange" onclick="showModal('leave')" onmouseenter="showStatTip(event,'📤 <b>待离职2人</b><br>六尾(许凌豪) — 专家九组 · 4.07 主动<br>波雅(李淑华) — 行业四组 · 4.13 被动')" onmouseleave="hideStatTip()">
     <div class="stat-value orange">2</div>
     <div class="stat-label">待离职</div>
     <div class="stat-sub">需交接</div>
   </div>
-  <div class="stat-card" onclick="showModal('young')">
+  <div class="stat-card" onclick="showModal('young')" onmouseenter="showStatTip(event,'🌱 <b>≤28岁占比 39.9%</b><br>较3.18下降 ▼10.8%（原50.7%）<br>年轻人才流失较快，需重点关注')" onmouseleave="hideStatTip()">
     <div class="stat-value green">40<span style="font-size:14px">%</span></div>
     <div class="stat-label">年轻人才比例</div>
     <div class="stat-sub">≤28岁占比</div>
   </div>
-  <div class="stat-card" onclick="showModal('efficiency')">
+  <div class="stat-card" onclick="showModal('efficiency')" onmouseenter="showStatTip(event,'⏱ <b>3月人效 9.1h</b><br>低于本月均值约1h<br>13人低于均值 · 需关注工时异常')" onmouseleave="hideStatTip()">
     <div class="stat-value orange">9.1<span style="font-size:14px">h</span></div>
     <div class="stat-label">3月人效</div>
     <div class="stat-sub">低于均值</div>
   </div>
-  <div class="stat-card" onclick="showModal('age')">
+  <div class="stat-card" onclick="showModal('age')" onmouseenter="showStatTip(event,'👥 <b>平均年龄 29.6岁</b><br>较3.18上升 ▲1.3岁<br>整体老龄化趋势，日化赛道尤甚')" onmouseleave="hideStatTip()">
     <div class="stat-value green">29.6<span style="font-size:14px">岁</span></div>
     <div class="stat-label">平均年龄</div>
-    <div class="stat-sub">≤28岁占比40%</div>
   </div>
-  <div class="stat-card" onclick="showModal('tenure')">
+  <div class="stat-card" onclick="showModal('tenure')" onmouseenter="showStatTip(event,'📅 <b>平均司龄 1.65年</b><br>较3.18上升 ▲0.26年<br>团队稳定性提升中')" onmouseleave="hideStatTip()">
     <div class="stat-value">1.7<span style="font-size:14px">年</span></div>
     <div class="stat-label">平均司龄</div>
     <div class="stat-sub">花名册实时数据</div>
@@ -1180,6 +1182,7 @@
     <span style="font-size:13px;font-weight:600;color:#166534">🏢 行业Solution（横向）</span>
     <span style="font-size:12px;color:var(--text-sub)">飞云(张一鸣) · Anne 4.8入职</span>
     <span style="font-size:12px;color:var(--text-sub)">横跨全赛道支持</span>
+    <span style="font-size:12px;background:#F0FDF4;color:#166534;padding:2px 8px;border-radius:6px;font-weight:600">在职2人 | HC3</span>
   </div>
 
   <!-- 人员动态 -->
@@ -1405,19 +1408,19 @@
         <div class="pipe-cand-name">杜明哲</div>
         <div class="pipe-cand-track">🏷 欧美新悦</div>
         <div class="pipe-chips"><span class="pipe-chip chip-func">策划→定位专家</span><span class="pipe-chip chip-375">3.75</span></div>
-        <div class="pipe-ta">TA: 瑶妮</div>
+        <div class="pipe-ta">TA: 瑞妮</div>
       </div>
       <div class="pipe-cand yang" onclick="pipeOpenModal('hexiaojing')" style="border-left:3px solid #FFC107">
         <div class="pipe-cand-name">何小婧</div>
         <div class="pipe-cand-track">🏷 欧美新悦</div>
         <div class="pipe-chips"><span class="pipe-chip chip-func">策划→定位专家</span><span class="pipe-chip chip-375">3.75</span></div>
-        <div class="pipe-ta">TA: 瑶妮</div>
+        <div class="pipe-ta">TA: 瑞妮</div>
       </div>
       <div class="pipe-cand yang" onclick="pipeOpenModal('panglitong')" style="border-left:3px solid #FFC107">
         <div class="pipe-cand-name">庞丽彤</div>
         <div class="pipe-cand-track">🏷 欧美新悦</div>
         <div class="pipe-chips"><span class="pipe-chip chip-func">运营</span><span class="pipe-chip chip-375">3.75</span></div>
-        <div class="pipe-ta">TA: 瑶妮</div>
+        <div class="pipe-ta">TA: 瑞妮</div>
       </div>
       <div class="pipe-cand yang" onclick="pipeOpenModal('zhubaiqi')" style="border-left:3px solid #FFC107">
         <div class="pipe-cand-name">朱柏其</div>
@@ -1700,9 +1703,9 @@ const pipeCandidates = {
   hongfangwen: { name:'洪方雯', track:'日化（整体）', func:'策划', grade:'3.5+', date:'3月17日', stage:'offer', stageLabel:'✅ Offer 环节', interviewer:'惊鸿', ta:'蒂蒂', remark:'日化赛道策划，3.5+通过，已进offer', steps:['L1一面 ✓','昂扬二面 ✓','Final ✓','Offer ←当前'], url:'https://hr.xiaohongshu.com/applicant-view/1852810/6111007' },
   xinran: { name:'王肖肖', track:'Personal Care', func:'CBD', grade:'3.75', date:'3月24日', stage:'final', stageLabel:'🟢 Final 通过', interviewer:'南舟', ta:'天雪', remark:'PC赛道CBD，3.75，final已过，待推进offer', steps:['L1一面 ✓','昂扬二面 ✓','Final ✓','Offer ←待推进'], url:'https://hr.xiaohongshu.com/applicant-evaluation?talentId=2445326&interviewId=6229583&interviewScheduleId=690671' },
   yangke: { name:'杨珂', track:'雅诗兰黛', func:'CBD', grade:'3.5+', date:'3月25日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'吴邪', ta:'贵音', remark:'雅诗兰黛CBD，昂扬3.5+通过，Final面试尚未通过', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'https://hr.xiaohongshu.com/applicant-evaluation?talentId=699425&interviewId=6305303&interviewScheduleId=690632' },
-  dumingzhe: { name:'杜明哲', track:'欧美新悦', func:'策划→定位专家', grade:'3.75', date:'3月19日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'箱得', ta:'瑶妮', remark:'昂扬3.75通过，建议定位专家方向，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'' },
-  hexiaojing: { name:'何小婧', track:'欧美新悦', func:'策划→定位专家', grade:'3.75', date:'3月19日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'箱得', ta:'瑶妮', remark:'昂扬3.75通过，建议定位专家方向，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'' },
-  panglitong: { name:'庞丽彤', track:'欧美新悦', func:'运营', grade:'3.75', date:'3月19日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'箱得', ta:'瑶妮', remark:'昂扬3.75通过，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'' },
+  dumingzhe: { name:'杜明哲', track:'欧美新悦', func:'策划→定位专家', grade:'3.75', date:'3月19日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'箱得', ta:'瑞妮', remark:'昂扬3.75通过，建议定位专家方向，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'' },
+  hexiaojing: { name:'何小婧', track:'欧美新悦', func:'策划→定位专家', grade:'3.75', date:'3月19日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'箱得', ta:'瑞妮', remark:'昂扬3.75通过，建议定位专家方向，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'' },
+  panglitong: { name:'庞丽彤', track:'欧美新悦', func:'运营', grade:'3.75', date:'3月19日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'箱得', ta:'瑞妮', remark:'昂扬3.75通过，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'' },
   zhubaiqi: { name:'朱柏其', track:'国货新悦', func:'运营', grade:'3.5+', date:'3月19日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'希莫', ta:'天雪', remark:'国货新悦运营，昂扬3.5+通过，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'' },
   lidi: { name:'李迪', track:'国货美妆', func:'CBD', grade:'3.75', date:'3月25日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'昭燃', ta:'粥粥', remark:'国货美妆CBD，昂扬3.75通过，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'' },
   qinyalian: { name:'覃雅莲', track:'国货护肤集团', func:'CBD', grade:'3.75', date:'3月4日', stage:'lost', stageLabel:'❌ Final Fail', interviewer:'嘉莉', ta:'瑶思', remark:'final淘汰；已给职级建议，放人才库持续跟进', steps:['L1一面 ✓','昂扬二面 ✓','Final ✗','Offer'], url:'' },
@@ -1742,6 +1745,16 @@ function pipeOpenModal(id) {
 function pipeCloseModal() { document.getElementById('pipeModal').classList.remove('open'); }
 document.addEventListener('keydown', e => { if(e.key==='Escape') pipeCloseModal(); });
 
+
+function showStatTip(e, html) {
+  const t = document.getElementById('statTooltip');
+  t.innerHTML = html;
+  t.style.display = 'block';
+  const x = e.clientX + 12, y = e.clientY - 10;
+  t.style.left = Math.min(x, window.innerWidth - 320) + 'px';
+  t.style.top = Math.max(y - t.offsetHeight, 10) + 'px';
+}
+function hideStatTip() { document.getElementById('statTooltip').style.display = 'none'; }
 function toggleTrack(card) {
   card.classList.toggle('expanded');
 }
