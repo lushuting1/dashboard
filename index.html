@@ -324,7 +324,13 @@
   <!-- tooltip -->
   <div id="chartTooltip" style="position:fixed;display:none;background:rgba(15,23,42,0.92);color:white;padding:10px 14px;border-radius:10px;font-size:12px;pointer-events:none;z-index:9999;min-width:160px;box-shadow:0 8px 24px rgba(0,0,0,0.3);line-height:1.8"></div>
 
-  <div class="section-title">12大赛道 · 数据与策略</div>
+  <div class="section-title" style="display:flex;align-items:center;justify-content:space-between">
+    <span>12大赛道 · 数据与策略</span>
+    <div style="display:flex;gap:8px">
+      <button onclick="expandAll()" style="font-size:12px;padding:4px 12px;border-radius:8px;border:1px solid var(--primary);color:var(--primary);background:var(--primary-light);cursor:pointer;font-weight:600">全部展开</button>
+      <button onclick="collapseAll()" style="font-size:12px;padding:4px 12px;border-radius:8px;border:1px solid var(--border);color:var(--text-sub);background:white;cursor:pointer;font-weight:600">全部收起</button>
+    </div>
+  </div>
 
   <div class="categories-grid">
 
@@ -1536,6 +1542,12 @@ rosterData.groups.forEach(g => {
 
 function toggleTrack(card) {
   card.classList.toggle('expanded');
+}
+function expandAll() {
+  document.querySelectorAll('.track-card').forEach(c => c.classList.add('expanded'));
+}
+function collapseAll() {
+  document.querySelectorAll('.track-card').forEach(c => c.classList.remove('expanded'));
 }
 
 const modalData = {
