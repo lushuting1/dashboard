@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="refresh" content="3600">
-  <title>行业一部 - 组织管理看板看板</title>
+  <title>行业一部 - 组织管理看板</title>
   <style>
     :root {
       --primary: #166534;
@@ -1452,8 +1452,8 @@ const G = [
   ['专家三', 29.4, 28.8, 1.14, 0.99, 42.9, 50.0,  7,  8, '宝洁汉高', '若琳'],
   ['专家四', 29.5, 28.0, 1.38, 1.11, 50.0, 60.0,  4,  5, '亚太新悦', '古娴(兼)'],
   ['专家五', 28.0, 26.8, 1.04, 0.78, 80.0,100.0,  5,  4, '欧美新悦', '觉得'],
-  ['专家六', 27.8, 27.2, 0.94, 0.87, 80.0, 75.0,  5,  8, '国货护肤集团', '希美'],
-  ['专家七', 29.0, 29.0, 1.36, 1.1, 44.4, 44.4,  9, 9, '国货新悦', '希美(兼)'],
+  ['专家六', 27.8, 27.2, 0.94, 0.87, 80.0, 75.0,  5,  8, '国货护肤集团', '希莫'],
+  ['专家七', 29.0, 29.0, 1.36, 1.1, 44.4, 44.4,  9, 9, '国货新悦', '希莫(兼)'],
   ['专家八', 29.0, 28.0, 1.66, 1.38, 40.0, 50.0,  5,  6, '科技护肤', '觉得(兼)'],
   ['专家九', 29.4, 28.9, 1.44, 1.18, 25.0, 28.6,  8, 7, '国货彩香', '银尘'],
   ['专家十', 30.3, 28.4, 1.82, 1.52, 16.7, 37.5,  6,  8, '联合利华', '珠珠'],
@@ -1677,13 +1677,13 @@ const pipeCandidates = {
   xinran: { name:'王肖肖', track:'Personal Care', func:'CBD', grade:'3.75', date:'3月24日', stage:'final', stageLabel:'🟢 Final 通过', interviewer:'南舟', ta:'天雪', remark:'PC赛道CBD，3.75，final已过，待推进offer', steps:['L1一面 ✓','昂扬二面 ✓','Final ✓','Offer ←待推进'], url:'https://hr.xiaohongshu.com/applicant-evaluation?talentId=2445326&interviewId=6229583&interviewScheduleId=690671' },
   yangke: { name:'杨珂', track:'雅诗兰黛', func:'CBD', grade:'3.5+', date:'3月25日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'吴邪', ta:'贵音', remark:'雅诗兰黛CBD，昂扬3.5+通过，Final面试尚未通过', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'https://hr.xiaohongshu.com/applicant-evaluation?talentId=699425&interviewId=6305303&interviewScheduleId=690632' },
   dumingzhe: { name:'杜明哲', track:'欧美新悦', func:'策划→定位专家', grade:'3.75', date:'3月19日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'箱得', ta:'瑞妮', remark:'昂扬3.75通过，建议定位专家方向，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'https://hr.xiaohongshu.com/applicant-view/1076989/6164749/resume' },
-  hexiaojing: { url:'https://hr.xiaohongshu.com/position-manage/social?keyword=何小婧',name:'何小婧', track:'欧美新悦', func:'策划→定位专家', grade:'3.75', date:'3月19日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'箱得', ta:'瑞妮', remark:'昂扬3.75通过，建议定位专家方向，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'' },
-  panglitong: { url:'https://hr.xiaohongshu.com/position-manage/social?keyword=庞丽彤',name:'庞丽彤', track:'欧美新悦', func:'运营', grade:'3.75', date:'3月19日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'箱得', ta:'瑞妮', remark:'昂扬3.75通过，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'' },
-  zhubaiqi: { url:'https://hr.xiaohongshu.com/position-manage/social?keyword=朱柏其',name:'朱柏其', track:'国货新悦', func:'运营', grade:'3.5+', date:'3月19日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'希莫', ta:'天雪', remark:'国货新悦运营，昂扬3.5+通过，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'' },
+  hexiaojing: { name:'何小婧', track:'欧美新悦', func:'策划→定位专家', grade:'3.75', date:'3月19日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'箱得', ta:'瑞妮', remark:'昂扬3.75通过，建议定位专家方向，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'https://hr.xiaohongshu.com/position-manage/social?keyword=庞丽彤' },
+  panglitong: { name:'庞丽彤', track:'欧美新悦', func:'运营', grade:'3.75', date:'3月19日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'箱得', ta:'瑞妮', remark:'昂扬3.75通过，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'https://hr.xiaohongshu.com/position-manage/social?keyword=庞丽彤' },
+  zhubaiqi: { name:'朱柏其', track:'国货新悦', func:'运营', grade:'3.5+', date:'3月19日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'希莫', ta:'天雪', remark:'国货新悦运营，昂扬3.5+通过，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'https://hr.xiaohongshu.com/position-manage/social?keyword=朱柏其' },
   lidi: { name:'李迪', track:'国货美妆', func:'CBD', grade:'3.75', date:'3月25日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'昭燃', ta:'粥粥', remark:'国货美妆CBD，昂扬3.75通过，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'https://hr.xiaohongshu.com/applicant-view/1572795/6289683/resume' },
-  qinyalian: { name:'覃雅莲', track:'国货护肤集团', func:'CBD', grade:'3.75', date:'3月4日', stage:'lost', stageLabel:'❌ Final Fail', interviewer:'嘉莉', ta:'瑶思', remark:'final淘汰；已给职级建议，放人才库持续跟进', steps:['L1一面 ✓','昂扬二面 ✓','Final ✗','Offer'], url:'' },
-  tanshuile: { name:'谭水乐', track:'亚太新悦', func:'运营', grade:'3.75', date:'3月9日', stage:'lost', stageLabel:'❌ Final Fail', interviewer:'古翱', ta:'夏娜', remark:'final淘汰', steps:['L1一面 ✓','昂扬二面 ✓','Final ✗','Offer'], url:'' },
-  wangxinyi: { name:'王欣怡', track:'国际美护', func:'策划', grade:'3.5+', date:'3月12日', stage:'lost', stageLabel:'❌ Offer Turn Down', interviewer:'古翱', ta:'粥粥', remark:'成功进offer但候选人拒绝', steps:['L1一面 ✓','昂扬二面 ✓','Final ✓','Offer ✗ turn down'], url:'' },
+  { name:'覃雅莲', track:'国货护肤集团', func:'CBD', grade:'3.75', date:'3月4日', stage:'lost', stageLabel:'❌ Final Fail', interviewer:'嘉莉', ta:'瑶思', remark:'final淘汰；已给职级建议，放人才库持续跟进', steps:['L1一面 ✓','昂扬二面 ✓','Final ✗','Offer'], url:'',  # 覃雅莲 - 已淘汰 },
+  { name:'谭水乐', track:'亚太新悦', func:'运营', grade:'3.75', date:'3月9日', stage:'lost', stageLabel:'❌ Final Fail', interviewer:'古翱', ta:'夏娜', remark:'final淘汰', steps:['L1一面 ✓','昂扬二面 ✓','Final ✗','Offer'], url:'',  # 覃雅莲 - 已淘汰 },
+  { name:'王欣怡', track:'国际美护', func:'策划', grade:'3.5+', date:'3月12日', stage:'lost', stageLabel:'❌ Offer Turn Down', interviewer:'古翱', ta:'粥粥', remark:'成功进offer但候选人拒绝', steps:['L1一面 ✓','昂扬二面 ✓','Final ✓','Offer ✗ turn down'], url:'',  # 覃雅莲 - 已淘汰 },
 };
 
 function pipeOpenModal(id) {
