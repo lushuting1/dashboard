@@ -356,10 +356,10 @@
       <div style="font-size:11px;color:var(--text-sub);margin-bottom:8px">🏆 高于均值(24%)标金</div>
       <canvas id="perf375Chart" width="0" height="200" style="width:100%;cursor:crosshair"></canvas>
     </div>
-    <div style="background:white;border-radius:12px;padding:16px;box-shadow:var(--shadow)">
+    <div style="background:white;border-radius:12px;padding:16px;box-shadow:var(--shadow);max-height:420px;overflow-y:auto">
       <div style="font-size:13px;font-weight:600;margin-bottom:4px">📊 绩效全景分布</div>
-      <div style="font-size:11px;color:var(--text-sub);margin-bottom:8px">各赛道375+占比对比 · 左CBD右专家</div>
-      <canvas id="perfDistChart" width="0" height="260" style="width:100%"></canvas>
+      <div style="font-size:11px;color:var(--text-sub);margin-bottom:8px">各赛道375+占比对比 · 上CBD下专家</div>
+      <canvas id="perfDistChart" width="0" height="380" style="width:100%"></canvas>
     </div>
     <div style="background:white;border-radius:12px;padding:16px;box-shadow:var(--shadow)">
       <div style="font-size:13px;font-weight:600;margin-bottom:4px">⚠️ 质量预警</div>
@@ -1953,7 +1953,7 @@ function renderPerfDistChart() {
   const rect = canvas.parentElement.getBoundingClientRect();
   // 兜底：如果父容器宽度为0，使用 body 宽度计算
   const W = rect.width > 0 ? Math.max(rect.width - 32, 280) : Math.max((document.body.clientWidth - 100) / 3, 280);
-  const H = 260;
+  const H = 380;
   canvas.width = W * dpr;
   canvas.height = H * dpr;
   canvas.style.width = W + 'px';
@@ -2000,10 +2000,11 @@ function renderPerfDistChart() {
   // 按CBD的375+占比排序
   tracks.sort((a, b) => (b.cbd?.p375 || 0) - (a.cbd?.p375 || 0));
   
-  const barH = 10;
-  const gap = 6;
+  const barH = 9;
+  const gap = 5;
+  const rowGap = 4;
   const leftW = 70;
-  const chartW = W - leftW - 40;
+  const chartW = W - leftW - 45;
   const maxVal = 60;
   
   // 绘制均值线 (24%)
@@ -2011,19 +2012,19 @@ function renderPerfDistChart() {
   ctx.strokeStyle = '#F59E0B';
   ctx.setLineDash([3, 3]);
   ctx.beginPath();
-  ctx.moveTo(avgX, 10);
-  ctx.lineTo(avgX, tracks.length * (barH * 2 + gap + 8) + 10);
+  ctx.moveTo(avgX, 8);
+  ctx.lineTo(avgX, tracks.length * (barH * 2 + gap + rowGap) + 8);
   ctx.stroke();
   ctx.setLineDash([]);
   
   tracks.forEach((t, i) => {
-    const y = 10 + i * (barH * 2 + gap + 8);
+    const y = 8 + i * (barH * 2 + gap + rowGap);
     
     // 赛道名
     ctx.fillStyle = '#374151';
     ctx.font = '11px sans-serif';
     ctx.textAlign = 'right';
-    ctx.fillText(t.name, leftW - 6, y + barH + 8);
+    ctx.fillText(t.name, leftW - 6, y + barH + 5);
     
     // CBD 柱子 (上半)
     if (t.cbd) {
@@ -2077,15 +2078,15 @@ function renderPerfDistChart() {
     
     ctx.fillStyle = '#10B981';
     ctx.beginPath();
-    ctx.arc(leftW - 15, y + barH + 2 + barH/2, 3, 0, Math.PI * 2);
+    ctx.arc(leftW - 15, y + barH + gap - 1 + barH/2, 3, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = '#fff';
     ctx.font = '9px sans-serif';
-    ctx.fillText('专', leftW - 15, y + barH + 2 + barH/2 + 3);
+    ctx.fillText('专', leftW - 15, y + barH + gap - 1 + barH/2 + 3);
   });
   
   // 图例
-  const legendY = H - 25;
+  const legendY = tracks.length * (barH * 2 + gap + rowGap) + 20;
   ctx.fillStyle = '#F59E0B';
   ctx.fillRect(W/2 - 80, legendY, 10, 10);
   ctx.fillStyle = '#374151';
