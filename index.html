@@ -1500,9 +1500,16 @@ function drawBarChart(canvasId, dataFn, avgLine, minY, maxY, unit, colorFn, tipF
   // 等待布局稳定再渲染
   function render() {
     const parent = canvas.parentElement;
-    let rawW = parent.getBoundingClientRect().width;
-    if (!rawW || rawW < 10) rawW = parent.offsetWidth || parent.clientWidth || 600;
-    const W = Math.max(rawW - 32, 100); // 减去padding，兜底100
+    // 多种方式获取宽度，兜底用 body 宽度 / 3（三列布局）
+    let rawW = parent.getBoundingClientRect().width
+      || parent.offsetWidth
+      || parent.clientWidth
+      || 0;
+    if (!rawW || rawW < 10) {
+      const bodyW = document.body.clientWidth || window.innerWidth || 1200;
+      rawW = (bodyW - 64) / 3; // 减去 main padding，三等分
+    }
+    const W = Math.max(rawW - 32, 100); // 减去 card padding，兜底100
     const H = 220;
     canvas.width = W;
     canvas.height = H;
