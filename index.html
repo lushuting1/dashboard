@@ -1624,6 +1624,7 @@ function ageColor(v, avg) { return v > avg ? '#FCA5A5' : '#93C5FD'; }
 function youngColor(v, avg) { return v >= avg ? '#6EE7B7' : '#FCD34D'; }
 function tenureColor() { return '#A5B4FC'; }
 
+function initCharts() {
 drawBarChart('ageChart',
   g => [g[1], g[2]], 29.6, 24, 34, '岁', ageColor,
   (g, vN, vO) => `<div style="font-size:13px;font-weight:700;margin-bottom:6px">${g[0]}</div>
@@ -1662,6 +1663,14 @@ drawBarChart('tenureChart',
 <span style="color:#94A3B8">在职人数</span><span>${g[7]}人 ${delta(g[7],g[8],'人',false)}</span>
 </div>`
 );
+} // end initCharts
+
+// 用 window load 确保 layout 完全稳定后再画图
+if (document.readyState === 'complete') {
+  initCharts();
+} else {
+  window.addEventListener('load', initCharts);
+}
 
 // 环比delta热力表
 // 环比delta热力表
