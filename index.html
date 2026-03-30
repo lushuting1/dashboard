@@ -1745,7 +1745,7 @@ function pipeOpenModal(id) {
     <div class="pipe-tl">${stepHtml}</div>
     <div style="margin-top:10px;padding:10px;background:#F5F6F8;border-radius:8px;font-size:12px;color:var(--text-sub)">${c.remark}</div>
     <div class="pipe-modal-actions">
-      ${c.url ? `<a class="pipe-modal-btn primary" href="${c.url}" target="_blank">🔗 查看简历</a>` : ''}
+      ${c.url ? '<a class="pipe-modal-btn primary" href="' + c.url + '" target="_blank">🔗 查看简历</a>' : ''}
       <button class="pipe-modal-btn secondary" onclick="pipeCloseModal()">关闭</button>
     </div>
   `;
