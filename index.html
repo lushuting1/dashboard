@@ -358,8 +358,8 @@
     </div>
     <div style="background:white;border-radius:12px;padding:16px;box-shadow:var(--shadow)">
       <div style="font-size:13px;font-weight:600;margin-bottom:4px">📊 绩效全景分布</div>
-      <div style="font-size:11px;color:var(--text-sub);margin-bottom:8px">CBD vs 专家对比</div>
-      <canvas id="perfDistChart" width="0" height="200" style="width:100%"></canvas>
+      <div style="font-size:11px;color:var(--text-sub);margin-bottom:8px">各赛道375+占比对比 · 左CBD右专家</div>
+      <canvas id="perfDistChart" width="0" height="260" style="width:100%"></canvas>
     </div>
     <div style="background:white;border-radius:12px;padding:16px;box-shadow:var(--shadow)">
       <div style="font-size:13px;font-weight:600;margin-bottom:4px">⚠️ 质量预警</div>
@@ -1951,99 +1951,159 @@ function renderPerfDistChart() {
   const ctx = canvas.getContext('2d');
   const dpr = window.devicePixelRatio || 1;
   const rect = canvas.parentElement.getBoundingClientRect();
-  // 兜底：如果父容器宽度为0，使用 body 宽度计算（三列布局每列约1/3）
+  // 兜底：如果父容器宽度为0，使用 body 宽度计算
   const W = rect.width > 0 ? Math.max(rect.width - 32, 280) : Math.max((document.body.clientWidth - 100) / 3, 280);
-  const H = 200;
+  const H = 260;
   canvas.width = W * dpr;
   canvas.height = H * dpr;
   canvas.style.width = W + 'px';
   canvas.style.height = H + 'px';
   ctx.scale(dpr, dpr);
   
-  // 计算CBD和专家的整体分布
-  const cbdData = PERF_DATA.filter(p => p[0].startsWith('行'));
-  const expertData = PERF_DATA.filter(p => p[0].startsWith('专家'));
+  // 按赛道聚合数据：计算每个赛道的CBD和专家平均375+占比
+  // PERF_DATA: [小组名, 375%, 35+%, 35%, 35-%, 人数, 赛道, 负责人]
+  const trackMap = new Map();
   
-  const avg = (arr, idx) => arr.reduce((sum, p) => sum + p[idx], 0) / arr.length;
-  
-  const cbdAvg = { 
-    p375: avg(cbdData, 1), 
-    p35p: avg(cbdData, 2), 
-    p35: avg(cbdData, 3), 
-    p35m: avg(cbdData, 4),
-    count: cbdData.reduce((s, p) => s + p[5], 0)
-  };
-  const expAvg = { 
-    p375: avg(expertData, 1), 
-    p35p: avg(expertData, 2), 
-    p35: avg(expertData, 3), 
-    p35m: avg(expertData, 4),
-    count: expertData.reduce((s, p) => s + p[5], 0)
-  };
-  
-  const barW = 60;
-  const gap = 40;
-  const startX = (W - barW * 2 - gap) / 2;
-  const chartH = 140;
-  const baseY = 150;
-  
-  // 绘制CBD柱状图（堆叠）
-  const drawStackedBar = (x, data, label) => {
-    let y = baseY;
-    const scale = chartH / 100;
+  PERF_DATA.forEach(p => {
+    const [name, p375, p35p, p35, p35m, count, track, leader] = p;
+    const isCBD = name.startsWith('行');
+    const type = isCBD ? 'cbd' : 'expert';
     
-    // 35- (红色，如果有)
-    if (data.p35m > 0) {
-      const h = data.p35m * scale;
-      ctx.fillStyle = '#EF4444';
-      ctx.fillRect(x, y - h, barW, h);
-      y -= h;
+    if (!trackMap.has(track)) {
+      trackMap.set(track, { cbd: [], expert: [] });
     }
-    // 35 (灰色)
-    const h35 = data.p35 * scale;
-    ctx.fillStyle = '#9CA3AF';
-    ctx.fillRect(x, y - h35, barW, h35);
-    y -= h35;
-    // 35+ (蓝色)
-    const h35p = data.p35p * scale;
-    ctx.fillStyle = '#3B82F6';
-    ctx.fillRect(x, y - h35p, barW, h35p);
-    y -= h35p;
-    // 375+ (金色)
-    const h375 = data.p375 * scale;
-    ctx.fillStyle = '#F59E0B';
-    ctx.fillRect(x, y - h375, barW, h375);
-    
-    // 标签
-    ctx.fillStyle = '#374151';
-    ctx.font = 'bold 13px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(label, x + barW/2, baseY + 18);
-    ctx.fillStyle = '#6B7280';
-    ctx.font = '11px sans-serif';
-    ctx.fillText(data.count + '人', x + barW/2, baseY + 32);
-    
-    // 375+数值
-    ctx.fillStyle = '#B45309';
-    ctx.font = 'bold 12px sans-serif';
-    ctx.fillText(data.p375.toFixed(0) + '%', x + barW/2, baseY - chartH - 8);
-  };
+    trackMap.get(track)[type].push({ p375, p35p, p35, p35m, count });
+  });
   
-  drawStackedBar(startX, cbdAvg, 'CBD');
-  drawStackedBar(startX + barW + gap, expAvg, '专家');
+  // 计算每个赛道的加权平均值
+  const tracks = [];
+  trackMap.forEach((data, name) => {
+    const calcAvg = (arr) => {
+      if (arr.length === 0) return null;
+      const total = arr.reduce((s, p) => s + p.count, 0);
+      return {
+        p375: arr.reduce((s, p) => s + p.p375 * p.count, 0) / total,
+        p35p: arr.reduce((s, p) => s + p.p35p * p.count, 0) / total,
+        p35: arr.reduce((s, p) => s + p.p35 * p.count, 0) / total,
+        p35m: arr.reduce((s, p) => s + p.p35m * p.count, 0) / total,
+        count: total,
+        groups: arr.length
+      };
+    };
+    tracks.push({
+      name: name.substring(0, 4), // 截短名称以适应空间
+      cbd: calcAvg(data.cbd),
+      expert: calcAvg(data.expert)
+    });
+  });
+  
+  // 按CBD的375+占比排序
+  tracks.sort((a, b) => (b.cbd?.p375 || 0) - (a.cbd?.p375 || 0));
+  
+  const barH = 10;
+  const gap = 6;
+  const leftW = 70;
+  const chartW = W - leftW - 40;
+  const maxVal = 60;
+  
+  // 绘制均值线 (24%)
+  const avgX = leftW + (24 / maxVal) * chartW;
+  ctx.strokeStyle = '#F59E0B';
+  ctx.setLineDash([3, 3]);
+  ctx.beginPath();
+  ctx.moveTo(avgX, 10);
+  ctx.lineTo(avgX, tracks.length * (barH * 2 + gap + 8) + 10);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  
+  tracks.forEach((t, i) => {
+    const y = 10 + i * (barH * 2 + gap + 8);
+    
+    // 赛道名
+    ctx.fillStyle = '#374151';
+    ctx.font = '11px sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText(t.name, leftW - 6, y + barH + 8);
+    
+    // CBD 柱子 (上半)
+    if (t.cbd) {
+      const x = leftW;
+      const w375 = (t.cbd.p375 / maxVal) * chartW;
+      const w35p = (t.cbd.p35p / maxVal) * chartW;
+      
+      ctx.fillStyle = '#F59E0B'; // 375+ 金色
+      ctx.fillRect(x, y, w375, barH);
+      ctx.fillStyle = '#3B82F6'; // 35+ 蓝色
+      ctx.fillRect(x + w375, y, w35p, barH);
+      ctx.fillStyle = '#DDD'; // 35 浅灰占位
+      ctx.fillRect(x + w375 + w35p, y, chartW - w375 - w35p, barH);
+      
+      // 数值标签
+      ctx.fillStyle = '#B45309';
+      ctx.font = 'bold 10px sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText(Math.round(t.cbd.p375) + '%', Math.min(x + w375 + 4, W - 30), y + barH - 1);
+    }
+    
+    // 专家 柱子 (下半)
+    if (t.expert) {
+      const x = leftW;
+      const y2 = y + barH + 2;
+      const w375 = (t.expert.p375 / maxVal) * chartW;
+      const w35p = (t.expert.p35p / maxVal) * chartW;
+      
+      ctx.fillStyle = '#F59E0B';
+      ctx.fillRect(x, y2, w375, barH);
+      ctx.fillStyle = '#3B82F6';
+      ctx.fillRect(x + w375, y2, w35p, barH);
+      ctx.fillStyle = '#DDD';
+      ctx.fillRect(x + w375 + w35p, y2, chartW - w375 - w35p, barH);
+      
+      // 数值标签
+      ctx.fillStyle = '#B45309';
+      ctx.font = 'bold 10px sans-serif';
+      ctx.fillText(Math.round(t.expert.p375) + '%', Math.min(x + w375 + 4, W - 30), y2 + barH - 1);
+    }
+    
+    // 小圆点标记类型
+    ctx.fillStyle = '#9CA3AF';
+    ctx.beginPath();
+    ctx.arc(leftW - 15, y + barH/2, 3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#6B7280';
+    ctx.font = '9px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('C', leftW - 15, y + barH/2 + 3);
+    
+    ctx.fillStyle = '#10B981';
+    ctx.beginPath();
+    ctx.arc(leftW - 15, y + barH + 2 + barH/2, 3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.font = '9px sans-serif';
+    ctx.fillText('专', leftW - 15, y + barH + 2 + barH/2 + 3);
+  });
   
   // 图例
-  const legendY = baseY + 45;
-  const legends = [['375+', '#F59E0B'], ['35+', '#3B82F6'], ['35', '#9CA3AF'], ['35-', '#EF4444']];
-  const legendStartX = (W - legends.length * 55) / 2;
-  legends.forEach(([label, color], i) => {
-    const lx = legendStartX + i * 55;
-    ctx.fillStyle = color;
-    ctx.fillRect(lx, legendY, 10, 10);
-    ctx.fillStyle = '#6B7280';
-    ctx.font = '11px sans-serif';
-    ctx.fillText(label, lx + 14, legendY + 9);
-  });
+  const legendY = H - 25;
+  ctx.fillStyle = '#F59E0B';
+  ctx.fillRect(W/2 - 80, legendY, 10, 10);
+  ctx.fillStyle = '#374151';
+  ctx.font = '11px sans-serif';
+  ctx.fillText('375+', W/2 - 65, legendY + 9);
+  
+  ctx.fillStyle = '#3B82F6';
+  ctx.fillRect(W/2 - 30, legendY, 10, 10);
+  ctx.fillStyle = '#374151';
+  ctx.fillText('35+', W/2 - 15, legendY + 9);
+  
+  ctx.fillStyle = '#9CA3AF';
+  ctx.beginPath();
+  ctx.arc(W/2 + 30, legendY + 5, 4, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#6B7280';
+  ctx.font = '10px sans-serif';
+  ctx.fillText('C=CBD', W/2 + 40, legendY + 9);
 }
 
 function showPerfModal(p) {
