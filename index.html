@@ -1951,160 +1951,89 @@ function renderPerfDistChart() {
   const ctx = canvas.getContext('2d');
   const dpr = window.devicePixelRatio || 1;
   const rect = canvas.parentElement.getBoundingClientRect();
-  // 兜底：如果父容器宽度为0，使用 body 宽度计算
   const W = rect.width > 0 ? Math.max(rect.width - 32, 280) : Math.max((document.body.clientWidth - 100) / 3, 280);
-  const H = 380;
+  const H = 420;
   canvas.width = W * dpr;
   canvas.height = H * dpr;
   canvas.style.width = W + 'px';
   canvas.style.height = H + 'px';
   ctx.scale(dpr, dpr);
   
-  // 按赛道聚合数据：计算每个赛道的CBD和专家平均375+占比
-  // PERF_DATA: [小组名, 375%, 35+%, 35%, 35-%, 人数, 赛道, 负责人]
+  // 聚合数据
   const trackMap = new Map();
-  
   PERF_DATA.forEach(p => {
-    const [name, p375, p35p, p35, p35m, count, track, leader] = p;
-    const isCBD = name.startsWith('行');
-    const type = isCBD ? 'cbd' : 'expert';
-    
-    if (!trackMap.has(track)) {
-      trackMap.set(track, { cbd: [], expert: [] });
-    }
-    trackMap.get(track)[type].push({ p375, p35p, p35, p35m, count });
+    const [name, p375, p35p, p35, p35m, count, track] = p;
+    const type = name.startsWith('行') ? 'cbd' : 'expert';
+    if (!trackMap.has(track)) trackMap.set(track, { cbd: [], expert: [] });
+    trackMap.get(track)[type].push({ p375, p35p, count });
   });
   
-  // 计算每个赛道的加权平均值
   const tracks = [];
   trackMap.forEach((data, name) => {
-    const calcAvg = (arr) => {
+    const calc = (arr) => {
       if (arr.length === 0) return null;
       const total = arr.reduce((s, p) => s + p.count, 0);
       return {
         p375: arr.reduce((s, p) => s + p.p375 * p.count, 0) / total,
-        p35p: arr.reduce((s, p) => s + p.p35p * p.count, 0) / total,
-        p35: arr.reduce((s, p) => s + p.p35 * p.count, 0) / total,
-        p35m: arr.reduce((s, p) => s + p.p35m * p.count, 0) / total,
-        count: total,
-        groups: arr.length
+        p35p: arr.reduce((s, p) => s + p.p35p * p.count, 0) / total
       };
     };
-    tracks.push({
-      name: name.substring(0, 4), // 截短名称以适应空间
-      cbd: calcAvg(data.cbd),
-      expert: calcAvg(data.expert)
-    });
+    tracks.push({ name: name.length > 4 ? name.substring(0,4) : name, cbd: calc(data.cbd), expert: calc(data.expert) });
   });
   
-  // 按CBD的375+占比排序
-  tracks.sort((a, b) => (b.cbd?.p375 || 0) - (a.cbd?.p375 || 0));
+  tracks.sort((a,b) => (b.expert?.p375||0) - (a.expert?.p375||0));
   
-  const barH = 9;
-  const gap = 5;
-  const rowGap = 4;
-  const leftW = 70;
-  const chartW = W - leftW - 45;
-  const maxVal = 60;
+  const barH = 11, gap = 3, rowGap = 14, leftW = 50, labelW = 35, maxVal = 60;
+  const chartW = W - leftW - labelW - 10;
   
-  // 绘制均值线 (24%)
-  const avgX = leftW + (24 / maxVal) * chartW;
-  ctx.strokeStyle = '#F59E0B';
-  ctx.setLineDash([3, 3]);
-  ctx.beginPath();
-  ctx.moveTo(avgX, 8);
-  ctx.lineTo(avgX, tracks.length * (barH * 2 + gap + rowGap) + 8);
-  ctx.stroke();
-  ctx.setLineDash([]);
+  // 均值线
+  const avgX = leftW + (24/maxVal)*chartW;
+  ctx.strokeStyle = '#F59E0B'; ctx.setLineDash([3,3]); ctx.beginPath();
+  ctx.moveTo(avgX, 10); ctx.lineTo(avgX, tracks.length*(barH*2+gap+rowGap)+10); ctx.stroke(); ctx.setLineDash([]);
   
-  tracks.forEach((t, i) => {
-    const y = 8 + i * (barH * 2 + gap + rowGap);
+  tracks.forEach((t,i) => {
+    const y = 10 + i*(barH*2+gap+rowGap);
     
     // 赛道名
-    ctx.fillStyle = '#374151';
-    ctx.font = '11px sans-serif';
-    ctx.textAlign = 'right';
-    ctx.fillText(t.name, leftW - 6, y + barH + 5);
+    ctx.fillStyle = '#374151'; ctx.font = '12px sans-serif'; ctx.textAlign = 'right';
+    ctx.fillText(t.name, leftW-6, y+barH+6);
     
-    // CBD 柱子 (上半)
+    // CBD
     if (t.cbd) {
-      const x = leftW;
-      const w375 = (t.cbd.p375 / maxVal) * chartW;
-      const w35p = (t.cbd.p35p / maxVal) * chartW;
-      
-      ctx.fillStyle = '#F59E0B'; // 375+ 金色
-      ctx.fillRect(x, y, w375, barH);
-      ctx.fillStyle = '#3B82F6'; // 35+ 蓝色
-      ctx.fillRect(x + w375, y, w35p, barH);
-      ctx.fillStyle = '#DDD'; // 35 浅灰占位
-      ctx.fillRect(x + w375 + w35p, y, chartW - w375 - w35p, barH);
-      
-      // 数值标签
-      ctx.fillStyle = '#B45309';
-      ctx.font = 'bold 10px sans-serif';
-      ctx.textAlign = 'left';
-      ctx.fillText(Math.round(t.cbd.p375) + '%', Math.min(x + w375 + 4, W - 30), y + barH - 1);
+      ctx.fillStyle = '#3B82F6'; ctx.font = '9px sans-serif'; ctx.textAlign = 'left';
+      ctx.fillText('售', leftW, y+barH-1);
+      const x = leftW + 14;
+      const w375 = (t.cbd.p375/maxVal)*chartW, w35p = (t.cbd.p35p/maxVal)*chartW;
+      ctx.fillStyle = '#F59E0B'; ctx.fillRect(x, y, w375, barH);
+      ctx.fillStyle = '#93C5FD'; ctx.fillRect(x+w375, y, w35p, barH);
+      ctx.fillStyle = '#E5E7EB'; ctx.fillRect(x+w375+w35p, y, chartW-w375-w35p, barH);
+      ctx.fillStyle = '#fff'; ctx.font = 'bold 10px sans-serif';
+      if (w375 > 12) ctx.fillText(Math.round(t.cbd.p375)+'%', x+3, y+barH-2);
+      else { ctx.fillStyle = '#B45309'; ctx.fillText(Math.round(t.cbd.p375)+'%', x+w375+3, y+barH-2); }
     }
     
-    // 专家 柱子 (下半)
+    // 专家
     if (t.expert) {
-      const x = leftW;
-      const y2 = y + barH + 2;
-      const w375 = (t.expert.p375 / maxVal) * chartW;
-      const w35p = (t.expert.p35p / maxVal) * chartW;
-      
-      ctx.fillStyle = '#F59E0B';
-      ctx.fillRect(x, y2, w375, barH);
-      ctx.fillStyle = '#3B82F6';
-      ctx.fillRect(x + w375, y2, w35p, barH);
-      ctx.fillStyle = '#DDD';
-      ctx.fillRect(x + w375 + w35p, y2, chartW - w375 - w35p, barH);
-      
-      // 数值标签
-      ctx.fillStyle = '#B45309';
-      ctx.font = 'bold 10px sans-serif';
-      ctx.fillText(Math.round(t.expert.p375) + '%', Math.min(x + w375 + 4, W - 30), y2 + barH - 1);
+      const y2 = y + barH + gap;
+      ctx.fillStyle = '#10B981'; ctx.font = '9px sans-serif';
+      ctx.fillText('专', leftW, y2+barH-1);
+      const x = leftW + 14;
+      const w375 = (t.expert.p375/maxVal)*chartW, w35p = (t.expert.p35p/maxVal)*chartW;
+      ctx.fillStyle = '#F59E0B'; ctx.fillRect(x, y2, w375, barH);
+      ctx.fillStyle = '#93C5FD'; ctx.fillRect(x+w375, y2, w35p, barH);
+      ctx.fillStyle = '#E5E7EB'; ctx.fillRect(x+w375+w35p, y2, chartW-w375-w35p, barH);
+      ctx.fillStyle = '#fff'; ctx.font = 'bold 10px sans-serif';
+      if (w375 > 12) ctx.fillText(Math.round(t.expert.p375)+'%', x+3, y2+barH-2);
+      else { ctx.fillStyle = '#B45309'; ctx.fillText(Math.round(t.expert.p375)+'%', x+w375+3, y2+barH-2); }
     }
-    
-    // 小圆点标记类型
-    ctx.fillStyle = '#9CA3AF';
-    ctx.beginPath();
-    ctx.arc(leftW - 15, y + barH/2, 3, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = '#6B7280';
-    ctx.font = '9px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('C', leftW - 15, y + barH/2 + 3);
-    
-    ctx.fillStyle = '#10B981';
-    ctx.beginPath();
-    ctx.arc(leftW - 15, y + barH + gap - 1 + barH/2, 3, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = '#fff';
-    ctx.font = '9px sans-serif';
-    ctx.fillText('专', leftW - 15, y + barH + gap - 1 + barH/2 + 3);
   });
   
   // 图例
-  const legendY = tracks.length * (barH * 2 + gap + rowGap) + 20;
-  ctx.fillStyle = '#F59E0B';
-  ctx.fillRect(W/2 - 80, legendY, 10, 10);
-  ctx.fillStyle = '#374151';
-  ctx.font = '11px sans-serif';
-  ctx.fillText('375+', W/2 - 65, legendY + 9);
-  
-  ctx.fillStyle = '#3B82F6';
-  ctx.fillRect(W/2 - 30, legendY, 10, 10);
-  ctx.fillStyle = '#374151';
-  ctx.fillText('35+', W/2 - 15, legendY + 9);
-  
-  ctx.fillStyle = '#9CA3AF';
-  ctx.beginPath();
-  ctx.arc(W/2 + 30, legendY + 5, 4, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.fillStyle = '#6B7280';
-  ctx.font = '10px sans-serif';
-  ctx.fillText('C=CBD', W/2 + 40, legendY + 9);
+  const ly = tracks.length*(barH*2+gap+rowGap)+20;
+  ctx.fillStyle = '#F59E0B'; ctx.fillRect(leftW+10, ly, 12, 12);
+  ctx.fillStyle = '#374151'; ctx.font = '11px sans-serif'; ctx.fillText('375+', leftW+26, ly+10);
+  ctx.fillStyle = '#93C5FD'; ctx.fillRect(leftW+65, ly, 12, 12);
+  ctx.fillStyle = '#374151'; ctx.fillText('35+', leftW+81, ly+10);
 }
 
 function showPerfModal(p) {
