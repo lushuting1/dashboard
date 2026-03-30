@@ -1499,8 +1499,10 @@ function drawBarChart(canvasId, dataFn, avgLine, minY, maxY, unit, colorFn, tipF
 
   // 等待布局稳定再渲染
   function render() {
-    const rect = canvas.parentElement.getBoundingClientRect();
-    const W = rect.width - 32; // 减去padding
+    const parent = canvas.parentElement;
+    let rawW = parent.getBoundingClientRect().width;
+    if (!rawW || rawW < 10) rawW = parent.offsetWidth || parent.clientWidth || 600;
+    const W = Math.max(rawW - 32, 100); // 减去padding，兜底100
     const H = 220;
     canvas.width = W;
     canvas.height = H;
@@ -1588,7 +1590,18 @@ function drawBarChart(canvasId, dataFn, avgLine, minY, maxY, unit, colorFn, tipF
     canvas._hit = hitBar;
   }
 
-  render();
+  // 首次渲染：用 requestAnimationFrame 确保 layout 完成
+  requestAnimationFrame(() => {
+    requestAnimationFrame(render);
+  });
+
+  // ResizeObserver：容器宽度变化时重新渲染（兜底 + 响应窗口缩放）
+  if (window.ResizeObserver) {
+    const ro = new ResizeObserver(() => render());
+    ro.observe(canvas.parentElement);
+  } else {
+    window.addEventListener('resize', render);
+  }
 
   // 绑定交互
   canvas.addEventListener('mousemove', e => {
