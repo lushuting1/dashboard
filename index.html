@@ -322,6 +322,65 @@
   <!-- tooltip -->
   <div id="chartTooltip" style="position:fixed;display:none;background:rgba(15,23,42,0.92);color:white;padding:10px 14px;border-radius:10px;font-size:12px;pointer-events:none;z-index:9999;min-width:160px;box-shadow:0 8px 24px rgba(0,0,0,0.3);line-height:1.8"></div>
 
+  <!-- ======== 人才质量 · 绩效水位 ======== -->
+  <div class="section-title">⭐ 人才质量 · 绩效水位 (Y26)</div>
+  
+  <!-- 质量指标卡 -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px">
+    <div style="background:linear-gradient(135deg,#FEF3C7 0%,#FDE68A 100%);border-radius:12px;padding:16px;box-shadow:var(--shadow);border-left:4px solid #F59E0B">
+      <div style="font-size:12px;color:#92400E;margin-bottom:4px">🏆 375+ 占比</div>
+      <div style="font-size:28px;font-weight:800;color:#B45309">24<span style="font-size:14px">%</span></div>
+      <div style="font-size:11px;color:#A16207;margin-top:4px">35人 | 行业均值 22%</div>
+    </div>
+    <div style="background:linear-gradient(135deg,#DBEAFE 0%,#BFDBFE 100%);border-radius:12px;padding:16px;box-shadow:var(--shadow);border-left:4px solid #3B82F6">
+      <div style="font-size:12px;color:#1E40AF;margin-bottom:4px">📈 35+ 占比</div>
+      <div style="font-size:28px;font-weight:800;color:#1D4ED8">67<span style="font-size:14px">%</span></div>
+      <div style="font-size:11px;color:#3B82F6;margin-top:4px">98人 | 含375+43%</div>
+    </div>
+    <div style="background:linear-gradient(135deg,#D1FAE5 0%,#A7F3D0 100%);border-radius:12px;padding:16px;box-shadow:var(--shadow);border-left:4px solid #10B981">
+      <div style="font-size:12px;color:#065F46;margin-bottom:4px">✅ 质量健康度</div>
+      <div style="font-size:28px;font-weight:800;color:#047857">良好</div>
+      <div style="font-size:11px;color:#059669;margin-top:4px">35以下仅1%</div>
+    </div>
+    <div style="background:linear-gradient(135deg,#EDE9FE 0%,#DDD6FE 100%);border-radius:12px;padding:16px;box-shadow:var(--shadow);border-left:4px solid #8B5CF6">
+      <div style="font-size:12px;color:#5B21B6;margin-bottom:4px">🌟 高潜密度</div>
+      <div style="font-size:28px;font-weight:800;color:#6D28D9">12<span style="font-size:14px">人</span></div>
+      <div style="font-size:11px;color:#7C3AED;margin-top:4px">L1中375占比 75%</div>
+    </div>
+  </div>
+
+  <!-- 各组绩效分布图 -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+    <div style="background:white;border-radius:12px;padding:16px;box-shadow:var(--shadow)">
+      <div style="font-size:13px;font-weight:600;margin-bottom:4px">🥇 各组375+占比</div>
+      <div style="font-size:11px;color:var(--text-sub);margin-bottom:8px">🏆 高于均值(24%)标金</div>
+      <canvas id="perf375Chart" width="0" height="200" style="width:100%;cursor:crosshair"></canvas>
+    </div>
+    <div style="background:white;border-radius:12px;padding:16px;box-shadow:var(--shadow)">
+      <div style="font-size:13px;font-weight:600;margin-bottom:4px">📊 绩效全景分布</div>
+      <div style="font-size:11px;color:var(--text-sub);margin-bottom:8px">CBD vs 专家对比</div>
+      <canvas id="perfDistChart" width="0" height="200" style="width:100%"></canvas>
+    </div>
+    <div style="background:white;border-radius:12px;padding:16px;box-shadow:var(--shadow)">
+      <div style="font-size:13px;font-weight:600;margin-bottom:4px">⚠️ 质量预警</div>
+      <div style="font-size:11px;color:var(--text-sub);margin-bottom:8px">需关注的低质量组</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="padding:10px;background:#FEE2E2;border-radius:8px;font-size:12px">
+          <span style="color:#DC2626;font-weight:600">🔴 专家十组</span>
+          <span style="color:#991B1B">· 375仅25% · 35占75%</span>
+        </div>
+        <div style="padding:10px;background:#FEF3C7;border-radius:8px;font-size:12px">
+          <span style="color:#D97706;font-weight:600">🟡 行业九组</span>
+          <span style="color:#92400E">· 无375 · 需激活</span>
+        </div>
+        <div style="padding:10px;background:#FEF3C7;border-radius:8px;font-size:12px">
+          <span style="color:#D97706;font-weight:600">🟡 平台专家九组</span>
+          <span style="color:#92400E">· 375仅20% · 储备不足</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="section-title" style="display:flex;align-items:center;justify-content:space-between">
     <span>赛道策略</span>
     <div style="display:flex;gap:8px;justify-content:flex-end">
@@ -1470,6 +1529,35 @@ const G = [
 ];
 // [name, ageNew, ageOld, tenureNew, tenureOld, youngNew, youngOld, countNew, countOld]
 
+// ====== 绩效数据 (Y26) ======
+// [小组名, 375+% , 35+% , 35% , 35-% , 人数, 所属赛道, 负责人]
+const PERF_DATA = [
+  ['行一组', 25, 50, 25, 0, 8, '欧莱雅', '千月'],
+  ['行二组', 17, 67, 17, 0, 6, '雅诗兰黛', '吴邪'],
+  ['行三组', 17, 50, 33, 0, 6, '宝洁汉高', '克斯'],
+  ['行四组', 0, 43, 57, 0, 7, '亚太新悦', '波雅'],
+  ['行五组', 0, 67, 33, 0, 6, '国货护肤', '嘉莉'],
+  ['行六组', 18, 45, 27, 9, 11, '国货新悦', '昭燃'],
+  ['行七组', 50, 33, 17, 0, 6, '国货新悦', '吴邪'],
+  ['行八组', 38, 25, 38, 0, 8, '科技护肤', '白泉'],
+  ['行九组', 0, 50, 50, 0, 6, '国货彩香', '蓓拉'],
+  ['行十组', 0, 50, 50, 0, 4, '联合利华', '南舟'],
+  ['行十一', 40, 20, 40, 0, 5, 'Personal Care', '希坦'],
+  ['行十二', 0, 50, 25, 25, 4, 'Home Care', '希坦(跨组)'],
+  ['专家一', 33, 33, 33, 0, 6, '欧莱雅', '千月'],
+  ['专家二', 22, 56, 22, 0, 9, '雅诗兰黛', '菀得'],
+  ['专家三', 20, 40, 40, 0, 5, '宝洁汉高', '若琳'],
+  ['专家四', 25, 25, 50, 0, 4, '亚太新悦', '古娴'],
+  ['专家五', 50, 25, 25, 0, 4, '欧美新悦', '希莫'],
+  ['专家六', 38, 25, 38, 0, 8, '国货护肤', '希莫'],
+  ['专家七', 43, 29, 29, 0, 7, '国货新悦', '波图'],
+  ['专家八', 40, 40, 0, 20, 5, '科技护肤', '银尘'],
+  ['专家九', 20, 40, 40, 0, 5, '国货彩香', '珠珠'],
+  ['专家十', 25, 25, 50, 0, 4, '联合利华', '惊鸿'],
+  ['专家十一', 0, 100, 0, 0, 2, 'Personal Care', '惊鸿'],
+  ['专家十二', 0, 50, 50, 0, 2, 'Home Care', '惊鸿'],
+];
+
 const TIP = document.getElementById('chartTooltip');
 
 function showTip(e, html) {
@@ -1753,7 +1841,149 @@ drawBarChart('tenureChart',
 <span style="color:#94A3B8">在职人数</span><span>${g[7]}人 ${delta(g[7],g[8],'人',false)}</span>
 </div>`
 );
+
+// 渲染绩效图表
+renderPerfCharts();
 } // end initCharts
+
+// ====== 绩效图表渲染 ======
+function renderPerfCharts() {
+  // 375+占比横向柱状图
+  const canvas375 = document.getElementById('perf375Chart');
+  if (!canvas375) return;
+  
+  const ctx = canvas375.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas375.parentElement.getBoundingClientRect();
+  const W = Math.max(rect.width - 32, 300);
+  const H = 200;
+  canvas375.width = W * dpr;
+  canvas375.height = H * dpr;
+  canvas375.style.width = W + 'px';
+  canvas375.style.height = H + 'px';
+  ctx.scale(dpr, dpr);
+  
+  // 按375+占比排序
+  const sorted = [...PERF_DATA].sort((a, b) => b[1] - a[1]);
+  const avg = 24; // 行业一部均值
+  
+  const barH = 14;
+  const gap = 6;
+  const leftW = 70;
+  const chartW = W - leftW - 20;
+  const chartH = sorted.length * (barH + gap) + 20;
+  
+  // 绘制背景均值线
+  const avgX = leftW + (avg / 60) * chartW;
+  ctx.strokeStyle = '#F59E0B';
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  ctx.moveTo(avgX, 10);
+  ctx.lineTo(avgX, chartH);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  
+  // 绘制每个组的柱状图
+  sorted.forEach((p, i) => {
+    const [name, p375, p35p, p35, p35m, count] = p;
+    const y = 10 + i * (barH + gap);
+    const x = leftW;
+    
+    // 组名
+    ctx.fillStyle = '#374151';
+    ctx.font = '12px sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText(name, leftW - 8, y + barH - 2);
+    
+    // 375+ 柱 (金色)
+    const w375 = (p375 / 60) * chartW;
+    ctx.fillStyle = '#F59E0B';
+    ctx.fillRect(x, y, w375, barH);
+    
+    // 35+ 柱 (蓝色) - 堆叠
+    const w35p = (p35p / 60) * chartW;
+    ctx.fillStyle = '#3B82F6';
+    ctx.fillRect(x + w375, y, w35p, barH);
+    
+    // 35 柱 (灰色)
+    const w35 = (p35 / 60) * chartW;
+    ctx.fillStyle = '#9CA3AF';
+    ctx.fillRect(x + w375 + w35p, y, w35, barH);
+    
+    // 数值标签
+    ctx.fillStyle = '#1F2937';
+    ctx.font = 'bold 11px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(p375 + '%', x + w375 + 4, y + barH - 2);
+  });
+  
+  // 图例
+  const legendY = chartH + 8;
+  const legends = [['375+', '#F59E0B'], ['35+', '#3B82F6'], ['35', '#9CA3AF']];
+  legends.forEach(([label, color], i) => {
+    const lx = leftW + i * 50;
+    ctx.fillStyle = color;
+    ctx.fillRect(lx, legendY, 10, 10);
+    ctx.fillStyle = '#6B7280';
+    ctx.font = '11px sans-serif';
+    ctx.fillText(label, lx + 14, legendY + 9);
+  });
+  
+  // 交互点击
+  canvas375.onclick = (e) => {
+    const r = canvas375.getBoundingClientRect();
+    const x = e.clientX - r.left;
+    const y = e.clientY - r.top;
+    const idx = Math.floor((y - 10) / (barH + gap));
+    if (idx >= 0 && idx < sorted.length) {
+      showPerfModal(sorted[idx]);
+    }
+  };
+}
+
+function showPerfModal(p) {
+  const [name, p375, p35p, p35, p35m, count, track, leader] = p;
+  const total = p375 + p35p + p35 + p35m;
+  
+  const content = `
+    <div style="min-width:280px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+        <div>
+          <div style="font-size:18px;font-weight:700;color:var(--text)">${name}</div>
+          <div style="font-size:12px;color:#6B7280">📌 ${track} &nbsp;·&nbsp; 👤 ${leader}</div>
+        </div>
+        <div style="background:#FEF3C7;border-radius:8px;padding:8px 14px;text-align:center">
+          <div style="font-size:22px;font-weight:800;color:#B45309">${p375}</div>
+          <div style="font-size:10px;color:#92400E">375+ %</div>
+        </div>
+      </div>
+      
+      <div style="margin-bottom:16px">
+        <div style="font-size:12px;font-weight:600;color:#6B7280;margin-bottom:8px">绩效分布（${count}人）</div>
+        <div style="display:flex;height:24px;border-radius:6px;overflow:hidden;margin-bottom:8px">
+          <div style="flex:${p375};background:#F59E0B;display:flex;align-items:center;justify-content:center;font-size:11px;color:white;font-weight:600">${p375}%</div>
+          <div style="flex:${p35p};background:#3B82F6;display:flex;align-items:center;justify-content:center;font-size:11px;color:white;font-weight:600">${p35p}%</div>
+          <div style="flex:${p35};background:#9CA3AF;display:flex;align-items:center;justify-content:center;font-size:11px;color:white;font-weight:600">${p35}%</div>
+          ${p35m > 0 ? `<div style="flex:${p35m};background:#EF4444;display:flex;align-items:center;justify-content:center;font-size:11px;color:white;font-weight:600">${p35m}%</div>` : ''}
+        </div>
+        <div style="display:flex;gap:12px;font-size:11px;flex-wrap:wrap">
+          <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:#F59E0B;border-radius:2px"></span>375+: ${Math.round(count*p375/100)}人</span>
+          <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:#3B82F6;border-radius:2px"></span>35+: ${Math.round(count*p35p/100)}人</span>
+          <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:#9CA3AF;border-radius:2px"></span>35: ${Math.round(count*p35/100)}人</span>
+          ${p35m > 0 ? `<span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:#EF4444;border-radius:2px"></span>35-: ${Math.round(count*p35m/100)}人</span>` : ''}
+        </div>
+      </div>
+      
+      ${p375 < 20 ? `<div style="padding:10px;background:#FEE2E2;border-radius:8px;font-size:12px;color:#DC2626">⚠️ 375+占比低于均值(${p375}% vs 24%)，建议关注高潜激活</div>` : ''}
+      ${p375 >= 35 ? `<div style="padding:10px;background:#D1FAE5;border-radius:8px;font-size:12px;color:#059669">✅ 375+占比优秀，人才密度高</div>` : ''}
+    </div>
+  `;
+  
+  const modal = document.getElementById('modalBackdrop');
+  document.getElementById('modalTitle').textContent = name + ' · 绩效详情';
+  document.getElementById('modalBody').innerHTML = content;
+  modal.classList.add('show');
+}
 
 // 用 window load 确保 layout 完全稳定后再画图
 if (document.readyState === 'complete') {
