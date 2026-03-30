@@ -103,16 +103,17 @@
     .track-card.expanded .track-content { max-height: 2000px; }
     .track-body { padding: 0 20px 20px; border-top: 1px solid var(--border); }
 
-    /* Groups */
-    .groups { margin: 16px 0; }
-    .group-row { display: flex; align-items: center; padding: 12px; background: var(--gray-light); border-radius: 10px; margin-bottom: 8px; flex-wrap: nowrap; white-space: nowrap; }
-    .group-type { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; margin-right: 12px; min-width: 80px; text-align: center; }
+    /* Groups — 重新设计为紧凑单行表格 */
+    .groups { margin: 12px 0; }
+    .group-row { display: grid; grid-template-columns: 60px 1fr auto; align-items: center; gap: 8px; padding: 8px 12px; background: var(--gray-light); border-radius: 8px; margin-bottom: 6px; min-height: 40px; }
+    .group-type { font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; text-align: center; white-space: nowrap; }
     .group-type.cbd { background: #EFF6FF; color: var(--blue); }
     .group-type.expert { background: #F0FDF4; color: var(--green); }
-    .group-info { flex: 1; }
-    .group-name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .group-leader { font-size: 12px; color: var(--text-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .group-stats { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+    .group-info { min-width: 0; }
+    .group-name { font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .group-leader { font-size: 11px; color: var(--text-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .group-stats { display: flex; gap: 6px; align-items: center; flex-shrink: 0; white-space: nowrap; }
+    .group-stats span[style] { white-space: nowrap !important; }
 
     /* Strategy Blocks */
     .strategy-block { margin-top: 16px; padding: 16px; border-radius: 10px; position: relative; }
@@ -1610,7 +1611,7 @@ function drawBarChart(canvasId, dataFn, avgLine, minY, maxY, unit, colorFn, tipF
     window.addEventListener('resize', render);
   }
 
-  // 绑定交互
+  // 绑定交互：hover 显示 tooltip，click 弹窗详情
   canvas.addEventListener('mousemove', e => {
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
@@ -1618,13 +1619,96 @@ function drawBarChart(canvasId, dataFn, avgLine, minY, maxY, unit, colorFn, tipF
     const my = (e.clientY - rect.top) * (canvas.height / rect.height);
     const hit = canvas._hit(mx, my);
     if (hit) {
-      canvas.style.opacity = '1';
+      canvas.style.cursor = 'pointer';
       showTip(e, canvas._tipFn(hit.g, hit.vN, hit.vO));
     } else {
+      canvas.style.cursor = 'default';
       hideTip();
     }
   });
-  canvas.addEventListener('mouseleave', hideTip);
+  canvas.addEventListener('mouseleave', () => { hideTip(); canvas.style.cursor = 'default'; });
+  canvas.addEventListener('click', e => {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const mx = (e.clientX - rect.left) * scaleX;
+    const my = (e.clientY - rect.top) * (canvas.height / rect.height);
+    const hit = canvas._hit(mx, my);
+    if (hit) {
+      hideTip();
+      showChartDetailModal(hit.g);
+    }
+  });
+}
+
+// 图表点击弹窗：显示该小组完整数据
+function showChartDetailModal(g) {
+  const [name, ageN, ageO, tenN, tenO, yN, yO, cN, cO, track, leader] = g;
+  const dAge = (ageN - ageO).toFixed(1);
+  const dYoung = (yN - yO).toFixed(1);
+  const dCount = cN - cO;
+  const dTen = (tenN - tenO).toFixed(2);
+  const dColor = (v, bad) => v > 0 ? (bad ? '#EF4444' : '#10B981') : (bad ? '#10B981' : '#EF4444');
+  const dArrow = v => v > 0 ? '▲' : '▼';
+
+  const content = `
+    <div style="min-width:300px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+        <div>
+          <div style="font-size:18px;font-weight:700;color:var(--text)">${name}</div>
+          <div style="font-size:12px;color:#6B7280;margin-top:2px">📌 ${track} &nbsp;·&nbsp; 👤 ${leader}</div>
+        </div>
+        <div style="background:#F0FDF4;border-radius:8px;padding:8px 14px;text-align:center">
+          <div style="font-size:22px;font-weight:800;color:#166534">${cN}</div>
+          <div style="font-size:10px;color:#6B7280">当前在职</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+        <div style="background:#EFF6FF;border-radius:10px;padding:12px">
+          <div style="font-size:10px;color:#6B7280;margin-bottom:4px">📊 平均年龄</div>
+          <div style="font-size:22px;font-weight:700;color:#1D4ED8">${ageN}<span style="font-size:12px">岁</span></div>
+          <div style="font-size:11px;margin-top:4px">
+            vs 上月 ${ageO}岁 &nbsp;
+            <span style="color:${dColor(dAge, true)}">${dArrow(dAge)}${Math.abs(dAge)}岁</span>
+          </div>
+        </div>
+        <div style="background:#FFF7ED;border-radius:10px;padding:12px">
+          <div style="font-size:10px;color:#6B7280;margin-bottom:4px">🌱 ≤28岁占比</div>
+          <div style="font-size:22px;font-weight:700;color:#C2410C">${yN}<span style="font-size:12px">%</span></div>
+          <div style="font-size:11px;margin-top:4px">
+            vs 上月 ${yO}% &nbsp;
+            <span style="color:${dColor(dYoung, false)}">${dArrow(dYoung)}${Math.abs(dYoung)}%</span>
+          </div>
+        </div>
+        <div style="background:#F5F3FF;border-radius:10px;padding:12px">
+          <div style="font-size:10px;color:#6B7280;margin-bottom:4px">⏳ 平均司龄</div>
+          <div style="font-size:22px;font-weight:700;color:#7C3AED">${tenN}<span style="font-size:12px">yr</span></div>
+          <div style="font-size:11px;margin-top:4px">
+            vs 上月 ${tenO}yr &nbsp;
+            <span style="color:${dColor(dTen, false)}">${dArrow(dTen)}${Math.abs(dTen)}yr</span>
+          </div>
+        </div>
+        <div style="background:#F0FDF4;border-radius:10px;padding:12px">
+          <div style="font-size:10px;color:#6B7280;margin-bottom:4px">👥 在职人数</div>
+          <div style="font-size:22px;font-weight:700;color:#166534">${cN}<span style="font-size:12px">人</span></div>
+          <div style="font-size:11px;margin-top:4px">
+            vs 上月 ${cO}人 &nbsp;
+            <span style="color:${dCount >= 0 ? '#10B981' : '#EF4444'}">${dCount >= 0 ? '▲+' : '▼'}${Math.abs(dCount)}人</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding:10px;background:#F8FAFC;border-radius:8px;font-size:11px;color:#6B7280;text-align:center">
+        数据来源：3.18 vs 3.26 花名册 · 点击赛道卡片查看更多详情
+      </div>
+    </div>
+  `;
+
+  const modal = document.getElementById('modalBackdrop');
+  const mContent = document.getElementById('modalContent');
+  document.getElementById('modalTitle').textContent = name + ' · 人才结构详情';
+  mContent.innerHTML = content;
+  modal.classList.add('show');
 }
 
 function ageColor(v, avg) { return v > avg ? '#FCA5A5' : '#93C5FD'; }
