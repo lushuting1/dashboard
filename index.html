@@ -1939,6 +1939,110 @@ function renderPerfCharts() {
       showPerfModal(sorted[idx]);
     }
   };
+  
+  // 渲染中间：绩效全景分布（CBD vs 专家对比）
+  renderPerfDistChart();
+}
+
+function renderPerfDistChart() {
+  const canvas = document.getElementById('perfDistChart');
+  if (!canvas) return;
+  
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  const W = Math.max(rect.width - 32, 300);
+  const H = 200;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.scale(dpr, dpr);
+  
+  // 计算CBD和专家的整体分布
+  const cbdData = PERF_DATA.filter(p => p[0].startsWith('行'));
+  const expertData = PERF_DATA.filter(p => p[0].startsWith('专家'));
+  
+  const avg = (arr, idx) => arr.reduce((sum, p) => sum + p[idx], 0) / arr.length;
+  
+  const cbdAvg = { 
+    p375: avg(cbdData, 1), 
+    p35p: avg(cbdData, 2), 
+    p35: avg(cbdData, 3), 
+    p35m: avg(cbdData, 4),
+    count: cbdData.reduce((s, p) => s + p[5], 0)
+  };
+  const expAvg = { 
+    p375: avg(expertData, 1), 
+    p35p: avg(expertData, 2), 
+    p35: avg(expertData, 3), 
+    p35m: avg(expertData, 4),
+    count: expertData.reduce((s, p) => s + p[5], 0)
+  };
+  
+  const barW = 60;
+  const gap = 40;
+  const startX = (W - barW * 2 - gap) / 2;
+  const chartH = 140;
+  const baseY = 150;
+  
+  // 绘制CBD柱状图（堆叠）
+  const drawStackedBar = (x, data, label) => {
+    let y = baseY;
+    const scale = chartH / 100;
+    
+    // 35- (红色，如果有)
+    if (data.p35m > 0) {
+      const h = data.p35m * scale;
+      ctx.fillStyle = '#EF4444';
+      ctx.fillRect(x, y - h, barW, h);
+      y -= h;
+    }
+    // 35 (灰色)
+    const h35 = data.p35 * scale;
+    ctx.fillStyle = '#9CA3AF';
+    ctx.fillRect(x, y - h35, barW, h35);
+    y -= h35;
+    // 35+ (蓝色)
+    const h35p = data.p35p * scale;
+    ctx.fillStyle = '#3B82F6';
+    ctx.fillRect(x, y - h35p, barW, h35p);
+    y -= h35p;
+    // 375+ (金色)
+    const h375 = data.p375 * scale;
+    ctx.fillStyle = '#F59E0B';
+    ctx.fillRect(x, y - h375, barW, h375);
+    
+    // 标签
+    ctx.fillStyle = '#374151';
+    ctx.font = 'bold 13px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, x + barW/2, baseY + 18);
+    ctx.fillStyle = '#6B7280';
+    ctx.font = '11px sans-serif';
+    ctx.fillText(data.count + '人', x + barW/2, baseY + 32);
+    
+    // 375+数值
+    ctx.fillStyle = '#B45309';
+    ctx.font = 'bold 12px sans-serif';
+    ctx.fillText(data.p375.toFixed(0) + '%', x + barW/2, baseY - chartH - 8);
+  };
+  
+  drawStackedBar(startX, cbdAvg, 'CBD');
+  drawStackedBar(startX + barW + gap, expAvg, '专家');
+  
+  // 图例
+  const legendY = baseY + 45;
+  const legends = [['375+', '#F59E0B'], ['35+', '#3B82F6'], ['35', '#9CA3AF'], ['35-', '#EF4444']];
+  const legendStartX = (W - legends.length * 55) / 2;
+  legends.forEach(([label, color], i) => {
+    const lx = legendStartX + i * 55;
+    ctx.fillStyle = color;
+    ctx.fillRect(lx, legendY, 10, 10);
+    ctx.fillStyle = '#6B7280';
+    ctx.font = '11px sans-serif';
+    ctx.fillText(label, lx + 14, legendY + 9);
+  });
 }
 
 function showPerfModal(p) {
