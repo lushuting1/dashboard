@@ -229,8 +229,8 @@
   <!-- 待离职 -->
   <div onclick="showModal('leave')" style="background:white;border-radius:14px;padding:18px 20px;box-shadow:0 2px 12px rgba(0,0,0,0.08);cursor:pointer;transition:all 0.2s;border-top:4px solid #F59E0B" onmouseenter="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.14)'" onmouseleave="this.style.transform='';this.style.boxShadow='0 2px 12px rgba(0,0,0,0.08)'">
     <div style="font-size:11px;color:#9CA3AF;margin-bottom:6px">待离职</div>
-    <div style="font-size:28px;font-weight:800;color:#F59E0B;line-height:1">3</div>
-    <div style="font-size:11px;color:#6B7280;margin-top:6px">4.07/4.13/4.23 · 点击看名单</div>
+    <div style="font-size:28px;font-weight:800;color:#F59E0B;line-height:1">2</div>
+    <div style="font-size:11px;color:#6B7280;margin-top:6px">4.07/4.13 · 点击看名单</div>
   </div>
 </div>
 
@@ -1212,7 +1212,7 @@
 
     <div class="personnel-card">
       <div class="personnel-header orange">
-        📤 待离职（3人）
+        📤 待离职（2人）
       </div>
       <div class="person-item">
         <div class="person-info">
@@ -1227,13 +1227,6 @@
           <div class="person-meta">行业四组 · 被动离职</div>
         </div>
         <span class="person-status leave">2026-04-13</span>
-      </div>
-      <div class="person-item">
-        <div class="person-info">
-          <div class="person-name">诗源(杨骑宇)</div>
-          <div class="person-meta">财务职能 · 被动离职（审批中）</div>
-        </div>
-        <span class="person-status leave">2026-04-23</span>
       </div>
     </div>
   </div>
@@ -1774,7 +1767,7 @@ const STAT_TIPS = {
   'onboard': '📍 在职165人<br>国际美护49 | 国货美护64 | 日化46 | Solution 2<br>含L1，数据截至2026-03-30',
   'hc': '📊 总HC 164<br>❌ 缺编：欧莱雅(1)+欧美(1)+科技(2)+PC(3)=缺7<br>⚠️ 超编：雅诗(5)+亚太(2)+国护(7)+国新(4)+彩香(3)+联合(1)+HC(1)=超23',
   'join': '📥 待入职3人（行业一部）<br>JICHAO SUN — 行业一部 L1 · 4.08<br>邓鸿颖 — 行业五组 IC · 4.08<br>洪方雯 — 平台专家十一组 IC · 4.27',
-  'leave': '📤 待离职3人<br>六尾(许凌豪) — 专家九组 · 4.07 主动<br>波雅(李淑华) — 行业四组 · 4.13 被动<br>诗源(杨骑宇) — 财务职能 · 4.23 被动（审批中）',
+  'leave': '📤 待离职2人<br>六尾(许凌豪) — 专家九组 · 4.07 主动<br>波雅(李淑华) — 行业四组 · 4.13 被动',
   'young': '🌱 ≤28岁占比 39.9%<br>环比+1.9%（vs 2.26: 38.0%）<br>同比+11.2%（vs 25.2: 28.7%）<br>一年来年轻化趋势显著',
   'efficiency': '⏱ 3月人效 9.1h<br>低于本月均值约1h<br>13人低于均值 · 需关注工时异常',
   'age': '👥 平均年龄 29.6岁<br>环比-0.1岁（vs 2.26: 29.7岁）<br>同比-0.5岁（vs 25.2: 30.1岁）<br>整体年轻化趋势良好',
@@ -1807,8 +1800,8 @@ const modalData = {
     content: '<div class="modal-item"><div class="modal-item-title">JICHAO SUN</div><div class="modal-item-sub">行业一部 L1 · 上海 · 2026-04-08 · 上级：昂扬</div></div><div class="modal-item"><div class="modal-item-title">邓鸿颖</div><div class="modal-item-sub">行业五组 · 上海 · 2026-04-08 · 上级：吴邪</div></div><div class="modal-item"><div class="modal-item-title">洪方雯</div><div class="modal-item-sub">平台专家十一组 · 上海 · 2026-04-27 · 上级：惊鸿</div></div>'
   },
   leave: {
-    title: '待离职人员（3人）',
-    content: '<div class="modal-item"><div class="modal-item-title">诗源(杨骑宇)</div><div class="modal-item-sub">财务职能 · 被动离职 · 2026-04-23 · 审批中</div></div><div class="modal-item"><div class="modal-item-title">六尾(许凌豪)</div><div class="modal-item-sub">平台专家九组 · 主动离职 · 2026-04-07 · 待离职</div></div><div class="modal-item"><div class="modal-item-title">波雅(李淑华)</div><div class="modal-item-sub">行业四组 · 被动离职 · 2026-04-13 · 待离职</div></div><div style="margin-top:12px;padding:12px;background:var(--red-light);border-radius:8px;font-size:12px;color:var(--red)"><strong>⚠️ 注意：</strong>六尾4/7离职（平台专家九组）、波雅4/13离职（行业四组），需及时做交接和补位安排</div>'
+    title: '待离职人员（2人）',
+    content: '<div class="modal-item"><div class="modal-item-title">六尾(许凌豪)</div><div class="modal-item-sub">平台专家九组 · 主动离职 · 2026-04-07 · 待离职</div></div><div class="modal-item"><div class="modal-item-title">波雅(李淑华)</div><div class="modal-item-sub">行业四组 · 被动离职 · 2026-04-13 · 待离职</div></div><div style="margin-top:12px;padding:12px;background:var(--red-light);border-radius:8px;font-size:12px;color:var(--red)"><strong>⚠️ 注意：</strong>六尾4/7离职（平台专家九组）、波雅4/13离职（行业四组），需及时做交接和补位安排</div>'
   },
   recruit: {
     title: '在招职位',
@@ -1848,6 +1841,123 @@ function closeModalDirect() {
 
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closeModalDirect();
+});
+</script>
+
+<!-- 赛道详情弹窗 -->
+<script>
+// 赛道详情数据
+const TRACK_DETAILS = {
+  '欧莱雅': {
+    name: '欧莱雅',
+    category: '国际美护',
+    staff: 15, hc: 16, hcv: '缺1',
+    target: '12.00亿', yoy: '+7.5%',
+    avgAge: 29.1, avgTenure: 1.8, youngPct: 40,
+    leaders: [{name:'千月', group:'行业一组', type:'CBD', staff:9, hc:8, age:29.9, tenure:2.4, young:22}, {name:'古娴', group:'平台专家一组', type:'专家', staff:6, hc:8, age:27.8, tenure:1.0, young:67}],
+    strategy: {biz:'1、增长承压（yoy+7.5%），在欧莱雅26年品牌投资回流线下+抖音的背景下，重点防守钱包份额；2、推进种品（pillar spa矩阵精细化）+种牌（品牌persona长线经营）+种体验（o2o+线上）三线并进；3、七方联动提效kFs协同，强化一方数据应用', people:'1、L1之间凝聚力不足，互相不是很熟；2、CBD与专家的配合问题', hr:'整体维稳&焕活——1、业务对专家数据洞察与复盘能力依赖；2、375续代同学流失；3、留住375IC，焕发活力，调动到（目前没有1位在做）；4、CBD和专家的配合提升', todo:'1.结合绩效期catch up HIPO IC规划路径；2.补充1-2位运营'}
+  },
+  '雅诗兰黛': {
+    name: '雅诗兰黛',
+    category: '国际美护',
+    staff: 16, hc: 11, hcv: '超5',
+    target: '6.52亿', yoy: '+7%',
+    avgAge: 29.3, avgTenure: 1.7, youngPct: 56,
+    leaders: [{name:'吴邪', group:'行业二组', type:'CBD', staff:8, hc:8, age:29.6, tenure:1.7, young:62.5}, {name:'菀得', group:'平台专家二组', type:'专家', staff:8, hc:3, age:29.0, tenure:1.6, young:50}],
+    strategy: {biz:'雅诗兰黛25年增长有压力；1、25年Q1增长尚可，Q2需盯防钱包份额；2、以品牌升级（小棕瓶50周年+白金上新）为契机，做种牌+种品+种体验的三线并行；3、KFS种草提效+线下o2o联动', people:'专家人少但精，CBD年轻化程度好；专家与CBD配合节奏需磨合', hr:'专家缩编中（HC11→9→7），保持人效；CBD维持编制，关注年轻梯队培养', todo:'1.专家缩编后的工作负荷与留存；2.CBD年轻化优势转化为业务结果'}
+  }
+  // 其他赛道数据省略，实际需要补充完整
+};
+
+// 显示赛道详情弹窗
+function showTrackModal(trackName) {
+  const t = TRACK_DETAILS[trackName];
+  if (!t) return;
+  
+  const leadersHtml = t.leaders.map(l => `
+    <div style="padding:10px;background:#F8FAFC;border-radius:8px;margin-bottom:8px">
+      <div style="font-weight:600;color:var(--text)">${l.group}</div>
+      <div style="font-size:12px;color:var(--text-sub)">负责人：${l.name} | ${l.type}</div>
+      <div style="font-size:11px;color:#6B7280;margin-top:4px">${l.staff}人 | HC${l.hc} | 均龄${l.age}岁 | ≤28岁${l.young}%</div>
+    </div>
+  `).join('');
+  
+  const content = `
+    <div style="max-width:480px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div>
+          <div style="font-size:18px;font-weight:700">${t.name}</div>
+          <div style="font-size:12px;color:#6B7280">${t.category}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:20px;font-weight:700;color:#166534">${t.staff}<span style="font-size:12px">人</span></div>
+          <div style="font-size:11px;color:#6B7280">HC${t.hc} ${t.hcv}</div>
+        </div>
+      </div>
+      
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px">
+        <div style="background:#F0FDF4;padding:10px;border-radius:8px;text-align:center">
+          <div style="font-size:10px;color:#6B7280">均龄</div>
+          <div style="font-size:16px;font-weight:600;color:#166534">${t.avgAge}岁</div>
+        </div>
+        <div style="background:#EFF6FF;padding:10px;border-radius:8px;text-align:center">
+          <div style="font-size:10px;color:#6B7280">司龄</div>
+          <div style="font-size:16px;font-weight:600;color:#1D4ED8">${t.avgTenure}年</div>
+        </div>
+        <div style="background:#FFF7ED;padding:10px;border-radius:8px;text-align:center">
+          <div style="font-size:10px;color:#6B7280">≤28岁占比</div>
+          <div style="font-size:16px;font-weight:600;color:#C2410C">${t.youngPct}%</div>
+        </div>
+      </div>
+      
+      <div style="margin-bottom:16px">
+        <div style="font-size:12px;font-weight:600;color:#6B7280;margin-bottom:8px">👥 小组信息</div>
+        ${leadersHtml}
+      </div>
+      
+      <div style="background:#F0FDF4;border-left:3px solid #166534;padding:12px;border-radius:0 8px 8px 0;margin-bottom:12px">
+        <div style="font-size:12px;font-weight:600;color:#166534;margin-bottom:4px">📈 业务策略</div>
+        <div style="font-size:11px;color:var(--text);line-height:1.6">${t.strategy.biz}</div>
+      </div>
+      
+      <div style="background:#FEE2E2;border-left:3px solid #EF4444;padding:12px;border-radius:0 8px 8px 0;margin-bottom:12px">
+        <div style="font-size:12px;font-weight:600;color:#EF4444;margin-bottom:4px">⚠️ 人才问题</div>
+        <div style="font-size:11px;color:var(--text);line-height:1.6">${t.strategy.people}</div>
+      </div>
+      
+      <div style="background:#E0E7FF;border-left:3px solid #6366F1;padding:12px;border-radius:0 8px 8px 0;margin-bottom:12px">
+        <div style="font-size:12px;font-weight:600;color:#6366F1;margin-bottom:4px">🎯 HR策略</div>
+        <div style="font-size:11px;color:var(--text);line-height:1.6">${t.strategy.hr}</div>
+      </div>
+      
+      <div style="background:#DBEAFE;padding:10px;border-radius:8px">
+        <div style="font-size:11px;color:#1D4ED8;font-weight:600">📌 Todo</div>
+        <div style="font-size:11px;color:var(--text)">${t.strategy.todo}</div>
+      </div>
+    </div>
+  `;
+  
+  // 使用现有的 showModal 或创建弹窗
+  const modal = document.getElementById('modalBackdrop');
+  const mContent = document.getElementById('modalContent');
+  mContent.innerHTML = `<div style="position:relative"><button onclick="closeModalDirect()" style="position:absolute;top:-10px;right:-10px;width:28px;height:28px;border-radius:50%;border:none;background:#F3F4F6;cursor:pointer;font-size:16px;color:#6B7280">×</button>${content}</div>`;
+  modal.classList.add('show');
+}
+
+// 为赛道卡片添加点击查看详情（Ctrl+点击或右键，保留原有的展开/收起）
+document.querySelectorAll('.track-card').forEach(card => {
+  const header = card.querySelector('.track-header');
+  const titleEl = card.querySelector('.track-title');
+  if (titleEl) {
+    const trackName = titleEl.childNodes[0].textContent.trim();
+    // 双击打开详情弹窗
+    header.addEventListener('dblclick', (e) => {
+      e.stopPropagation();
+      showTrackModal(trackName);
+    });
+    // 添加提示
+    header.title = '单击展开/收起，双击查看详情';
+  }
 });
 </script>
 
