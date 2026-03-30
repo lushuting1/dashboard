@@ -1951,7 +1951,8 @@ function renderPerfDistChart() {
   const ctx = canvas.getContext('2d');
   const dpr = window.devicePixelRatio || 1;
   const rect = canvas.parentElement.getBoundingClientRect();
-  const W = Math.max(rect.width - 32, 300);
+  // 兜底：如果父容器宽度为0，使用 body 宽度计算（三列布局每列约1/3）
+  const W = rect.width > 0 ? Math.max(rect.width - 32, 280) : Math.max((document.body.clientWidth - 100) / 3, 280);
   const H = 200;
   canvas.width = W * dpr;
   canvas.height = H * dpr;
