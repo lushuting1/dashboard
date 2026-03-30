@@ -1705,9 +1705,8 @@ function showChartDetailModal(g) {
   `;
 
   const modal = document.getElementById('modalBackdrop');
-  const mContent = document.getElementById('modalContent');
   document.getElementById('modalTitle').textContent = name + ' · 人才结构详情';
-  mContent.innerHTML = content;
+  document.getElementById('modalBody').innerHTML = content;
   modal.classList.add('show');
 }
 
@@ -2029,10 +2028,9 @@ function showTrackModal(trackName) {
     </div>
   `;
   
-  // 使用现有的 showModal 或创建弹窗
+  // 使用现有的 modal
   const modal = document.getElementById('modalBackdrop');
-  const mContent = document.getElementById('modalContent');
-  mContent.innerHTML = `<div style="position:relative"><button onclick="closeModalDirect()" style="position:absolute;top:-10px;right:-10px;width:28px;height:28px;border-radius:50%;border:none;background:#F3F4F6;cursor:pointer;font-size:16px;color:#6B7280">×</button>${content}</div>`;
+  document.getElementById('modalBody').innerHTML = `<div style="position:relative"><button onclick="closeModalDirect()" style="position:absolute;top:-10px;right:-10px;width:28px;height:28px;border-radius:50%;border:none;background:#F3F4F6;cursor:pointer;font-size:16px;color:#6B7280">×</button>${content}</div>`;
   modal.classList.add('show');
 }
 
