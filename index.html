@@ -105,14 +105,14 @@
 
     /* Groups */
     .groups { margin: 16px 0; }
-    .group-row { display: flex; align-items: center; padding: 12px; background: var(--gray-light); border-radius: 10px; margin-bottom: 8px; }
+    .group-row { display: flex; align-items: center; padding: 12px; background: var(--gray-light); border-radius: 10px; margin-bottom: 8px; flex-wrap: nowrap; white-space: nowrap; }
     .group-type { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; margin-right: 12px; min-width: 80px; text-align: center; }
     .group-type.cbd { background: #EFF6FF; color: var(--blue); }
     .group-type.expert { background: #F0FDF4; color: var(--green); }
     .group-info { flex: 1; }
-    .group-name { font-size: 13px; font-weight: 600; }
-    .group-leader { font-size: 12px; color: var(--text-sub); }
-    .group-stats { display: flex; gap: 8px; }
+    .group-name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .group-leader { font-size: 12px; color: var(--text-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .group-stats { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
 
     /* Strategy Blocks */
     .strategy-block { margin-top: 16px; padding: 16px; border-radius: 10px; position: relative; }
@@ -1298,13 +1298,13 @@
 
   <!-- 汇总数字 -->
   <div class="pipe-summary-bar">
-    <div class="pipe-sum-item"><div class="pipe-sum-num" style="color:#166534">2</div><div class="pipe-sum-label">✅ Offer 环节</div></div>
+    <div class="pipe-sum-item"><div class="pipe-sum-num" style="color:#166534">3</div><div class="pipe-sum-label">✅ Offer 环节</div></div>
     <div class="pipe-sum-divider"></div>
     <div class="pipe-sum-item"><div class="pipe-sum-num" style="color:#4CAF50">2</div><div class="pipe-sum-label">🟢 Final 通过</div></div>
     <div class="pipe-sum-divider"></div>
     <div class="pipe-sum-item"><div class="pipe-sum-num" style="color:#F59E0B">6</div><div class="pipe-sum-label">🟡 待 Final</div></div>
     <div class="pipe-sum-divider"></div>
-    <div class="pipe-sum-item"><div class="pipe-sum-num" style="color:var(--text-sub)">10</div><div class="pipe-sum-label">活跃在途合计</div></div>
+    <div class="pipe-sum-item"><div class="pipe-sum-num" style="color:var(--text-sub)">11</div><div class="pipe-sum-label">活跃在途合计</div></div>
 
     <div style="margin-left:auto;font-size:12px;color:var(--text-sub)">点击卡片查看详情</div>
   </div>
@@ -1321,7 +1321,7 @@
 
     <!-- Offer -->
     <div>
-      <div class="pipe-col-header pipe-stage-offer">✅ Offer 环节 <span class="pipe-count">2人</span></div>
+      <div class="pipe-col-header pipe-stage-offer">✅ Offer 环节 <span class="pipe-count">3人</span></div>
       <div class="pipe-col-cards">
         <div class="pipe-cand offer" onclick="pipeOpenModal('liuyilin')">
           <div class="pipe-cand-name">刘一霖</div>
@@ -1336,6 +1336,13 @@
           <div class="pipe-chips"><span class="pipe-chip chip-func">策划</span><span class="pipe-chip chip-35">3.5+ ✓</span><span class="pipe-chip chip-date">3.17</span></div>
           <div class="pipe-ta">TA: 蒂蒂 | 面：惊鸿</div>
           <a class="pipe-link" href="https://hr.xiaohongshu.com/applicant-view/1852810/6111007" target="_blank" onclick="event.stopPropagation()">🔗 查简历</a>
+        </div>
+        <div class="pipe-cand offer" onclick="pipeOpenModal('songzejin')">
+          <div class="pipe-cand-name">宋泽锦</div>
+          <div class="pipe-cand-track">🏷 待确认</div>
+          <div class="pipe-chips"><span class="pipe-chip chip-func">待确认</span><span class="pipe-chip chip-375">3.75 ✓</span><span class="pipe-chip chip-date">3.30</span></div>
+          <div class="pipe-ta">TA: 待确认 | 面：待确认</div>
+          <a class="pipe-link" href="https://hr.xiaohongshu.com/applicant-view/2404083/5955659/history" target="_blank" onclick="event.stopPropagation()">🔗 查简历</a>
         </div>
       </div>
     </div>
@@ -1703,6 +1710,7 @@ rosterData.groups.forEach(g => {
 const pipeCandidates = {
   liuyilin: { name:'刘一霖', track:'宝洁汉高', func:'平台专家', grade:'3.75', date:'3月12日', stage:'offer', stageLabel:'✅ Offer 环节', interviewer:'若琳', ta:'欧然', remark:'宝洁方向平台专家，375以上，已进offer环节', steps:['L1一面 ✓','昂扬二面 ✓','Final ✓','Offer ←当前'], url:'https://hr.xiaohongshu.com/applicant-view/2424053/6064531/resume' },
   hongfangwen: { name:'洪方雯', track:'日化（整体）', func:'策划', grade:'3.5+', date:'3月17日', stage:'offer', stageLabel:'✅ Offer 环节', interviewer:'惊鸿', ta:'蒂蒂', remark:'日化赛道策划，3.5+通过，已进offer', steps:['L1一面 ✓','昂扬二面 ✓','Final ✓','Offer ←当前'], url:'https://hr.xiaohongshu.com/applicant-view/1852810/6111007' },
+  songzejin: { name:'宋泽锦', track:'待确认', func:'待确认', grade:'3.75', date:'3月30日', stage:'offer', stageLabel:'✅ Offer 环节', interviewer:'待确认', ta:'待确认', remark:'新加入offer环节候选人，详情待补充', steps:['L1一面 ✓','昂扬二面 ✓','Final ✓','Offer ←当前'], url:'https://hr.xiaohongshu.com/applicant-view/2404083/5955659/history' },
   xinran: { name:'王肖肖', track:'Personal Care', func:'CBD', grade:'3.75', date:'3月24日', stage:'final', stageLabel:'🟢 Final 通过', interviewer:'南舟', ta:'天雪', remark:'PC赛道CBD，3.75，final已过，待推进offer', steps:['L1一面 ✓','昂扬二面 ✓','Final ✓','Offer ←待推进'], url:'https://hr.xiaohongshu.com/applicant-evaluation?talentId=2445326&interviewId=6229583&interviewScheduleId=690671' },
   yangke: { name:'杨珂', track:'雅诗兰黛', func:'CBD', grade:'3.5+', date:'3月25日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'吴邪', ta:'贵音', remark:'雅诗兰黛CBD，昂扬3.5+通过，Final面试尚未通过', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'https://hr.xiaohongshu.com/applicant-evaluation?talentId=699425&interviewId=6305303&interviewScheduleId=690632' },
   dumingzhe: { name:'杜明哲', track:'欧美新悦', func:'策划→定位专家', grade:'3.75', date:'3月19日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'箱得', ta:'瑞妮', remark:'昂扬3.75通过，建议定位专家方向，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'https://hr.xiaohongshu.com/applicant-view/1076989/6164749/resume' },
