@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HC 管理看板</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#F2F3F5;color:#1a1a1a;min-height:100vh}
+
+/* ── Header ── */
+.hd{background:linear-gradient(120deg,#FF2442 0%,#FF6B81 100%);color:#fff;padding:20px 32px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 12px rgba(255,36,66,.25)}
+.hd-title{font-size:20px;font-weight:700;letter-spacing:-.3px}
+.hd-sub{font-size:12px;opacity:.8;margin-top:3px}
+.hd-right{text-align:right;font-size:12px;opacity:.85}
+.hd-right a{color:rgba(255,255,255,.9);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.4)}
+
+/* ── Wrapper ── */
+.wrap{max-width:1280px;margin:0 auto;padding:24px 24px 40px}
+
+/* ── 顶部概览条 ── */
+.overview-strip{display:flex;gap:0;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:24px;border:1px solid #E8E8E8}
+.ov-item{flex:1;padding:16px 20px;text-align:center;border-right:1px solid #F0F0F0}
+.ov-item:last-child{border-right:none}
+.ov-val{font-size:28px;font-weight:800;line-height:1}
+.ov-label{font-size:11px;color:#888;margin-top:5px;font-weight:500}
+.ov-red{color:#FF2442}.ov-blue{color:#1565C0}.ov-green{color:#00B248}.ov-orange{color:#FF6D00}.ov-gap{color:#00B248}
+
+/* ── 招聘快览条 ── */
+.recruit-bar{background:#fff;border-radius:12px;padding:14px 24px;margin-bottom:24px;border:1px solid #E8E8E8;box-shadow:0 1px 4px rgba(0,0,0,.06);display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.rb-label{font-size:12px;font-weight:700;color:#666}
+.rb-item{display:flex;align-items:baseline;gap:6px}
+.rb-num{font-size:22px;font-weight:800;color:#1565C0}
+.rb-desc{font-size:12px;color:#888}
+.rb-link{margin-left:auto}
+.rb-link a{color:#FF2442;text-decoration:none;font-size:13px;font-weight:600;padding:7px 16px;border:1.5px solid #FF2442;border-radius:20px;white-space:nowrap}
+.rb-link a:hover{background:#FF2442;color:#fff}
+
+/* ── 部门卡片区 ── */
+.dept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;margin-bottom:8px}
+.dept-card{background:#fff;border-radius:12px;border:1.5px solid #E8E8E8;box-shadow:0 1px 4px rgba(0,0,0,.06);cursor:pointer;transition:all .2s;overflow:hidden}
+.dept-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.12);border-color:#ddd;transform:translateY(-1px)}
+.dept-card.open{border-color:#FF2442;box-shadow:0 4px 16px rgba(255,36,66,.15)}
+.dept-card-inner{padding:20px}
+.dept-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+.dept-name{font-size:17px;font-weight:700}
+.dept-meta{font-size:12px;color:#888;margin-top:3px}
+.dept-gap-pill{font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px;white-space:nowrap}
+.dept-metrics{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.metric{text-align:center;min-width:44px}
+.metric-val{font-size:22px;font-weight:800;line-height:1}
+.metric-label{font-size:10px;color:#999;margin-top:3px}
+.metric-divider{font-size:18px;color:#ccc;font-weight:300;margin:0 2px;padding-bottom:12px}
+.metric-sep{width:1px;height:32px;background:#F0F0F0;margin:0 4px}
+.dept-footer{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid #F5F5F5}
+.sub-count{font-size:12px;color:#999}
+.dept-link{font-size:12px;color:#1565C0;text-decoration:none;font-weight:600}
+.dept-link:hover{color:#FF2442}
+
+/* ── 子组详情 ── */
+.dept-detail{background:#fff;border-radius:12px;border:1.5px solid #FFD6DC;box-shadow:0 2px 8px rgba(255,36,66,.08);overflow:hidden;margin-bottom:16px}
+.detail-header{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;background:#FFF8F9;border-bottom:1px solid #FFE0E5}
+.detail-title{font-size:14px;font-weight:700;color:#FF2442}
+.detail-all-link{font-size:12px;color:#FF2442;text-decoration:none;font-weight:600;border:1px solid #FF2442;padding:4px 12px;border-radius:16px}
+.detail-table{width:100%;border-collapse:collapse;font-size:13px}
+.detail-table th{background:#FAFAFA;padding:10px 14px;font-size:11px;font-weight:600;color:#888;text-align:center;border-bottom:1px solid #F0F0F0;white-space:nowrap}
+.detail-table th.th-name{text-align:left;padding-left:20px}
+.detail-table td{padding:10px 14px;text-align:center;border-bottom:1px solid #F8F8F8;vertical-align:middle}
+.detail-table tr:last-child td{border-bottom:none}
+.detail-table tr:hover td{background:#FAFBFC}
+.child-name-cell{text-align:left!important;padding-left:20px!important}
+.child-name{font-weight:600;font-size:13px}
+.child-leader{font-size:11px;color:#999;margin-top:2px}
+.n{font-size:14px;font-weight:500}
+.actual-n{font-size:16px;font-weight:800}
+.total-row td{background:#FFF8F9;font-size:13px}
+
+/* ── 颜色工具 ── */
+.red{color:#FF2442}.green{color:#00B248}.orange{color:#FF6D00}
+.gap-pill{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700}
+.gap-neg{background:#FFEBEE;color:#FF2442}
+.gap-over{background:#E8F5E9;color:#2E7D32}
+.gap-zero{background:#F5F5F5;color:#757575}
+.match-tag{display:inline-block;padding:3px 8px;border-radius:10px;font-size:11px;font-weight:600}
+.m-excellent{background:#E8F5E9;color:#2E7D32}
+.m-good{background:#E3F2FD;color:#1565C0}
+.m-doubt{background:#FFF3E0;color:#E65100}
+.m-warning{background:#FFEBEE;color:#C62828}
+.m-normal{background:#F5F5F5;color:#757575}
+.row-link{color:#1565C0;text-decoration:none;font-size:12px;font-weight:600;white-space:nowrap}
+.row-link:hover{color:#FF2442}
+
+/* ── 图例 ── */
+.legend{display:flex;flex-wrap:wrap;gap:16px;font-size:11px;color:#999;margin-top:20px;padding:12px 16px;background:#fff;border-radius:8px;border:1px solid #F0F0F0}
+.legend span{white-space:nowrap}
+
+/* ── Footer ── */
+.footer{text-align:center;margin-top:32px;font-size:11px;color:#bbb}
+.footer a{color:#FF2442;text-decoration:none}
+
+/* ── 动画 ── */
+.dept-detail{animation:slideDown .2s ease}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<div class="hd">
+  <div>
+    <div class="hd-title">📊 HC 管理看板</div>
+    <div class="hd-sub">商业交易 · 行业一部 + 财务一组 + 资本市场</div>
+  </div>
+  <div class="hd-right">
+    <div>数据更新：2026-03-31</div>
+    <div style="margin-top:4px"><a href="https://hr.xiaohongshu.com/ehr-workbench/hrbp" target="_blank">HRBP 工作台 ↗</a></div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- 全局概览条 -->
+  <div class="overview-strip">
+    <div class="ov-item"><div class="ov-val ov-red">224</div><div class="ov-label">在职 HC</div></div>
+    <div class="ov-item"><div class="ov-val ov-blue">220</div><div class="ov-label">目标 HC</div></div>
+    <div class="ov-item"><div class="ov-val ov-green">+12</div><div class="ov-label">流入在途</div></div>
+    <div class="ov-item"><div class="ov-val ov-orange">-4</div><div class="ov-label">流出在途</div></div>
+    <div class="ov-item"><div class="ov-val">232</div><div class="ov-label">预计在职</div></div>
+    <div class="ov-item"><div class="ov-val ov-gap">超 12</div><div class="ov-label">HC Gap</div></div>
+    <div class="ov-item"><div class="ov-val ov-blue">39</div><div class="ov-label">在招职位</div></div>
+  </div>
+
+  <!-- 招聘快览 -->
+  <div class="recruit-bar">
+    <span class="rb-label">📋 招聘快览</span>
+    <div class="rb-item">
+      <span class="rb-num">39</span>
+      <div class="rb-desc"><div>在招职位数</div></div>
+    </div>
+    <div class="rb-item">
+      <span class="rb-num">137</span>
+      <div class="rb-desc"><div>在途候选人</div></div>
+    </div>
+    <div class="rb-link">
+      <a href="https://hr.xiaohongshu.com/next/applicant-manage/social" target="_blank">查看全部待入职人员明细 →</a>
+    </div>
+  </div>
+
+  <!-- 部门卡片 -->
+  <div class="dept-grid">
+    
+<div class="dept-card" onclick="toggleDept(0)">
+  <div class="dept-card-inner">
+    <div class="dept-top">
+      <div>
+        <div class="dept-name">行业一部</div>
+        <div class="dept-meta">L2 · 昂扬(李昂)</div>
+      </div>
+      <div class="dept-gap-pill gap-over">超 5</div>
+    </div>
+    <div class="dept-metrics">
+      <div class="metric">
+        <div class="metric-val red">165</div>
+        <div class="metric-label">在职</div>
+      </div>
+      <div class="metric-divider">/</div>
+      <div class="metric">
+        <div class="metric-val">164</div>
+        <div class="metric-label">目标HC</div>
+      </div>
+      <div class="metric-sep"></div>
+      <div class="metric">
+        <div class="metric-val green">+7</div>
+        <div class="metric-label">流入</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val orange">-3</div>
+        <div class="metric-label">流出</div>
+      </div>
+      <div class="metric-sep"></div>
+      <div class="metric">
+        <div class="metric-val">169</div>
+        <div class="metric-label">预计在职</div>
+      </div>
+    </div>
+    <div class="dept-footer">
+      <span class='sub-count'>▼ 点击展开 25 个子组</span>
+      <a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=5000273" target="_blank" onclick="event.stopPropagation()" class="dept-link">查看人选 →</a>
+    </div>
+  </div>
+</div>
+<div class="dept-card" onclick="toggleDept(1)">
+  <div class="dept-card-inner">
+    <div class="dept-top">
+      <div>
+        <div class="dept-name">财务一组</div>
+        <div class="dept-meta">L2 · 白真(白乐天)</div>
+      </div>
+      <div class="dept-gap-pill gap-over">超 7</div>
+    </div>
+    <div class="dept-metrics">
+      <div class="metric">
+        <div class="metric-val red">54</div>
+        <div class="metric-label">在职</div>
+      </div>
+      <div class="metric-divider">/</div>
+      <div class="metric">
+        <div class="metric-val">51</div>
+        <div class="metric-label">目标HC</div>
+      </div>
+      <div class="metric-sep"></div>
+      <div class="metric">
+        <div class="metric-val green">+5</div>
+        <div class="metric-label">流入</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val orange">-1</div>
+        <div class="metric-label">流出</div>
+      </div>
+      <div class="metric-sep"></div>
+      <div class="metric">
+        <div class="metric-val">58</div>
+        <div class="metric-label">预计在职</div>
+      </div>
+    </div>
+    <div class="dept-footer">
+      <span class='sub-count'>▼ 点击展开 5 个子组</span>
+      <a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=5003008" target="_blank" onclick="event.stopPropagation()" class="dept-link">查看人选 →</a>
+    </div>
+  </div>
+</div>
+<div class="dept-card" onclick="toggleDept(2)">
+  <div class="dept-card-inner">
+    <div class="dept-top">
+      <div>
+        <div class="dept-name">资本市场</div>
+        <div class="dept-meta">L1 · 劳拉(蒋晓雯)</div>
+      </div>
+      <div class="dept-gap-pill gap-zero">达标</div>
+    </div>
+    <div class="dept-metrics">
+      <div class="metric">
+        <div class="metric-val red">5</div>
+        <div class="metric-label">在职</div>
+      </div>
+      <div class="metric-divider">/</div>
+      <div class="metric">
+        <div class="metric-val">5</div>
+        <div class="metric-label">目标HC</div>
+      </div>
+      <div class="metric-sep"></div>
+      <div class="metric">
+        <div class="metric-val green">+0</div>
+        <div class="metric-label">流入</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val orange">-0</div>
+        <div class="metric-label">流出</div>
+      </div>
+      <div class="metric-sep"></div>
+      <div class="metric">
+        <div class="metric-val">5</div>
+        <div class="metric-label">预计在职</div>
+      </div>
+    </div>
+    <div class="dept-footer">
+      <span class='sub-count'>无子组</span>
+      <a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=5000785" target="_blank" onclick="event.stopPropagation()" class="dept-link">查看人选 →</a>
+    </div>
+  </div>
+</div>
+  </div>
+
+  <!-- 子组详情（点击展开） -->
+  
+<div class="dept-detail" id="detail-0" style="display:none">
+  <div class="detail-header">
+    <span class="detail-title">行业一部 · 子组明细</span>
+    <a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=5000273" target="_blank" class="detail-all-link">查看行业一部全部人选 →</a>
+  </div>
+  <table class="detail-table">
+    <thead>
+      <tr>
+        <th class="th-name">小组 / 负责人</th>
+        <th>在职</th><th>目标HC</th><th>流入在途</th><th>流出在途</th>
+        <th>预计在职</th><th>HC Gap</th><th>人岗匹配</th><th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+<tr>
+  <td class="child-name-cell">
+    <div class="child-name">行业一组</div>
+    <div class="child-leader">千月(陈思琪)</div>
+  </td>
+  <td class="n actual-n">9</td>
+  <td class="n">8</td>
+  <td class="n green">+0</td>
+  <td class="n orange">-0</td>
+  <td class="n">9</td>
+  <td class="n"><span class="gap-pill gap-over">超 1</span></td>
+  <td class="n"><span class="match-tag m-excellent">优秀</span></td>
+  <td><a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=5000407" target="_blank" class="row-link">人选 →</a></td>
+</tr>
+<tr>
+  <td class="child-name-cell">
+    <div class="child-name">行业二组</div>
+    <div class="child-leader">吴邪(吴建成)</div>
+  </td>
+  <td class="n actual-n">9</td>
+  <td class="n">6</td>
+  <td class="n green">+0</td>
+  <td class="n orange">-0</td>
+  <td class="n">9</td>
+  <td class="n"><span class="gap-pill gap-over">超 3</span></td>
+  <td class="n"><span class="match-tag m-excellent">优秀</span></td>
+  <td><a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=5001415" target="_blank" class="row-link">人选 →</a></td>
+</tr>
+<tr>
+  <td class="child-name-cell">
+    <div class="child-name">行业三组</div>
+    <div class="child-leader">克斯(陈宇田)</div>
+  </td>
+  <td class="n actual-n">9</td>
+  <td class="n">8</td>
+  <td class="n green">+0</td>
+  <td class="n orange">-0</td>
+  <td class="n">9</td>
+  <td class="n"><span class="gap-pill gap-over">超 1</span></td>
+  <td class="n"><span class="match-tag m-normal">匹配</span></td>
+  <td><a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=5002337" target="_blank" class="row-link">人选 →</a></td>
+</tr>
+<tr>
+  <td class="child-name-cell">
+    <div class="child-name">行业四组</div>
+    <div class="child-leader">千月(陈思琪)</div>
+  </td>
+  <td class="n actual-n">5</td>
+  <td class="n">4</td>
+  <td class="n green">+0</td>
+  <td class="n orange">-1</td>
+  <td class="n">4</td>
+  <td class="n"><span class="gap-pill gap-zero">达标</span></td>
+  <td class="n"><span class="match-tag m-normal">匹配</span></td>
+  <td><a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=5000277" target="_blank" class="row-link">人选 →</a></td>
+</tr>
+<tr>
+  <td class="child-name-cell">
+    <div class="child-name">行业五组</div>
+    <div class="child-leader">吴邪(吴建成)</div>
+  </td>
+  <td class="n actual-n">4</td>
+  <td class="n">5</td>
+  <td class="n green">+1</td>
+  <td class="n orange">-0</td>
+  <td class="n">5</td>
+  <td class="n"><span class="gap-pill gap-zero">达标</span></td>
+  <td class="n"><span class="match-tag m-normal">匹配</span></td>
+  <td><a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=5003873" target="_blank" class="row-link">人选 →</a></td>
+</tr>
+<tr>
+  <td class="child-name-cell">
+    <div class="child-name">行业六组</div>
+    <div class="child-leader">嘉莉(惠江雯)</div>
+  </td>
+  <td class="n actual-n">11</td>
+  <td class="n">5</td>
+  <td class="n green">+0</td>
+  <td class="n orange">-0</td>
+  <td class="n">11</td>
+  <td class="n"><span class="gap-pill gap-over">超 6</span></td>
+  <td class="n"><span class="match-tag m-normal">匹配</span></td>
+  <td><a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=5003074" target="_blank" class="row-link">人选 →</a></td>
+</tr>
+<tr>
+  <td class="child-name-cell">
+    <div class="child-name">行业七组</div>
+    <div class="child-leader">昭燃(千艺)</div>
+  </td>
+  <td class="n actual-n">12</td>
+  <td class="n">9</td>
+  <td class="n green">+1</td>
+  <td class="n orange">-0</td>
+  <td class="n">13</td>
+  <td class="n"><span class="gap-pill gap-over">超 4</span></td>
+  <td class="n"><span class="match-tag m-normal">匹配</span></td>
+  <td><a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=5000278" target="_blank" class="row-link">人选 →</a></td>
+</tr>
+<tr>
+  <td class="child-name-cell">
+    <div class="child-name">行业八组</div>
+    <div class="child-leader">吴邪(吴建成)</div>
+  </td>
+  <td class="n actual-n">6</td>
+  <td class="n">7</td>
+  <td class="n green">+0</td>
+  <td class="n orange">-0</td>
+  <td class="n">6</td>
+  <td class="n"><span class="gap-pill gap-neg">缺 1</span></td>
+  <td class="n"><span class="match-tag m-excellent">优秀</span></td>
+  <td><a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=5002599" target="_blank" class="row-link">人选 →</a></td>
+</tr>
+<tr>
+  <td class="child-name-cell">
+    <div class="child-name">行业九组</div>
+    <div class="child-leader">白泉(陈可茵)</div>
+  </td>
+  <td class="n actual-n">8</td>
+  <td class="n">7</td>
+  <td class="n green">+0</td>
+  <td class="n orange">-0</td>
+  <td class="n">8</td>
+  <td class="n"><span class="gap-pill gap-over">超 1</span></td>
+  <td class="n"><span class="match-tag m-excellent">优秀</span></td>
+  <td><a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=5002603" target="_blank" class="row-link">人选 →</a></td>
+</tr>
+<tr>
+  <td class="child-name-cell">
+    <div class="child-name">行业十组</div>
+    <div class="child-leader">昂扬(李昂)</div>
+  </td>
+  <td class="n actual-n">9</td>
+  <td class="n">8</td>
+  <td class="n green">+1</td>
+  <td class="n orange">-1</td>
+  <td class="n">9</td>
+  <td class="n"><span class="gap-pill gap-over">超 1</span></td>
+  <td class="n"><span class="match-tag m-normal">匹配</span></td>
+  <td><a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=5002600" target="_blank" class="row-link">人选 →</a></td>
+</tr>
+<tr>
+  <td class="child-name-cell">
+    <div class="child-name">行业十一组</div>
+    <div class="child-leader">南舟(姚苒)</div>
+  </td>
+  <td class="n actual-n">5</td>
+  <td class="n">6</td>
+  <td class="n green">+0</td>
+  <td class="n orange">-0</td>
+  <td class="n">5</td>
+  <td class="n"><span class="gap-pill gap-neg">缺 1</span></td>
+  <td class="n"><span class="match-tag m-normal">匹配</span></td>
+  <td><a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=5002601" target="_blank" class="row-link">人选 →</a></td>
+</tr>
+<tr>
+  <td class="child-name-cell">
+    <div class="child-name">行业十二组</div>
+    <div class="child-leader">希坦(贺琼)</div>
+  </td>
+  <td class="n actual-n">5</td>
+  <td class="n">4</td>
+  <td class="n green">+0</td>
+  <td class="n orange">-0</td>
+  <td class="n">5</td>
+  <td class="n"><span class="gap-pill gap-over">超 1</span></td>
+  <td class="n"><span class="match-tag m-normal">匹配</span></td>
+  <td><a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=5003733" target="_blank" class="row-link">人选 →</a></td>
+</tr>
+<tr>
+  <td class="child-name-cell">
+    <div class="child-name">平台专家一组</div>
+    <div class="child-leader">古娴(高逸群)</div>
+  </td>
+  <td class="n actual-n">6</td>
+  <td class="n">8</td>
+  <td class="n green">+0</td>
+  <td class="n orange">-0</td>
+  <td class="n">6</td>
+  <td class="n"><span class="gap-pill gap-neg">缺 2</span></td>
+  <td class="n"><span class="match-tag m-normal">匹配</span></td>
+  <td><a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=5003735" target="_blank" class="row-link">人选 →</a></td>
+</tr>
+<tr>
+  <td class="child-name-cell">
+    <div class="child-name">平台专家二组</div>
+    <div class="child-leader">菀得(杨森)</div>
+  </td>
+  <td class="n actual-n">8</td>
+  <td class="n">5</td>
+  <td class="n green">+1</td>
+  <td class="n orange">-0</td>
+  <td class="n">9</td>
+  <td class="n"><span class="gap-pill gap-over">超 4</span></td>
+  <td class="n"><span class="match-tag m-excellent">优秀</span></td>
+  <td><a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=5002123" target="_blank" class="row-link">人选 →</a></td>
+</tr>
+<tr>
+  <td class="child-name-cell">
+    <div class="child-name">平台专家三组</div>
+    <div class="child-leader">若琳(陈若琳)</div>
+  </td>
+  <td class="n actual-n">7</td>
+  <td class="n">6</td>
+  <td class="n green">+0</td>
+  <td class="n orange">-0</td>
+  <td class="n">7</td>
+  <td class="n"><span class="gap-pill gap-over">超 1</span></td>
+  <td class="n"><span class="match-tag m-excellent">优秀</span></td>
+  <td><a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=5000280" target="_blank" class="row-link">人选 →</a></td>
+</tr>
+<tr>
+  <td class="child-name-cell">
+    <div class="child-name">平台专家四组</div>
+    <div class="child-leader">古娴(高逸群)</div>
+  </td>
+  <td class="n actual-n">4</td>
+  <td class="n">3</td>
+  <td class="n green">+0</td>
+  <td class="n orange">-0</td>
+  <td class="n">4</td>
+  <td class="n"><span class="gap-pill gap-over">超 1</span></td>
+  <td class="n"><span class="match-tag m-excellent">优秀</span></td>
+  <td><a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=5002742" target="_blank" class="row-link">人选 →</a></td>
+</tr>
+<tr>
+  <td class="child-name-cell">
+    <div class="child-name">平台专家五组</div>
+    <div class="child-leader">菀得(杨森)</div>
+  </td>
+  <td class="n actual-n">5</td>
+  <td class="n">5</td>
+  <td class="n green">+0</td>
+  <td class="n orange">-0</td>
+  <td class="n">5</td>
+  <td class="n"><span class="gap-pill gap-zero">达标</span></td>
+  <td class="n"><span class="match-tag m-excellent">优秀</span></td>
+  <td><a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=5003874" target="_blank" class="row-link">人选 →</a></td>
+</tr>
+<tr>
+  <td class="child-name-cell">
+    <div class="child-name">平台专家六组</div>
+    <div class="child-leader">希莫(焦潞林)</div>
+  </td>
+  <td class="n actual-n">5</td>
+  <td class="n">4</td>
+  <td class="n green">+0</td>
+  <td class="n orange">-0</td>
+  <td class="n">5</td>
+  <td class="n"><span class="gap-pill gap-over">超 1</span></td>
+  <td class="n"><span class="match-tag m-normal">匹配</span></td>
+  <td><a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=5000281" target="_blank" class="row-link">人选 →</a></td>
+</tr>
+<tr>
+  <td class="child-name-cell">
+    <div class="child-name">平台专家七组</div>
+    <div class="child-leader">希莫(焦潞林)</div>
+  </td>
+  <td class="n actual-n">9</td>
+  <td class="n">8</td>
+  <td class="n green">+0</td>
+  <td class="n orange">-0</td>
+  <td class="n">9</td>
+  <td class="n"><span class="gap-pill gap-over">超 1</span></td>
+  <td class="n"><span class="match-tag m-normal">匹配</span></td>
+  <td><a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=5003080" target="_blank" class="row-link">人选 →</a></td>
+</tr>
+<tr>
+  <td class="child-name-cell">
+    <div class="child-name">平台专家八组</div>
+    <div class="child-leader">菀得(杨森)</div>
+  </td>
+  <td class="n actual-n">5</td>
+  <td class="n">6</td>
+  <td class="n green">+0</td>
+  <td class="n orange">-0</td>
+  <td class="n">5</td>
+  <td class="n"><span class="gap-pill gap-neg">缺 1</span></td>
+  <td class="n"><span class="match-tag m-normal">匹配</span></td>
+  <td><a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=5003079" target="_blank" class="row-link">人选 →</a></td>
+</tr>
+<tr>
+  <td class="child-name-cell">
+    <div class="child-name">平台专家九组</div>
+    <div class="child-leader">清也(刘月)</div>
+  </td>
+  <td class="n actual-n">8</td>
+  <td class="n">6</td>
+  <td class="n green">+0</td>
+  <td class="n orange">-1</td>
+  <td class="n">7</td>
+  <td class="n"><span class="gap-pill gap-over">超 1</span></td>
+  <td class="n"><span class="match-tag m-normal">匹配</span></td>
+  <td><a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=5002605" target="_blank" class="row-link">人选 →</a></td>
+</tr>
+<tr>
+  <td class="child-name-cell">
+    <div class="child-name">平台专家十组</div>
+    <div class="child-leader">珠珠(朱梦倩)</div>
+  </td>
+  <td class="n actual-n">6</td>
+  <td class="n">6</td>
+  <td class="n green">+0</td>
+  <td class="n orange">-0</td>
+  <td class="n">6</td>
+  <td class="n"><span class="gap-pill gap-zero">达标</span></td>
+  <td class="n"><span class="match-tag m-normal">匹配</span></td>
+  <td><a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=5002610" target="_blank" class="row-link">人选 →</a></td>
+</tr>
+<tr>
+  <td class="child-name-cell">
+    <div class="child-name">平台专家十一组</div>
+    <div class="child-leader">惊鸿(王晶晶)</div>
+  </td>
+  <td class="n actual-n">4</td>
+  <td class="n">5</td>
+  <td class="n green">+1</td>
+  <td class="n orange">-0</td>
+  <td class="n">5</td>
+  <td class="n"><span class="gap-pill gap-zero">达标</span></td>
+  <td class="n"><span class="match-tag m-normal">—</span></td>
+  <td><a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=5003734" target="_blank" class="row-link">人选 →</a></td>
+</tr>
+<tr>
+  <td class="child-name-cell">
+    <div class="child-name">平台专家十二组</div>
+    <div class="child-leader">惊鸿(王晶晶)</div>
+  </td>
+  <td class="n actual-n">4</td>
+  <td class="n">3</td>
+  <td class="n green">+1</td>
+  <td class="n orange">-0</td>
+  <td class="n">5</td>
+  <td class="n"><span class="gap-pill gap-over">超 2</span></td>
+  <td class="n"><span class="match-tag m-normal">匹配</span></td>
+  <td><a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=5002609" target="_blank" class="row-link">人选 →</a></td>
+</tr>
+<tr>
+  <td class="child-name-cell">
+    <div class="child-name">行业策略组</div>
+    <div class="child-leader">飞云(张一鸣)</div>
+  </td>
+  <td class="n actual-n">2</td>
+  <td class="n">3</td>
+  <td class="n green">+0</td>
+  <td class="n orange">-0</td>
+  <td class="n">2</td>
+  <td class="n"><span class="gap-pill gap-neg">缺 1</span></td>
+  <td class="n"><span class="match-tag m-normal">匹配</span></td>
+  <td><a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=5000306" target="_blank" class="row-link">人选 →</a></td>
+</tr></tbody>
+    <tfoot>
+      <tr class="total-row">
+        <td><strong>行业一部合计</strong></td>
+        <td class="n actual-n"><strong>165</strong></td>
+        <td class="n"><strong>164</strong></td>
+        <td class="n green"><strong>+7</strong></td>
+        <td class="n orange"><strong>-3</strong></td>
+        <td class="n"><strong>169</strong></td>
+        <td class="n"><span class="gap-pill gap-over"><strong>超 5</strong></span></td>
+        <td>—</td><td>—</td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+<div class="dept-detail" id="detail-1" style="display:none">
+  <div class="detail-header">
+    <span class="detail-title">财务一组 · 子组明细</span>
+    <a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=5003008" target="_blank" class="detail-all-link">查看财务一组全部人选 →</a>
+  </div>
+  <table class="detail-table">
+    <thead>
+      <tr>
+        <th class="th-name">小组 / 负责人</th>
+        <th>在职</th><th>目标HC</th><th>流入在途</th><th>流出在途</th>
+        <th>预计在职</th><th>HC Gap</th><th>人岗匹配</th><th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+<tr>
+  <td class="child-name-cell">
+    <div class="child-name">技术财务分析</div>
+    <div class="child-leader">艾妲(谭婧)</div>
+  </td>
+  <td class="n actual-n">6</td>
+  <td class="n">6</td>
+  <td class="n green">+1</td>
+  <td class="n orange">-0</td>
+  <td class="n">7</td>
+  <td class="n"><span class="gap-pill gap-over">超 1</span></td>
+  <td class="n"><span class="match-tag m-normal">匹配</span></td>
+  <td><a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=5003010" target="_blank" class="row-link">人选 →</a></td>
+</tr>
+<tr>
+  <td class="child-name-cell">
+    <div class="child-name">交易财务分析</div>
+    <div class="child-leader">白真(白乐天)</div>
+  </td>
+  <td class="n actual-n">10</td>
+  <td class="n">7</td>
+  <td class="n green">+1</td>
+  <td class="n orange">-0</td>
+  <td class="n">11</td>
+  <td class="n"><span class="gap-pill gap-over">超 4</span></td>
+  <td class="n"><span class="match-tag m-excellent">优秀</span></td>
+  <td><a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=2194372" target="_blank" class="row-link">人选 →</a></td>
+</tr>
+<tr>
+  <td class="child-name-cell">
+    <div class="child-name">商业财务分析</div>
+    <div class="child-leader">花且(王玮)</div>
+  </td>
+  <td class="n actual-n">9</td>
+  <td class="n">10</td>
+  <td class="n green">+0</td>
+  <td class="n orange">-0</td>
+  <td class="n">9</td>
+  <td class="n"><span class="gap-pill gap-neg">缺 1</span></td>
+  <td class="n"><span class="match-tag m-excellent">优秀</span></td>
+  <td><a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=2194371" target="_blank" class="row-link">人选 →</a></td>
+</tr>
+<tr>
+  <td class="child-name-cell">
+    <div class="child-name">财务职能</div>
+    <div class="child-leader">花且(王玮)</div>
+  </td>
+  <td class="n actual-n">20</td>
+  <td class="n">20</td>
+  <td class="n green">+0</td>
+  <td class="n orange">-1</td>
+  <td class="n">19</td>
+  <td class="n"><span class="gap-pill gap-neg">缺 1</span></td>
+  <td class="n"><span class="match-tag m-normal">—</span></td>
+  <td><a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=932829" target="_blank" class="row-link">人选 →</a></td>
+</tr>
+<tr>
+  <td class="child-name-cell">
+    <div class="child-name">资金管理组</div>
+    <div class="child-leader">绫波(李静)</div>
+  </td>
+  <td class="n actual-n">8</td>
+  <td class="n">8</td>
+  <td class="n green">+2</td>
+  <td class="n orange">-0</td>
+  <td class="n">10</td>
+  <td class="n"><span class="gap-pill gap-over">超 2</span></td>
+  <td class="n"><span class="match-tag m-excellent">优秀</span></td>
+  <td><a href="https://hr.xiaohongshu.com/next/applicant-manage/social?departmentId=932833" target="_blank" class="row-link">人选 →</a></td>
+</tr></tbody>
+    <tfoot>
+      <tr class="total-row">
+        <td><strong>财务一组合计</strong></td>
+        <td class="n actual-n"><strong>54</strong></td>
+        <td class="n"><strong>51</strong></td>
+        <td class="n green"><strong>+5</strong></td>
+        <td class="n orange"><strong>-1</strong></td>
+        <td class="n"><strong>58</strong></td>
+        <td class="n"><span class="gap-pill gap-over"><strong>超 7</strong></span></td>
+        <td>—</td><td>—</td>
+      </tr>
+    </tfoot>
+  </table>
+</div><div class="dept-detail" id="detail-2" style="display:none"></div>
+
+  <!-- 图例 -->
+  <div class="legend">
+    <span>📌 <b>在职</b> = 当前实际在职人数</span>
+    <span>📌 <b>目标HC</b> = 核定编制数</span>
+    <span>📌 <b>流入在途</b> = 外招入职中 + 活水转入</span>
+    <span>📌 <b>流出在途</b> = 待离职 + 活水转出</span>
+    <span>📌 <b>预计在职</b> = 在职 + 流入 − 流出</span>
+    <span>📌 <b>HC Gap</b> = 目标HC − 预计在职（正数=缺人）</span>
+    <span>📌 点击部门卡片可展开子组明细</span>
+  </div>
+
+</div>
+
+<div class="footer">
+  数据来源：<a href="https://hr.xiaohongshu.com/ehr-workbench/hrbp" target="_blank">HRBP 工作台</a> &nbsp;|&nbsp;
+  人选明细：<a href="https://hr.xiaohongshu.com/next/applicant-manage/social" target="_blank">招聘管理系统</a> &nbsp;|&nbsp;
+  生成于 2026-03-31 16:14
+</div>
+
+<script>
+function toggleDept(idx) {
+  const detail = document.getElementById('detail-' + idx);
+  const cards  = document.querySelectorAll('.dept-card');
+  const card   = cards[idx];
+  const isOpen = detail.style.display !== 'none';
+
+  // 关闭所有
+  document.querySelectorAll('.dept-detail').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.dept-card').forEach(el => el.classList.remove('open'));
+
+  if (!isOpen && detail.innerHTML.trim()) {
+    detail.style.display = 'block';
+    card.classList.add('open');
+    // 滚动到详情
+    setTimeout(() => detail.scrollIntoView({behavior:'smooth', block:'nearest'}), 50);
+  }
+}
+</script>
+
+</body>
+</html>
