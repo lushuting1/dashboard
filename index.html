@@ -354,7 +354,7 @@
     <div style="background:white;border-radius:12px;padding:16px;box-shadow:var(--shadow)">
       <div style="font-size:13px;font-weight:600;margin-bottom:4px">🥇 各组375+占比</div>
       <div style="font-size:11px;color:var(--text-sub);margin-bottom:8px">🏆 高于均值(24%)标金</div>
-      <canvas id="perf375Chart" width="0" height="200" style="width:100%;cursor:crosshair"></canvas>
+      <canvas id="perf375Chart" width="0" height="600" style="width:100%;cursor:crosshair"></canvas>
     </div>
     <div style="background:white;border-radius:12px;padding:16px;box-shadow:var(--shadow);max-height:420px;overflow-y:auto">
       <div style="font-size:13px;font-weight:600;margin-bottom:4px">📊 绩效全景分布</div>
@@ -1856,12 +1856,6 @@ function renderPerfCharts() {
   const dpr = window.devicePixelRatio || 1;
   const rect = canvas375.parentElement.getBoundingClientRect();
   const W = Math.max(rect.width - 32, 300);
-  const H = 200;
-  canvas375.width = W * dpr;
-  canvas375.height = H * dpr;
-  canvas375.style.width = W + 'px';
-  canvas375.style.height = H + 'px';
-  ctx.scale(dpr, dpr);
   
   // 按375+占比排序
   const sorted = [...PERF_DATA].sort((a, b) => b[1] - a[1]);
@@ -1869,6 +1863,13 @@ function renderPerfCharts() {
   
   const barH = 14;
   const gap = 6;
+  // 动态计算高度：每组 (barH+gap)，加上顶部10、图例30
+  const H = sorted.length * (barH + gap) + 10 + 30;
+  canvas375.width = W * dpr;
+  canvas375.height = H * dpr;
+  canvas375.style.width = W + 'px';
+  canvas375.style.height = H + 'px';
+  ctx.scale(dpr, dpr);
   const leftW = 70;
   const chartW = W - leftW - 20;
   const chartH = sorted.length * (barH + gap) + 20;
