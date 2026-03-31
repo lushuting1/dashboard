@@ -1395,14 +1395,14 @@
           <div class="pipe-cand-track">🏷 日化（整体）</div>
           <div class="pipe-chips"><span class="pipe-chip chip-func">策划</span><span class="pipe-chip chip-35">3.5+ ✓</span><span class="pipe-chip chip-date">3.17</span></div>
           <div class="pipe-ta">TA: 蒂蒂 | 面：惊鸿</div>
-          <a class="pipe-link" href="https://hr.xiaohongshu.com/applicant-view/1852810/6111007" target="_blank" onclick="event.stopPropagation()">🔗 查简历</a>
+          <a class="pipe-link" href="https://hr.xiaohongshu.com/applicant-view/1852810/6111007/resume" target="_blank" onclick="event.stopPropagation()">🔗 查简历</a>
         </div>
         <div class="pipe-cand offer" onclick="pipeOpenModal('songzejin')">
           <div class="pipe-cand-name">宋泽锦</div>
           <div class="pipe-cand-track">🏷 待确认</div>
           <div class="pipe-chips"><span class="pipe-chip chip-func">待确认</span><span class="pipe-chip chip-375">3.75 ✓</span><span class="pipe-chip chip-date">3.30</span></div>
           <div class="pipe-ta">TA: 待确认 | 面：待确认</div>
-          <a class="pipe-link" href="https://hr.xiaohongshu.com/applicant-view/2404083/5955659/history" target="_blank" onclick="event.stopPropagation()">🔗 查简历</a>
+          <a class="pipe-link" href="https://hr.xiaohongshu.com/applicant-view/2404083/5955659/resume" target="_blank" onclick="event.stopPropagation()">🔗 查简历</a>
         </div>
       </div>
     </div>
@@ -1416,7 +1416,7 @@
           <div class="pipe-cand-track">🏷 Personal Care</div>
           <div class="pipe-chips"><span class="pipe-chip chip-func">CBD</span><span class="pipe-chip chip-375">3.75 ✓</span><span class="pipe-chip chip-date">3.24</span></div>
           <div class="pipe-ta">TA: 天雪 | 面：南舟</div>
-          <a class="pipe-link" href="https://hr.xiaohongshu.com/applicant-evaluation?talentId=2445326&interviewId=6229583&interviewScheduleId=690671" target="_blank" onclick="event.stopPropagation()">🔗 查简历</a>
+          <a class="pipe-link" href="https://hr.xiaohongshu.com/applicant-view/2445326/6229583/resume" target="_blank" onclick="event.stopPropagation()">🔗 查简历</a>
         </div>
 
       </div>
@@ -1471,8 +1471,8 @@
         <div class="pipe-cand-name">杨珂</div>
         <div class="pipe-cand-track">🏷 雅诗兰黛</div>
         <div class="pipe-chips"><span class="pipe-chip chip-func">CBD</span><span class="pipe-chip chip-35">3.5+</span></div>
-        <div class="pipe-ta">TA: 贵音</div>
-        <a class="pipe-link" href="https://hr.xiaohongshu.com/applicant-evaluation?talentId=699425&interviewId=6305303&interviewScheduleId=690632" target="_blank" onclick="event.stopPropagation()">🔗 简历</a>
+        <div class="pipe-ta">TA: 贵音
+        <a class="pipe-link" href="https://hr.xiaohongshu.com/applicant-view/699425/6305303/resume" target="_blank" onclick="event.stopPropagation()">🔗 简历</a></div>
       </div>
     </div>
   </div>
@@ -2118,12 +2118,12 @@ rosterData.groups.forEach(g => {
 // ====== Pipeline Modal ======
 const pipeCandidates = {
   liuyilin: { name:'刘一霖', track:'宝洁汉高', func:'平台专家', grade:'3.75', date:'3月12日', stage:'offer', stageLabel:'✅ Offer 环节', interviewer:'若琳', ta:'欧然', remark:'宝洁方向平台专家，375以上，已进offer环节', steps:['L1一面 ✓','昂扬二面 ✓','Final ✓','Offer ←当前'], url:'https://hr.xiaohongshu.com/applicant-view/2424053/6064531/resume' },
-  hongfangwen: { name:'洪方雯', track:'日化（整体）', func:'策划', grade:'3.5+', date:'3月17日', stage:'offer', stageLabel:'✅ Offer 环节', interviewer:'惊鸿', ta:'蒂蒂', remark:'日化赛道策划，3.5+通过，已进offer', steps:['L1一面 ✓','昂扬二面 ✓','Final ✓','Offer ←当前'], url:'https://hr.xiaohongshu.com/applicant-view/1852810/6111007' },
-  songzejin: { name:'宋泽锦', track:'待确认', func:'待确认', grade:'3.75', date:'3月30日', stage:'offer', stageLabel:'✅ Offer 环节', interviewer:'待确认', ta:'待确认', remark:'新加入offer环节候选人，详情待补充', steps:['L1一面 ✓','昂扬二面 ✓','Final ✓','Offer ←当前'], url:'https://hr.xiaohongshu.com/applicant-view/2404083/5955659/history' },
-  xinran: { name:'王肖肖', track:'Personal Care', func:'CBD', grade:'3.75', date:'3月24日', stage:'final', stageLabel:'🟢 Final 通过', interviewer:'南舟', ta:'天雪', remark:'PC赛道CBD，3.75，final已过，待推进offer', steps:['L1一面 ✓','昂扬二面 ✓','Final ✓','Offer ←待推进'], url:'https://hr.xiaohongshu.com/applicant-evaluation?talentId=2445326&interviewId=6229583&interviewScheduleId=690671' },
-  yangke: { name:'杨珂', track:'雅诗兰黛', func:'CBD', grade:'3.5+', date:'3月25日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'吴邪', ta:'贵音', remark:'雅诗兰黛CBD，昂扬3.5+通过，Final面试尚未通过', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'https://hr.xiaohongshu.com/applicant-evaluation?talentId=699425&interviewId=6305303&interviewScheduleId=690632' },
+  hongfangwen: { name:'洪方雯', track:'日化（整体）', func:'策划', grade:'3.5+', date:'3月17日', stage:'offer', stageLabel:'✅ Offer 环节', interviewer:'惊鸿', ta:'蒂蒂', remark:'日化赛道策划，3.5+通过，已进offer', steps:['L1一面 ✓','昂扬二面 ✓','Final ✓','Offer ←当前'], url:'https://hr.xiaohongshu.com/applicant-view/1852810/6111007/resume' },
+  songzejin: { name:'宋泽锦', track:'待确认', func:'待确认', grade:'3.75', date:'3月30日', stage:'offer', stageLabel:'✅ Offer 环节', interviewer:'待确认', ta:'待确认', remark:'新加入offer环节候选人，详情待补充', steps:['L1一面 ✓','昂扬二面 ✓','Final ✓','Offer ←当前'], url:'https://hr.xiaohongshu.com/applicant-view/2404083/5955659/resume' },
+  xinran: { name:'王肖肖', track:'Personal Care', func:'CBD', grade:'3.75', date:'3月24日', stage:'final', stageLabel:'🟢 Final 通过', interviewer:'南舟', ta:'天雪', remark:'PC赛道CBD，3.75，final已过，待推进offer', steps:['L1一面 ✓','昂扬二面 ✓','Final ✓','Offer ←待推进'], url:'https://hr.xiaohongshu.com/applicant-view/2445326/6229583/resume' },
+  yangke: { name:'杨珂', track:'雅诗兰黛', func:'CBD', grade:'3.5+', date:'3月25日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'吴邪', ta:'贵音', remark:'雅诗兰黛CBD，昂扬3.5+通过，Final面试尚未通过', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'https://hr.xiaohongshu.com/applicant-view/699425/6305303/resume' },
   dumingzhe: { name:'杜明哲', track:'欧美新悦', func:'策划→定位专家', grade:'3.75', date:'3月19日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'箱得', ta:'瑞妮', remark:'昂扬3.75通过，建议定位专家方向，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'https://hr.xiaohongshu.com/applicant-view/1076989/6164749/resume' },
-  hexiaojing: { name:'何小婧', track:'欧美新悦', func:'策划→定位专家', grade:'3.75', date:'3月19日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'箱得', ta:'瑞妮', remark:'昂扬3.75通过，建议定位专家方向，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'https://hr.xiaohongshu.com/position-manage/social?keyword=庞丽彤' },
+  hexiaojing: { name:'何小婧', track:'欧美新悦', func:'策划→定位专家', grade:'3.75', date:'3月19日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'箱得', ta:'瑞妮', remark:'昂扬3.75通过，建议定位专家方向，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'https://hr.xiaohongshu.com/position-manage/social?keyword=何小婧' },
   panglitong: { name:'庞丽彤', track:'欧美新悦', func:'运营', grade:'3.75', date:'3月19日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'箱得', ta:'瑞妮', remark:'昂扬3.75通过，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'https://hr.xiaohongshu.com/position-manage/social?keyword=庞丽彤' },
   zhubaiqi: { name:'朱柏其', track:'国货新悦', func:'运营', grade:'3.5+', date:'3月19日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'希莫', ta:'天雪', remark:'国货新悦运营，昂扬3.5+通过，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'https://hr.xiaohongshu.com/position-manage/social?keyword=朱柏其' },
   lidi: { name:'李迪', track:'国货美妆', func:'CBD', grade:'3.75', date:'3月25日', stage:'yang', stageLabel:'🟡 待 Final', interviewer:'昭燃', ta:'粥粥', remark:'国货美妆CBD，昂扬3.75通过，待安排Final', steps:['L1一面 ✓','昂扬二面 ✓','Final ←待安排','Offer'], url:'https://hr.xiaohongshu.com/applicant-view/1572795/6289683/resume' },
