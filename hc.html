@@ -58,10 +58,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue"
 .bds-lbl{font-size:9px;color:#aaa;letter-spacing:.3px;margin-top:2px}
 
 /* KPI 网格 */
-.kpi-section{margin-bottom:20px}
-.kpi-section-title{font-size:10px;font-weight:700;color:#aaa;letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px;padding-left:2px;display:flex;align-items:center;gap:6px}
-.kpi-section-title::after{content:'';flex:1;height:1px;background:#E5EAE7}
+.kpi-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.kpi-row .kpi-card{flex:1;min-width:100px}
 .kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.dept-bar-flow{display:flex;gap:6px;font-size:10px;font-weight:700;min-width:120px;justify-content:flex-end;align-items:center;margin-left:8px}
+.flow-prev{font-size:10px;color:#aaa;margin-top:1px}
 .kpi-card{background:#fff;border-radius:14px;border:1px solid #E5EAE7;padding:18px 20px;box-shadow:0 1px 6px rgba(15,61,36,.05);display:flex;flex-direction:column;justify-content:space-between}
 .kpi-top{display:flex;align-items:flex-start;justify-content:space-between}
 .kpi-val{font-size:36px;font-weight:900;line-height:1;color:#1a1a1a}
@@ -219,7 +220,8 @@ table.sdt tr.un{background:#FEF2F2}
     <div class="nav-sub">2026 · 大商业</div>
   </div>
   <div class="nav-tabs">
-    <button class="nav-tab active" onclick="switchTab('biz',this)">💼 商业化</button>
+    <button class="nav-tab active" onclick="switchTab('summary',this)">📋 总览</button>
+    <button class="nav-tab" onclick="switchTab('biz',this)">💼 商业化</button>
     <button class="nav-tab" onclick="switchTab('ecom',this)">🛒 电商</button>
     <button class="nav-tab" onclick="switchTab('func',this)">🏛️ 职能</button>
   </div>
@@ -230,7 +232,18 @@ table.sdt tr.un{background:#FEF2F2}
 </nav>
 
 <!-- ══════ 商业化 TAB ══════ -->
-<div id="tab-biz" class="tab-panel active">
+<!-- ══════ 总览 TAB ══════ -->
+<div id="tab-summary" class="tab-panel active">
+  <div class="sh"><span class="sh-title">大商业整体 HC 总览</span><span class="sh-tag green">2026 Y26</span></div>
+  <div id="summaryCards" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px"></div>
+  <div class="sh"><span class="sh-title">全部门满编率一览</span><span class="sh-note">🟢商业化 · 🔵电商 · 🟡职能 &nbsp;|&nbsp; 按满编率升序</span></div>
+  <div class="gap-overview">
+    <div class="gap-ov-hd"><span class="gap-ov-title">所有部门（按满编率低→高）</span></div>
+    <div class="dept-bar-list" id="summaryBarList"></div>
+  </div>
+</div>
+
+<div id="tab-biz" class="tab-panel">
   <div class="alert-wrap">
     <div class="alert-strip urgent" id="alertUrgent">
       <span class="alert-icon">🚨</span>
@@ -262,7 +275,7 @@ table.sdt tr.un{background:#FEF2F2}
       </div>
       <div class="big-donut-stats" id="bigStats"></div>
     </div>
-    <div id="kpiGrid"></div>
+    <div class="kpi-row" id="kpiRow"></div>
   </div>
 
   <!-- DEPT GAP OVERVIEW -->
@@ -286,23 +299,61 @@ table.sdt tr.un{background:#FEF2F2}
 
 <!-- ══════ 电商 TAB ══════ -->
 <div id="tab-ecom" class="tab-panel">
-  <div class="sh"><span class="sh-title">交易（电商）HC</span><span class="sh-tag green">Y26规划 347</span></div>
+  <div class="alert-wrap">
+    <div class="alert-strip urgent" id="ecomAlertUrgent"><span class="alert-icon">🚨</span><div class="alert-body"><span class="alert-label urgent">立即关注：</span><div class="alert-tags" id="ecomAlertUrgentTags"></div></div></div>
+    <div class="alert-strip notice" id="ecomAlertNotice"><span class="alert-icon">📌</span><div class="alert-body"><span class="alert-label notice">建议追进：</span><div class="alert-tags" id="ecomAlertNoticeTags"></div></div></div>
+  </div>
+  <div class="sh"><span class="sh-title">电商整体 HC</span><span class="sh-tag green">Y26规划 347</span></div>
+  <div class="overview">
+    <div class="big-donut-wrap">
+      <div class="big-donut-title">整体满编率</div>
+      <div class="big-donut-canvas">
+        <canvas id="ecomBigDonut" width="160" height="160"></canvas>
+        <div class="big-donut-center">
+          <div class="big-pct" id="ecomBigPct"></div>
+          <div class="big-sub" id="ecomBigSub"></div>
+        </div>
+      </div>
+      <div class="big-donut-stats" id="ecomBigStats"></div>
+    </div>
+    <div class="kpi-row" id="ecomKpiRow"></div>
+  </div>
+  <div class="sh"><span class="sh-title">各部门 HC 完成度</span><span class="sh-tag gray">在职 ÷ Y26规划</span></div>
   <div class="gap-overview">
     <div class="gap-ov-hd"><span class="gap-ov-title">部门满编率总览</span></div>
     <div class="dept-bar-list" id="ecomBarList"></div>
   </div>
-  <div class="sh"><span class="sh-title">各部门详情</span></div>
+  <div class="sh"><span class="sh-title">各部门详情</span><span class="sh-tag gray">点击展开</span></div>
   <div class="dept-cards" id="ecomCards"></div>
 </div>
 
 <!-- ══════ 职能 TAB ══════ -->
 <div id="tab-func" class="tab-panel">
-  <div class="sh"><span class="sh-title">职能 HC</span><span class="sh-tag green">Y26规划 272 · 战略 72</span></div>
+  <div class="alert-wrap">
+    <div class="alert-strip urgent" id="funcAlertUrgent"><span class="alert-icon">🚨</span><div class="alert-body"><span class="alert-label urgent">立即关注：</span><div class="alert-tags" id="funcAlertUrgentTags"></div></div></div>
+    <div class="alert-strip notice" id="funcAlertNotice"><span class="alert-icon">📌</span><div class="alert-body"><span class="alert-label notice">建议追进：</span><div class="alert-tags" id="funcAlertNoticeTags"></div></div></div>
+  </div>
+  <div class="sh"><span class="sh-title">职能整体 HC</span><span class="sh-tag green">Y26规划 272 · 战略 72</span></div>
+  <div class="overview">
+    <div class="big-donut-wrap">
+      <div class="big-donut-title">整体满编率</div>
+      <div class="big-donut-canvas">
+        <canvas id="funcBigDonut" width="160" height="160"></canvas>
+        <div class="big-donut-center">
+          <div class="big-pct" id="funcBigPct"></div>
+          <div class="big-sub" id="funcBigSub"></div>
+        </div>
+      </div>
+      <div class="big-donut-stats" id="funcBigStats"></div>
+    </div>
+    <div class="kpi-row" id="funcKpiRow"></div>
+  </div>
+  <div class="sh"><span class="sh-title">各部门 HC 完成度</span><span class="sh-tag gray">在职 ÷ Y26规划</span></div>
   <div class="gap-overview">
     <div class="gap-ov-hd"><span class="gap-ov-title">部门满编率总览</span></div>
     <div class="dept-bar-list" id="funcBarList"></div>
   </div>
-  <div class="sh"><span class="sh-title">各部门详情</span></div>
+  <div class="sh"><span class="sh-title">各部门详情</span><span class="sh-tag gray">点击展开</span></div>
   <div class="dept-cards" id="funcCards"></div>
 </div>
 
@@ -343,7 +394,7 @@ const DEPTS = {
         {n:"行业策略组",l:"飞云",cur:2, plan:3, in:0,out:0,pred:2, match:"匹配"},
       ],
       entry:[
-        {name:"JICHAO SUN",dept:"行业一部",date:"2026-04-08",lv:"L1"},
+        {name:"JICHAO SUN",dept:"行业一部",date:"2026-04-08",lv:"L1",prevCompany:"字节跳动",resumeId:"10234567"},
         {name:"缪薛鹏",dept:"平台专家十二组",date:"2026-04-01",lv:"IC"},
         {name:"邓鸿颖",dept:"行业五组",date:"2026-04-08",lv:"IC"},
         {name:"洪方雯",dept:"平台专家十一组",date:"2026-04-27",lv:"IC"},
@@ -364,8 +415,8 @@ const DEPTS = {
         {n:"行业运营组",l:"风禾",cur:18,plan:22,in:1,out:1,pred:18,match:"匹配"},
       ],
       entry:[
-        {name:"苏慕遮",dept:"行业BD一组",date:"2026-04-10",lv:"L2"},
-        {name:"顾北辰",dept:"平台专家组",date:"2026-04-15",lv:"L1"},
+        {name:"苏慕遮",dept:"行业BD一组",date:"2026-04-10",lv:"L2",prevCompany:"阿里巴巴",resumeId:"10234568"},
+        {name:"顾北辰",dept:"平台专家组",date:"2026-04-15",lv:"L1",prevCompany:"腾讯",resumeId:"10234569"},
       ],
       dimission:[
         {name:"林夕辞",dept:"行业运营组",date:"2026-04-20",type:"主动",lv:"IC"},
@@ -383,8 +434,8 @@ const DEPTS = {
         {n:"专家团",l:"秋宁",cur:15,plan:10,in:0,out:0,pred:15,match:"优秀"},
       ],
       entry:[
-        {name:"白芷苓",dept:"BD一组",date:"2026-04-08",lv:"L1"},
-        {name:"沈寄云",dept:"BD二组",date:"2026-05-01",lv:"L2"},
+        {name:"白芷苓",dept:"BD一组",date:"2026-04-08",lv:"L1",prevCompany:"美团",resumeId:"10234570"},
+        {name:"沈寄云",dept:"BD二组",date:"2026-05-01",lv:"L2",prevCompany:"快手",resumeId:"10234571"},
       ],
       dimission:[]
     },
@@ -400,8 +451,8 @@ const DEPTS = {
         {n:"运营中台",  l:"夜阑",cur:17,plan:15,in:0,out:0,pred:17,match:"优秀"},
       ],
       entry:[
-        {name:"楚楚安",dept:"美护BD一组",date:"2026-04-12",lv:"L1"},
-        {name:"温如玉",dept:"日化BD组",date:"2026-04-12",lv:"L2"},
+        {name:"楚楚安",dept:"美护BD一组",date:"2026-04-12",lv:"L1",prevCompany:"百度",resumeId:"10234572"},
+        {name:"温如玉",dept:"日化BD组",date:"2026-04-12",lv:"L2",prevCompany:"京东",resumeId:"10234573"},
       ],
       dimission:[
         {name:"余烟飞",dept:"医美BD组",date:"2026-04-18",type:"被动",lv:"L1"},
@@ -418,9 +469,9 @@ const DEPTS = {
         {n:"策略组",l:"渐离",cur:8, plan:16,in:1,out:0,pred:9, match:null},
       ],
       entry:[
-        {name:"江离散",dept:"BD一组",date:"2026-04-15",lv:"L1"},
-        {name:"辛夷坞",dept:"BD二组",date:"2026-04-15",lv:"L1"},
-        {name:"远山黛",dept:"运营组",date:"2026-05-06",lv:"L2"},
+        {name:"江离散",dept:"BD一组",date:"2026-04-15",lv:"L1",prevCompany:"字节跳动",resumeId:"10234574"},
+        {name:"辛夷坞",dept:"BD二组",date:"2026-04-15",lv:"L1",prevCompany:"滴滴",resumeId:"10234575"},
+        {name:"远山黛",dept:"运营组",date:"2026-05-06",lv:"L2",prevCompany:"网易",resumeId:"10234576"},
       ],
       dimission:[
         {name:"折梦兰",dept:"策略组",date:"2026-04-20",type:"主动",lv:"IC"},
@@ -447,7 +498,7 @@ const DEPTS = {
         {n:"平台专家",l:"月桂",cur:28,plan:28,in:1,out:0,pred:29,match:"优秀"},
         {n:"运营组",  l:"幽篁",cur:24,plan:24,in:1,out:0,pred:25,match:"匹配"},
       ],
-      entry:[{name:"林栖迟",dept:"BD一组",date:"2026-04-08",lv:"L1"}],
+      entry:[{name:"林栖迟",dept:"BD一组",date:"2026-04-08",lv:"L1",prevCompany:"微博",resumeId:"10234577"}],
       dimission:[]
     },
     {
@@ -459,7 +510,7 @@ const DEPTS = {
         {n:"运营组",l:"星沉",cur:20,plan:20,in:1,out:1,pred:20,match:"匹配"},
         {n:"专家组",l:"潮落",cur:15,plan:15,in:1,out:0,pred:16,match:"优秀"},
       ],
-      entry:[{name:"叶如尘",dept:"BD二组",date:"2026-04-18",lv:"L2"}],
+      entry:[{name:"叶如尘",dept:"BD二组",date:"2026-04-18",lv:"L2",prevCompany:"爱奇艺",resumeId:"10234578"}],
       dimission:[]
     },
     {
@@ -480,7 +531,7 @@ const DEPTS = {
         {n:"渠道运营",l:"帆远",cur:24,plan:24,in:1,out:1,pred:24,match:"匹配"},
         {n:"专家组",  l:"远岸",cur:22,plan:22,in:1,out:0,pred:23,match:"优秀"},
       ],
-      entry:[{name:"云帆过",dept:"渠道一组",date:"2026-04-20",lv:"L1"}],
+      entry:[{name:"云帆过",dept:"渠道一组",date:"2026-04-20",lv:"L1",prevCompany:"拼多多",resumeId:"10234579"}],
       dimission:[]
     },
     {
@@ -495,8 +546,8 @@ const DEPTS = {
         {n:"数据组",    l:"碧云",cur:20,plan:20,in:0,out:0,pred:20,match:"优秀"},
       ],
       entry:[
-        {name:"尹长风",dept:"生态BD一组",date:"2026-04-08",lv:"L1"},
-        {name:"阮清越",dept:"生态BD二组",date:"2026-04-15",lv:"L2"},
+        {name:"尹长风",dept:"生态BD一组",date:"2026-04-08",lv:"L1",prevCompany:"字节跳动",resumeId:"10234580"},
+        {name:"阮清越",dept:"生态BD二组",date:"2026-04-15",lv:"L2",prevCompany:"腾讯",resumeId:"10234581"},
       ],
       dimission:[{name:"沈浮生",dept:"生态运营组",date:"2026-04-20",type:"转岗",lv:"L2"}]
     },
@@ -511,7 +562,7 @@ const DEPTS = {
         {n:"策略组",      l:"清岚",cur:30,plan:30,in:1,out:0,pred:31,match:"优秀"},
         {n:"专家组",      l:"云卷",cur:13,plan:16,in:1,out:0,pred:14,match:"匹配"},
       ],
-      entry:[{name:"叶知秋",dept:"平台合作组",date:"2026-04-22",lv:"L1"}],
+      entry:[{name:"叶知秋",dept:"平台合作组",date:"2026-04-22",lv:"L1",prevCompany:"美团",resumeId:"10234582"}],
       dimission:[]
     },
     {
@@ -534,7 +585,7 @@ const DEPTS = {
         {n:"数据洞察组",l:"暮色",cur:22,plan:22,in:1,out:0,pred:23,match:"优秀"},
         {n:"创意设计组",l:"竹影",cur:19,plan:14,in:0,out:1,pred:18,match:"优秀"},
       ],
-      entry:[{name:"洛神赋",dept:"品牌营销组",date:"2026-04-20",lv:"L1"}],
+      entry:[{name:"洛神赋",dept:"品牌营销组",date:"2026-04-20",lv:"L1",prevCompany:"宝洁",resumeId:"10234583"}],
       dimission:[]
     },
     {
@@ -571,8 +622,8 @@ const DEPTS = {
         {n:"PMO",          l:"残月",cur:19,plan:22,in:1,out:1,pred:19,match:"匹配"},
       ],
       entry:[
-        {name:"落云歌",dept:"商业化产品一组",date:"2026-04-10",lv:"L1"},
-        {name:"时未晚",dept:"广告产品组",date:"2026-05-01",lv:"L2"},
+        {name:"落云歌",dept:"商业化产品一组",date:"2026-04-10",lv:"L1",prevCompany:"字节跳动",resumeId:"10234584"},
+        {name:"时未晚",dept:"广告产品组",date:"2026-05-01",lv:"L2",prevCompany:"阿里巴巴",resumeId:"10234585"},
       ],
       dimission:[{name:"流光散",dept:"PMO",date:"2026-04-15",type:"主动",lv:"IC"}]
     },
@@ -581,14 +632,14 @@ const DEPTS = {
     {
       name:"商家发展", leader:"松涛", plan:35, cur:33, predict:35, inHc:3, outHc:1,
       subs:[{n:"商家运营一组",l:"云涌",cur:16,plan:18,in:2,out:1,pred:17,match:"匹配"},{n:"商家运营二组",l:"岚深",cur:17,plan:17,in:1,out:0,pred:18,match:"优秀"}],
-      entry:[{name:"霜林晚",dept:"商家运营一组",date:"2026-04-15",lv:"L1"}],
+      entry:[{name:"霜林晚",dept:"商家运营一组",date:"2026-04-15",lv:"L1",prevCompany:"京东",resumeId:"10234587"}],
       dimission:[]
     },
     {
       name:"蒲公英", leader:"飞絮", plan:35, cur:30, predict:33, inHc:4, outHc:1,
       isWarn:true,
       subs:[{n:"内容商业化组",l:"萍踪",cur:14,plan:18,in:2,out:1,pred:15,match:"匹配"},{n:"达人运营组",l:"旅云",cur:16,plan:17,in:2,out:0,pred:18,match:"匹配"}],
-      entry:[{name:"南来雁",dept:"达人运营组",date:"2026-04-22",lv:"L2"}],
+      entry:[{name:"南来雁",dept:"达人运营组",date:"2026-04-22",lv:"L2",prevCompany:"快手",resumeId:"10234588"}],
       dimission:[]
     },
     {
@@ -615,7 +666,7 @@ const DEPTS = {
         {n:"资金管理组",  cur:8, plan:8, pred:9},
       ],
       entry:[
-        {name:"赛娜",dept:"财务一组",date:"2026-04-01",lv:"L1"},
+        {name:"赛娜",dept:"财务一组",date:"2026-04-01",lv:"L1",prevCompany:"德勤",resumeId:"10234586"},
       ],
       dimission:[]
     },
@@ -702,57 +753,29 @@ function renderBigDonut(canvasId, cur, plan, predict){
 function renderKpis(containerId, depts){
   const t=totals(depts);
   const pct=Math.round(t.cur/t.plan*100);
-  const warns=depts.filter(d=>d.isWarn||d.cur<d.plan*0.85);
-  const overDepts=depts.filter(d=>d.cur>d.plan);
-  // 统计L1/L2流入流出
   const allEntry=depts.flatMap(d=>d.entry||[]);
   const allDim=depts.flatMap(d=>d.dimission||[]);
-  const keyIn=allEntry.filter(e=>e.lv==='L1'||e.lv==='L2');
-  const keyOut=allDim.filter(e=>e.lv==='L1'||e.lv==='L2');
   const dimOut=allDim.filter(e=>e.type==='主动'||e.type==='被动');
   const transOut=allDim.filter(e=>e.type==='转岗');
-
-  const sections=[
-    {
-      title:'HC 数据',
-      items:[
-        {v:t.cur, lbl:'在职人数', sub:'Y26规划 '+t.plan+' 人', cls:'b', icon:'👥'},
-        {v:pct+'%', lbl:'整体满编率', sub:t.cur+' / '+t.plan, cls:pct>=100?'g':pct>=85?'':'r', icon:'📊'},
-        {v:t.predict, lbl:'预计在职', sub:'预计缺/超 '+(t.predict>=t.plan?'超'+(t.predict-t.plan):'缺'+(t.plan-t.predict))+'人', cls:'', icon:'🎯'},
-      ]
-    },
-    {
-      title:'流动数据',
-      items:[
-        {v:'+'+keyIn.length, lbl:'L1/L2 流入在途', sub:'IC另有 '+(allEntry.length-keyIn.length)+' 人待入职', cls:'b', icon:'↗️'},
-        {v:'-'+keyOut.length, lbl:'L1/L2 流出在途', sub:'离职 '+dimOut.filter(e=>e.lv==='L1'||e.lv==='L2').length+' · 转岗 '+transOut.filter(e=>e.lv==='L1'||e.lv==='L2').length, cls:keyOut.length?'r':'', icon:'↘️'},
-        {v:transOut.length+'', lbl:'转岗在途', sub:transOut.map(e=>e.name).join('·')||'暂无', cls:transOut.length?'':'', icon:'🔄'},
-      ]
-    },
-    {
-      title:'建议关注',
-      items:[
-        {v:warns.length+'', lbl:'低满编部门', sub:warns.slice(0,2).map(d=>d.name).join('·')+(warns.length>2?'等':''), cls:warns.length?'r':'g', icon:'⚠️'},
-        {v:overDepts.length+'', lbl:'超编部门', sub:overDepts.slice(0,2).map(d=>d.name).join('·')||'暂无', cls:'', icon:'📈'},
-        {v:dimOut.length+'', lbl:'离职在途', sub:dimOut.map(e=>(e.lv==='L1'||e.lv==='L2'?'★':'')+e.name).join('·').slice(0,28)||'暂无', cls:dimOut.length?'r':'', icon:'🚪'},
-      ]
-    }
+  const items=[
+    {v:t.plan,        lbl:'HC规划数',   sub:'Y26总目标',                               cls:'',  icon:'📋'},
+    {v:t.cur,         lbl:'在职人数',   sub:'实时在职',                                cls:'b', icon:'👥'},
+    {v:allEntry.length,lbl:'入职在途',  sub:'L1/L2+'+(allEntry.filter(e=>!e.lv||e.lv==='IC').length)+' IC', cls:'b', icon:'↗️'},
+    {v:dimOut.length, lbl:'离职在途',   sub:dimOut.map(e=>e.name).slice(0,2).join('·')||'暂无', cls:dimOut.length?'r':'', icon:'🚪'},
+    {v:transOut.length,lbl:'转岗在途',  sub:transOut.map(e=>e.name).join('·')||'暂无', cls:transOut.length?'':'', icon:'🔄'},
+    {v:0,             lbl:'转入在途',   sub:'待补充',                                  cls:'',  icon:'📥'},
+    {v:t.predict,     lbl:'预计在职',   sub:(t.predict>=t.plan?'超'+(t.predict-t.plan):t.predict<t.plan?'缺'+(t.plan-t.predict):'达标'), cls:'', icon:'🎯'},
+    {v:pct+'%',       lbl:'满编率',     sub:t.cur+' / '+t.plan,                       cls:pct>=100?'g':pct>=85?'':'r', icon:'📊'},
   ];
   const el=document.getElementById(containerId);
-  el.innerHTML=sections.map(sec=>`
-    <div class="kpi-section">
-      <div class="kpi-section-title">${sec.title}</div>
-      <div class="kpi-grid">
-        ${sec.items.map(it=>`
-        <div class="kpi-card">
-          <div class="kpi-top">
-            <div class="kpi-val ${it.cls||''}">${it.v}</div>
-            <div class="kpi-icon">${it.icon}</div>
-          </div>
-          <div class="kpi-lbl">${it.lbl}</div>
-          <div class="kpi-sub">${it.sub}</div>
-        </div>`).join('')}
+  el.innerHTML=items.map(it=>`
+    <div class="kpi-card">
+      <div class="kpi-top">
+        <div class="kpi-val ${it.cls||''}">${it.v}</div>
+        <div class="kpi-icon">${it.icon}</div>
       </div>
+      <div class="kpi-lbl">${it.lbl}</div>
+      <div class="kpi-sub">${it.sub}</div>
     </div>`).join('');
 }
 
@@ -822,7 +845,13 @@ function renderDeptBars(containerId, depts, onClickFn){
         <span class="dept-bar-plan">${d.plan}</span>
         <span style="font-size:10px;color:#bbb;font-weight:400">${Math.round(pct*100)}%</span>
       </div>
-      <div class="dept-bar-gap">${gBadge(g)}</div>`;
+      <div class="dept-bar-gap">${gBadge(g)}</div>
+      <div class="dept-bar-flow">
+        <span style="color:#1d4ed8">↗${d.inHc||0}</span>
+        <span style="color:#dc2626">↘${(d.dimission||[]).filter(e=>e.type!=='转岗').length}</span>
+        <span style="color:#7c3aed">⇄${(d.dimission||[]).filter(e=>e.type==='转岗').length}</span>
+        <span style="color:#888">→${d.predict}</span>
+      </div>`;
     row.addEventListener('click',()=>onClickFn&&onClickFn(d.name));
     el.appendChild(row);
   });
@@ -852,6 +881,7 @@ function renderDeptCards(containerId, depts){
         <div class="flow-av ${cls}">${initials(e.name)}</div>
         <div class="flow-info">
           <div class="flow-nm">${e.name}${lvTag(e.lv||'')}${e.type==='转岗'?'<span class="lv-tag" style="background:#7c3aed;color:#fff">转岗</span>':e.type==='主动'?'<span class="lv-tag" style="background:#dc2626;color:#fff">主动</span>':e.type==='被动'?'<span class="lv-tag" style="background:#92400e;color:#fff">被动</span>':''}</div>
+          ${(e.prevCompany||e.resumeId)?'<div class="flow-prev">'+(e.prevCompany?'📍 '+e.prevCompany+' ':'')+(e.resumeId?'<a href="https://hr.xiaohongshu.com/next/applicant-manage/social?applicantId='+e.resumeId+'" target="_blank" style="color:#1d4ed8;font-size:10px">查看简历→</a>':'')+'</div>':''}
           <div class="flow-dept">${e.dept}</div>
         </div>
         <div class="flow-right"><div class="flow-date">${fmtD(e.date||e.date)}</div></div>
@@ -999,6 +1029,91 @@ function switchTab(id,btn){
 }
 
 // ════════════════════════════════════════════
+// SUMMARY TAB
+// ════════════════════════════════════════════
+function switchTabByName(id){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  const panel=document.getElementById('tab-'+id);
+  if(panel) panel.classList.add('active');
+  const btn=document.querySelector('.nav-tab[onclick*="\''+id+'\'"]');
+  if(btn) btn.classList.add('active');
+}
+function buildSummaryTab(){
+  const groups=[
+    {label:'💼 商业化',depts:DEPTS.biz,tag:'biz'},
+    {label:'🛒 电商',depts:DEPTS.ecom,tag:'ecom'},
+    {label:'🏛️ 职能',depts:DEPTS.func,tag:'func'},
+  ];
+  const cardsEl=document.getElementById('summaryCards');
+  cardsEl.innerHTML='';
+  groups.forEach(g=>{
+    const t=totals(g.depts);
+    const pct=Math.round(t.cur/t.plan*100);
+    const warns=g.depts.filter(d=>d.cur/d.plan<0.85||d.isWarn);
+    const keyIn=g.depts.flatMap(d=>d.entry||[]).filter(e=>e.lv==='L1'||e.lv==='L2');
+    const allDim=g.depts.flatMap(d=>d.dimission||[]);
+    const dimOut=allDim.filter(e=>e.type!=='转岗').length;
+    const transOut=allDim.filter(e=>e.type==='转岗').length;
+    const r=36,circ=2*Math.PI*r;
+    const fill=Math.min(t.cur/t.plan,1);
+    const dash=fill*circ;
+    const svgColor=pct>=100?'#4ade80':pct>=85?'#86efac':pct>=70?'#fbbf24':'#f87171';
+    const div=document.createElement('div');
+    div.style.cssText='background:#fff;border-radius:16px;border:1px solid #E5EAE7;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,.06)';
+    div.innerHTML=`
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <svg width="80" height="80" viewBox="0 0 80 80">
+          <circle cx="40" cy="40" r="${r}" fill="none" stroke="#EEF3EF" stroke-width="8"/>
+          <circle cx="40" cy="40" r="${r}" fill="none" stroke="${svgColor}" stroke-width="8"
+            stroke-dasharray="${dash.toFixed(1)} ${circ.toFixed(1)}" stroke-dashoffset="${(circ/4).toFixed(1)}" stroke-linecap="round"/>
+          <text x="40" y="37" text-anchor="middle" font-size="14" font-weight="900" fill="#1a1a1a">${pct}%</text>
+          <text x="40" y="52" text-anchor="middle" font-size="10" fill="#aaa">${t.cur}/${t.plan}</text>
+        </svg>
+        <div>
+          <div style="font-size:15px;font-weight:800;color:#1a1a1a">${g.label}</div>
+          <div style="font-size:11px;color:#aaa;margin-top:2px">Y26规划 ${t.plan}</div>
+          <div style="font-size:11px;color:#888;margin-top:4px">预计在职 ${t.predict}</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px">
+        <div style="background:#F4FAF6;border-radius:8px;padding:7px 8px;text-align:center"><div style="font-size:15px;font-weight:800;color:#1d4ed8">${t.cur}</div><div style="font-size:9px;color:#aaa">在职</div></div>
+        <div style="background:#F4FAF6;border-radius:8px;padding:7px 8px;text-align:center"><div style="font-size:15px;font-weight:800;color:${t.predict>=t.plan?'#16a34a':'#dc2626'}">${t.predict>=t.plan?'超'+(t.predict-t.plan):'缺'+(t.plan-t.predict)}</div><div style="font-size:9px;color:#aaa">HC Gap</div></div>
+        <div style="background:#F4FAF6;border-radius:8px;padding:7px 8px;text-align:center"><div style="font-size:15px;font-weight:800;color:#1d4ed8">+${t.inHc}</div><div style="font-size:9px;color:#aaa">流入</div></div>
+        <div style="background:#F4FAF6;border-radius:8px;padding:7px 8px;text-align:center"><div style="font-size:15px;font-weight:800;color:${t.outHc?'#dc2626':'#888'}">-${t.outHc}</div><div style="font-size:9px;color:#aaa">流出</div></div>
+      </div>
+      ${warns.length?'<div style="margin-bottom:10px"><span style="font-size:10px;font-weight:700;color:#991b1b">⚠ 重点关注：</span>'+warns.map(d=>'<span style="font-size:10px;background:#FEE2E2;color:#991b1b;border-radius:4px;padding:1px 6px;margin-left:3px">'+d.name+'</span>').join('')+'</div>':'<div style="margin-bottom:10px;font-size:10px;color:#16a34a">✅ 无需特别关注</div>'}
+      <div style="font-size:10px;color:#aaa;border-top:1px solid #f0f0f0;padding-top:8px">L1/L2待入职 <strong style="color:#1d4ed8">${keyIn.length}</strong> 人 · 离职在途 <strong style="color:#dc2626">${dimOut}</strong> · 转岗在途 <strong style="color:#7c3aed">${transOut}</strong> · <a href="javascript:void(0)" onclick="switchTabByName('${g.tag}')" style="color:#1d4ed8">查看详情 →</a></div>`;
+    cardsEl.appendChild(div);
+  });
+
+  // 全部门满编率条（按升序）
+  const allDepts=[
+    ...DEPTS.biz.map(d=>({...d,_color:'#4ade80',_group:'商业化'})),
+    ...DEPTS.ecom.map(d=>({...d,_color:'#93c5fd',_group:'电商'})),
+    ...DEPTS.func.map(d=>({...d,_color:'#fcd34d',_group:'职能'})),
+  ].sort((a,b)=>(a.cur/a.plan)-(b.cur/b.plan));
+  const listEl=document.getElementById('summaryBarList');
+  listEl.innerHTML='';
+  allDepts.forEach(d=>{
+    const pct=d.cur/d.plan;
+    const g=d.predict-d.plan;
+    const maxW=Math.min(pct*100,120);
+    const row=document.createElement('div');
+    row.className='dept-bar-row';
+    row.innerHTML=`<div class="dept-bar-name">${d.name}<span style="font-size:9px;color:#bbb;margin-left:4px">${d._group}</span></div>
+      <div class="dept-bar-track">
+        <div class="dept-bar-fill" style="width:${maxW}%;background:${d._color}"></div>
+        <div class="dept-bar-plan-mark" style="left:100%"></div>
+      </div>
+      <div class="dept-bar-nums"><span class="dept-bar-cur">${d.cur}</span><span class="dept-bar-sep">/</span><span class="dept-bar-plan">${d.plan}</span><span style="font-size:10px;color:#bbb">${Math.round(pct*100)}%</span></div>
+      <div class="dept-bar-gap">${gBadge(g)}</div>
+      <div class="dept-bar-flow"><span style="color:#1d4ed8">↗${d.inHc||0}</span><span style="color:#dc2626">↘${(d.dimission||[]).filter(e=>e.type!=='转岗').length}</span><span style="color:#7c3aed">⇄${(d.dimission||[]).filter(e=>e.type==='转岗').length}</span><span style="color:#888">→${d.predict}</span></div>`;
+    listEl.appendChild(row);
+  });
+}
+
+// ════════════════════════════════════════════
 // INIT
 // ════════════════════════════════════════════
 (function(){
@@ -1008,7 +1123,7 @@ function switchTab(id,btn){
   // 商业化 tab
   renderAlerts('alertUrgent','alertUrgentTags','alertNotice','alertNoticeTags',biz);
   setTimeout(()=>renderBigDonut('bigDonut',bt.cur,bt.plan,bt.predict),100);
-  renderKpis('kpiGrid',biz);
+  renderKpis('kpiRow',biz);
   renderDeptBars('deptBarList',biz,(name)=>{
     // scroll to card
     const cards=document.querySelectorAll('#bizCards .dc-name');
@@ -1017,12 +1132,23 @@ function switchTab(id,btn){
   renderDeptCards('bizCards',biz);
 
   // 电商 tab
+  const et=totals(ecom);
+  renderAlerts('ecomAlertUrgent','ecomAlertUrgentTags','ecomAlertNotice','ecomAlertNoticeTags',ecom);
+  setTimeout(()=>renderBigDonut('ecomBigDonut',et.cur,et.plan,et.predict),150);
+  renderKpis('ecomKpiRow',ecom);
   renderDeptBars('ecomBarList',ecom);
   renderDeptCards('ecomCards',ecom);
 
   // 职能 tab
+  const ft=totals(func);
+  renderAlerts('funcAlertUrgent','funcAlertUrgentTags','funcAlertNotice','funcAlertNoticeTags',func);
+  setTimeout(()=>renderBigDonut('funcBigDonut',ft.cur,ft.plan,ft.predict),200);
+  renderKpis('funcKpiRow',func);
   renderDeptBars('funcBarList',func);
   renderDeptCards('funcCards',func);
+
+  // 总览 tab
+  buildSummaryTab();
 })();
 </script>
 </body>
