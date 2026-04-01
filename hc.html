@@ -58,18 +58,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue"
 .bds-lbl{font-size:9px;color:#aaa;letter-spacing:.3px;margin-top:2px}
 
 /* KPI 网格 */
-.kpi-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
-.kpi-row .kpi-card{flex:1;min-width:100px}
+.kpi-row{display:flex;gap:8px;flex-wrap:nowrap;margin-bottom:20px}
+.kpi-row .kpi-card{flex:1;min-width:0;padding:12px 14px}
 .kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .dept-bar-flow{display:flex;gap:6px;font-size:10px;font-weight:700;min-width:120px;justify-content:flex-end;align-items:center;margin-left:8px}
 .flow-prev{font-size:10px;color:#aaa;margin-top:1px}
 .kpi-card{background:#fff;border-radius:14px;border:1px solid #E5EAE7;padding:18px 20px;box-shadow:0 1px 6px rgba(15,61,36,.05);display:flex;flex-direction:column;justify-content:space-between}
 .kpi-top{display:flex;align-items:flex-start;justify-content:space-between}
-.kpi-val{font-size:36px;font-weight:900;line-height:1;color:#1a1a1a}
+.kpi-val{font-size:24px;font-weight:900;line-height:1;color:#1a1a1a;word-break:break-all}
 .kpi-val.g{color:#16a34a}.kpi-val.r{color:#dc2626}.kpi-val.b{color:#1d4ed8}
-.kpi-icon{font-size:22px;opacity:.6}
-.kpi-lbl{font-size:11px;font-weight:700;color:#888;letter-spacing:.3px;margin-top:8px}
-.kpi-sub{font-size:11px;color:#aaa;margin-top:4px}
+.kpi-icon{font-size:16px;opacity:.6;flex-shrink:0}
+.kpi-lbl{font-size:10px;font-weight:700;color:#888;letter-spacing:.2px;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi-sub{font-size:9px;color:#aaa;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .kpi-trend{display:flex;align-items:center;gap:4px;margin-top:8px;font-size:11px;font-weight:700}
 .trend-up{color:#16a34a}.trend-dn{color:#dc2626}
 
@@ -394,7 +394,7 @@ const DEPTS = {
         {n:"行业策略组",l:"飞云",cur:2, plan:3, in:0,out:0,pred:2, match:"匹配"},
       ],
       entry:[
-        {name:"JICHAO SUN",dept:"行业一部",date:"2026-04-08",lv:"L1",prevCompany:"字节跳动",resumeId:"10234567"},
+        {name:"JICHAO SUN",dept:"行业一部",date:"2026-04-08",lv:"L1"},
         {name:"缪薛鹏",dept:"平台专家十二组",date:"2026-04-01",lv:"IC"},
         {name:"邓鸿颖",dept:"行业五组",date:"2026-04-08",lv:"IC"},
         {name:"洪方雯",dept:"平台专家十一组",date:"2026-04-27",lv:"IC"},
@@ -415,8 +415,8 @@ const DEPTS = {
         {n:"行业运营组",l:"风禾",cur:18,plan:22,in:1,out:1,pred:18,match:"匹配"},
       ],
       entry:[
-        {name:"苏慕遮",dept:"行业BD一组",date:"2026-04-10",lv:"L2",prevCompany:"阿里巴巴",resumeId:"10234568"},
-        {name:"顾北辰",dept:"平台专家组",date:"2026-04-15",lv:"L1",prevCompany:"腾讯",resumeId:"10234569"},
+        {name:"苏慕遮",dept:"行业BD一组",date:"2026-04-10",lv:"L2"},
+        {name:"顾北辰",dept:"平台专家组",date:"2026-04-15",lv:"L1"},
       ],
       dimission:[
         {name:"林夕辞",dept:"行业运营组",date:"2026-04-20",type:"主动",lv:"IC"},
@@ -434,8 +434,8 @@ const DEPTS = {
         {n:"专家团",l:"秋宁",cur:15,plan:10,in:0,out:0,pred:15,match:"优秀"},
       ],
       entry:[
-        {name:"白芷苓",dept:"BD一组",date:"2026-04-08",lv:"L1",prevCompany:"美团",resumeId:"10234570"},
-        {name:"沈寄云",dept:"BD二组",date:"2026-05-01",lv:"L2",prevCompany:"快手",resumeId:"10234571"},
+        {name:"白芷苓",dept:"BD一组",date:"2026-04-08",lv:"L1"},
+        {name:"沈寄云",dept:"BD二组",date:"2026-05-01",lv:"L2"},
       ],
       dimission:[]
     },
@@ -451,8 +451,8 @@ const DEPTS = {
         {n:"运营中台",  l:"夜阑",cur:17,plan:15,in:0,out:0,pred:17,match:"优秀"},
       ],
       entry:[
-        {name:"楚楚安",dept:"美护BD一组",date:"2026-04-12",lv:"L1",prevCompany:"百度",resumeId:"10234572"},
-        {name:"温如玉",dept:"日化BD组",date:"2026-04-12",lv:"L2",prevCompany:"京东",resumeId:"10234573"},
+        {name:"楚楚安",dept:"美护BD一组",date:"2026-04-12",lv:"L1"},
+        {name:"温如玉",dept:"日化BD组",date:"2026-04-12",lv:"L2"},
       ],
       dimission:[
         {name:"余烟飞",dept:"医美BD组",date:"2026-04-18",type:"被动",lv:"L1"},
@@ -469,9 +469,9 @@ const DEPTS = {
         {n:"策略组",l:"渐离",cur:8, plan:16,in:1,out:0,pred:9, match:null},
       ],
       entry:[
-        {name:"江离散",dept:"BD一组",date:"2026-04-15",lv:"L1",prevCompany:"字节跳动",resumeId:"10234574"},
-        {name:"辛夷坞",dept:"BD二组",date:"2026-04-15",lv:"L1",prevCompany:"滴滴",resumeId:"10234575"},
-        {name:"远山黛",dept:"运营组",date:"2026-05-06",lv:"L2",prevCompany:"网易",resumeId:"10234576"},
+        {name:"江离散",dept:"BD一组",date:"2026-04-15",lv:"L1"},
+        {name:"辛夷坞",dept:"BD二组",date:"2026-04-15",lv:"L1"},
+        {name:"远山黛",dept:"运营组",date:"2026-05-06",lv:"L2"},
       ],
       dimission:[
         {name:"折梦兰",dept:"策略组",date:"2026-04-20",type:"主动",lv:"IC"},
@@ -498,7 +498,7 @@ const DEPTS = {
         {n:"平台专家",l:"月桂",cur:28,plan:28,in:1,out:0,pred:29,match:"优秀"},
         {n:"运营组",  l:"幽篁",cur:24,plan:24,in:1,out:0,pred:25,match:"匹配"},
       ],
-      entry:[{name:"林栖迟",dept:"BD一组",date:"2026-04-08",lv:"L1",prevCompany:"微博",resumeId:"10234577"}],
+      entry:[{name:"林栖迟",dept:"BD一组",date:"2026-04-08",lv:"L1"}],
       dimission:[]
     },
     {
@@ -510,7 +510,7 @@ const DEPTS = {
         {n:"运营组",l:"星沉",cur:20,plan:20,in:1,out:1,pred:20,match:"匹配"},
         {n:"专家组",l:"潮落",cur:15,plan:15,in:1,out:0,pred:16,match:"优秀"},
       ],
-      entry:[{name:"叶如尘",dept:"BD二组",date:"2026-04-18",lv:"L2",prevCompany:"爱奇艺",resumeId:"10234578"}],
+      entry:[{name:"叶如尘",dept:"BD二组",date:"2026-04-18",lv:"L2"}],
       dimission:[]
     },
     {
@@ -531,7 +531,7 @@ const DEPTS = {
         {n:"渠道运营",l:"帆远",cur:24,plan:24,in:1,out:1,pred:24,match:"匹配"},
         {n:"专家组",  l:"远岸",cur:22,plan:22,in:1,out:0,pred:23,match:"优秀"},
       ],
-      entry:[{name:"云帆过",dept:"渠道一组",date:"2026-04-20",lv:"L1",prevCompany:"拼多多",resumeId:"10234579"}],
+      entry:[{name:"云帆过",dept:"渠道一组",date:"2026-04-20",lv:"L1"}],
       dimission:[]
     },
     {
@@ -546,8 +546,8 @@ const DEPTS = {
         {n:"数据组",    l:"碧云",cur:20,plan:20,in:0,out:0,pred:20,match:"优秀"},
       ],
       entry:[
-        {name:"尹长风",dept:"生态BD一组",date:"2026-04-08",lv:"L1",prevCompany:"字节跳动",resumeId:"10234580"},
-        {name:"阮清越",dept:"生态BD二组",date:"2026-04-15",lv:"L2",prevCompany:"腾讯",resumeId:"10234581"},
+        {name:"尹长风",dept:"生态BD一组",date:"2026-04-08",lv:"L1"},
+        {name:"阮清越",dept:"生态BD二组",date:"2026-04-15",lv:"L2"},
       ],
       dimission:[{name:"沈浮生",dept:"生态运营组",date:"2026-04-20",type:"转岗",lv:"L2"}]
     },
@@ -562,7 +562,7 @@ const DEPTS = {
         {n:"策略组",      l:"清岚",cur:30,plan:30,in:1,out:0,pred:31,match:"优秀"},
         {n:"专家组",      l:"云卷",cur:13,plan:16,in:1,out:0,pred:14,match:"匹配"},
       ],
-      entry:[{name:"叶知秋",dept:"平台合作组",date:"2026-04-22",lv:"L1",prevCompany:"美团",resumeId:"10234582"}],
+      entry:[{name:"叶知秋",dept:"平台合作组",date:"2026-04-22",lv:"L1"}],
       dimission:[]
     },
     {
@@ -585,7 +585,7 @@ const DEPTS = {
         {n:"数据洞察组",l:"暮色",cur:22,plan:22,in:1,out:0,pred:23,match:"优秀"},
         {n:"创意设计组",l:"竹影",cur:19,plan:14,in:0,out:1,pred:18,match:"优秀"},
       ],
-      entry:[{name:"洛神赋",dept:"品牌营销组",date:"2026-04-20",lv:"L1",prevCompany:"宝洁",resumeId:"10234583"}],
+      entry:[{name:"洛神赋",dept:"品牌营销组",date:"2026-04-20",lv:"L1"}],
       dimission:[]
     },
     {
@@ -622,8 +622,8 @@ const DEPTS = {
         {n:"PMO",          l:"残月",cur:19,plan:22,in:1,out:1,pred:19,match:"匹配"},
       ],
       entry:[
-        {name:"落云歌",dept:"商业化产品一组",date:"2026-04-10",lv:"L1",prevCompany:"字节跳动",resumeId:"10234584"},
-        {name:"时未晚",dept:"广告产品组",date:"2026-05-01",lv:"L2",prevCompany:"阿里巴巴",resumeId:"10234585"},
+        {name:"落云歌",dept:"商业化产品一组",date:"2026-04-10",lv:"L1"},
+        {name:"时未晚",dept:"广告产品组",date:"2026-05-01",lv:"L2"},
       ],
       dimission:[{name:"流光散",dept:"PMO",date:"2026-04-15",type:"主动",lv:"IC"}]
     },
@@ -632,14 +632,14 @@ const DEPTS = {
     {
       name:"商家发展", leader:"松涛", plan:35, cur:33, predict:35, inHc:3, outHc:1,
       subs:[{n:"商家运营一组",l:"云涌",cur:16,plan:18,in:2,out:1,pred:17,match:"匹配"},{n:"商家运营二组",l:"岚深",cur:17,plan:17,in:1,out:0,pred:18,match:"优秀"}],
-      entry:[{name:"霜林晚",dept:"商家运营一组",date:"2026-04-15",lv:"L1",prevCompany:"京东",resumeId:"10234587"}],
+      entry:[{name:"霜林晚",dept:"商家运营一组",date:"2026-04-15",lv:"L1"}],
       dimission:[]
     },
     {
       name:"蒲公英", leader:"飞絮", plan:35, cur:30, predict:33, inHc:4, outHc:1,
       isWarn:true,
       subs:[{n:"内容商业化组",l:"萍踪",cur:14,plan:18,in:2,out:1,pred:15,match:"匹配"},{n:"达人运营组",l:"旅云",cur:16,plan:17,in:2,out:0,pred:18,match:"匹配"}],
-      entry:[{name:"南来雁",dept:"达人运营组",date:"2026-04-22",lv:"L2",prevCompany:"快手",resumeId:"10234588"}],
+      entry:[{name:"南来雁",dept:"达人运营组",date:"2026-04-22",lv:"L2"}],
       dimission:[]
     },
     {
@@ -666,7 +666,7 @@ const DEPTS = {
         {n:"资金管理组",  cur:8, plan:8, pred:9},
       ],
       entry:[
-        {name:"赛娜",dept:"财务一组",date:"2026-04-01",lv:"L1",prevCompany:"德勤",resumeId:"10234586"},
+        {name:"赛娜",dept:"财务一组",date:"2026-04-01",lv:"L1"},
       ],
       dimission:[]
     },
@@ -881,7 +881,6 @@ function renderDeptCards(containerId, depts){
         <div class="flow-av ${cls}">${initials(e.name)}</div>
         <div class="flow-info">
           <div class="flow-nm">${e.name}${lvTag(e.lv||'')}${e.type==='转岗'?'<span class="lv-tag" style="background:#7c3aed;color:#fff">转岗</span>':e.type==='主动'?'<span class="lv-tag" style="background:#dc2626;color:#fff">主动</span>':e.type==='被动'?'<span class="lv-tag" style="background:#92400e;color:#fff">被动</span>':''}</div>
-          ${(e.prevCompany||e.resumeId)?'<div class="flow-prev">'+(e.prevCompany?'📍 '+e.prevCompany+' ':'')+(e.resumeId?'<a href="https://hr.xiaohongshu.com/next/applicant-manage/social?applicantId='+e.resumeId+'" target="_blank" style="color:#1d4ed8;font-size:10px">查看简历→</a>':'')+'</div>':''}
           <div class="flow-dept">${e.dept}</div>
         </div>
         <div class="flow-right"><div class="flow-date">${fmtD(e.date||e.date)}</div></div>
