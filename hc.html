@@ -10,7 +10,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue"
 a{color:#1a7a4a;text-decoration:none}
 a:hover{text-decoration:underline}
 
-/* ── TOP NAV ── */
 .topnav{background:linear-gradient(135deg,#1a5c36 0%,#2d8653 60%,#1e7a47 100%);padding:0 32px;display:flex;align-items:stretch;gap:0;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.18)}
 .topnav-brand{display:flex;align-items:center;gap:10px;padding:14px 0;margin-right:32px}
 .topnav-logo{font-size:24px}
@@ -21,108 +20,61 @@ a:hover{text-decoration:underline}
 .nav-tab.active{color:#fff;border-bottom-color:#7FFFD4;font-weight:700}
 .topnav-time{margin-left:auto;display:flex;align-items:center;font-size:12px;color:rgba(255,255,255,.5);padding:14px 0}
 
-/* ── OVERVIEW STRIP ── */
-.overview-strip{background:#fff;border-bottom:1px solid #E4EDE8;padding:0 32px}
-.overview-row{display:flex;gap:0;overflow-x:auto}
-.ov-card{flex:1;min-width:120px;padding:16px 20px;border-right:1px solid #EEF3EF;cursor:pointer;transition:background .15s;position:relative}
-.ov-card:last-child{border-right:none}
-.ov-card:hover{background:#F4FAF6}
-.ov-label{font-size:11px;color:#888;margin-bottom:4px;font-weight:500}
-.ov-total{font-size:26px;font-weight:800;color:#1a1a1a;line-height:1}
-.ov-total.gap-red{color:#E53935}
-.ov-total.gap-grn{color:#2e7d32}
-.ov-breakdown{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap}
-.ov-seg{font-size:11px;padding:2px 7px;border-radius:4px;font-weight:600}
-.ov-seg.biz{background:#E8F5E9;color:#2e7d32}
-.ov-seg.ecom{background:#E3F2FD;color:#1565c0}
-.ov-seg.func{background:#FFF3E0;color:#e65100}
-
-/* ── ALERT BAR ── */
-.alert-bar{margin:16px 32px;background:#FFFBF0;border:1px solid #FFD54F;border-radius:10px;padding:12px 18px;display:flex;align-items:flex-start;gap:10px}
-.alert-bar.hidden{display:none}
-.alert-icon{font-size:18px;flex-shrink:0;margin-top:1px}
-.alert-title{font-weight:700;font-size:13px;color:#B45309;margin-bottom:5px}
-.alert-tags{display:flex;flex-wrap:wrap;gap:6px}
-.alert-tag{font-size:12px;padding:3px 10px;border-radius:6px;font-weight:600}
-.alert-tag.vacancy{background:#FFEBEE;color:#c62828;border:1px solid #EF9A9A}
-.alert-tag.overstaff{background:#F1F8E9;color:#2e7d32;border:1px solid #A5D6A7}
-
-/* ── TAB PANELS ── */
-.tab-panel{display:none;padding:20px 32px 48px}
+.tab-panel{display:none;padding:24px 32px 60px}
 .tab-panel.active{display:block}
 
-/* ── DEPT GRID (multi-column for many depts) ── */
-.dept-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(520px,1fr));gap:16px}
+/* ── SECTION HEADER ── */
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;margin-top:8px}
+.section-title{font-size:16px;font-weight:800;color:#1a1a1a}
+.section-badge{font-size:12px;font-weight:700;background:#E8F5E9;color:#2e7d32;border-radius:20px;padding:2px 10px}
+.section-note{font-size:11px;color:#aaa;margin-left:auto}
 
-/* ── DEPT CARD ── */
-.dept-card{background:#fff;border-radius:12px;border:1px solid #E4EDE8;overflow:hidden;transition:box-shadow .15s}
-.dept-card:hover{box-shadow:0 4px 20px rgba(26,92,54,.1)}
+/* ── MAIN TABLE ── */
+.hc-table-wrap{background:#fff;border-radius:12px;border:1px solid #E4EDE8;overflow:hidden;margin-bottom:24px;box-shadow:0 1px 6px rgba(26,92,54,.06)}
+table.hct{width:100%;border-collapse:collapse;font-size:13px}
+table.hct th{padding:10px 14px;text-align:center;font-size:11px;font-weight:700;color:#888;background:#FAFCFA;border-bottom:2px solid #E4EDE8;white-space:nowrap}
+table.hct th.left{text-align:left}
+table.hct td{padding:9px 14px;border-bottom:1px solid #F2F6F3;text-align:center;vertical-align:middle}
+table.hct td.left{text-align:left}
+table.hct tr:last-child td{border-bottom:none}
+table.hct tr.total-row td{background:#F4FAF6;font-weight:700;border-top:2px solid #C8E6C9}
+table.hct tr.total-row td.left{font-weight:800;color:#1a5c36}
+table.hct tr:hover:not(.total-row){background:#FAFDF9}
+table.hct tr.group-header td{background:#F0F5F1;font-weight:700;color:#2e7d32;font-size:12px;padding:6px 14px;border-top:1px solid #D4E8D8}
 
-.dept-head{padding:16px 20px 12px;border-bottom:1px solid #F0F5F1}
-.dept-head-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.dept-name{font-size:15px;font-weight:700;color:#1a1a1a}
-.dept-lv{font-size:11px;background:#E8F5E9;color:#2e7d32;border-radius:5px;padding:2px 8px;font-weight:700}
-.dept-leader{font-size:12px;color:#888;margin-left:auto}
-.gap-pill{font-size:12px;font-weight:700;border-radius:20px;padding:3px 12px}
-.gap-pill.v{background:#FFEBEE;color:#c62828;border:1px solid #EF9A9A}
-.gap-pill.o{background:#F1F8E9;color:#2e7d32;border:1px solid #A5D6A7}
-.gap-pill.f{background:#F5F5F5;color:#888;border:1px solid #DDD}
+/* ── SYSTEM DATA BADGE ── */
+.sys-badge{display:inline-block;font-size:10px;background:#E3F2FD;color:#1565c0;border-radius:4px;padding:1px 5px;font-weight:600;vertical-align:middle;margin-left:3px}
+.no-data{color:#ccc;font-size:12px}
 
-.dept-metrics{padding:12px 20px;display:flex;gap:0;border-bottom:1px solid #F5F8F5}
-.metric{flex:1;text-align:center;border-right:1px solid #F0F5F1}
-.metric:last-child{border-right:none}
-.metric-val{font-size:20px;font-weight:800;color:#1a1a1a;line-height:1}
-.metric-val.in{color:#1976d2}
-.metric-val.out{color:#c62828}
-.metric-val.gap-r{color:#c62828}
-.metric-val.gap-g{color:#2e7d32}
-.metric-lbl{font-size:10px;color:#aaa;margin-top:3px}
+/* ── GAP PILL ── */
+.gap-pill{display:inline-block;font-size:11px;font-weight:700;border-radius:12px;padding:2px 9px;white-space:nowrap}
+.gap-v{background:#FFEBEE;color:#c62828;border:1px solid #EF9A9A}
+.gap-o{background:#F1F8E9;color:#2e7d32;border:1px solid #A5D6A7}
+.gap-f{background:#F5F5F5;color:#888;border:1px solid #DDD}
 
-.dept-flow{padding:10px 20px;display:flex;gap:12px;border-bottom:1px solid #F5F8F5;flex-wrap:wrap}
-.flow-block{flex:1;min-width:130px;background:#FAFCFA;border-radius:8px;padding:8px 12px}
-.flow-title{font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
-.flow-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:2px 0}
-.flow-key{color:#666}
-.flow-num{font-weight:700}
-.flow-num.blue{color:#1976d2}
-.flow-num.red{color:#c62828}
-.flow-num.gray{color:#bbb}
-
-/* ── PEOPLE PILLS (L1 入职) ── */
-.dept-l1{padding:10px 20px;border-bottom:1px solid #F5F8F5}
-.l1-title{font-size:11px;font-weight:700;color:#2e7d32;margin-bottom:6px;display:flex;align-items:center;gap:5px}
-.l1-pills{display:flex;gap:6px;flex-wrap:wrap}
-.l1-pill{display:flex;align-items:center;gap:5px;background:#E8F5E9;border:1px solid #A5D6A7;border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;color:#1b5e20;cursor:pointer}
-.l1-pill a{color:#1b5e20;font-weight:700}
-.l1-pill:hover{background:#C8E6C9}
-
-/* ── IC 人数条 ── */
-.ic-bar{padding:6px 20px 10px;border-bottom:1px solid #F5F8F5;font-size:12px;color:#888}
-.ic-bar span{font-weight:600;color:#555}
-
-/* ── EXPAND BUTTON ── */
-.expand-btn{width:100%;background:none;border:none;padding:10px 20px;cursor:pointer;display:flex;align-items:center;justify-between;gap:6px;font-size:12px;color:#888;font-weight:600;text-align:left;border-top:1px solid #F0F5F1;transition:background .15s}
-.expand-btn:hover{background:#F4FAF6;color:#2e7d32}
-.expand-icon{margin-left:auto;transition:transform .2s;font-size:10px}
-.expand-icon.open{transform:rotate(90deg)}
-
-/* ── SUB-DEPT TABLE ── */
-.subdept-wrap{display:none;overflow-x:auto;border-top:1px solid #F0F5F1}
-.subdept-wrap.open{display:block}
-table.st{width:100%;border-collapse:collapse;font-size:12px}
-table.st th{padding:6px 12px;text-align:left;color:#aaa;font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #EEF3EF;background:#FAFCFA}
-table.st td{padding:7px 12px;border-bottom:1px solid #F5F8F5;vertical-align:middle}
-table.st tr:last-child td{border-bottom:none}
-tr.rv{background:#FFF5F5}
-tr.ro{background:#F6FFF6}
-.mini-bar{width:80px;height:5px;background:#EEF3EF;border-radius:3px;overflow:hidden;display:inline-block;vertical-align:middle}
+/* ── MINI PROGRESS ── */
+.mini-bar{width:64px;height:5px;background:#EEF3EF;border-radius:3px;overflow:hidden;display:inline-block;vertical-align:middle;margin-right:4px}
 .mini-fill{height:100%;border-radius:3px;background:#4CAF50}
 .mini-fill.over{background:#E53935}
-.match-tag{font-size:10px;border-radius:4px;padding:1px 6px;font-weight:600}
-.mt-exc{background:#E8F5E9;color:#2e7d32}
-.mt-mat{background:#E8F4FF;color:#1565c0}
-.mt-dbt{background:#FFF3E0;color:#e65100}
-.mt-na{background:#F5F5F5;color:#aaa}
+
+/* ── LEADER ── */
+.leader-name{font-size:12px;color:#666}
+.dept-name-cell{font-weight:600;color:#1a1a1a}
+.dept-name-cell.l2{color:#1a5c36;font-weight:800}
+
+/* ── OVERVIEW CARDS ── */
+.ov-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:24px}
+.ov-card{background:#fff;border-radius:10px;border:1px solid #E4EDE8;padding:14px 18px;box-shadow:0 1px 4px rgba(26,92,54,.05)}
+.ov-card-label{font-size:11px;color:#aaa;font-weight:600;margin-bottom:4px}
+.ov-card-val{font-size:28px;font-weight:800;color:#1a1a1a;line-height:1}
+.ov-card-sub{font-size:11px;color:#888;margin-top:5px}
+.ov-card-val.red{color:#c62828}
+.ov-card-val.green{color:#2e7d32}
+
+/* ── DATA SOURCE NOTE ── */
+.data-note{font-size:11px;color:#aaa;background:#FAFCFA;border:1px solid #E8EDE9;border-radius:8px;padding:8px 14px;margin-bottom:16px;display:flex;align-items:center;gap:6px}
+.data-note span.dot-sys{display:inline-block;width:8px;height:8px;border-radius:50%;background:#1565c0;margin-right:2px}
+.data-note span.dot-plan{display:inline-block;width:8px;height:8px;border-radius:50%;background:#2e7d32;margin-right:2px}
 
 /* ── PLACEHOLDER ── */
 .placeholder{text-align:center;padding:80px 20px;color:#bbb}
@@ -130,52 +82,16 @@ tr.ro{background:#F6FFF6}
 .ph-text{font-size:15px}
 .ph-sub{font-size:13px;color:#ccc;margin-top:6px}
 
-/* ── MODAL ── */
-.moverlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(3px)}
-.moverlay.open{display:flex}
-.modal{background:#fff;border-radius:16px;padding:28px 32px;max-width:600px;width:92%;box-shadow:0 12px 48px rgba(0,0,0,.2);max-height:85vh;overflow-y:auto}
-.modal-title{font-size:18px;font-weight:700;margin-bottom:4px;color:#1a1a1a}
-.modal-sub{font-size:12px;color:#aaa;margin-bottom:20px}
-.modal-close{float:right;background:none;border:none;font-size:20px;cursor:pointer;color:#aaa;margin-top:-4px}
-.modal-sec{margin-bottom:18px}
-.modal-sec-title{font-size:12px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;padding-bottom:5px;border-bottom:1px solid #F0F0F0}
-.modal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
-.modal-card{background:#F4FAF6;border-radius:10px;padding:12px 16px}
-.modal-card-val{font-size:24px;font-weight:800;color:#1a1a1a}
-.modal-card-val.r{color:#c62828}
-.modal-card-val.g{color:#2e7d32}
-.modal-card-val.b{color:#1565c0}
-.modal-card-lbl{font-size:11px;color:#888;margin-top:3px}
-.person-row{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;font-size:13px}
-.person-row:hover{background:#F4FAF6}
-.person-name{font-weight:600;color:#1a1a1a;min-width:100px}
-.person-dept{color:#aaa;font-size:12px;flex:1}
-.person-date{font-size:11px;color:#bbb;white-space:nowrap}
-.badge{font-size:10px;border-radius:4px;padding:1px 6px;font-weight:700}
-.badge-l1{background:#1b5e20;color:#fff}
-.badge-campus{background:#1565c0;color:#fff}
-.badge-social{background:#2e7d32;color:#fff}
-.badge-active{background:#e65100;color:#fff}
-.badge-passive{background:#c62828;color:#fff}
-
-/* ── DONUT SVG ── */
-.donut-wrap{display:flex;align-items:center;gap:10px;padding:8px 20px;border-bottom:1px solid #F5F8F5}
-.donut-legend{display:flex;flex-direction:column;gap:3px}
-.legend-row{display:flex;align-items:center;gap:5px;font-size:11px;color:#666}
-.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-
 @media(max-width:700px){
-  .topnav{padding:0 16px}
-  .overview-strip{padding:0 12px}
-  .tab-panel{padding:12px 16px 32px}
-  .dept-grid{grid-template-columns:1fr}
-  .alert-bar{margin:10px 16px}
+  .topnav{padding:0 12px}
+  .tab-panel{padding:14px 12px 40px}
+  .nav-tab{padding:0 12px;font-size:12px}
+  table.hct th,table.hct td{padding:7px 8px;font-size:11px}
 }
 </style>
 </head>
 <body>
 
-<!-- TOP NAV -->
 <nav class="topnav">
   <div class="topnav-brand">
     <span class="topnav-logo">🧧</span>
@@ -186,455 +102,646 @@ tr.ro{background:#F6FFF6}
     <button class="nav-tab" onclick="switchTab('ecom',this)">🛒 电商</button>
     <button class="nav-tab" onclick="switchTab('func',this)">🏛️ 职能</button>
   </div>
-  <div class="topnav-time" id="fetchTimeLabel"></div>
+  <div class="topnav-time">更新于 2026-04-01</div>
 </nav>
 
-<!-- OVERVIEW STRIP -->
-<div class="overview-strip">
-  <div class="overview-row" id="overviewRow"></div>
-</div>
-
-<!-- ALERT BAR -->
-<div class="alert-bar hidden" id="alertBar">
-  <span class="alert-icon">⚠️</span>
-  <div>
-    <div class="alert-title">HC 预警 · 建议关注</div>
-    <div class="alert-tags" id="alertTags"></div>
-  </div>
-</div>
-
-<!-- TAB PANELS -->
+<!-- ═══════════════ 商业化 ═══════════════ -->
 <div id="tab-biz" class="tab-panel active">
-  <div class="dept-grid" id="biz-grid"></div>
-</div>
-<div id="tab-ecom" class="tab-panel">
-  <div class="placeholder">
-    <div class="ph-icon">🛒</div>
-    <div class="ph-text">电商数据接入中</div>
-    <div class="ph-sub">敬请期待</div>
+
+  <div class="data-note">
+    <span class="dot-sys"></span><strong>蓝色数字</strong> = 系统实时数据（行业一部）&nbsp;&nbsp;
+    <span class="dot-plan"></span><strong>Y26规划</strong> = 来自 HC Dashboard 表格（2026大商业&职能HC管理Dashboard）
   </div>
-</div>
-<div id="tab-func" class="tab-panel">
-  <div class="dept-grid" id="func-grid"></div>
+
+  <!-- 总览 -->
+  <div class="ov-cards">
+    <div class="ov-card">
+      <div class="ov-card-label">商业化 Y26规划 Total</div>
+      <div class="ov-card-val">2390</div>
+      <div class="ov-card-sub">含行业+生态+中台+产品</div>
+    </div>
+    <div class="ov-card">
+      <div class="ov-card-label">行业一部 在职</div>
+      <div class="ov-card-val" style="color:#1565c0">165</div>
+      <div class="ov-card-sub">系统实时 · Y26规划 164</div>
+    </div>
+    <div class="ov-card">
+      <div class="ov-card-label">行业一部 预计在职</div>
+      <div class="ov-card-val" style="color:#1565c0">169</div>
+      <div class="ov-card-sub">在职+流入-流出</div>
+    </div>
+    <div class="ov-card">
+      <div class="ov-card-label">行业一部 HC Gap</div>
+      <div class="ov-card-val green">超5</div>
+      <div class="ov-card-sub">预计在职 vs Y26规划</div>
+    </div>
+  </div>
+
+  <!-- 行业线 -->
+  <div class="section-header">
+    <span class="section-title">行业线</span>
+    <span class="section-badge">Y26规划 Total 1088</span>
+    <span class="section-note">含行业一～九部 + 渠道业务</span>
+  </div>
+  <div class="hc-table-wrap">
+    <table class="hct">
+      <thead>
+        <tr>
+          <th class="left" style="min-width:120px">二级部门</th>
+          <th>之HI-1</th>
+          <th>Y26规划</th>
+          <th>在职<br><small style="font-weight:400;color:#1565c0">系统</small></th>
+          <th>流入在途<br><small style="font-weight:400;color:#1565c0">系统</small></th>
+          <th>流出在途<br><small style="font-weight:400;color:#1565c0">系统</small></th>
+          <th>预计在职<br><small style="font-weight:400;color:#1565c0">系统</small></th>
+          <th>HC Gap<br><small style="font-weight:400;color:#888">预计-规划</small></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="left dept-name-cell">行业一部 <span class="sys-badge">实时</span></td>
+          <td class="leader-name">昂扬</td>
+          <td><strong>164</strong></td>
+          <td style="color:#1565c0;font-weight:700">165</td>
+          <td style="color:#1565c0;font-weight:700">7</td>
+          <td style="color:#c62828;font-weight:700">3</td>
+          <td style="color:#1565c0;font-weight:700">169</td>
+          <td><span class="gap-pill gap-o">超5</span></td>
+        </tr>
+        <tr>
+          <td class="left dept-name-cell">行业二部</td>
+          <td class="leader-name">欧迪</td>
+          <td><strong>90</strong></td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+        </tr>
+        <tr>
+          <td class="left dept-name-cell">行业三部</td>
+          <td class="leader-name">昂扬</td>
+          <td><strong>157</strong></td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+        </tr>
+        <tr>
+          <td class="left dept-name-cell">行业四部</td>
+          <td class="leader-name">米欧</td>
+          <td><strong>207</strong></td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+        </tr>
+        <tr>
+          <td class="left dept-name-cell">行业五部</td>
+          <td class="leader-name">宗宪</td>
+          <td><strong>90</strong></td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+        </tr>
+        <tr>
+          <td class="left dept-name-cell">行业六部</td>
+          <td class="leader-name">昂扬</td>
+          <td><strong>48</strong></td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+        </tr>
+        <tr>
+          <td class="left dept-name-cell">行业七部</td>
+          <td class="leader-name">觅阳</td>
+          <td><strong>163</strong></td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+        </tr>
+        <tr>
+          <td class="left dept-name-cell">行业八部</td>
+          <td class="leader-name">纳什</td>
+          <td><strong>95</strong></td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+        </tr>
+        <tr>
+          <td class="left dept-name-cell">行业九部</td>
+          <td class="leader-name">宗宪</td>
+          <td><strong>48</strong></td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+        </tr>
+        <tr>
+          <td class="left dept-name-cell">渠道业务</td>
+          <td class="leader-name">米欧</td>
+          <td><strong>94</strong></td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+        </tr>
+        <tr class="total-row">
+          <td class="left">行业线 合计</td>
+          <td></td>
+          <td>1156</td>
+          <td>165</td>
+          <td colspan="5" style="text-align:left;font-size:11px;color:#888;font-weight:400">其余部门暂无系统权限</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 生态线 -->
+  <div class="section-header">
+    <span class="section-title">生态线</span>
+    <span class="section-badge">Y26规划 Total 774</span>
+  </div>
+  <div class="hc-table-wrap">
+    <table class="hct">
+      <thead>
+        <tr>
+          <th class="left" style="min-width:140px">二级部门</th>
+          <th>之HI-1</th>
+          <th>Y26规划</th>
+          <th>在职</th>
+          <th>流入在途</th>
+          <th>流出在途</th>
+          <th>预计在职</th>
+          <th>HC Gap</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="left dept-name-cell">生态一部</td>
+          <td class="leader-name">觅阳</td>
+          <td><strong>400</strong></td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+        </tr>
+        <tr>
+          <td class="left dept-name-cell">生态二部</td>
+          <td class="leader-name">米欧</td>
+          <td><strong>334</strong></td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+        </tr>
+        <tr>
+          <td class="left dept-name-cell">创作者营销与商业服务</td>
+          <td class="leader-name">玄霜</td>
+          <td><strong>40</strong></td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+        </tr>
+        <tr class="total-row">
+          <td class="left">生态线 合计</td>
+          <td></td>
+          <td>774</td>
+          <td colspan="5" style="text-align:left;font-size:11px;color:#888;font-weight:400">暂无系统权限</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 中台&产品 -->
+  <div class="section-header">
+    <span class="section-title">中台 &amp; 产品</span>
+    <span class="section-badge">Y26规划 Total 459</span>
+  </div>
+  <div class="hc-table-wrap">
+    <table class="hct">
+      <thead>
+        <tr>
+          <th class="left" style="min-width:140px">二级部门</th>
+          <th>之HI-1</th>
+          <th>Y26规划</th>
+          <th>在职</th>
+          <th>流入在途</th>
+          <th>流出在途</th>
+          <th>预计在职</th>
+          <th>HC Gap</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="left dept-name-cell">市场营销中台</td>
+          <td class="leader-name">义思</td>
+          <td><strong>160</strong></td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+        </tr>
+        <tr>
+          <td class="left dept-name-cell">策略中台</td>
+          <td class="leader-name">/</td>
+          <td><strong>89</strong></td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+        </tr>
+        <tr>
+          <td class="left dept-name-cell">营销实验室</td>
+          <td class="leader-name">圣香</td>
+          <td><strong>14</strong></td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+        </tr>
+        <tr>
+          <td class="left dept-name-cell">商业产品</td>
+          <td class="leader-name">披萝</td>
+          <td><strong>196</strong></td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+        </tr>
+        <tr class="total-row">
+          <td class="left">中台&amp;产品 合计</td>
+          <td></td>
+          <td>459</td>
+          <td colspan="5" style="text-align:left;font-size:11px;color:#888;font-weight:400">暂无系统权限</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 商业化汇总 -->
+  <div class="hc-table-wrap">
+    <table class="hct">
+      <tbody>
+        <tr class="total-row">
+          <td class="left" style="font-size:14px">🏢 商业化 Total</td>
+          <td></td>
+          <td style="font-size:18px;color:#1a5c36">2390</td>
+          <td colspan="5" style="text-align:left;font-size:12px;color:#888;font-weight:400">Y26规划合计 = 行业1156 + 生态774 + 中台&amp;产品459 + 渠道94（含渠道业务）</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 行业一部子组明细 -->
+  <div class="section-header" style="margin-top:8px">
+    <span class="section-title">📊 行业一部 子组明细</span>
+    <span class="sys-badge" style="font-size:11px;padding:3px 8px">系统实时数据</span>
+    <span class="section-note">在职/编制/Gap 均来自 HRBP 系统</span>
+  </div>
+  <div class="hc-table-wrap">
+    <table class="hct">
+      <thead>
+        <tr>
+          <th class="left">子组</th>
+          <th>负责人</th>
+          <th>在职</th>
+          <th>目标编制</th>
+          <th>流入</th>
+          <th>流出</th>
+          <th>预计在职</th>
+          <th>Gap</th>
+          <th>完成率</th>
+          <th>人岗匹配</th>
+        </tr>
+      </thead>
+      <tbody id="subdept-tbody">
+      </tbody>
+    </table>
+  </div>
+
 </div>
 
-<!-- MODAL -->
-<div class="moverlay" id="moverlay" onclick="closeMod(event)">
-  <div class="modal">
-    <button class="modal-close" onclick="closeMod()">✕</button>
-    <div class="modal-title" id="mod-title"></div>
-    <div class="modal-sub" id="mod-sub"></div>
-    <div id="mod-body"></div>
+<!-- ═══════════════ 电商 ═══════════════ -->
+<div id="tab-ecom" class="tab-panel">
+  <div class="data-note">
+    Y26规划来自 HC Dashboard 表格，暂无系统实时数据权限
   </div>
+  <div class="section-header">
+    <span class="section-title">交易（电商）</span>
+    <span class="section-badge">Y26规划 Total 347</span>
+    <span class="section-note">数据来源：大商业Summary</span>
+  </div>
+  <div class="hc-table-wrap">
+    <table class="hct">
+      <thead>
+        <tr>
+          <th class="left" style="min-width:140px">二级部门</th>
+          <th>Y26规划</th>
+          <th>在职</th>
+          <th>预计在职</th>
+          <th>HC Gap</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="left dept-name-cell">商家发展</td><td><strong>35</strong></td><td class="no-data">—</td><td class="no-data">—</td><td class="no-data">—</td></tr>
+        <tr><td class="left dept-name-cell">薄公英</td><td><strong>35</strong></td><td class="no-data">—</td><td class="no-data">—</td><td class="no-data">—</td></tr>
+        <tr><td class="left dept-name-cell">商业客服</td><td><strong>34</strong></td><td class="no-data">—</td><td class="no-data">—</td><td class="no-data">—</td></tr>
+        <tr><td class="left dept-name-cell">交易市场</td><td><strong>19</strong></td><td class="no-data">—</td><td class="no-data">—</td><td class="no-data">—</td></tr>
+        <tr><td class="left dept-name-cell">其他（电商）</td><td><strong>224</strong></td><td class="no-data">—</td><td class="no-data">—</td><td class="no-data">—</td></tr>
+        <tr class="total-row">
+          <td class="left">交易 Total</td>
+          <td>347</td>
+          <td colspan="3" style="text-align:left;font-size:11px;color:#888;font-weight:400">暂无系统权限，数字来自大商业Summary表格</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════ 职能 ═══════════════ -->
+<div id="tab-func" class="tab-panel">
+
+  <div class="data-note">
+    <span class="dot-plan"></span>Y26规划来自 HC Dashboard 表格（财务职能+DI、战略 两个 sheet）
+  </div>
+
+  <!-- 总览 -->
+  <div class="ov-cards">
+    <div class="ov-card">
+      <div class="ov-card-label">职能（财务+DI）Y26 Total</div>
+      <div class="ov-card-val">272</div>
+      <div class="ov-card-sub">含财务、法务、DI等10个部门</div>
+    </div>
+    <div class="ov-card">
+      <div class="ov-card-label">战略 Y26 Total</div>
+      <div class="ov-card-val">72</div>
+      <div class="ov-card-sub">含用研、战略中台等10个子组</div>
+    </div>
+    <div class="ov-card">
+      <div class="ov-card-label">财务一组（系统在职）</div>
+      <div class="ov-card-val" style="color:#1565c0">54</div>
+      <div class="ov-card-sub">Y26规划 51</div>
+    </div>
+    <div class="ov-card">
+      <div class="ov-card-label">资本市场（系统在职）</div>
+      <div class="ov-card-val" style="color:#1565c0">5</div>
+      <div class="ov-card-sub">Y26规划 5</div>
+    </div>
+  </div>
+
+  <!-- 财务职能+DI -->
+  <div class="section-header">
+    <span class="section-title">财务职能 + DI</span>
+    <span class="section-badge">Y26规划 Total 272</span>
+  </div>
+  <div class="hc-table-wrap">
+    <table class="hct">
+      <thead>
+        <tr>
+          <th class="left" style="min-width:120px">二级部门</th>
+          <th>之HI-1</th>
+          <th>Y26规划</th>
+          <th>在职<br><small style="font-weight:400;color:#1565c0">系统</small></th>
+          <th>预计在职<br><small style="font-weight:400;color:#1565c0">系统</small></th>
+          <th>HC Gap</th>
+          <th>diff vs actual</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="left dept-name-cell">财务一组 <span class="sys-badge">实时</span></td>
+          <td class="leader-name">白真</td>
+          <td><strong>51</strong></td>
+          <td style="color:#1565c0;font-weight:700">54</td>
+          <td style="color:#1565c0;font-weight:700">54</td>
+          <td><span class="gap-pill gap-o">超3</span></td>
+          <td style="color:#888;font-size:12px">+3</td>
+        </tr>
+        <tr>
+          <td class="left dept-name-cell">财务二组</td>
+          <td class="leader-name">潇潇</td>
+          <td><strong>16</strong></td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td style="color:#888;font-size:12px">+2</td>
+        </tr>
+        <tr>
+          <td class="left dept-name-cell">税务</td>
+          <td class="leader-name">马斯</td>
+          <td><strong>12</strong></td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td style="color:#888;font-size:12px">+2</td>
+        </tr>
+        <tr>
+          <td class="left dept-name-cell">内控内审</td>
+          <td class="leader-name">狄狄</td>
+          <td><strong>12</strong></td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td style="color:#888;font-size:12px">0</td>
+        </tr>
+        <tr>
+          <td class="left dept-name-cell">采购</td>
+          <td class="leader-name">四儿</td>
+          <td><strong>18</strong></td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td style="color:#888;font-size:12px">0</td>
+        </tr>
+        <tr>
+          <td class="left dept-name-cell">投资部</td>
+          <td class="leader-name">文生POC</td>
+          <td><strong>16</strong></td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td style="color:#888;font-size:12px">0</td>
+        </tr>
+        <tr>
+          <td class="left dept-name-cell">科技投资</td>
+          <td class="leader-name">非特</td>
+          <td><strong>2</strong></td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td style="color:#888;font-size:12px">0</td>
+        </tr>
+        <tr>
+          <td class="left dept-name-cell">资本市场 <span class="sys-badge">实时</span></td>
+          <td class="leader-name">劳拉</td>
+          <td><strong>5</strong></td>
+          <td style="color:#1565c0;font-weight:700">5</td>
+          <td style="color:#1565c0;font-weight:700">5</td>
+          <td><span class="gap-pill gap-f">达标</span></td>
+          <td style="color:#888;font-size:12px">0</td>
+        </tr>
+        <tr>
+          <td class="left dept-name-cell">法务部</td>
+          <td class="leader-name">龙信/许恩</td>
+          <td><strong>32</strong></td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td style="color:#888;font-size:12px">0</td>
+        </tr>
+        <tr>
+          <td class="left dept-name-cell">DI</td>
+          <td class="leader-name">哈利</td>
+          <td><strong>107</strong></td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td class="no-data">—</td>
+          <td style="color:#2e7d32;font-size:12px;font-weight:700">+31</td>
+        </tr>
+        <tr class="total-row">
+          <td class="left">职能 Total</td>
+          <td></td>
+          <td>272</td>
+          <td>59<br><span style="font-size:10px;color:#888;font-weight:400">仅财务一组+资本市场</span></td>
+          <td>59</td>
+          <td colspan="2" style="text-align:left;font-size:11px;color:#888;font-weight:400">diff vs actual +38（全部门）</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 战略 -->
+  <div class="section-header">
+    <span class="section-title">战略</span>
+    <span class="section-badge">Y26规划 Total 72</span>
+    <span class="section-note">和25年规划保持一致</span>
+  </div>
+  <div class="hc-table-wrap">
+    <table class="hct">
+      <thead>
+        <tr>
+          <th class="left" style="min-width:140px">子组</th>
+          <th>之HI-1</th>
+          <th>Y26规划</th>
+          <th>在职</th>
+          <th>预计在职</th>
+          <th>HC Gap</th>
+          <th>diff vs actual</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="left dept-name-cell">战略部-非特</td><td class="leader-name">—</td><td><strong>1</strong></td><td class="no-data">—</td><td class="no-data">—</td><td class="no-data">—</td><td style="color:#888;font-size:12px">0</td></tr>
+        <tr><td class="left dept-name-cell">用研一组</td><td class="leader-name">初一·acting</td><td><strong>11</strong></td><td class="no-data">—</td><td class="no-data">—</td><td class="no-data">—</td><td style="color:#888;font-size:12px">+1</td></tr>
+        <tr><td class="left dept-name-cell">用研二组</td><td class="leader-name">阿亚</td><td><strong>10</strong></td><td class="no-data">—</td><td class="no-data">—</td><td class="no-data">—</td><td style="color:#c62828;font-size:12px;font-weight:700">-3</td></tr>
+        <tr><td class="left dept-name-cell">交易战略</td><td class="leader-name">非特·acting</td><td><strong>7</strong></td><td class="no-data">—</td><td class="no-data">—</td><td class="no-data">—</td><td style="color:#888;font-size:12px">+2</td></tr>
+        <tr><td class="left dept-name-cell">商业战略</td><td class="leader-name">非特·acting</td><td><strong>6</strong></td><td class="no-data">—</td><td class="no-data">—</td><td class="no-data">—</td><td style="color:#888;font-size:12px">+2</td></tr>
+        <tr><td class="left dept-name-cell">社区战略</td><td class="leader-name">初一</td><td><strong>11</strong></td><td class="no-data">—</td><td class="no-data">—</td><td class="no-data">—</td><td style="color:#888;font-size:12px">+2</td></tr>
+        <tr><td class="left dept-name-cell">技术战略</td><td class="leader-name">夏月</td><td><strong>11</strong></td><td class="no-data">—</td><td class="no-data">—</td><td class="no-data">—</td><td style="color:#888;font-size:12px">+2</td></tr>
+        <tr><td class="left dept-name-cell">战略中台</td><td class="leader-name">非特·acting</td><td><strong>9</strong></td><td class="no-data">—</td><td class="no-data">—</td><td class="no-data">—</td><td style="color:#888;font-size:12px">+2</td></tr>
+        <tr><td class="left dept-name-cell">hi lab战略组</td><td class="leader-name">非特·acting</td><td><strong>5</strong></td><td class="no-data">—</td><td class="no-data">—</td><td class="no-data">—</td><td style="color:#888;font-size:12px">+3</td></tr>
+        <tr><td class="left dept-name-cell">国际化战略</td><td class="leader-name">非特·acting</td><td><strong>1</strong></td><td class="no-data">—</td><td class="no-data">—</td><td class="no-data">—</td><td style="color:#888;font-size:12px">0</td></tr>
+        <tr class="total-row">
+          <td class="left">战略 Total</td>
+          <td></td>
+          <td>72</td>
+          <td colspan="3" class="no-data">—</td>
+          <td style="color:#2e7d32;font-size:12px;font-weight:700">+12</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
 </div>
 
 <script>
-const D = {"fetchTime": "2026-03-31 20:54", "biz": {"top": {"children": [{"children": [], "currentHc": 9, "departmentId": "5000407", "departmentIdPath": "149680,1600106,5000273,5000407", "departmentName": "行业一组", "engagementErrorEmpNum": 1, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 7.3, "valueText": "7.3"}, {"month": "2026-02", "tag": "NORMAL", "value": 7.0, "valueText": "7.0"}, {"month": "2026-03", "tag": "NORMAL", "value": 7.6, "valueText": "7.6"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/821703_0-yJwvzzRSWeH7H_1726059501/0", "leaderId": 500002996, "leaderName": "千月(陈思琪)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "优秀", "matchingDegreeTag": "excellent", "predictHc": 9, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 8, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 9, "departmentId": "5001415", "departmentIdPath": "149680,1600106,5000273,5001415", "departmentName": "行业二组", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 7.1, "valueText": "7.1"}, {"month": "2026-02", "tag": "NORMAL", "value": 7.1, "valueText": "7.1"}, {"month": "2026-03", "tag": "NORMAL", "value": 7.5, "valueText": "7.5"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/830649_RwaNq38US8inexl_1774777496/0", "leaderId": 500000483, "leaderName": "吴邪(吴建成)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "优秀", "matchingDegreeTag": "excellent", "predictHc": 9, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 6, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 9, "departmentId": "5002337", "departmentIdPath": "149680,1600106,5000273,5002337", "departmentName": "行业三组", "engagementErrorEmpNum": 1, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 8.5, "valueText": "8.5"}, {"month": "2026-02", "tag": "NORMAL", "value": 7.5, "valueText": "7.5"}, {"month": "2026-03", "tag": "NORMAL", "value": 7.6, "valueText": "7.6"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/500398_kUz1uy9HQQiqldE_1733278703/0", "leaderId": 500018986, "leaderName": "克斯(陈宇田)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 9, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 8, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 5, "departmentId": "5000277", "departmentIdPath": "149680,1600106,5000273,5000277", "departmentName": "行业四组", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 8.6, "valueText": "8.6"}, {"month": "2026-02", "tag": "NORMAL", "value": 8.5, "valueText": "8.5"}, {"month": "2026-03", "tag": "NORMAL", "value": 8.8, "valueText": "8.8"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/821703_0-yJwvzzRSWeH7H_1726059501/0", "leaderId": 500002996, "leaderName": "千月(陈思琪)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 4, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 4, "transInHc": 0, "transOutHc": 1}, {"children": [], "currentHc": 4, "departmentId": "5003873", "departmentIdPath": "149680,1600106,5000273,5003873", "departmentName": "行业五组", "engagementErrorEmpNum": 2, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 7.3, "valueText": "7.3"}, {"month": "2026-02", "tag": "NORMAL", "value": 7.3, "valueText": "7.3"}, {"month": "2026-03", "tag": "NORMAL", "value": 7.8, "valueText": "7.8"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/830649_RwaNq38US8inexl_1774777496/0", "leaderId": 500000483, "leaderName": "吴邪(吴建成)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 5, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 5, "transInHc": 1, "transOutHc": 0}, {"children": [], "currentHc": 11, "departmentId": "5003074", "departmentIdPath": "149680,1600106,5000273,5003074", "departmentName": "行业六组", "engagementErrorEmpNum": 1, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 7.1, "valueText": "7.1"}, {"month": "2026-02", "tag": "NORMAL", "value": 7.4, "valueText": "7.4"}, {"month": "2026-03", "tag": "NORMAL", "value": 8.0, "valueText": "8.0"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/962126_uyXo9F6qQc6Uc2C_1774067720/0", "leaderId": 500039331, "leaderName": "嘉莉(惠江雯)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 11, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 5, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 12, "departmentId": "5000278", "departmentIdPath": "149680,1600106,5000273,5000278", "departmentName": "行业七组", "engagementErrorEmpNum": 1, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 8.0, "valueText": "8.0"}, {"month": "2026-02", "tag": "NORMAL", "value": 7.8, "valueText": "7.8"}, {"month": "2026-03", "tag": "NORMAL", "value": 8.5, "valueText": "8.5"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/253960_ZKy-jFvhQyG3x0f_1756145779/0", "leaderId": 500040114, "leaderName": "昭燃(千艺)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 13, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 9, "transInHc": 1, "transOutHc": 0}, {"children": [], "currentHc": 6, "departmentId": "5002599", "departmentIdPath": "149680,1600106,5000273,5002599", "departmentName": "行业八组", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 7.7, "valueText": "7.7"}, {"month": "2026-02", "tag": "NORMAL", "value": 7.7, "valueText": "7.7"}, {"month": "2026-03", "tag": "NORMAL", "value": 8.7, "valueText": "8.7"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/830649_RwaNq38US8inexl_1774777496/0", "leaderId": 500000483, "leaderName": "吴邪(吴建成)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "优秀", "matchingDegreeTag": "excellent", "predictHc": 6, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 7, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 8, "departmentId": "5002603", "departmentIdPath": "149680,1600106,5000273,5002603", "departmentName": "行业九组", "engagementErrorEmpNum": 2, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 7.5, "valueText": "7.5"}, {"month": "2026-02", "tag": "NORMAL", "value": 6.8, "valueText": "6.8"}, {"month": "2026-03", "tag": "NORMAL", "value": 7.5, "valueText": "7.5"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/563396_XcOj7wtDQYKGD9l_1734874267/0", "leaderId": 142384575, "leaderName": "白泉(陈可茵)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "优秀", "matchingDegreeTag": "excellent", "predictHc": 8, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 7, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 9, "departmentId": "5002600", "departmentIdPath": "149680,1600106,5000273,5002600", "departmentName": "行业十组", "engagementErrorEmpNum": 1, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 7.6, "valueText": "7.6"}, {"month": "2026-02", "tag": "NORMAL", "value": 8.2, "valueText": "8.2"}, {"month": "2026-03", "tag": "NORMAL", "value": 8.8, "valueText": "8.8"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/93395_Omst0zWDRIODLQT_1759132174/0", "leaderId": 500001502, "leaderName": "昂扬(李昂)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 9, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 8, "transInHc": 1, "transOutHc": 1}, {"children": [], "currentHc": 5, "departmentId": "5002601", "departmentIdPath": "149680,1600106,5000273,5002601", "departmentName": "行业十一组", "engagementErrorEmpNum": 1, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 8.7, "valueText": "8.7"}, {"month": "2026-02", "tag": "NORMAL", "value": 8.4, "valueText": "8.4"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.4, "valueText": "9.4"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/190753_gL6YhMrMSjGnT1p_1758150161/0", "leaderId": 500010469, "leaderName": "南舟(姚苒)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 5, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 6, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 5, "departmentId": "5003733", "departmentIdPath": "149680,1600106,5000273,5003733", "departmentName": "行业十二组", "engagementErrorEmpNum": 1, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 8.9, "valueText": "8.9"}, {"month": "2026-02", "tag": "NORMAL", "value": 8.3, "valueText": "8.3"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.1, "valueText": "9.1"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/607186_N-_dobjVS12Cshx_1744503285/0", "leaderId": 500017007, "leaderName": "希坦(贺琼)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 5, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 4, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 6, "departmentId": "5003735", "departmentIdPath": "149680,1600106,5000273,5003735", "departmentName": "平台专家一组", "engagementErrorEmpNum": 1, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 8.7, "valueText": "8.7"}, {"month": "2026-02", "tag": "NORMAL", "value": 8.4, "valueText": "8.4"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.7, "valueText": "9.7"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/229192_INMSIBklT1SgLTx_1713576935/0", "leaderId": 500015931, "leaderName": "古娴(高逸群)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 6, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 8, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 8, "departmentId": "5002123", "departmentIdPath": "149680,1600106,5000273,5002123", "departmentName": "平台专家二组", "engagementErrorEmpNum": 1, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 10.1, "valueText": "10.1"}, {"month": "2026-02", "tag": "NORMAL", "value": 9.8, "valueText": "9.8"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.7, "valueText": "9.7"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/391608_K2YGnVDUTOeCIuG_1760086946/0", "leaderId": 500005047, "leaderName": "菀得(杨森)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "优秀", "matchingDegreeTag": "excellent", "predictHc": 9, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 5, "transInHc": 1, "transOutHc": 0}, {"children": [], "currentHc": 7, "departmentId": "5000280", "departmentIdPath": "149680,1600106,5000273,5000280", "departmentName": "平台专家三组", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 10.1, "valueText": "10.1"}, {"month": "2026-02", "tag": "NORMAL", "value": 9.9, "valueText": "9.9"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.7, "valueText": "10.7"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/400273_OZEcrDSYTHSUe01_1752153687/0", "leaderId": 500037124, "leaderName": "若琳(陈若琳)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "优秀", "matchingDegreeTag": "excellent", "predictHc": 7, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 6, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 4, "departmentId": "5002742", "departmentIdPath": "149680,1600106,5000273,5002742", "departmentName": "平台专家四组", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 10.4, "valueText": "10.4"}, {"month": "2026-02", "tag": "NORMAL", "value": 9.1, "valueText": "9.1"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.1, "valueText": "10.1"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/229192_INMSIBklT1SgLTx_1713576935/0", "leaderId": 500015931, "leaderName": "古娴(高逸群)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "优秀", "matchingDegreeTag": "excellent", "predictHc": 4, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 3, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 5, "departmentId": "5003874", "departmentIdPath": "149680,1600106,5000273,5003874", "departmentName": "平台专家五组", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 10.7, "valueText": "10.7"}, {"month": "2026-02", "tag": "NORMAL", "value": 9.2, "valueText": "9.2"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.9, "valueText": "9.9"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/391608_K2YGnVDUTOeCIuG_1760086946/0", "leaderId": 500005047, "leaderName": "菀得(杨森)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "优秀", "matchingDegreeTag": "excellent", "predictHc": 5, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 5, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 5, "departmentId": "5000281", "departmentIdPath": "149680,1600106,5000273,5000281", "departmentName": "平台专家六组", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 9.8, "valueText": "9.8"}, {"month": "2026-02", "tag": "NORMAL", "value": 9.8, "valueText": "9.8"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.4, "valueText": "10.4"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/324391_FPHaL6boQ6mlTBc_1728831410/0", "leaderId": 500025423, "leaderName": "希莫(焦潞林)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 5, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 4, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 9, "departmentId": "5003080", "departmentIdPath": "149680,1600106,5000273,5003080", "departmentName": "平台专家七组", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 9.2, "valueText": "9.2"}, {"month": "2026-02", "tag": "NORMAL", "value": 8.2, "valueText": "8.2"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.8, "valueText": "9.8"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/324391_FPHaL6boQ6mlTBc_1728831410/0", "leaderId": 500025423, "leaderName": "希莫(焦潞林)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 9, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 8, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 5, "departmentId": "5003079", "departmentIdPath": "149680,1600106,5000273,5003079", "departmentName": "平台专家八组", "engagementErrorEmpNum": 2, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 9.2, "valueText": "9.2"}, {"month": "2026-02", "tag": "NORMAL", "value": 8.9, "valueText": "8.9"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.5, "valueText": "9.5"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/391608_K2YGnVDUTOeCIuG_1760086946/0", "leaderId": 500005047, "leaderName": "菀得(杨森)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 5, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 6, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 8, "departmentId": "5002605", "departmentIdPath": "149680,1600106,5000273,5002605", "departmentName": "平台专家九组", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 10.2, "valueText": "10.2"}, {"month": "2026-02", "tag": "NORMAL", "value": 10.0, "valueText": "10.0"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.2, "valueText": "10.2"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/662229_Kah56AsVR8WK2LT_1773817704/0", "leaderId": 500044822, "leaderName": "清也(刘月)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 7, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 6, "transInHc": 0, "transOutHc": 1}, {"children": [], "currentHc": 6, "departmentId": "5002610", "departmentIdPath": "149680,1600106,5000273,5002610", "departmentName": "平台专家十组", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 9.9, "valueText": "9.9"}, {"month": "2026-02", "tag": "NORMAL", "value": 9.5, "valueText": "9.5"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.4, "valueText": "10.4"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/883070_HTJOYltOSdigijc_1740578933/0", "leaderId": 500005065, "leaderName": "珠珠(朱梦倩)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 6, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 6, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 4, "departmentId": "5003734", "departmentIdPath": "149680,1600106,5000273,5003734", "departmentName": "平台专家十一组", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 10.4, "valueText": "10.4"}, {"month": "2026-02", "tag": "NORMAL", "value": 10.5, "valueText": "10.5"}, {"month": "2026-03", "tag": "NORMAL", "value": 11.0, "valueText": "11.0"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/684592_3C2OYhf3TQGskhM_1757414572/0", "leaderId": 500034814, "leaderName": "惊鸿(王晶晶)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": null, "matchingDegreeTag": null, "predictHc": 5, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 5, "transInHc": 1, "transOutHc": 0}, {"children": [], "currentHc": 4, "departmentId": "5002609", "departmentIdPath": "149680,1600106,5000273,5002609", "departmentName": "平台专家十二组", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 10.4, "valueText": "10.4"}, {"month": "2026-02", "tag": "NORMAL", "value": 10.2, "valueText": "10.2"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.4, "valueText": "10.4"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/684592_3C2OYhf3TQGskhM_1757414572/0", "leaderId": 500034814, "leaderName": "惊鸿(王晶晶)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 5, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 3, "transInHc": 1, "transOutHc": 0}, {"children": [], "currentHc": 2, "departmentId": "5000306", "departmentIdPath": "149680,1600106,5000273,5000306", "departmentName": "行业策略组", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 9.7, "valueText": "9.7"}, {"month": "2026-02", "tag": "NORMAL", "value": 9.0, "valueText": "9.0"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.1, "valueText": "10.1"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/434891_Wqi2oxX5RMG9uY4_1765551921/0", "leaderId": 500011224, "leaderName": "飞云(张一鸣)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 2, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 3, "transInHc": 0, "transOutHc": 0}], "currentHc": 165, "departmentId": "5000273", "departmentName": "行业一部", "engagementErrorEmpNum": 15, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 8.8, "valueText": "8.8"}, {"month": "2026-02", "tag": "NORMAL", "value": 8.4, "valueText": "8.4"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.1, "valueText": "9.1"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/93395_Omst0zWDRIODLQT_1759132174/0", "leaderId": 500001502, "leaderName": "昂扬(李昂)", "managerLevel": "2", "managerLevelName": "L2", "matchingDegreeName": "优秀", "matchingDegreeTag": "excellent", "predictHc": 169, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 164, "transInHc": 7, "transOutHc": 3}, "children": [{"children": [], "currentHc": 9, "departmentId": "5000407", "departmentIdPath": "149680,1600106,5000273,5000407", "departmentName": "行业一组", "engagementErrorEmpNum": 1, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 7.3, "valueText": "7.3"}, {"month": "2026-02", "tag": "NORMAL", "value": 7.0, "valueText": "7.0"}, {"month": "2026-03", "tag": "NORMAL", "value": 7.6, "valueText": "7.6"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/821703_0-yJwvzzRSWeH7H_1726059501/0", "leaderId": 500002996, "leaderName": "千月(陈思琪)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "优秀", "matchingDegreeTag": "excellent", "predictHc": 9, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 8, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 9, "departmentId": "5001415", "departmentIdPath": "149680,1600106,5000273,5001415", "departmentName": "行业二组", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 7.1, "valueText": "7.1"}, {"month": "2026-02", "tag": "NORMAL", "value": 7.1, "valueText": "7.1"}, {"month": "2026-03", "tag": "NORMAL", "value": 7.5, "valueText": "7.5"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/830649_RwaNq38US8inexl_1774777496/0", "leaderId": 500000483, "leaderName": "吴邪(吴建成)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "优秀", "matchingDegreeTag": "excellent", "predictHc": 9, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 6, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 9, "departmentId": "5002337", "departmentIdPath": "149680,1600106,5000273,5002337", "departmentName": "行业三组", "engagementErrorEmpNum": 1, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 8.5, "valueText": "8.5"}, {"month": "2026-02", "tag": "NORMAL", "value": 7.5, "valueText": "7.5"}, {"month": "2026-03", "tag": "NORMAL", "value": 7.6, "valueText": "7.6"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/500398_kUz1uy9HQQiqldE_1733278703/0", "leaderId": 500018986, "leaderName": "克斯(陈宇田)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 9, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 8, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 5, "departmentId": "5000277", "departmentIdPath": "149680,1600106,5000273,5000277", "departmentName": "行业四组", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 8.6, "valueText": "8.6"}, {"month": "2026-02", "tag": "NORMAL", "value": 8.5, "valueText": "8.5"}, {"month": "2026-03", "tag": "NORMAL", "value": 8.8, "valueText": "8.8"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/821703_0-yJwvzzRSWeH7H_1726059501/0", "leaderId": 500002996, "leaderName": "千月(陈思琪)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 4, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 4, "transInHc": 0, "transOutHc": 1}, {"children": [], "currentHc": 4, "departmentId": "5003873", "departmentIdPath": "149680,1600106,5000273,5003873", "departmentName": "行业五组", "engagementErrorEmpNum": 2, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 7.3, "valueText": "7.3"}, {"month": "2026-02", "tag": "NORMAL", "value": 7.3, "valueText": "7.3"}, {"month": "2026-03", "tag": "NORMAL", "value": 7.8, "valueText": "7.8"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/830649_RwaNq38US8inexl_1774777496/0", "leaderId": 500000483, "leaderName": "吴邪(吴建成)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 5, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 5, "transInHc": 1, "transOutHc": 0}, {"children": [], "currentHc": 11, "departmentId": "5003074", "departmentIdPath": "149680,1600106,5000273,5003074", "departmentName": "行业六组", "engagementErrorEmpNum": 1, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 7.1, "valueText": "7.1"}, {"month": "2026-02", "tag": "NORMAL", "value": 7.4, "valueText": "7.4"}, {"month": "2026-03", "tag": "NORMAL", "value": 8.0, "valueText": "8.0"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/962126_uyXo9F6qQc6Uc2C_1774067720/0", "leaderId": 500039331, "leaderName": "嘉莉(惠江雯)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 11, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 5, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 12, "departmentId": "5000278", "departmentIdPath": "149680,1600106,5000273,5000278", "departmentName": "行业七组", "engagementErrorEmpNum": 1, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 8.0, "valueText": "8.0"}, {"month": "2026-02", "tag": "NORMAL", "value": 7.8, "valueText": "7.8"}, {"month": "2026-03", "tag": "NORMAL", "value": 8.5, "valueText": "8.5"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/253960_ZKy-jFvhQyG3x0f_1756145779/0", "leaderId": 500040114, "leaderName": "昭燃(千艺)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 13, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 9, "transInHc": 1, "transOutHc": 0}, {"children": [], "currentHc": 6, "departmentId": "5002599", "departmentIdPath": "149680,1600106,5000273,5002599", "departmentName": "行业八组", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 7.7, "valueText": "7.7"}, {"month": "2026-02", "tag": "NORMAL", "value": 7.7, "valueText": "7.7"}, {"month": "2026-03", "tag": "NORMAL", "value": 8.7, "valueText": "8.7"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/830649_RwaNq38US8inexl_1774777496/0", "leaderId": 500000483, "leaderName": "吴邪(吴建成)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "优秀", "matchingDegreeTag": "excellent", "predictHc": 6, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 7, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 8, "departmentId": "5002603", "departmentIdPath": "149680,1600106,5000273,5002603", "departmentName": "行业九组", "engagementErrorEmpNum": 2, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 7.5, "valueText": "7.5"}, {"month": "2026-02", "tag": "NORMAL", "value": 6.8, "valueText": "6.8"}, {"month": "2026-03", "tag": "NORMAL", "value": 7.5, "valueText": "7.5"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/563396_XcOj7wtDQYKGD9l_1734874267/0", "leaderId": 142384575, "leaderName": "白泉(陈可茵)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "优秀", "matchingDegreeTag": "excellent", "predictHc": 8, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 7, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 9, "departmentId": "5002600", "departmentIdPath": "149680,1600106,5000273,5002600", "departmentName": "行业十组", "engagementErrorEmpNum": 1, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 7.6, "valueText": "7.6"}, {"month": "2026-02", "tag": "NORMAL", "value": 8.2, "valueText": "8.2"}, {"month": "2026-03", "tag": "NORMAL", "value": 8.8, "valueText": "8.8"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/93395_Omst0zWDRIODLQT_1759132174/0", "leaderId": 500001502, "leaderName": "昂扬(李昂)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 9, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 8, "transInHc": 1, "transOutHc": 1}, {"children": [], "currentHc": 5, "departmentId": "5002601", "departmentIdPath": "149680,1600106,5000273,5002601", "departmentName": "行业十一组", "engagementErrorEmpNum": 1, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 8.7, "valueText": "8.7"}, {"month": "2026-02", "tag": "NORMAL", "value": 8.4, "valueText": "8.4"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.4, "valueText": "9.4"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/190753_gL6YhMrMSjGnT1p_1758150161/0", "leaderId": 500010469, "leaderName": "南舟(姚苒)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 5, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 6, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 5, "departmentId": "5003733", "departmentIdPath": "149680,1600106,5000273,5003733", "departmentName": "行业十二组", "engagementErrorEmpNum": 1, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 8.9, "valueText": "8.9"}, {"month": "2026-02", "tag": "NORMAL", "value": 8.3, "valueText": "8.3"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.1, "valueText": "9.1"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/607186_N-_dobjVS12Cshx_1744503285/0", "leaderId": 500017007, "leaderName": "希坦(贺琼)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 5, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 4, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 6, "departmentId": "5003735", "departmentIdPath": "149680,1600106,5000273,5003735", "departmentName": "平台专家一组", "engagementErrorEmpNum": 1, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 8.7, "valueText": "8.7"}, {"month": "2026-02", "tag": "NORMAL", "value": 8.4, "valueText": "8.4"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.7, "valueText": "9.7"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/229192_INMSIBklT1SgLTx_1713576935/0", "leaderId": 500015931, "leaderName": "古娴(高逸群)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 6, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 8, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 8, "departmentId": "5002123", "departmentIdPath": "149680,1600106,5000273,5002123", "departmentName": "平台专家二组", "engagementErrorEmpNum": 1, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 10.1, "valueText": "10.1"}, {"month": "2026-02", "tag": "NORMAL", "value": 9.8, "valueText": "9.8"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.7, "valueText": "9.7"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/391608_K2YGnVDUTOeCIuG_1760086946/0", "leaderId": 500005047, "leaderName": "菀得(杨森)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "优秀", "matchingDegreeTag": "excellent", "predictHc": 9, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 5, "transInHc": 1, "transOutHc": 0}, {"children": [], "currentHc": 7, "departmentId": "5000280", "departmentIdPath": "149680,1600106,5000273,5000280", "departmentName": "平台专家三组", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 10.1, "valueText": "10.1"}, {"month": "2026-02", "tag": "NORMAL", "value": 9.9, "valueText": "9.9"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.7, "valueText": "10.7"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/400273_OZEcrDSYTHSUe01_1752153687/0", "leaderId": 500037124, "leaderName": "若琳(陈若琳)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "优秀", "matchingDegreeTag": "excellent", "predictHc": 7, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 6, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 4, "departmentId": "5002742", "departmentIdPath": "149680,1600106,5000273,5002742", "departmentName": "平台专家四组", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 10.4, "valueText": "10.4"}, {"month": "2026-02", "tag": "NORMAL", "value": 9.1, "valueText": "9.1"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.1, "valueText": "10.1"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/229192_INMSIBklT1SgLTx_1713576935/0", "leaderId": 500015931, "leaderName": "古娴(高逸群)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "优秀", "matchingDegreeTag": "excellent", "predictHc": 4, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 3, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 5, "departmentId": "5003874", "departmentIdPath": "149680,1600106,5000273,5003874", "departmentName": "平台专家五组", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 10.7, "valueText": "10.7"}, {"month": "2026-02", "tag": "NORMAL", "value": 9.2, "valueText": "9.2"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.9, "valueText": "9.9"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/391608_K2YGnVDUTOeCIuG_1760086946/0", "leaderId": 500005047, "leaderName": "菀得(杨森)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "优秀", "matchingDegreeTag": "excellent", "predictHc": 5, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 5, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 5, "departmentId": "5000281", "departmentIdPath": "149680,1600106,5000273,5000281", "departmentName": "平台专家六组", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 9.8, "valueText": "9.8"}, {"month": "2026-02", "tag": "NORMAL", "value": 9.8, "valueText": "9.8"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.4, "valueText": "10.4"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/324391_FPHaL6boQ6mlTBc_1728831410/0", "leaderId": 500025423, "leaderName": "希莫(焦潞林)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 5, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 4, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 9, "departmentId": "5003080", "departmentIdPath": "149680,1600106,5000273,5003080", "departmentName": "平台专家七组", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 9.2, "valueText": "9.2"}, {"month": "2026-02", "tag": "NORMAL", "value": 8.2, "valueText": "8.2"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.8, "valueText": "9.8"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/324391_FPHaL6boQ6mlTBc_1728831410/0", "leaderId": 500025423, "leaderName": "希莫(焦潞林)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 9, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 8, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 5, "departmentId": "5003079", "departmentIdPath": "149680,1600106,5000273,5003079", "departmentName": "平台专家八组", "engagementErrorEmpNum": 2, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 9.2, "valueText": "9.2"}, {"month": "2026-02", "tag": "NORMAL", "value": 8.9, "valueText": "8.9"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.5, "valueText": "9.5"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/391608_K2YGnVDUTOeCIuG_1760086946/0", "leaderId": 500005047, "leaderName": "菀得(杨森)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 5, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 6, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 8, "departmentId": "5002605", "departmentIdPath": "149680,1600106,5000273,5002605", "departmentName": "平台专家九组", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 10.2, "valueText": "10.2"}, {"month": "2026-02", "tag": "NORMAL", "value": 10.0, "valueText": "10.0"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.2, "valueText": "10.2"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/662229_Kah56AsVR8WK2LT_1773817704/0", "leaderId": 500044822, "leaderName": "清也(刘月)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 7, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 6, "transInHc": 0, "transOutHc": 1}, {"children": [], "currentHc": 6, "departmentId": "5002610", "departmentIdPath": "149680,1600106,5000273,5002610", "departmentName": "平台专家十组", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 9.9, "valueText": "9.9"}, {"month": "2026-02", "tag": "NORMAL", "value": 9.5, "valueText": "9.5"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.4, "valueText": "10.4"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/883070_HTJOYltOSdigijc_1740578933/0", "leaderId": 500005065, "leaderName": "珠珠(朱梦倩)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 6, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 6, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 4, "departmentId": "5003734", "departmentIdPath": "149680,1600106,5000273,5003734", "departmentName": "平台专家十一组", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 10.4, "valueText": "10.4"}, {"month": "2026-02", "tag": "NORMAL", "value": 10.5, "valueText": "10.5"}, {"month": "2026-03", "tag": "NORMAL", "value": 11.0, "valueText": "11.0"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/684592_3C2OYhf3TQGskhM_1757414572/0", "leaderId": 500034814, "leaderName": "惊鸿(王晶晶)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": null, "matchingDegreeTag": null, "predictHc": 5, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 5, "transInHc": 1, "transOutHc": 0}, {"children": [], "currentHc": 4, "departmentId": "5002609", "departmentIdPath": "149680,1600106,5000273,5002609", "departmentName": "平台专家十二组", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 10.4, "valueText": "10.4"}, {"month": "2026-02", "tag": "NORMAL", "value": 10.2, "valueText": "10.2"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.4, "valueText": "10.4"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/684592_3C2OYhf3TQGskhM_1757414572/0", "leaderId": 500034814, "leaderName": "惊鸿(王晶晶)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 5, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 3, "transInHc": 1, "transOutHc": 0}, {"children": [], "currentHc": 2, "departmentId": "5000306", "departmentIdPath": "149680,1600106,5000273,5000306", "departmentName": "行业策略组", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 9.7, "valueText": "9.7"}, {"month": "2026-02", "tag": "NORMAL", "value": 9.0, "valueText": "9.0"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.1, "valueText": "10.1"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/434891_Wqi2oxX5RMG9uY4_1765551921/0", "leaderId": 500011224, "leaderName": "飞云(张一鸣)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 2, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 3, "transInHc": 0, "transOutHc": 0}], "summary": {"current": 165, "target": 164, "predict": 169, "inflow": 7, "outflow": 3, "gap": -5}, "entry": [{"collectionStatus": 1, "collectionStatusName": "已完成", "departmentName": "平台专家十二组", "departmentNamePath": "小红书,商业部,行业一部,平台专家十二组", "departmentValidFlag": true, "empTagList": ["2"], "employeeId": 500046571, "entryDate": "2026-04-01", "leaderId": 500034814, "leaderName": "惊鸿(王晶晶)", "leaderOnJobFlag": true, "manageLevel": "IC", "redNameStatus": 0, "redNameStatusName": "未完成", "showName": "缪薛鹏", "workPlaceName": "上海市"}, {"collectionStatus": 0, "collectionStatusName": "采集中", "departmentName": "行业一部", "departmentNamePath": "小红书,商业部,行业一部", "departmentValidFlag": true, "empTagList": [], "employeeId": 500045116, "entryDate": "2026-04-08", "leaderId": 500001502, "leaderName": "昂扬(李昂)", "leaderOnJobFlag": true, "manageLevel": "L1", "redNameStatus": 0, "redNameStatusName": "未完成", "showName": "JICHAO SUN", "workPlaceName": "上海市"}, {"collectionStatus": 2, "collectionStatusName": "待审核", "departmentName": "行业五组", "departmentNamePath": "小红书,商业部,行业一部,行业五组", "departmentValidFlag": true, "empTagList": [], "employeeId": 500045855, "entryDate": "2026-04-08", "leaderId": 500000483, "leaderName": "吴邪(吴建成)", "leaderOnJobFlag": true, "manageLevel": "IC", "redNameStatus": 0, "redNameStatusName": "未完成", "showName": "邓鸿颖", "workPlaceName": "上海市"}, {"collectionStatus": 0, "collectionStatusName": "采集中", "departmentName": "平台专家十一组", "departmentNamePath": "小红书,商业部,行业一部,平台专家十一组", "departmentValidFlag": true, "empTagList": [], "employeeId": 500046498, "entryDate": "2026-04-27", "leaderId": 500034814, "leaderName": "惊鸿(王晶晶)", "leaderOnJobFlag": true, "manageLevel": "IC", "redNameStatus": 0, "redNameStatusName": "未完成", "showName": "洪方雯", "workPlaceName": "上海市"}, {"collectionStatus": 0, "collectionStatusName": "采集中", "departmentName": "行业七组", "departmentNamePath": "小红书,商业部,行业一部,行业七组", "departmentValidFlag": true, "empTagList": [], "employeeId": 500046556, "entryDate": "2026-07-01", "leaderId": 500040114, "leaderName": "昭燃(千艺)", "leaderOnJobFlag": true, "manageLevel": "IC", "redNameStatus": 0, "redNameStatusName": "未完成", "showName": "陈静仪", "workPlaceName": "广州市"}], "dimission": [{"departmentName": "平台专家九组", "departmentNamePath": "小红书,商业部,行业一部,平台专家九组", "dimissionStatus": 30, "dimissionStatusName": "待离职", "dimissionTypeName": "主动离职", "empTagList": [], "employeeId": 500037602, "lastDate": "2026-04-07", "manageLevel": "IC", "operatorNameList": ["尹志鹏", "朱靖云", "颜庭江", "李林美", "周星雨", "陷煌", "张传宇", "万松", "畅世卉", "张祥威", "沈涟桥", "张亚南", "刘瑞星", "张雨生", "李帅", "任杰", "王倩", "孙震宇", "甄亚萍（实习）", "王晓鹏", "胡锦辉", "龚林", "刘洋", "妙依(张文月)"], "showName": "六尾(许凌豪)"}, {"departmentName": "行业四组", "departmentNamePath": "小红书,商业部,行业一部,行业四组", "dimissionStatus": 30, "dimissionStatusName": "待离职", "dimissionTypeName": "被动离职", "empTagList": [], "employeeId": 500039666, "lastDate": "2026-04-13", "manageLevel": "IC", "operatorNameList": ["尹志鹏", "朱靖云", "颜庭江", "李林美", "周星雨", "陷煌", "张传宇", "万松", "畅世卉", "张祥威", "沈涟桥", "张亚南", "刘瑞星", "张雨生", "李帅", "任杰", "王倩", "孙震宇", "王晓鹏", "胡锦辉", "龚林", "刘洋", "妙依(张文月)"], "showName": "波雅(李淑华)"}], "alerts": [{"name": "行业六组", "gap": -6, "type": "overstaff"}, {"name": "行业七组", "gap": -4, "type": "overstaff"}, {"name": "平台专家二组", "gap": -4, "type": "overstaff"}]}, "func1": {"top": {"children": [{"children": [], "currentHc": 6, "departmentId": "5003010", "departmentIdPath": "149680,149682,5003008,5003010", "departmentName": "技术财务分析", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 10.6, "valueText": "10.6"}, {"month": "2026-02", "tag": "NORMAL", "value": 9.6, "valueText": "9.6"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.3, "valueText": "10.3"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/242403_UfP0t-bHTyiIDX2_1734931002/0", "leaderId": 500031407, "leaderName": "艾妲(谭婧)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 7, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 6, "transInHc": 1, "transOutHc": 0}, {"children": [], "currentHc": 10, "departmentId": "2194372", "departmentIdPath": "149680,149682,5003008,2194372", "departmentName": "交易财务分析", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 10.6, "valueText": "10.6"}, {"month": "2026-02", "tag": "NORMAL", "value": 10.3, "valueText": "10.3"}, {"month": "2026-03", "tag": "NORMAL", "value": 11.0, "valueText": "11.0"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/922214_km_Ai_lKQKKJ16y_1748680095/0", "leaderId": 500037016, "leaderName": "白真(白乐天)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "优秀", "matchingDegreeTag": "excellent", "predictHc": 11, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 7, "transInHc": 1, "transOutHc": 0}, {"children": [], "currentHc": 9, "departmentId": "2194371", "departmentIdPath": "149680,149682,5003008,2194371", "departmentName": "商业财务分析", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 9.2, "valueText": "9.2"}, {"month": "2026-02", "tag": "NORMAL", "value": 10.2, "valueText": "10.2"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.1, "valueText": "10.1"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/632931_UI1fGzIdSCG5Hnq_1721288372/0", "leaderId": 500002309, "leaderName": "花且(王玮)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "优秀", "matchingDegreeTag": "excellent", "predictHc": 9, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 10, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 20, "departmentId": "932829", "departmentIdPath": "149680,149682,5003008,932829", "departmentName": "财务职能", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 10.3, "valueText": "10.3"}, {"month": "2026-02", "tag": "NORMAL", "value": 10.6, "valueText": "10.6"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.4, "valueText": "10.4"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/632931_UI1fGzIdSCG5Hnq_1721288372/0", "leaderId": 500002309, "leaderName": "花且(王玮)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": null, "matchingDegreeTag": null, "predictHc": 19, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 20, "transInHc": 0, "transOutHc": 1}, {"children": [], "currentHc": 8, "departmentId": "932833", "departmentIdPath": "149680,149682,5003008,932833", "departmentName": "资金管理组", "engagementErrorEmpNum": 2, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 9.8, "valueText": "9.8"}, {"month": "2026-02", "tag": "NORMAL", "value": 9.5, "valueText": "9.5"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.4, "valueText": "9.4"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/752755_kPOOAH9pQeajgJ2_1728881505/0", "leaderId": 500030627, "leaderName": "绫波(李静)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "优秀", "matchingDegreeTag": "excellent", "predictHc": 10, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 8, "transInHc": 2, "transOutHc": 0}], "currentHc": 54, "departmentId": "5003008", "departmentName": "财务一组", "engagementErrorEmpNum": 2, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 10.1, "valueText": "10.1"}, {"month": "2026-02", "tag": "NORMAL", "value": 10.2, "valueText": "10.2"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.3, "valueText": "10.3"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/922214_km_Ai_lKQKKJ16y_1748680095/0", "leaderId": 500037016, "leaderName": "白真(白乐天)", "managerLevel": "2", "managerLevelName": "L2", "matchingDegreeName": "优秀", "matchingDegreeTag": "excellent", "predictHc": 58, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 51, "transInHc": 5, "transOutHc": 1}, "children": [{"children": [], "currentHc": 6, "departmentId": "5003010", "departmentIdPath": "149680,149682,5003008,5003010", "departmentName": "技术财务分析", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 10.6, "valueText": "10.6"}, {"month": "2026-02", "tag": "NORMAL", "value": 9.6, "valueText": "9.6"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.3, "valueText": "10.3"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/242403_UfP0t-bHTyiIDX2_1734931002/0", "leaderId": 500031407, "leaderName": "艾妲(谭婧)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "匹配", "matchingDegreeTag": "mate", "predictHc": 7, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 6, "transInHc": 1, "transOutHc": 0}, {"children": [], "currentHc": 10, "departmentId": "2194372", "departmentIdPath": "149680,149682,5003008,2194372", "departmentName": "交易财务分析", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 10.6, "valueText": "10.6"}, {"month": "2026-02", "tag": "NORMAL", "value": 10.3, "valueText": "10.3"}, {"month": "2026-03", "tag": "NORMAL", "value": 11.0, "valueText": "11.0"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/922214_km_Ai_lKQKKJ16y_1748680095/0", "leaderId": 500037016, "leaderName": "白真(白乐天)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "优秀", "matchingDegreeTag": "excellent", "predictHc": 11, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 7, "transInHc": 1, "transOutHc": 0}, {"children": [], "currentHc": 9, "departmentId": "2194371", "departmentIdPath": "149680,149682,5003008,2194371", "departmentName": "商业财务分析", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 9.2, "valueText": "9.2"}, {"month": "2026-02", "tag": "NORMAL", "value": 10.2, "valueText": "10.2"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.1, "valueText": "10.1"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/632931_UI1fGzIdSCG5Hnq_1721288372/0", "leaderId": 500002309, "leaderName": "花且(王玮)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "优秀", "matchingDegreeTag": "excellent", "predictHc": 9, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 10, "transInHc": 0, "transOutHc": 0}, {"children": [], "currentHc": 20, "departmentId": "932829", "departmentIdPath": "149680,149682,5003008,932829", "departmentName": "财务职能", "engagementErrorEmpNum": 0, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 10.3, "valueText": "10.3"}, {"month": "2026-02", "tag": "NORMAL", "value": 10.6, "valueText": "10.6"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.4, "valueText": "10.4"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/632931_UI1fGzIdSCG5Hnq_1721288372/0", "leaderId": 500002309, "leaderName": "花且(王玮)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": null, "matchingDegreeTag": null, "predictHc": 19, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 20, "transInHc": 0, "transOutHc": 1}, {"children": [], "currentHc": 8, "departmentId": "932833", "departmentIdPath": "149680,149682,5003008,932833", "departmentName": "资金管理组", "engagementErrorEmpNum": 2, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 9.8, "valueText": "9.8"}, {"month": "2026-02", "tag": "NORMAL", "value": 9.5, "valueText": "9.5"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.4, "valueText": "9.4"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic3az/752755_kPOOAH9pQeajgJ2_1728881505/0", "leaderId": 500030627, "leaderName": "绫波(李静)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "优秀", "matchingDegreeTag": "excellent", "predictHc": 10, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 8, "transInHc": 2, "transOutHc": 0}], "summary": {"current": 54, "target": 51, "predict": 58, "inflow": 5, "outflow": 1, "gap": -7}, "entry": [{"collectionStatus": 1, "collectionStatusName": "已完成", "departmentName": "财务一组", "departmentNamePath": "小红书,财务投资部,财务一组", "departmentValidFlag": true, "empTagList": [], "employeeId": 500045276, "entryDate": "2026-04-01", "leaderId": 500037016, "leaderName": "白真(白乐天)", "leaderOnJobFlag": true, "manageLevel": "IC", "redNameStatus": 1, "redNameStatusName": "已完成", "showName": "赛娜(李木子)", "workPlaceName": "北京市"}, {"collectionStatus": 1, "collectionStatusName": "已完成", "departmentName": "交易财务分析", "departmentNamePath": "小红书,财务投资部,财务一组,交易财务分析", "departmentValidFlag": true, "empTagList": [], "employeeId": 500045464, "entryDate": "2026-04-08", "leaderId": 500037016, "leaderName": "白真(白乐天)", "leaderOnJobFlag": true, "manageLevel": "IC", "redNameStatus": 0, "redNameStatusName": "未完成", "showName": "曹腾", "workPlaceName": "上海市"}, {"collectionStatus": 0, "collectionStatusName": "采集中", "departmentName": "资金管理组", "departmentNamePath": "小红书,财务投资部,财务一组,资金管理组", "departmentValidFlag": true, "empTagList": [], "employeeId": 500044724, "entryDate": "2026-04-13", "leaderId": 500030627, "leaderName": "绫波(李静)", "leaderOnJobFlag": true, "manageLevel": "IC", "redNameStatus": 0, "redNameStatusName": "未完成", "showName": "鲍天玥", "workPlaceName": "上海市"}, {"collectionStatus": 0, "collectionStatusName": "采集中", "departmentName": "资金管理组", "departmentNamePath": "小红书,财务投资部,财务一组,资金管理组", "departmentValidFlag": true, "empTagList": [], "employeeId": 500046576, "entryDate": "2026-04-27", "leaderId": 500030627, "leaderName": "绫波(李静)", "leaderOnJobFlag": true, "manageLevel": "IC", "redNameStatus": 0, "redNameStatusName": "未完成", "showName": "刘潇阳", "workPlaceName": "上海市"}], "dimission": [{"departmentName": "财务职能", "departmentNamePath": "小红书,财务投资部,财务一组,财务职能", "dimissionStatus": 30, "dimissionStatusName": "待离职", "dimissionTypeName": "被动离职", "empTagList": ["OTHER"], "employeeId": 139154412, "lastDate": "2026-04-23", "manageLevel": "IC", "operatorNameList": ["尹志鹏", "朱靖云", "颜庭江", "李林美", "周星雨", "陷煌", "张传宇", "万松", "畅世卉", "张祥威", "沈涟桥", "张亚南", "刘瑞星", "张雨生", "李帅", "任杰", "王倩", "孙震宇", "甄亚萍（实习）", "王晓鹏", "胡锦辉", "龚林", "刘洋", "妙依(张文月)"], "showName": "诗源(杨骑宇)"}], "alerts": [{"name": "交易财务分析", "gap": -4, "type": "overstaff"}]}, "func2": {"top": {"children": [], "currentHc": 5, "departmentId": "5000785", "departmentName": "资本市场", "engagementErrorEmpNum": 1, "engagementInfo": [{"month": "2026-01", "tag": "NORMAL", "value": 8.4, "valueText": "8.4"}, {"month": "2026-02", "tag": "NORMAL", "value": 8.3, "valueText": "8.3"}, {"month": "2026-03", "tag": "NORMAL", "value": 8.5, "valueText": "8.5"}], "firstCooperativeManagerAvatarUrl": null, "firstCooperativeManagerId": null, "firstCooperativeManagerMatchDegree": null, "firstCooperativeManagerMatchDegreeName": null, "firstCooperativeManagerName": null, "fourthCooperativeManagerAvatarUrl": null, "fourthCooperativeManagerId": null, "fourthCooperativeManagerMatchDegree": null, "fourthCooperativeManagerMatchDegreeName": null, "fourthCooperativeManagerName": null, "hasPermission": true, "highPfmNum": 0, "leaderAvatarUrl": "https://wework.qpic.cn/wwpic/59171_XEtOUShqRy6vuoY_1690989787/0", "leaderId": 118213435, "leaderName": "劳拉(蒋晓雯)", "managerLevel": "1", "managerLevelName": "L1", "matchingDegreeName": "存疑", "matchingDegreeTag": "in_doubt", "predictHc": 5, "secondCooperativeManagerAvatarUrl": null, "secondCooperativeManagerId": null, "secondCooperativeManagerMatchDegree": null, "secondCooperativeManagerMatchDegreeName": null, "secondCooperativeManagerName": null, "thirdCooperativeManagerAvatarUrl": null, "thirdCooperativeManagerId": null, "thirdCooperativeManagerMatchDegree": null, "thirdCooperativeManagerMatchDegreeName": null, "thirdCooperativeManagerName": null, "totalHc": 5, "transInHc": 0, "transOutHc": 0}, "children": [], "summary": {"current": 5, "target": 5, "predict": 5, "inflow": 0, "outflow": 0, "gap": 0}, "entry": [], "dimission": [], "alerts": []}, "total": {"current": 224, "target": 220, "predict": 232, "inflow": 12, "outflow": 4, "gap": -12}, "allAlerts": [{"name": "行业六组", "gap": -6, "type": "overstaff"}, {"name": "行业七组", "gap": -4, "type": "overstaff"}, {"name": "平台专家二组", "gap": -4, "type": "overstaff"}, {"name": "交易财务分析", "gap": -4, "type": "overstaff"}], "recruit": {"allPositionCount": 49, "allPositionProcessCount": 179, "allpositionIdList": null, "followPositionCount": 5, "followPositionProcessCount": 1, "followpositionIdList": null}, "bizSummary": {"current": 165, "target": 164, "predict": 169, "inflow": 7, "outflow": 3, "gap": -5}, "func1Summary": {"current": 54, "target": 51, "predict": 58, "inflow": 5, "outflow": 1, "gap": -7}, "func2Summary": {"current": 5, "target": 5, "predict": 5, "inflow": 0, "outflow": 0, "gap": 0}};
+// ── 行业一部子组数据（来自系统）──
+const subdepts = [
+  {name:"行业一组",leader:"千月",cur:9,total:8,inHc:0,outHc:0,match:"优秀"},
+  {name:"行业二组",leader:"吴邪",cur:9,total:6,inHc:0,outHc:0,match:"优秀"},
+  {name:"行业三组",leader:"克斯",cur:9,total:8,inHc:0,outHc:0,match:"匹配"},
+  {name:"行业四组",leader:"千月",cur:5,total:4,inHc:0,outHc:1,match:"匹配"},
+  {name:"行业五组",leader:"吴邪",cur:4,total:5,inHc:1,outHc:0,match:"匹配"},
+  {name:"平台专家一组",leader:"古娴",cur:6,total:8,inHc:0,outHc:0,match:"匹配"},
+  {name:"平台专家二组",leader:"菀得",cur:8,total:5,inHc:1,outHc:0,match:"优秀"},
+  {name:"平台专家三组",leader:"若琳",cur:7,total:6,inHc:0,outHc:0,match:"优秀"},
+  {name:"平台专家四组",leader:"古娴",cur:4,total:3,inHc:0,outHc:0,match:"优秀"},
+  {name:"平台专家五组",leader:"菀得",cur:5,total:5,inHc:0,outHc:0,match:"优秀"},
+  {name:"平台专家六组",leader:"希莫",cur:5,total:4,inHc:0,outHc:0,match:"匹配"},
+  {name:"平台专家七组",leader:"希莫",cur:9,total:8,inHc:0,outHc:0,match:"匹配"},
+  {name:"平台专家八组",leader:"菀得",cur:5,total:6,inHc:0,outHc:0,match:"匹配"},
+  {name:"平台专家九组",leader:"清也",cur:8,total:6,inHc:0,outHc:1,match:"匹配"},
+  {name:"平台专家十组",leader:"珠珠",cur:6,total:6,inHc:0,outHc:0,match:"匹配"},
+  {name:"平台专家十一组",leader:"惊鸿",cur:4,total:5,inHc:1,outHc:0,match:null},
+  {name:"平台专家十二组",leader:"惊鸿",cur:4,total:3,inHc:1,outHc:0,match:"匹配"},
+  {name:"行业策略组",leader:"飞云",cur:2,total:3,inHc:0,outHc:0,match:"匹配"},
+];
 
-// ── HELPERS ──────────────────────────────────────────────
-const $ = id => document.getElementById(id);
-const ce = (tag, cls, html='') => { const el=document.createElement(tag); if(cls) el.className=cls; if(html) el.innerHTML=html; return el; };
-
-function gapPill(g){
-  if(g>0) return `<span class="gap-pill v">空编 ${g}</span>`;
-  if(g<0) return `<span class="gap-pill o">超编 ${Math.abs(g)}</span>`;
-  return `<span class="gap-pill f">满编</span>`;
+function matchTag(m){
+  if(!m) return '<span class="match-tag mt-na">—</span>';
+  if(m==="优秀") return '<span class="match-tag mt-exc">优秀</span>';
+  if(m==="匹配") return '<span class="match-tag mt-mat">匹配</span>';
+  return '<span class="match-tag mt-dbt">'+m+'</span>';
 }
 
-function matchTag(tag){
-  const map={'excellent':'mt-exc 优秀','mate':'mt-mat 匹配','in_doubt':'mt-dbt 存疑'};
-  const v=map[tag]||'mt-na —'; const [cls,txt]=v.split(' ');
-  return `<span class="match-tag ${cls}">${txt}</span>`;
+function miniBar(cur, total){
+  if(!total) return '';
+  const pct = Math.min(cur/total*100, 120);
+  const over = cur > total;
+  return '<span class="mini-bar"><span class="mini-fill'+(over?' over':'')+'" style="width:'+Math.min(pct,100)+'%"></span></span>';
 }
 
-function miniBar(cur, tgt){
-  const pct = tgt>0 ? Math.min(100, Math.round(cur/tgt*100)) : 100;
-  const over = cur > tgt;
-  return `<span class="mini-bar"><span class="mini-fill${over?' over':''}" style="width:${pct}%"></span></span> <span style="font-size:10px;color:#aaa;margin-left:4px">${pct}%</span>`;
-}
+const tbody = document.getElementById('subdept-tbody');
+subdepts.forEach(d => {
+  const pred = d.cur + d.inHc - d.outHc;
+  const gap = pred - d.total;
+  let gapHtml;
+  if(gap > 0) gapHtml = '<span class="gap-pill gap-o">超'+gap+'</span>';
+  else if(gap < 0) gapHtml = '<span class="gap-pill gap-v">缺'+Math.abs(gap)+'</span>';
+  else gapHtml = '<span class="gap-pill gap-f">达标</span>';
 
-function donut(cur, tgt, r=28){
-  const pct = tgt>0 ? Math.min(1, cur/tgt) : 1;
-  const circ = 2*Math.PI*r;
-  const dash = pct*circ;
-  const over = cur > tgt;
-  const color = over ? '#E53935' : '#4CAF50';
-  const size = (r+6)*2;
-  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-    <circle cx="${r+6}" cy="${r+6}" r="${r}" fill="none" stroke="#EEF3EF" stroke-width="5"/>
-    <circle cx="${r+6}" cy="${r+6}" r="${r}" fill="none" stroke="${color}" stroke-width="5"
-      stroke-dasharray="${dash.toFixed(1)} ${circ.toFixed(1)}" stroke-linecap="round"
-      transform="rotate(-90 ${r+6} ${r+6})"/>
-    <text x="${r+6}" y="${r+6}" text-anchor="middle" dominant-baseline="middle"
-      font-size="11" font-weight="700" fill="#1a1a1a">${cur}/${tgt}</text>
-  </svg>`;
-}
+  const pct = d.total ? Math.round(pred/d.total*100) : 0;
+  const rowCls = gap > 0 ? ' class="ro"' : (gap < 0 ? ' class="rv"' : '');
+  tbody.innerHTML += '<tr'+rowCls+'>'
+    +'<td class="left" style="font-weight:600">'+d.name+'</td>'
+    +'<td class="leader-name">'+d.leader+'</td>'
+    +'<td style="color:#1565c0;font-weight:700">'+d.cur+'</td>'
+    +'<td>'+d.total+'</td>'
+    +'<td style="color:#1976d2">'+d.inHc+'</td>'
+    +'<td style="color:#c62828">'+d.outHc+'</td>'
+    +'<td style="color:#1565c0;font-weight:700">'+pred+'</td>'
+    +'<td>'+gapHtml+'</td>'
+    +'<td>'+miniBar(pred,d.total)+pct+'%</td>'
+    +'<td>'+matchTag(d.match)+'</td>'
+    +'</tr>';
+});
 
-// ── SWITCH TAB ────────────────────────────────────────────
 function switchTab(id, btn){
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
-  $('tab-'+id).classList.add('active');
-  if(btn) btn.classList.add('active');
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
 }
-
-// ── EXPAND SUBDEPT ────────────────────────────────────────
-function toggleSub(cardId){
-  const wrap = $('sub-'+cardId);
-  const icon = $('icon-'+cardId);
-  const btn  = $('btn-'+cardId);
-  const open = wrap.classList.toggle('open');
-  icon.classList.toggle('open', open);
-  btn.textContent = (open ? '▲ 收起子组' : '▼ 展开子组明细') + ' ';
-  btn.appendChild(icon);
-}
-
-// ── MODAL ─────────────────────────────────────────────────
-function openMod(title, sub, bodyHtml){
-  $('mod-title').textContent = title;
-  $('mod-sub').textContent = sub || '';
-  $('mod-body').innerHTML = bodyHtml;
-  $('moverlay').classList.add('open');
-}
-function closeMod(e){
-  if(!e || e.target===$('moverlay')) $('moverlay').classList.remove('open');
-}
-
-// ── BUILD DEPT CARD ───────────────────────────────────────
-let cardIdx = 0;
-function buildCard(deptData, entryList, dimList){
-  const id = 'card'+(++cardIdx);
-  const top = deptData.top;
-  const children = deptData.children || [];
-  const g = (top.totalHc||0) - (top.predictHc||0);
-
-  // flow breakdown
-  const social = entryList.filter(e=>!((e.empTagList||[]).includes('2')));
-  const campus = entryList.filter(e=>(e.empTagList||[]).includes('2'));
-  const l1List = entryList.filter(e=>e.manageLevel==='L1');
-  const icCount = entryList.filter(e=>e.manageLevel!=='L1').length;
-  const dimActive = dimList.filter(e=>(e.dimissionTypeName||'').includes('主动'));
-  const dimPassive = dimList.filter(e=>(e.dimissionTypeName||'').includes('被动'));
-
-  // sub dept rows
-  const subRows = children.map(c=>{
-    const cg = (c.totalHc||0)-(c.predictHc||0);
-    const rowCls = cg>=3?'rv':cg<=-4?'ro':'';
-    return `<tr class="${rowCls}">
-      <td style="font-weight:600">${c.departmentName}</td>
-      <td style="text-align:center">${c.currentHc}</td>
-      <td style="text-align:center">${c.totalHc}</td>
-      <td style="text-align:center">${gapPill(cg)}</td>
-      <td>${miniBar(c.currentHc,c.totalHc)}</td>
-      <td style="text-align:center">${c.transInHc>0?`<span style="color:#1976d2;font-weight:700">+${c.transInHc}</span>`:'-'}</td>
-      <td style="text-align:center">${c.transOutHc>0?`<span style="color:#c62828;font-weight:700">-${c.transOutHc}</span>`:'-'}</td>
-      <td>${matchTag(c.matchingDegreeTag)}</td>
-    </tr>`;
-  }).join('');
-
-  // L1 pills
-  const l1Html = l1List.length>0 ? `
-    <div class="dept-l1">
-      <div class="l1-title">⭐ L1 待入职</div>
-      <div class="l1-pills">${l1List.map(p=>`
-        <div class="l1-pill" onclick="openPersonMod(${JSON.stringify(p).replace(/"/g,'&quot;')})">
-          <span>👤 ${p.showName}</span>
-          <span style="font-size:10px;color:#388e3c">${p.departmentName}</span>
-          <span style="font-size:10px;color:#81c784">${p.entryDate}</span>
-        </div>`).join('')}
-      </div>
-    </div>` : '';
-
-  return `<div class="dept-card">
-    <div class="dept-head">
-      <div class="dept-head-row">
-        <span class="dept-name">${top.departmentName||''}</span>
-        <span class="dept-lv">${top.managerLevelName||''}</span>
-        ${gapPill(g)}
-        <span class="dept-leader">👤 ${top.leaderName||''}</span>
-      </div>
-    </div>
-
-    <div class="dept-metrics">
-      <div class="metric"><div class="metric-val">${top.currentHc||0}</div><div class="metric-lbl">在职</div></div>
-      <div class="metric"><div class="metric-val">${top.totalHc||0}</div><div class="metric-lbl">目标HC</div></div>
-      <div class="metric"><div class="metric-val">${top.predictHc||0}</div><div class="metric-lbl">预计在职</div></div>
-      <div class="metric"><div class="metric-val in">+${top.transInHc||0}</div><div class="metric-lbl">流入</div></div>
-      <div class="metric"><div class="metric-val out">-${top.transOutHc||0}</div><div class="metric-lbl">流出</div></div>
-      <div class="metric">
-        <div class="metric-val ${g>0?'gap-r':g<0?'gap-g':''}">${g>0?'+'+g:g}</div>
-        <div class="metric-lbl">HC Gap</div>
-      </div>
-    </div>
-
-    <div class="donut-wrap">
-      ${donut(top.currentHc||0, top.totalHc||0)}
-      <div class="donut-legend">
-        <div class="legend-row"><span class="legend-dot" style="background:#4CAF50"></span>在职 ${top.currentHc}</div>
-        <div class="legend-row"><span class="legend-dot" style="background:#EEF3EF;border:1px solid #ccc"></span>目标 ${top.totalHc}</div>
-        ${g!==0?`<div class="legend-row"><span class="legend-dot" style="background:${g>0?'#E53935':'#2e7d32'}"></span>${g>0?'空编'+g:'超编'+Math.abs(g)}</div>`:''}
-      </div>
-    </div>
-
-    <div class="dept-flow">
-      <div class="flow-block">
-        <div class="flow-title">📥 流入在途</div>
-        <div class="flow-row"><span class="flow-key">社招待入职</span><span class="flow-num blue">${social.length}</span></div>
-        <div class="flow-row"><span class="flow-key">校招待入职</span><span class="flow-num blue">${campus.length}</span></div>
-        <div class="flow-row"><span class="flow-key">内部转入</span><span class="flow-num gray">0</span></div>
-      </div>
-      <div class="flow-block">
-        <div class="flow-title">📤 流出在途</div>
-        <div class="flow-row"><span class="flow-key">主动离职</span><span class="flow-num red">${dimActive.length}</span></div>
-        <div class="flow-row"><span class="flow-key">被动离职</span><span class="flow-num red">${dimPassive.length}</span></div>
-        <div class="flow-row"><span class="flow-key">内部转出</span><span class="flow-num gray">0</span></div>
-      </div>
-    </div>
-
-    ${l1Html}
-
-    ${icCount>0?`<div class="ic-bar">IC 待入职：<span>${icCount} 人</span>（含校招 ${campus.filter(e=>e.manageLevel!=='L1').length} 人），
-      <a href="#" onclick="openICMod(${JSON.stringify(entryList.filter(e=>e.manageLevel!=='L1')).replace(/"/g,'&quot;')},this);return false">查看名单</a>
-    </div>`:''}
-
-    ${dimList.length>0?`<div class="ic-bar" style="border-top:1px solid #F5F8F5">待离职：<span>${dimList.length} 人</span>，
-      <a href="#" onclick="openDimMod(${JSON.stringify(dimList).replace(/"/g,'&quot;')});return false">查看名单</a>
-    </div>`:''}
-
-    ${children.length>0?`
-    <button class="expand-btn" id="btn-${id}" onclick="toggleSub('${id}')">
-      <span>▼ 展开 ${children.length} 个子组明细</span>
-      <span class="expand-icon" id="icon-${id}">▶</span>
-    </button>
-    <div class="subdept-wrap" id="sub-${id}">
-      <table class="st">
-        <thead><tr>
-          <th>子组</th><th>在职</th><th>目标</th><th>Gap</th><th>完成率</th>
-          <th>流入</th><th>流出</th><th>匹配度</th>
-        </tr></thead>
-        <tbody>${subRows}</tbody>
-      </table>
-    </div>`:''}
-  </div>`;
-}
-
-// ── MODAL HELPERS ────────────────────────────────────────
-function openPersonMod(p){
-  const empLink = `https://hr.xiaohongshu.com/next/employee/${p.employeeId}`;
-  const isCampus = (p.empTagList||[]).includes('2');
-  openMod('👤 L1 入职详情', `入职日期：${p.entryDate}`, `
-    <div class="modal-sec">
-      <div class="modal-grid" style="grid-template-columns:1fr 1fr 1fr">
-        <div class="modal-card"><div class="modal-card-val b">${p.showName}</div><div class="modal-card-lbl">姓名</div></div>
-        <div class="modal-card"><div class="modal-card-val">${p.manageLevel}</div><div class="modal-card-lbl">级别</div></div>
-        <div class="modal-card"><div class="modal-card-val">${isCampus?'校招':'社招'}</div><div class="modal-card-lbl">来源</div></div>
-      </div>
-      <div class="person-row">
-        <span class="person-name">所在部门</span>
-        <span class="person-dept">${p.departmentName}</span>
-      </div>
-      <div class="person-row">
-        <span class="person-name">直属上级</span>
-        <span class="person-dept">${p.leaderName||'—'}</span>
-      </div>
-      <div class="person-row">
-        <span class="person-name">工作地点</span>
-        <span class="person-dept">${p.workPlaceName||'—'}</span>
-      </div>
-    </div>
-    <div style="margin-top:16px">
-      <a href="${empLink}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:#1b5e20;color:#fff;padding:8px 18px;border-radius:8px;font-weight:600;font-size:13px">
-        📋 查看员工档案 →
-      </a>
-      <div style="font-size:11px;color:#aaa;margin-top:8px">点击跳转 HR 系统员工档案页（入职管理系统）</div>
-    </div>
-  `);
-}
-
-function openICMod(entries){
-  const rows = entries.map(p=>{
-    const isCampus=(p.empTagList||[]).includes('2');
-    return `<div class="person-row">
-      <span class="person-name">${p.showName}</span>
-      <span class="badge badge-${isCampus?'campus':'social'}">${isCampus?'校招':'社招'}</span>
-      <span class="person-dept">${p.departmentName}</span>
-      <span class="person-date">${p.entryDate}</span>
-    </div>`;
-  }).join('');
-  openMod('IC 待入职名单', `共 ${entries.length} 人`, rows);
-}
-
-function openDimMod(list){
-  const rows = list.map(p=>{
-    const isActive=(p.dimissionTypeName||'').includes('主动');
-    return `<div class="person-row">
-      <span class="person-name">${p.showName}</span>
-      <span class="badge badge-${isActive?'active':'passive'}">${p.dimissionTypeName||'离职'}</span>
-      <span class="person-dept">${p.departmentName}</span>
-      <span class="person-date">最后：${p.lastDate}</span>
-    </div>`;
-  }).join('');
-  openMod('待离职名单', `共 ${list.length} 人`, rows);
-}
-
-// ── OVERVIEW CARDS ─────────────────────────────────────────
-function buildOverview(){
-  const t = D.total;
-  const bs = D.bizSummary, es = {current:0,target:0,predict:0,inflow:0,outflow:0}, fs1=D.func1Summary, fs2=D.func2Summary;
-  const fCur=fs1.current+fs2.current, fTgt=fs1.target+fs2.target, fPre=fs1.predict+fs2.predict;
-  const fIn=fs1.inflow+fs2.inflow, fOut=fs1.outflow+fs2.outflow;
-
-  const cards = [
-    {
-      label:'在职 HC', total:t.current, colorClass:'',
-      segs:[
-        {cls:'biz',label:'商业化',val:bs.current},
-        {cls:'ecom',label:'电商',val:0},
-        {cls:'func',label:'职能',val:fCur},
-      ],
-      onClick:()=>openMod('在职 HC 明细','各板块人数分布',buildBizFuncGrid(bs.current,0,fCur))
-    },
-    {
-      label:'目标 HC', total:t.target, colorClass:'',
-      segs:[
-        {cls:'biz',label:'商业化',val:bs.target},
-        {cls:'ecom',label:'电商',val:0},
-        {cls:'func',label:'职能',val:fTgt},
-      ],
-      onClick:()=>openMod('目标 HC 明细','各板块编制上限',buildBizFuncGrid(bs.target,0,fTgt))
-    },
-    {
-      label:'预计在职', total:t.predict, colorClass:'',
-      segs:[
-        {cls:'biz',label:'商业化',val:bs.predict},
-        {cls:'ecom',label:'电商',val:0},
-        {cls:'func',label:'职能',val:fPre},
-      ],
-      onClick:()=>openMod('预计在职明细','含流入/流出后预计人数',buildBizFuncGrid(bs.predict,0,fPre))
-    },
-    {
-      label:'流入在途', total:t.inflow, colorClass:'',
-      segs:[
-        {cls:'biz',label:'商业化',val:bs.inflow},
-        {cls:'ecom',label:'电商',val:0},
-        {cls:'func',label:'职能',val:fIn},
-      ],
-      onClick:()=>openEntryMod()
-    },
-    {
-      label:'流出在途', total:t.outflow, colorClass:'',
-      segs:[
-        {cls:'biz',label:'商业化',val:bs.outflow},
-        {cls:'ecom',label:'电商',val:0},
-        {cls:'func',label:'职能',val:fOut},
-      ],
-      onClick:()=>openDimAllMod()
-    },
-    {
-      label:'HC Gap', total:t.gap, colorClass:t.gap>0?'gap-red':t.gap<0?'gap-grn':'',
-      segs:[
-        {cls:'biz',label:'商业化',val:bs.gap},
-        {cls:'ecom',label:'电商',val:0},
-        {cls:'func',label:'职能',val:fs1.gap+fs2.gap},
-      ],
-      onClick:()=>openMod('HC Gap 明细','正数=空编，负数=超编',buildGapModal(bs.gap,0,fs1.gap+fs2.gap))
-    },
-    {
-      label:'在招职位', total:(D.recruit.allPositionCount||0), colorClass:'',
-      segs:[{cls:'biz',label:'候选人',val:(D.recruit.allPositionProcessCount||0)}],
-      onClick:()=>openMod('招聘统计','','<div class="modal-grid"><div class="modal-card"><div class="modal-card-val b">'+(D.recruit.allPositionCount||0)+'</div><div class="modal-card-lbl">在招职位</div></div><div class="modal-card"><div class="modal-card-val">'+(D.recruit.allPositionProcessCount||0)+'</div><div class="modal-card-lbl">在途候选人</div></div></div>')
-    },
-  ];
-
-  const row = $('overviewRow');
-  cards.forEach(c=>{
-    const el = ce('div','ov-card');
-    el.innerHTML = `<div class="ov-label">${c.label}</div>
-      <div class="ov-total ${c.colorClass}">${c.total}</div>
-      <div class="ov-breakdown">${c.segs.map(s=>`<span class="ov-seg ${s.cls}">${s.label} ${s.val}</span>`).join('')}</div>`;
-    el.onclick = c.onClick;
-    row.appendChild(el);
-  });
-}
-
-function buildBizFuncGrid(biz,ecom,func){
-  return `<div class="modal-grid">
-    <div class="modal-card"><div class="modal-card-val g">${biz}</div><div class="modal-card-lbl">💼 商业化</div></div>
-    <div class="modal-card"><div class="modal-card-val b">${ecom}</div><div class="modal-card-lbl">🛒 电商</div></div>
-    <div class="modal-card"><div class="modal-card-val" style="color:#e65100">${func}</div><div class="modal-card-lbl">🏛️ 职能</div></div>
-  </div>`;
-}
-
-function buildGapModal(biz,ecom,func){
-  const fmt=v=>`<span style="color:${v>0?'#c62828':v<0?'#2e7d32':'#888'};font-weight:800">${v>0?'+'+v:v}</span>`;
-  return `<div class="modal-grid">
-    <div class="modal-card"><div class="modal-card-val">${fmt(biz)}</div><div class="modal-card-lbl">💼 商业化</div></div>
-    <div class="modal-card"><div class="modal-card-val">${fmt(ecom)}</div><div class="modal-card-lbl">🛒 电商</div></div>
-    <div class="modal-card"><div class="modal-card-val">${fmt(func)}</div><div class="modal-card-lbl">🏛️ 职能</div></div>
-  </div><p style="font-size:12px;color:#aaa;margin-top:8px">正数=空编（缺人），负数=超编</p>`;
-}
-
-function openEntryMod(){
-  const all = [...D.biz.entry, ...D.func1.entry];
-  const rows = all.map(p=>{
-    const isCampus=(p.empTagList||[]).includes('2'), isL1=p.manageLevel==='L1';
-    return `<div class="person-row">
-      ${isL1?`<a href="https://hr.xiaohongshu.com/next/employee/${p.employeeId}" target="_blank" class="person-name" style="color:#1b5e20">${p.showName}</a>`:`<span class="person-name">${p.showName}</span>`}
-      ${isL1?'<span class="badge badge-l1">L1</span>':''}
-      ${isCampus?'<span class="badge badge-campus">校招</span>':'<span class="badge badge-social">社招</span>'}
-      <span class="person-dept">${p.departmentName}</span>
-      <span class="person-date">${p.entryDate}</span>
-    </div>`;
-  }).join('');
-  openMod('全部待入职', `共 ${all.length} 人（L1 可点击查看档案）`, rows);
-}
-
-function openDimAllMod(){
-  const all = [...D.biz.dimission, ...D.func1.dimission];
-  const rows = all.map(p=>{
-    const isActive=(p.dimissionTypeName||'').includes('主动');
-    return `<div class="person-row">
-      <span class="person-name">${p.showName}</span>
-      <span class="badge badge-${isActive?'active':'passive'}">${p.dimissionTypeName||'离职'}</span>
-      <span class="person-dept">${p.departmentName}</span>
-      <span class="person-date">最后：${p.lastDate}</span>
-    </div>`;
-  }).join('');
-  openMod('全部待离职', `共 ${all.length} 人`, rows);
-}
-
-// ── ALERT BAR ─────────────────────────────────────────────
-function buildAlerts(){
-  const alerts = D.allAlerts;
-  if(!alerts||alerts.length===0) return;
-  $('alertBar').classList.remove('hidden');
-  const tags = $('alertTags');
-  alerts.forEach(a=>{
-    const el=ce('span',`alert-tag ${a.type}`);
-    el.textContent = a.type==='vacancy'?`${a.name} 空编${a.gap}`:`${a.name} 超编${Math.abs(a.gap)}`;
-    tags.appendChild(el);
-  });
-}
-
-// ── BUILD ALL ─────────────────────────────────────────────
-function buildAll(){
-  $('fetchTimeLabel').textContent = '更新：' + D.fetchTime;
-
-  buildOverview();
-  buildAlerts();
-
-  // 商业化（行业一部）
-  const bizGrid = $('biz-grid');
-  bizGrid.innerHTML = buildCard(D.biz, D.biz.entry, D.biz.dimission);
-
-  // 职能（财务一组 + 资本市场）
-  const funcGrid = $('func-grid');
-  funcGrid.innerHTML =
-    buildCard(D.func1, D.func1.entry, D.func1.dimission) +
-    buildCard(D.func2, [], []);
-}
-
-buildAll();
 </script>
 </body>
 </html>
