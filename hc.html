@@ -4891,39 +4891,40 @@ function buildSummaryTab(){
 }
 
 function renderDeptMatrix(){
+  const bizColor='rgba(34,197,94,0.8)', bizBorder='#16a34a';
+  const ecomColor='rgba(59,130,246,0.8)', ecomBorder='#2563eb';
+  const funcColor='rgba(245,158,11,0.8)', funcBorder='#d97706';
+  
   const allDepts=[
-    ...DEPTS.biz.map(d=>({...d,_color:'rgba(34,197,94,0.85)',_group:'商业化',_border:'#16a34a'})),
-    ...DEPTS.ecom.map(d=>({...d,_color:'rgba(59,130,246,0.85)',_group:'电商',_border:'#2563eb'})),
-    ...DEPTS.func.map(d=>({...d,_color:'rgba(245,158,11,0.85)',_group:'职能',_border:'#d97706'})),
+    ...DEPTS.biz.map(d=>({...d,_color:bizColor,_border:bizBorder,_group:'商业化'})),
+    ...DEPTS.ecom.map(d=>({...d,_color:ecomColor,_border:ecomBorder,_group:'电商'})),
+    ...DEPTS.func.map(d=>({...d,_color:funcColor,_border:funcBorder,_group:'职能'})),
   ];
   const ctx=document.getElementById('deptMatrixChart');
   if(!ctx)return;
   
-  // Sort by plan size desc for better tooltip ordering
-  allDepts.sort((a,b)=>b.plan-a.plan);
-  
   new Chart(ctx,{
     type:'bubble',
     data:{
-      datasets:allDepts.map(d=>({
-        label:d.name,
-        data:[{
-          x:Math.min(Math.round(d.cur/d.plan*100),140),
+      datasets:[{
+        label:'部门',
+        data:allDepts.map(d=>({
+          x:Math.min(Math.round(d.cur/d.plan*100),145),
           y:d.plan,
-          r:Math.max(Math.min(Math.abs(d.predict-d.plan)/3+5,22),6)
-        }],
-        backgroundColor:d._color,
-        borderColor:d._border,
+          r:Math.max(Math.min(Math.abs(d.predict-d.plan)/2.5+4,18),5),
+          _dept:d
+        })),
+        backgroundColor:allDepts.map(d=>d._color),
+        borderColor:allDepts.map(d=>d._border),
         borderWidth:2,
-        hoverBackgroundColor:d._border,
-        hoverBorderWidth:3,
-        hoverRadius:Math.max(Math.min(Math.abs(d.predict-d.plan)/3+5,22),6)+3
-      }))
+        hoverBackgroundColor:allDepts.map(d=>d._border),
+        hoverBorderWidth:3
+      }]
     },
     options:{
       responsive:true,
       maintainAspectRatio:false,
-      animation:{duration:800,easing:'easeOutQuart'},
+      animation:{duration:700,easing:'easeOutQuart'},
       plugins:{
         legend:{display:false},
         tooltip:{
@@ -4933,22 +4934,22 @@ function renderDeptMatrix(){
           borderColor:'#e5e7eb',
           borderWidth:1,
           cornerRadius:8,
-          displayColors:true,
+          displayColors:false,
           padding:12,
           callbacks:{
             title:(items)=>{
-              const d=allDepts[items[0].datasetIndex];
+              const d=items[0].raw._dept;
               return `${d.name} (${d._group})`;
             },
             label:(ctx)=>{
-              const d=allDepts[ctx.datasetIndex];
+              const d=ctx.raw._dept;
               const pct=Math.round(d.cur/d.plan*100);
               const gap=d.predict-d.plan;
               return [
                 `满编率: ${pct}% (${d.cur}/${d.plan})`,
                 `预计在职: ${d.predict}人 ${gap>=0?'↑':'↓'}`,
                 `人员缺口: ${gap>0?'超'+gap:'缺'+Math.abs(gap)}人`,
-                `流入在途: ${d.inHc||0}人 | 流出在途: ${(d.dimission||[]).length}人`
+                `流入: ${d.inHc||0}人 | 流出: ${(d.dimission||[]).length}人`
               ];
             }
           }
@@ -4957,7 +4958,7 @@ function renderDeptMatrix(){
       scales:{
         x:{
           title:{display:true,text:'满编率 (%)',font:{size:12,weight:'600',family:'Inter'},color:'#666'},
-          min:55,max:140,
+          min:60,max:140,
           grid:{color:'#f3f4f6',drawBorder:false},
           ticks:{color:'#888',font:{size:11}}
         },
