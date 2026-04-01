@@ -3,387 +3,116 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HC Dashboard v10</title>
+<title>HC Dashboard - 动态权限版</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",sans-serif;background:#F1F4F2;color:#1a1a1a;font-size:14px;line-height:1.5}
+.loading{position:fixed;inset:0;background:rgba(255,255,255,.95);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+.loading-spinner{width:40px;height:40px;border:3px solid #E5EAE7;border-top-color:#1a6035;border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 .nav{background:linear-gradient(135deg,#0f3d24 0%,#1a6035 55%,#135430 100%);padding:0 36px;display:flex;align-items:stretch;position:sticky;top:0;z-index:300;box-shadow:0 2px 20px rgba(0,0,0,.28)}
-.nav-left{display:flex;align-items:center;gap:0;padding:15px 0;margin-right:28px;border-right:1px solid rgba(255,255,255,.1);padding-right:28px}
-.nav-title{font-size:20px;font-weight:800;color:#fff;letter-spacing:-0.5px}
-.nav-sub{font-size:12px;color:rgba(255,255,255,.65);margin-top:2px}
-.nav-tabs{display:flex;align-items:flex-end;margin-left:auto;gap:0}
-.nav-tab{background:transparent;border:none;padding:14px 18px 16px;color:rgba(255,255,255,.75);font-size:13px;font-weight:600;cursor:pointer;position:relative;transition:all .2s}
-.nav-tab:hover{color:#fff;background:rgba(255,255,255,.08)}
-.nav-tab.active{color:#fff;background:rgba(255,255,255,.12)}
-.nav-tab.active:after{content:'';position:absolute;left:10%;right:10%;bottom:0;height:3px;background:#fff;border-radius:2px 2px 0 0}
-.container{max-width:1440px;margin:0 auto;padding:24px 32px 64px}
-.overview{display:grid;grid-template-columns:280px 1fr;gap:24px;margin-bottom:28px}
-.big-donut-wrap{background:#fff;border-radius:16px;border:1px solid #E5EAE7;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,.04)}
-.big-donut-title{font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:14px}
-.big-donut-canvas{position:relative;width:200px;height:200px;margin:0 auto}
-.big-donut-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
-.big-pct{font-size:38px;font-weight:800;color:#1a1a1a;line-height:1}
-.big-pct.g{color:#16a34a}
-.big-sub{font-size:12px;color:#aaa;margin-top:4px}
-.big-donut-stats{display:flex;justify-content:center;gap:24px;margin-top:16px}
-.bds{text-align:center}
-.bds-val{font-size:22px;font-weight:800;color:#1a1a1a}
-.bds-val.r{color:#dc2626}
-.bds-val.b{color:#1d4ed8}
-.bds-val.g{color:#16a34a}
-.bds-lbl{font-size:10px;color:#aaa;margin-top:2px}
-.kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.kpi-card{background:#fff;border-radius:12px;border:1px solid #E5EAE7;padding:16px;box-shadow:0 2px 10px rgba(0,0,0,.04);cursor:pointer;transition:all .2s}
-.kpi-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.08)}
-.kpi-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
-.kpi-val{font-size:28px;font-weight:800;color:#1a1a1a}
-.kpi-val.b{color:#1d4ed8}
-.kpi-val.r{color:#dc2626}
-.kpi-val.g{color:#16a34a}
-.kpi-icon{font-size:20px;opacity:0.6}
-.kpi-lbl{font-size:12px;font-weight:600;color:#666}
-.kpi-sub{font-size:11px;color:#aaa;margin-top:2px}
-.tab-panel{display:none;padding:24px 32px 64px;max-width:1440px;margin:0 auto}
+.nav-title{font-size:20px;font-weight:800;color:#fff;padding:16px 0}
+.container{max-width:1440px;margin:0 auto;padding:24px 32px}
+.tab-panel{display:none}
 .tab-panel.active{display:block}
-.alert-wrap{margin-bottom:20px}
-.alert-strip{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-radius:12px;margin-bottom:10px}
-.alert-strip.urgent{background:#FEE2E2;color:#991b1b}
-.alert-strip.notice{background:#FEF3C7;color:#92400E}
-.alert-icon{font-size:16px}
-.alert-body{flex:1}
-.alert-label{font-size:12px;font-weight:700}
-.alert-tags{display:inline-flex;gap:6px;margin-left:6px;flex-wrap:wrap}
-.at{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
-.at.under{background:rgba(0,0,0,.06)}
-.sh{display:flex;align-items:center;gap:10px;margin:24px 0 14px}
-.sh-title{font-size:15px;font-weight:800;color:#1a1a1a}
-.sh-tag{font-size:12px;font-weight:700;color:#16a34a;background:#F0FDF4;padding:4px 10px;border-radius:6px}
-.sh-tag.gray{color:#666;background:#F4F4F5}
-.sh-note{font-size:12px;color:#aaa;margin-left:auto}
-.gap-overview{background:#fff;border-radius:16px;border:1px solid #E5EAE7;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.04);margin-bottom:20px}
-.gap-ov-hd{padding:12px 18px;border-bottom:1px solid #F1F4F2;display:flex;align-items:center;gap:8px}
-.gap-ov-title{font-size:11px;font-weight:700;color:#888}
-.sh{font-size:15px;font-weight:800;color:#1a1a1a;text-transform:uppercase;letter-spacing:0.5px}
-.dept-bar-list{padding:8px 0}
-.dept-bar-row{display:grid;grid-template-columns:140px 1fr 100px 60px 120px;align-items:center;gap:12px;padding:10px 18px;border-bottom:1px solid #F8FAFC;transition:background .15s;cursor:pointer}
-.dept-bar-row:hover{background:#F8FAFC}
-.dept-bar-name{font-size:13px;font-weight:700;color:#1a1a1a}
-.dept-bar-name.warn{color:#dc2626}
-.dept-bar-track{height:8px;background:#E5E7EB;border-radius:4px;overflow:hidden;position:relative}
-.dept-bar-fill{height:100%;border-radius:4px;transition:width .3s}
-.dept-bar-plan-mark{position:absolute;top:-2px;width:2px;height:12px;background:#9CA3AF}
-.dept-bar-nums{font-size:12px;color:#666}
-.dept-bar-cur{color:#1d4ed8;font-weight:700}
-.dept-bar-sep{margin:0 2px;color:#ccc}
-.gbadge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700}
-.gbadge.v{background:#FEE2E2;color:#991b1b}
-.gbadge.o{background:#DCFCE7;color:#166534}
-.gbadge.f{background:#F3F4F6;color:#6B7280}
-.dept-bar-flow{display:flex;gap:8px;font-size:11px}
-.dept-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-@media(max-width:1200px){.dept-cards{grid-template-columns:1fr}}
-.dc{background:#fff;border-radius:16px;border:1px solid #E5EAE7;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.04)}
-.dc-hd{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;cursor:pointer;transition:background .15s}
-.dc-hd:hover{background:#F9FAFB}
-.dc-hd-left{display:flex;align-items:center;gap:10px}
-.dc-name{font-size:14px;font-weight:700;color:#1a1a1a}
-.dc-leader{font-size:12px;color:#888}
-.dc-hd-right{display:flex;align-items:center;gap:14px}
-.dc-mini-stats{display:flex;gap:16px}
-.dc-ms{text-align:center}
-.dc-ms-val{font-size:14px;font-weight:800;color:#1a1a1a}
-.dc-ms-val.b{color:#1d4ed8}
-.dc-ms-val.g{color:#16a34a}
-.dc-ms-val.r{color:#dc2626}
-.dc-ms-lbl{font-size:9px;color:#aaa;margin-top:1px}
-.dc-pct-badge{font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;background:#F3F4F6;color:#6B7280}
-.dc-pct-badge.g{background:#DCFCE7;color:#166534}
-.dc-pct-badge.y{background:#FEF3C7;color:#92400E}
-.dc-pct-badge.r{background:#FEE2E2;color:#991b1b}
-.arr{font-size:10px;color:#aaa;transition:transform .2s}
-.dc-body{display:none;padding:18px;border-top:1px solid #F1F4F2}
-.dc-body.open{display:block}
-.dc-metrics{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:18px}
-.dc-m{background:#F8FAFC;border-radius:10px;padding:12px 8px;text-align:center}
-.dc-m-val{font-size:18px;font-weight:800;color:#1a1a1a}
-.dc-m-val.b{color:#1d4ed8}
-.dc-m-val.g{color:#16a34a}
-.dc-m-val.r{color:#dc2626}
-.dc-m-val.y{color:#d97706}
-.dc-m-lbl{font-size:9px;color:#888;margin-top:2px;text-transform:uppercase;letter-spacing:0.3px}
-.dc-chart{margin:16px 0;height:120px}
-.dc-flow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.flow-blk{background:#F9FAFB;border-radius:12px;padding:14px}
-.flow-blk-title{font-size:12px;font-weight:700;color:#1a1a1a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.flow-count{font-size:10px;padding:2px 8px;border-radius:4px}
-.flow-count.in{background:#DBEAFE;color:#1e40af}
-.flow-count.out{background:#FEE2E2;color:#991b1b}
-.flow-person{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f0f0f0}
-.flow-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
-.flow-av.in{background:#1d4ed8}
-.flow-av.out{background:#dc2626}
-.flow-info{flex:1;min-width:0}
-.flow-nm{font-size:12px;font-weight:700;color:#1a1a1a}
-.flow-dept{font-size:10px;color:#aaa;margin-top:1px}
-.flow-right{text-align:right}
-.flow-date{font-size:10px;color:#888}
-.flow-date-soon{color:#dc2626;font-weight:700}
-.flow-empty{color:#aaa;text-align:center;padding:12px;font-size:12px}
-.ic-note{font-size:10px;color:#888;margin-top:6px;padding-top:6px;border-top:1px dashed #e5e7eb}
-.dc-sub{margin-top:14px}
-.sdt{width:100%;border-collapse:collapse;font-size:11px}
-.sdt th{text-align:left;padding:8px 6px;color:#888;font-weight:600;border-bottom:1px solid #e5e7eb;background:#fafafa}
-.sdt td{padding:8px 6px;border-bottom:1px solid #f3f4f6}
-.lv-tag{font-size:9px;padding:1px 4px;border-radius:3px;margin-left:4px}
-.lv-tag.lv-l1{background:#7c3aed;color:#fff}
-.lv-tag.lv-l2{background:#2563eb;color:#fff}
-.mini-bar{display:inline-block;width:40px;height:4px;background:#e5e7eb;border-radius:2px;overflow:hidden;margin-right:4px;vertical-align:middle}
-.mini-fill{height:100%;border-radius:2px;background:#22c55e}
-.mini-fill.ov{background:#dc2626}
-.mini-fill.warn{background:#f59e0b}
-.mt{display:inline-block;font-size:9px;padding:1px 4px;border-radius:3px}
-.mt-mat{background:#DCFCE7;color:#166534}
-.mt-exc{background:#DBEAFE;color:#1e40af}
-.sdt tr.ov{background:#F0FDF4}
-.matrix-wrap{position:relative}
-.flow-rank-wrap{margin-bottom:24px}
-#kpiModal{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.45);backdrop-filter:blur(4px)}
-#kpiModalBox{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;border-radius:20px;padding:28px 32px;min-width:340px;max-width:520px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.2);max-height:80vh;overflow-y:auto}
+.alert-strip{padding:12px 16px;border-radius:12px;margin-bottom:16px;background:#FEE2E2;color:#991b1b}
+.dept-card{background:#fff;border-radius:16px;border:1px solid #E5EAE7;padding:20px;margin-bottom:16px}
+.dept-name{font-size:16px;font-weight:800}
+.dept-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:12px}
+.stat{text-align:center}
+.stat-val{font-size:24px;font-weight:800;color:#1a1a1a}
+.stat-lbl{font-size:11px;color:#888}
 </style>
 </head>
 <body>
 
+<div class="loading" id="loading">
+  <div class="loading-spinner"></div>
+  <div>正在根据您的权限加载数据...</div>
+  <div style="font-size:12px;color:#888">请确保已登录 hr.xiaohongshu.com</div>
+</div>
+
 <nav class="nav">
-  <div class="nav-left">
-    <div>
-      <div class="nav-title">组织管理看板</div>
-      <div class="nav-sub">2026 · 实时HC数据</div>
-    </div>
-  </div>
-  <div class="nav-tabs">
-    <button class="nav-tab active" onclick="switchTab('summary',this)">📋 总览</button>
-    <button class="nav-tab" onclick="switchTab('biz',this)">💼 商业化</button>
-    <button class="nav-tab" onclick="switchTab('ecom',this)">🛒 电商</button>
-    <button class="nav-tab" onclick="switchTab('func',this)">🏛️ 职能</button>
+  <div class="container">
+    <div class="nav-title">HC 管理看板 - 动态权限版</div>
   </div>
 </nav>
 
-<div id="tab-summary" class="tab-panel active">
-  <div id="summaryCards"></div>
-  
-  <div class="sh"><span class="sh-title">部门人力分布矩阵</span><span class="sh-note">横轴=满编率 · 纵轴=规模 · 气泡=Gap</span></div>
-  <div class="matrix-wrap" style="background:#fff;border-radius:12px;border:1px solid #E5EAE7;padding:20px;margin-bottom:24px;height:360px">
-    <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
-      <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#666"><span style="width:10px;height:10px;border-radius:50%;background:#22c55e"></span>商业化</div>
-      <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#666"><span style="width:10px;height:10px;border-radius:50%;background:#3b82f6"></span>电商</div>
-      <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#666"><span style="width:10px;height:10px;border-radius:50%;background:#f59e0b"></span>职能</div>
-    </div>
-    <canvas id="deptMatrixChart" height="280"></canvas>
-  </div>
-
-  <div class="sh"><span class="sh-title">流入流出 TOP5</span><span class="sh-note">人员流动最剧烈的部门</span></div>
-  <div class="flow-rank-wrap" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
-    <div style="background:#fff;border-radius:12px;border:1px solid #E5EAE7;padding:16px">
-      <div style="font-size:13px;font-weight:700;color:#1d4ed8;margin-bottom:12px">↗ 流入 TOP5</div>
-      <div id="inFlowTop5"></div>
-    </div>
-    <div style="background:#fff;border-radius:12px;border:1px solid #E5EAE7;padding:16px">
-      <div style="font-size:13px;font-weight:700;color:#dc2626;margin-bottom:12px">↘ 流出 TOP5</div>
-      <div id="outFlowTop5"></div>
-    </div>
-  </div>
-</div>
-
-<div id="tab-biz" class="tab-panel">
-  <div class="alert-wrap">
-    <div class="alert-strip urgent" id="alertUrgent"><span class="alert-icon">🚨</span><div class="alert-body"><span class="alert-label urgent">立即关注：</span><div class="alert-tags" id="alertUrgentTags"></div></div></div>
-    <div class="alert-strip notice" id="alertNotice"><span class="alert-icon">📌</span><div class="alert-body"><span class="alert-label notice">建议追进：</span><div class="alert-tags" id="alertNoticeTags"></div></div></div>
-  </div>
-  <div class="sh"><span class="sh-title">商业化整体 HC</span><span class="sh-tag green">Y26规划 2390</span></div>
-  <div class="overview">
-    <div class="big-donut-wrap">
-      <div class="big-donut-title">整体满编率</div>
-      <div class="big-donut-canvas"><canvas id="bigDonut" height="200"></canvas><div class="big-donut-center"><div class="big-pct" id="bigPct"></div><div class="big-sub" id="bigSub"></div></div></div>
-      <div class="big-donut-stats" id="bigStats"></div>
-    </div>
-    <div class="kpi-row" id="kpiRow"></div>
-  </div>
-  <div class="sh"><span class="sh-title">各部门 HC 完成度</span><span class="sh-tag gray">在职 ÷ Y26规划</span></div>
-  <div class="gap-overview"><div class="gap-ov-hd"><span class="gap-ov-title">部门满编率总览</span></div><div class="dept-bar-list" id="deptBarList"></div></div>
-  <div class="sh"><span class="sh-title">各部门详情</span><span class="sh-tag gray">点击展开</span></div>
-  <div class="dept-cards" id="bizCards"></div>
-</div>
-
-<div id="tab-ecom" class="tab-panel">
-  <div class="alert-wrap">
-    <div class="alert-strip urgent" id="ecomAlertUrgent"><span class="alert-icon">🚨</span><div class="alert-body"><span class="alert-label urgent">立即关注：</span><div class="alert-tags" id="ecomAlertUrgentTags"></div></div></div>
-    <div class="alert-strip notice" id="ecomAlertNotice"><span class="alert-icon">📌</span><div class="alert-body"><span class="alert-label notice">建议追进：</span><div class="alert-tags" id="ecomAlertNoticeTags"></div></div></div>
-  </div>
-  <div class="sh"><span class="sh-title">电商整体 HC</span><span class="sh-tag green">Y26规划 123</span></div>
-  <div class="overview">
-    <div class="big-donut-wrap">
-      <div class="big-donut-title">整体满编率</div>
-      <div class="big-donut-canvas"><canvas id="ecomBigDonut" height="200"></canvas><div class="big-donut-center"><div class="big-pct" id="ecomBigPct"></div><div class="big-sub" id="ecomBigSub"></div></div></div>
-      <div class="big-donut-stats" id="ecomBigStats"></div>
-    </div>
-    <div class="kpi-row" id="ecomKpiRow"></div>
-  </div>
-  <div class="sh"><span class="sh-title">各部门 HC 完成度</span><span class="sh-tag gray">在职 ÷ Y26规划</span></div>
-  <div class="gap-overview"><div class="gap-ov-hd"><span class="gap-ov-title">部门满编率总览</span></div><div class="dept-bar-list" id="ecomBarList"></div></div>
-  <div class="sh"><span class="sh-title">各部门详情</span><span class="sh-tag gray">点击展开</span></div>
-  <div class="dept-cards" id="ecomCards"></div>
-</div>
-
-<div id="tab-func" class="tab-panel">
-  <div class="alert-wrap">
-    <div class="alert-strip urgent" id="funcAlertUrgent"><span class="alert-icon">🚨</span><div class="alert-body"><span class="alert-label urgent">立即关注：</span><div class="alert-tags" id="funcAlertUrgentTags"></div></div></div>
-    <div class="alert-strip notice" id="funcAlertNotice"><span class="alert-icon">📌</span><div class="alert-body"><span class="alert-label notice">建议追进：</span><div class="alert-tags" id="funcAlertNoticeTags"></div></div></div>
-  </div>
-  <div class="sh"><span class="sh-title">职能整体 HC</span><span class="sh-tag green">Y26规划 242</span></div>
-  <div class="overview">
-    <div class="big-donut-wrap">
-      <div class="big-donut-title">整体满编率</div>
-      <div class="big-donut-canvas"><canvas id="funcBigDonut" height="200"></canvas><div class="big-donut-center"><div class="big-pct" id="funcBigPct"></div><div class="big-sub" id="funcBigSub"></div></div></div>
-      <div class="big-donut-stats" id="funcBigStats"></div>
-    </div>
-    <div class="kpi-row" id="funcKpiRow"></div>
-  </div>
-  <div class="sh"><span class="sh-title">各部门 HC 完成度</span><span class="sh-tag gray">在职 ÷ Y26规划</span></div>
-  <div class="gap-overview"><div class="gap-ov-hd"><span class="gap-ov-title">部门满编率总览</span></div><div class="dept-bar-list" id="funcBarList"></div></div>
-  <div class="sh"><span class="sh-title">各部门详情</span><span class="sh-tag gray">点击展开</span></div>
-  <div class="dept-cards" id="funcCards"></div>
-</div>
-
-<div id="kpiModal" onclick="if(event.target===this)this.style.display='none'">
-  <div id="kpiModalBox">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
-      <div id="kpiModalTitle" style="font-size:15px;font-weight:800;color:#1a1a1a"></div>
-      <button onclick="document.getElementById('kpiModal').style.display='none'" style="background:none;border:none;font-size:20px;cursor:pointer;color:#aaa">×</button>
-    </div>
-    <div id="kpiModalBody"></div>
-  </div>
+<div class="container">
+  <div id="content"></div>
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════
-// DEPTS DATA - 已删除用研/战略
-// ═══════════════════════════════════════════════════════
-const DEPTS = {
-  biz: [
-    {name:"行业一部", leader:"昂扬", plan:164, cur:167, predict:169, inHc:4, outHc:2, isReal:true, subs:[
-      {n:"行业一组", l:"星汉", cur:9, plan:8, in:0, out:0, pred:9},
-      {n:"行业二组", l:"晴川", cur:16, plan:18, in:2, out:0, pred:18},
-      {n:"行业三组", l:"晓风", cur:18, plan:20, in:0, out:1, pred:17},
-      {n:"行业四组", l:"雨霁", cur:25, plan:28, in:1, out:0, pred:26},
-      {n:"行业五组", l:"云开", cur:28, plan:30, in:1, out:0, pred:29}
-    ], entry:[
-      {name:"JICHAO SUN", dept:"行业一部", date:"2026-04-08", lv:"L1"}
-    ], dimission:[
-      {name:"六尾", dept:"平台专家九组", date:"2026-04-07", type:"主动", lv:"IC"},
-      {name:"波雅", dept:"行业四组", date:"2026-04-13", type:"被动", lv:"IC"}
-    ]}
-  ],
-  ecom: [
-    {name:"商家发展", leader:"松涛", plan:35, cur:33, predict:35, inHc:3, outHc:0, isReal:true, subs:[
-      {n:"商家运营一组", l:"云涌", cur:16, plan:18, in:2, out:1, pred:17, man:1},
-      {n:"商家运营二组", l:"岚深", cur:17, plan:17, in:1, out:0, pred:18}
-    ], entry:[
-      {name:"霜林晚", dept:"商家运营一组", date:"2026-04-15", lv:"L1"}
-    ], dimission:[]}
-  ],
-  func: [
-    {name:"财务一组", leader:"白真", plan:51, cur:54, predict:57, inHc:3, outHc:0, isReal:true, subs:[
-      {n:"技术财务分析", cur:6, plan:6, pred:6},
-      {n:"交易财务分析", cur:10, plan:7, pred:14},
-      {n:"商业财务分析", cur:9, plan:10, pred:9}
-    ], entry:[
-      {name:"曹腾", dept:"交易财务分析", date:"2026-04-08", lv:"IC"},
-      {name:"鲍天玥", dept:"资金管理组", date:"2026-04-13", lv:"IC"}
-    ], dimission:[]},
-    {name:"DI", leader:"哈利", plan:107, cur:76, predict:85, inHc:10, outHc:1, isWarn:true, subs:[], entry:[
-      {name:"明日方舟", dept:"DI", date:"2026-04-20", lv:"L2"}
-    ], dimission:[]}
-  ]
-};
+const BASE = 'https://hr.xiaohongshu.com/oasis/api/ehrworkbench';
 
-// ═══════════════════════════════════════════════════════
-// UTILS
-// ═══════════════════════════════════════════════════════
-let _charts = {}, _dcCount = 0, _currentDepts = [];
-function initials(s){return (s||'').replace(/[（(].*$/,'').trim().slice(0,2)||'?'}
-function totals(depts){return depts.reduce((a,d)=>({cur:a.cur+d.cur, plan:a.plan+d.plan, predict:a.predict+d.predict, inHc:a.inHc+d.inHc, outHc:a.outHc+d.outHc}),{cur:0,plan:0,predict:0,inHc:0,outHc:0})}
-
-// ═══════════════════════════════════════════════════════
-// RENDER FUNCTIONS
-// ═══════════════════════════════════════════════════════
-function switchTab(id,btn){
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tab-'+id).classList.add('active');
-  btn.classList.add('active');
-  if(id==='biz') _currentDepts=DEPTS.biz;
-  else if(id==='ecom') _currentDepts=DEPTS.ecom;
-  else if(id==='func') _currentDepts=DEPTS.func;
+async function fetchWithAuth(url, options = {}) {
+  const resp = await fetch(url, { ...options, credentials: 'include' });
+  const data = await resp.json();
+  return data.code === 200 ? data.data : null;
 }
 
-function renderBigDonut(cid, cur, plan, predict){
-  const pct = Math.round(cur/plan*100);
-  const ctx = document.getElementById(cid).getContext('2d');
-  if(_charts[cid]) _charts[cid].destroy();
-  _charts[cid] = new Chart(ctx, {
-    type: 'doughnut',
-    data: {datasets: [{data:[cur, plan-cur], backgroundColor:['#1a6035','#E5EAE7'], borderWidth:0, cutout:'75%'}]},
-    options: {responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}}
-  });
-  document.getElementById(cid.replace('Donut','Pct')).textContent = pct + '%';
-  document.getElementById(cid.replace('Donut','Sub')).textContent = cur + ' / ' + plan;
-  document.getElementById(cid.replace('Donut','')+'BigStats').innerHTML = 
-    '<div class="bds"><div class="bds-val b">'+predict+'</div><div class="bds-lbl">预计在职</div></div>';
-}
+async function loadData() {
+  // 1. 获取部门列表
+  const deptList = await fetchWithAuth(`${BASE}/hrbp/pc/department/query`);
+  if (!deptList || !deptList.hrbpDepartmentVOList) {
+    document.getElementById('loading').innerHTML = `
+      <div style="color:#dc2626">❌ 无法获取数据</div>
+      <div style="font-size:12px;color:#666;margin-top:8px">
+        请检查：<br>1. 是否已登录 hr.xiaohongshu.com<br>2. 是否有 HRBP 权限
+      </div>
+    `;
+    return;
+  }
 
-function renderDeptMatrix(){
-  const allDepts=[...DEPTS.biz.map(d=>({...d,_color:'#22c55e',_group:'商业化'})), ...DEPTS.ecom.map(d=>({...d,_color:'#3b82f6',_group:'电商'})), ...DEPTS.func.map(d=>({...d,_color:'#f59e0b',_group:'职能'}))];
-  const ctx = document.getElementById('deptMatrixChart');
-  if(!ctx) return;
-  new Chart(ctx, {
-    type: 'bubble',
-    data: {datasets:[{label:'部门', data:allDepts.map(d=>({x:Math.round(d.cur/d.plan*100), y:d.plan, r:Math.min(Math.abs(d.predict-d.plan)/3+4, 18), _dept:d})), backgroundColor:allDepts.map(d=>d._color), borderColor:allDepts.map(d=>d._color), borderWidth:2}]},
-    options: {responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{title:i=>i[0].raw._dept.name, label:i=>`满编率:${Math.round(i[0].raw._dept.cur/i[0].raw._dept.plan*100)}% 规划:${i[0].raw._dept.plan}`}}}, scales:{x:{title:{display:true,text:'满编率 %'}, min:50, max:130}, y:{title:{display:true,text:'Y26规划人数'}, min:0, max:200}}}
-  });
-}
-
-function renderFlowTop5(){
-  const all=[...DEPTS.biz, ...DEPTS.ecom, ...DEPTS.func];
-  const inTop=all.filter(d=>d.inHc).sort((a,b)=>b.inHc-a.inHc).slice(0,5);
-  const outTop=all.filter(d=>d.outHc).sort((a,b)=>b.outHc-a.outHc).slice(0,5);
-  document.getElementById('inFlowTop5').innerHTML = inTop.map((d,i)=>'<div style="padding:10px 0;border-bottom:1px solid #f3f4f6"><span style="display:inline-block;width:20px;height:20px;line-height:20px;text-align:center;background:'+(i<3?'#dbeafe':'#f9fafb')+';color:'+(i<3?'#2563eb':'#9ca3af')+';border-radius:50%;font-size:11px;font-weight:700">'+(i+1)+'</span><span style="margin:0 12px">'+d.name+'</span><span style="color:#2563eb;font-weight:600">'+d.inHc+'人</span></div>').join('')||'<div style="padding:20px;text-align:center;color:#9ca3af">暂无数据</div>';
-  document.getElementById('outFlowTop5').innerHTML = outTop.map((d,i)=>'<div style="padding:10px 0;border-bottom:1px solid #f3f4f6"><span style="display:inline-block;width:20px;height:20px;line-height:20px;text-align:center;background:'+(i<3?'#fee2e2':'#f9fafb')+';color:'+(i<3?'#dc2626':'#9ca3af')+';border-radius:50%;font-size:11px;font-weight:700">'+(i+1)+'</span><span style="margin:0 12px">'+d.name+'</span><span style="color:#dc2626;font-weight:600">'+d.outHc+'人</span></div>').join('')||'<div style="padding:20px;text-align:center;color:#9ca3af">暂无数据</div>';
-}
-
-function buildSummaryTab(){
-  const groups=[{label:'💼 商业化', depts:DEPTS.biz}, {label:'🛒 电商', depts:DEPTS.ecom}, {label:'🏛️ 职能', depts:DEPTS.func}];
-  const cardsEl = document.getElementById('summaryCards');
-  cardsEl.innerHTML = groups.map(g=>{
-    const t = totals(g.depts);
-    const pct = Math.round(t.cur/t.plan*100);
-    return '<div style="background:#fff;border-radius:16px;border:1px solid #E5EAE7;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,.06)"><div style="display:flex;align-items:center;gap:12px;margin-bottom:16px"><div><div style="font-size:15px;font-weight:800;color:#1a1a1a">'+g.label+'</div><div style="font-size:11px;color:#aaa">Y26规划 '+t.plan+'</div></div></div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px"><div style="background:#F4FAF6;border-radius:8px;padding:7px;text-align:center"><div style="font-size:15px;font-weight:800;color:#2563eb">'+t.cur+'</div><div style="font-size:9px;color:#aaa">在职</div></div><div style="background:#F4FAF6;border-radius:8px;padding:7px;text-align:center"><div style="font-size:15px;font-weight:800;color:'+(t.predict>=t.plan?'#16a34a':'#dc2626')+'">'+(t.predict>=t.plan?'超'+(t.predict-t.plan):'缺'+(t.plan-t.predict))+'</div><div style="font-size:9px;color:#aaa">Gap</div></div><div style="background:#F4FAF6;border-radius:8px;padding:7px;text-align:center"><div style="font-size:15px;font-weight:800;color:#2563eb">+'+t.inHc+'</div><div style="font-size:9px;color:#aaa">流入</div></div><div style="background:#F4FAF6;border-radius:8px;padding:7px;text-align:center"><div style="font-size:15px;font-weight:800;color:'+(t.outHc?'#dc2626':'#9ca3af')+'">-'+t.outHc+'</div><div style="font-size:9px;color:#aaa">流出</div></div></div></div>';
-  }).join('');
+  const depts = deptList.hrbpDepartmentVOList;
+  const content = document.getElementById('content');
   
-  renderDeptMatrix();
-  renderFlowTop5();
+  content.innerHTML = `<div style="margin-bottom:12px;font-size:14px;color:#666">✅ 已加载 ${depts.length} 个有权限的部门</div>`;
+
+  // 2. 逐个获取部门详情
+  for (const dept of depts.slice(0, 5)) { // 先显示前5个
+    const detail = await fetchWithAuth(`${BASE}/hrbp/pc/department/query?departmentId=${dept.departmentId}`);
+    if (!detail) continue;
+
+    const entry = await fetchWithAuth(`${BASE}/entry/pc/entryProcessDetail/query`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({departmentIdList: [dept.departmentId], pageNum: 1, pageSize: 50})
+    });
+    
+    const dimission = await fetchWithAuth(`${BASE}/dimission/pc/dimissionProcessDetail/query`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({departmentIdList: [dept.departmentId], pageNum: 1, pageSize: 50})
+    });
+
+    const cur = detail.currentHc || 0;
+    const plan = detail.totalHc || 0;
+    const inCount = entry?.entryProcessDetailList?.length || 0;
+    const outCount = dimission?.dimissionProcessDetailList?.length || 0;
+    const predict = cur + inCount - outCount;
+
+    const card = document.createElement('div');
+    card.className = 'dept-card';
+    card.innerHTML = `
+      <div class="dept-name">${dept.departmentName}</div>
+      <div class="dept-stats">
+        <div class="stat"><div class="stat-val">${plan}</div><div class="stat-lbl">HC规划</div></div>
+        <div class="stat"><div class="stat-val" style="color:#1d4ed8">${cur}</div><div class="stat-lbl">在职</div></div>
+        <div class="stat"><div class="stat-val" style="color:#16a34a">+${inCount}</div><div class="stat-lbl">流入</div></div>
+        <div class="stat"><div class="stat-val" style="color:${outCount?'#dc2626':'#9ca3af'}">${outCount||'-'}${outCount?'':'人'}</div><div class="stat-lbl">流出</div></div>
+      </div>
+    `;
+    content.appendChild(card);
+  }
+
+  document.getElementById('loading').style.display = 'none';
 }
 
-// ═══════════════════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════════════════
-(function init(){
-  buildSummaryTab();
-  const bt = totals(DEPTS.biz);
-  _currentDepts = DEPTS.biz;
-  renderBigDonut('bigDonut', bt.cur, bt.plan, bt.predict);
-  document.getElementById('kpiRow').innerHTML = '<div class="kpi-card"><div class="kpi-top"><div class="kpi-val">'+bt.plan+'</div><div class="kpi-icon">📋</div></div><div class="kpi-lbl">HC 规划</div></div><div class="kpi-card"><div class="kpi-top"><div class="kpi-val b">'+bt.cur+'</div><div class="kpi-icon">👥</div></div><div class="kpi-lbl">在职人数</div></div><div class="kpi-card"><div class="kpi-top"><div class="kpi-val b">+'+bt.inHc+'</div><div class="kpi-icon">↗</div></div><div class="kpi-lbl">流入在途</div></div>';
-})();
+// 页面加载后 500ms 开始获取数据
+setTimeout(loadData, 500);
 </script>
+
 </body>
 </html>
