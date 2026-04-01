@@ -484,10 +484,7 @@ table.sdt tr.un{background:#fef2f2}
     </div>
   </div>
 
-  <!-- OLD DESIGN - DEPRECATED -->
-  <div style="display:none">
-  <div class="gap-overview">
-    <div class="gap-ov-hd"><span class="gap-ov-title">所有部门（按满编率低→高）</span></div>
+  
     <div class="dept-bar-list" id="summaryBarList"><div class="dept-bar-row"><div class="dept-bar-name">行业五部<span style="font-size:9px;color:#bbb;margin-left:4px">商业化</span></div>
       <div class="dept-bar-track">
         <div class="dept-bar-fill" style="width:64.44444444444444%;background:#4ade80"></div>
@@ -5137,57 +5134,103 @@ function buildSummaryTab(){
 
 function renderDeptMatrix(){
   const allDepts=[
-    ...DEPTS.biz.map(d=>({...d,_color:'#22c55e',_group:'商业化'})),
-    ...DEPTS.ecom.map(d=>({...d,_color:'#3b82f6',_group:'电商'})),
-    ...DEPTS.func.map(d=>({...d,_color:'#f59e0b',_group:'职能'})),
+    ...DEPTS.biz.map(d=>({...d,_color:'rgba(34,197,94,0.85)',_group:'商业化',_border:'#16a34a'})),
+    ...DEPTS.ecom.map(d=>({...d,_color:'rgba(59,130,246,0.85)',_group:'电商',_border:'#2563eb'})),
+    ...DEPTS.func.map(d=>({...d,_color:'rgba(245,158,11,0.85)',_group:'职能',_border:'#d97706'})),
   ];
   const ctx=document.getElementById('deptMatrixChart');
   if(!ctx)return;
+  
+  // Sort by plan size desc for better tooltip ordering
+  allDepts.sort((a,b)=>b.plan-a.plan);
+  
   new Chart(ctx,{
     type:'bubble',
     data:{
       datasets:allDepts.map(d=>({
         label:d.name,
         data:[{
-          x:Math.round(d.cur/d.plan*100),
+          x:Math.min(Math.round(d.cur/d.plan*100),140),
           y:d.plan,
-          r:Math.min(Math.abs(d.predict-d.plan)/2+3,20)
+          r:Math.max(Math.min(Math.abs(d.predict-d.plan)/3+5,22),6)
         }],
         backgroundColor:d._color,
-        borderColor:d._color,
-        borderWidth:0
+        borderColor:d._border,
+        borderWidth:2,
+        hoverBackgroundColor:d._border,
+        hoverBorderWidth:3,
+        hoverRadius:Math.max(Math.min(Math.abs(d.predict-d.plan)/3+5,22),6)+3
       }))
     },
     options:{
       responsive:true,
       maintainAspectRatio:false,
+      animation:{duration:800,easing:'easeOutQuart'},
       plugins:{
         legend:{display:false},
         tooltip:{
+          backgroundColor:'rgba(255,255,255,0.98)',
+          titleColor:'#1a1a1a',
+          bodyColor:'#4a4a4a',
+          borderColor:'#e5e7eb',
+          borderWidth:1,
+          cornerRadius:8,
+          displayColors:true,
+          padding:12,
           callbacks:{
+            title:(items)=>{
+              const d=allDepts[items[0].datasetIndex];
+              return `${d.name} (${d._group})`;
+            },
             label:(ctx)=>{
               const d=allDepts[ctx.datasetIndex];
-              return [`${d.name}(${d._group})`,`满编率: ${Math.round(d.cur/d.plan*100)}%`,`规划: ${d.plan}人`,
-                `Gap: ${d.predict>=d.plan?'超'+(d.predict-d.plan):'缺'+(d.plan-d.predict)}`,
-                `流入: ${d.inHc||0} / 流出: ${(d.dimission||[]).length}`];
+              const pct=Math.round(d.cur/d.plan*100);
+              const gap=d.predict-d.plan;
+              return [
+                `满编率: ${pct}% (${d.cur}/${d.plan})`,
+                `预计在职: ${d.predict}人 ${gap>=0?'↑':'↓'}`,
+                `人员缺口: ${gap>0?'超'+gap:'缺'+Math.abs(gap)}人`,
+                `流入在途: ${d.inHc||0}人 | 流出在途: ${(d.dimission||[]).length}人`
+              ];
             }
           }
         }
       },
       scales:{
         x:{
-          title:{display:true,text:'满编率 %',font:{size:11}},
-          min:60,max:135,
-          grid:{color:'#f0f0f0'}
+          title:{display:true,text:'满编率 (%)',font:{size:12,weight:'600',family:'Inter'},color:'#666'},
+          min:55,max:140,
+          grid:{color:'#f3f4f6',drawBorder:false},
+          ticks:{color:'#888',font:{size:11}}
         },
         y:{
-          title:{display:true,text:'Y26规划人数（规模）',font:{size:11}},
-          min:0,
-          grid:{color:'#f0f0f0'}
+          title:{display:true,text:'Y26规划人数（规模）',font:{size:12,weight:'600',family:'Inter'},color:'#666'},
+          min:0,max:450,
+          grid:{color:'#f3f4f6',drawBorder:false},
+          ticks:{color:'#888',font:{size:11}}
         }
       }
     }
   });
+  
+  // Add quadrant labels
+  const wrap = ctx.parentElement;
+  if(wrap && !wrap.querySelector('.q-label')){
+    const labels=[
+      {t:'🔴 招聘压力大',x:'5%',y:'85%',c:'#dc2626'},
+      {t:'🟡 重点关注',x:'5%',y:'15%',c:'#d97706'},
+      {t:'🟢 健康运行',x:'75%',y:'85%',c:'#16a34a'},
+      {t:'🔵 即将超编',x:'75%',y:'15%',c:'#2563eb'}
+    ];
+    labels.forEach(l=>{
+      const el=document.createElement('div');
+      el.className='q-label';
+      el.style.cssText=`position:absolute;left:${l.x};top:${l.y};font-size:11px;font-weight:600;color:${l.c};background:rgba(255,255,255,0.9);padding:4px 8px;border-radius:4px;pointer-events:none;text-shadow:0 1px 2px rgba(255,255,255,0.8)`;
+      el.textContent=l.t;
+      wrap.appendChild(el);
+    });
+    wrap.style.position='relative';
+  }
 }
 
 function renderFlowTop5(){
@@ -5201,18 +5244,23 @@ function renderFlowTop5(){
 
   const inEl=document.getElementById('inFlowTop5');
   const outEl=document.getElementById('outFlowTop5');
+  
+  const maxIn=Math.max(...inTop.map(d=>d.inHc||0));
+  const maxOut=Math.max(...outTop.map(d=>(d.dimission||[]).length));
+  
   if(inEl){
     inEl.innerHTML=inTop.map((d,i)=>{
       const pct=Math.round(d.cur/d.plan*100);
-      const barW=Math.min((d.inHc||0)/15*100,100);
-      return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:12px">
-        <span style="width:14px;text-align:center;color:#999">${i+1}</span>
-        <span style="flex:1;font-weight:600">${d.name}</span>
-        <span style="color:#666">${d.inHc||0}人</span>
-        <div style="width:80px;height:6px;background:#eef3ef;border-radius:3px;overflow:hidden">
-          <div style="width:${barW}%;height:100%;background:#1d4ed8;border-radius:3px"></div>
+      const barW=Math.min((d.inHc||0)/maxIn*100,100);
+      const groupColor=d.inHc>5?'#dc2626':d.inHc>3?'#d97706':'#1d4ed8';
+      return `<div class="flow-rank-item" style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #f3f4f6;${i===4?'border-bottom:none':''}">
+        <span style="width:22px;height:22px;text-align:center;line-height:22px;border-radius:50%;background:${i<3?'#dbeafe':'#f3f4f6'};color:${i<3?'#1d4ed8':'#6b7280'};font-size:11px;font-weight:700">${i+1}</span>
+        <span style="flex:1;font-weight:600;font-size:13px;color:#1f2937">${d.name}</span>
+        <span style="font-size:12px;color:#6b7280;background:#f9fafb;padding:2px 8px;border-radius:10px">${d.inHc||0}人</span>
+        <div style="width:60px;height:4px;background:#e5e7eb;border-radius:2px;overflow:hidden">
+          <div style="width:${barW}%;height:100%;background:${groupColor};border-radius:2px;transition:width 0.6s ease"></div>
         </div>
-        <span style="width:50px;text-align:right;color:${pct<85?'#dc2626':'#888'}">${pct}%</span>
+        <span style="width:42px;text-align:right;font-size:11px;font-weight:600;color:${pct<85?'#dc2626':pct<100?'#d97706':'#16a34a'}">${pct}%</span>
       </div>`;
     }).join('');
   }
@@ -5221,15 +5269,16 @@ function renderFlowTop5(){
       const out=(d.dimission||[]).length;
       const dim=(d.dimission||[]).filter(e=>e.type!=='转岗').length;
       const trans=(d.dimission||[]).filter(e=>e.type==='转岗').length;
-      const barW=Math.min(out/10*100,100);
-      return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:12px">
-        <span style="width:14px;text-align:center;color:#999">${i+1}</span>
-        <span style="flex:1;font-weight:600">${d.name}</span>
-        <span style="color:#666">${out}人</span>
-        <div style="width:80px;height:6px;background:#eef3ef;border-radius:3px;overflow:hidden">
-          <div style="width:${barW}%;height:100%;background:${trans>0?'#7c3aed':'#dc2626'};border-radius:3px"></div>
+      const barW=Math.min(out/maxOut*100,100);
+      const barColor=trans>0?'#9333ea':'#dc2626';
+      return `<div class="flow-rank-item" style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #f3f4f6;${i===4?'border-bottom:none':''}">
+        <span style="width:22px;height:22px;text-align:center;line-height:22px;border-radius:50%;background:${i<3?'#fee2e2':'#f3f4f6'};color:${i<3?'#dc2626':'#6b7280'};font-size:11px;font-weight:700">${i+1}</span>
+        <span style="flex:1;font-weight:600;font-size:13px;color:#1f2937">${d.name}</span>
+        <span style="font-size:12px;color:#6b7280;background:#f9fafb;padding:2px 8px;border-radius:10px">${out}人</span>
+        <div style="width:60px;height:4px;background:#e5e7eb;border-radius:2px;overflow:hidden">
+          <div style="width:${barW}%;height:100%;background:${barColor};border-radius:2px;transition:width 0.6s ease"></div>
         </div>
-        <span style="font-size:10px;color:#999">${dim>0?`离职${dim}`:''}${trans>0?`转岗${trans}`:''}</span>
+        <span style="font-size:10px;color:#9ca3af;white-space:nowrap">${dim>0?`离职${dim}`:''}${trans>0?`转${trans}`:''}</span>
       </div>`;
     }).join('');
   }
