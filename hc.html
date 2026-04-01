@@ -509,7 +509,7 @@ async function fetchDeptLive(deptId) {
 
 async function fetchTopDepts() {
   // 获取当前用户有权限的所有顶层部门
-  const data = await apiFetch('/hrbp/pc/department/query?departmentId=5000273');
+  const data = await apiFetch('/hrbp/pc/department/query');
   // data 是数组，每个元素有 departmentId, departmentName, currentHc, totalHc
   return Array.isArray(data) ? data : [];
 }
@@ -532,8 +532,17 @@ async function mergeSystemData() {
 
     // 找到 DEPTS 里对应的部门对象
     const all = [...DEPTS.biz, ...DEPTS.ecom, ...DEPTS.func];
-    const target = all.find(d => d.name === deptName);
-    if (!target) continue;
+    let target = all.find(d => d.name === deptName);
+
+    // 如果DEPTS里没有这个部门（对方负责我没录入的部门），动态创建并加入biz
+    if (!target) {
+      target = {
+        name: deptName, leader:'—',
+        plan: Y26[deptName]||0, cur:0, predict:0, inHc:0, outHc:0,
+        isReal:true, subs:[], entry:[], dimission:[]
+      };
+      DEPTS.biz.push(target);
+    }
 
     try {
       const { entry, dimission, flatSubs } = await fetchDeptLive(deptId);
