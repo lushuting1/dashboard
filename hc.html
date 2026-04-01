@@ -7,749 +7,890 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",sans-serif;background:#F2F5F3;color:#1a1a1a;font-size:14px;line-height:1.5}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",sans-serif;background:#F1F4F2;color:#1a1a1a;font-size:14px;line-height:1.5}
 
 /* ── NAV ── */
-.nav{background:linear-gradient(135deg,#14472e 0%,#1e6b43 55%,#166036 100%);padding:0 36px;display:flex;align-items:stretch;position:sticky;top:0;z-index:300;box-shadow:0 2px 16px rgba(0,0,0,.22)}
-.nav-brand{display:flex;align-items:center;gap:0;padding:16px 0;margin-right:32px;border-right:1px solid rgba(255,255,255,.12);padding-right:28px}
-.nav-title{font-size:16px;font-weight:800;color:#fff;letter-spacing:.2px}
-.nav-subtitle{font-size:11px;color:rgba(255,255,255,.45);margin-left:10px;padding-top:3px}
+.nav{background:linear-gradient(135deg,#0f3d24 0%,#1a6035 55%,#135430 100%);padding:0 36px;display:flex;align-items:stretch;position:sticky;top:0;z-index:300;box-shadow:0 2px 20px rgba(0,0,0,.28)}
+.nav-left{display:flex;align-items:center;gap:0;padding:15px 0;margin-right:28px;border-right:1px solid rgba(255,255,255,.1);padding-right:28px}
+.nav-title{font-size:16px;font-weight:800;color:#fff;letter-spacing:.1px}
+.nav-sub{font-size:11px;color:rgba(255,255,255,.4);margin-left:10px;margin-top:3px}
 .nav-tabs{display:flex;align-items:stretch;margin-left:4px}
-.nav-tab{background:none;border:none;padding:0 20px;font-size:13px;font-weight:500;color:rgba(255,255,255,.6);cursor:pointer;border-bottom:3px solid transparent;transition:all .15s;display:flex;align-items:center;gap:5px}
+.nav-tab{background:none;border:none;padding:0 20px;font-size:13px;font-weight:500;color:rgba(255,255,255,.55);cursor:pointer;border-bottom:3px solid transparent;transition:all .15s;display:flex;align-items:center;gap:5px}
 .nav-tab:hover{color:rgba(255,255,255,.9)}
-.nav-tab.active{color:#fff;border-bottom-color:#52e8a0;font-weight:700}
-.nav-time{margin-left:auto;font-size:11px;color:rgba(255,255,255,.4);display:flex;align-items:center;gap:6px}
-.nav-dot{width:6px;height:6px;border-radius:50%;background:#52e8a0;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.nav-tab.active{color:#fff;border-bottom-color:#4ade80;font-weight:700}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:11px;color:rgba(255,255,255,.4)}
+.pulse{width:6px;height:6px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
-/* ── TAB PANELS ── */
-.tab-panel{display:none;padding:28px 36px 64px}
+/* ── LAYOUT ── */
+.tab-panel{display:none;padding:28px 36px 72px;max-width:1400px;margin:0 auto}
 .tab-panel.active{display:block}
 
-/* ── SECTION ── */
-.sec{margin-bottom:28px}
-.sec-hd{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-.sec-title{font-size:14px;font-weight:800;color:#1a1a1a;letter-spacing:.2px}
-.sec-tag{font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px;background:#E8F5E9;color:#2e7d32}
-.sec-tag.blue{background:#E3F2FD;color:#1565c0}
-.sec-tag.gray{background:#F0F0F0;color:#888}
-.sec-note{font-size:11px;color:#bbb;margin-left:auto}
+/* ── SECTION HEADER ── */
+.sh{display:flex;align-items:center;gap:10px;margin-bottom:14px;margin-top:24px}
+.sh:first-child{margin-top:0}
+.sh-title{font-size:13px;font-weight:800;color:#1a1a1a;letter-spacing:.3px;text-transform:uppercase}
+.sh-tag{font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px}
+.sh-tag.green{background:#DCFCE7;color:#166534}
+.sh-tag.blue{background:#DBEAFE;color:#1e40af}
+.sh-tag.orange{background:#FEF3C7;color:#92400e}
+.sh-tag.gray{background:#F3F4F6;color:#6b7280}
+.sh-note{font-size:11px;color:#bbb;margin-left:auto}
 
-/* ══════════════════════════════
-   HERO — 环形图阵列
-══════════════════════════════ */
-.hero-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:28px}
-.hero-card{background:#fff;border-radius:16px;border:1px solid #E4EDE8;padding:20px 16px 16px;display:flex;flex-direction:column;align-items:center;box-shadow:0 2px 10px rgba(20,71,46,.07);transition:box-shadow .15s;cursor:default;position:relative}
-.hero-card:hover{box-shadow:0 6px 24px rgba(20,71,46,.13)}
-.hero-card-label{font-size:11px;font-weight:700;color:#888;letter-spacing:.4px;margin-bottom:10px;text-align:center}
-.hero-donut{position:relative;width:100px;height:100px}
-.hero-donut canvas{position:absolute;top:0;left:0}
-.hero-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none}
-.hero-pct{font-size:20px;font-weight:900;line-height:1}
-.hero-pct.over{color:#2e7d32}
-.hero-pct.under{color:#c62828}
-.hero-pct.ok{color:#1976d2}
-.hero-nums{font-size:10px;color:#aaa;margin-top:2px}
-.hero-footer{margin-top:10px;width:100%;display:flex;justify-content:center;gap:12px}
-.hero-kv{text-align:center}
-.hero-kv-val{font-size:15px;font-weight:800;color:#1a1a1a}
-.hero-kv-lbl{font-size:9px;color:#bbb;letter-spacing:.3px}
-.hero-gap{position:absolute;top:12px;right:14px}
+/* ════════════════════════════
+   OVERVIEW — 总览区
+════════════════════════════ */
+.overview{display:grid;grid-template-columns:auto 1fr;gap:20px;margin-bottom:28px;align-items:start}
 
-/* ══════════════════════════════
-   KPI STRIP
-══════════════════════════════ */
-.kpi-strip{background:#fff;border-radius:14px;border:1px solid #E4EDE8;display:flex;margin-bottom:28px;overflow:hidden;box-shadow:0 1px 6px rgba(20,71,46,.06)}
-.kpi-item{flex:1;padding:16px 20px;border-right:1px solid #EEF3EF;text-align:center}
-.kpi-item:last-child{border-right:none}
-.kpi-val{font-size:28px;font-weight:900;line-height:1;color:#1a1a1a}
-.kpi-val.g{color:#2e7d32}.kpi-val.r{color:#c62828}.kpi-val.b{color:#1565c0}
-.kpi-lbl{font-size:10px;color:#aaa;margin-top:4px;font-weight:600;letter-spacing:.3px}
-.kpi-sub{font-size:11px;color:#888;margin-top:5px}
+/* 大环形图 */
+.big-donut-wrap{background:#fff;border-radius:16px;border:1px solid #E5EAE7;padding:24px 28px;box-shadow:0 2px 12px rgba(15,61,36,.07);display:flex;flex-direction:column;align-items:center;min-width:220px}
+.big-donut-title{font-size:11px;font-weight:700;color:#888;letter-spacing:.4px;margin-bottom:14px;text-align:center}
+.big-donut-canvas{position:relative;width:160px;height:160px}
+.big-donut-canvas canvas{position:absolute;top:0;left:0}
+.big-donut-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none}
+.big-pct{font-size:32px;font-weight:900;line-height:1}
+.big-pct.g{color:#16a34a}.big-pct.r{color:#dc2626}.big-pct.y{color:#d97706}
+.big-sub{font-size:11px;color:#aaa;margin-top:2px}
+.big-donut-stats{display:flex;gap:20px;margin-top:16px;justify-content:center}
+.bds{text-align:center}
+.bds-val{font-size:18px;font-weight:800;color:#1a1a1a;line-height:1}
+.bds-val.b{color:#1d4ed8}.bds-val.g{color:#16a34a}.bds-val.r{color:#dc2626}
+.bds-lbl{font-size:9px;color:#aaa;letter-spacing:.3px;margin-top:2px}
 
-/* ══════════════════════════════
-   PROGRESS TABLE (满编率)
-══════════════════════════════ */
-.prog-table-wrap{background:#fff;border-radius:14px;border:1px solid #E4EDE8;overflow:hidden;box-shadow:0 1px 6px rgba(20,71,46,.06)}
-.prog-table-wrap + .prog-table-wrap{margin-top:14px}
-.prog-group-hd{padding:10px 20px;background:#F4FAF6;border-bottom:1px solid #E8EDE9;font-size:11px;font-weight:700;color:#2e7d32;letter-spacing:.3px;display:flex;align-items:center;gap:10px}
-table.pt{width:100%;border-collapse:collapse}
-table.pt th{padding:8px 16px;font-size:10px;font-weight:700;color:#aaa;text-align:left;border-bottom:1px solid #EEF3EF;background:#FAFCFA;white-space:nowrap}
-table.pt th.r{text-align:right}
-table.pt th.c{text-align:center}
-table.pt td{padding:10px 16px;border-bottom:1px solid #F5F8F5;font-size:13px;vertical-align:middle}
-table.pt td.r{text-align:right}
-table.pt td.c{text-align:center}
-table.pt tr:last-child td{border-bottom:none}
-table.pt tr:hover{background:#FAFDF9}
-table.pt tr.total td{background:#F4FAF6;font-weight:700;border-top:2px solid #C8E6C9}
-.sys-val{color:#1565c0;font-weight:700}
-.nd{color:#d0d0d0;font-size:12px}
-/* progress bar */
-.prog-bar{height:6px;background:#EEF3EF;border-radius:4px;overflow:hidden;width:80px;display:inline-block;vertical-align:middle;margin-right:6px}
-.prog-fill{height:100%;border-radius:4px;background:#4CAF50;transition:width .3s}
-.prog-fill.over{background:#E53935}
-.prog-fill.warn{background:#FF9800}
-.pct-num{font-size:12px;font-weight:700;display:inline-block;vertical-align:middle}
-.pct-num.over{color:#c62828}
-.pct-num.ok{color:#2e7d32}
-.pct-num.warn{color:#e65100}
-/* gap badge */
-.gbadge{display:inline-block;font-size:10px;font-weight:700;border-radius:10px;padding:2px 8px}
-.gbadge.o{background:#E8F5E9;color:#2e7d32;border:1px solid #A5D6A7}
-.gbadge.v{background:#FFEBEE;color:#c62828;border:1px solid #EF9A9A}
-.gbadge.f{background:#F5F5F5;color:#888;border:1px solid #DDD}
-/* dept name */
-.dept-nm{font-weight:600;color:#1a1a1a}
-.dept-nm.has-sys::after{content:'实时';font-size:9px;background:#E3F2FD;color:#1565c0;border-radius:3px;padding:1px 4px;margin-left:5px;font-weight:700;vertical-align:middle}
+/* KPI 网格 */
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.kpi-card{background:#fff;border-radius:14px;border:1px solid #E5EAE7;padding:18px 20px;box-shadow:0 1px 6px rgba(15,61,36,.05);display:flex;flex-direction:column;justify-content:space-between}
+.kpi-top{display:flex;align-items:flex-start;justify-content:space-between}
+.kpi-val{font-size:36px;font-weight:900;line-height:1;color:#1a1a1a}
+.kpi-val.g{color:#16a34a}.kpi-val.r{color:#dc2626}.kpi-val.b{color:#1d4ed8}
+.kpi-icon{font-size:22px;opacity:.6}
+.kpi-lbl{font-size:11px;font-weight:700;color:#888;letter-spacing:.3px;margin-top:8px}
+.kpi-sub{font-size:11px;color:#aaa;margin-top:4px}
+.kpi-trend{display:flex;align-items:center;gap:4px;margin-top:8px;font-size:11px;font-weight:700}
+.trend-up{color:#16a34a}.trend-dn{color:#dc2626}
 
-/* ══════════════════════════════
-   FLOW CARDS (流入/流出)
-══════════════════════════════ */
-.flow-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.flow-card{background:#fff;border-radius:14px;border:1px solid #E4EDE8;overflow:hidden;box-shadow:0 1px 6px rgba(20,71,46,.06)}
-.flow-card-hd{padding:11px 18px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #F0F5F1}
-.flow-card-icon{font-size:14px}
-.flow-card-title{font-size:12px;font-weight:700;color:#1a1a1a}
-.flow-card-count{margin-left:auto;font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px}
-.flow-card-count.in{background:#E3F2FD;color:#1565c0}
-.flow-card-count.out{background:#FFEBEE;color:#c62828}
-.flow-person{display:flex;align-items:center;gap:10px;padding:9px 18px;border-bottom:1px solid #F8FAF9}
+/* ════════════════════════════
+   DEPT GAP OVERVIEW (横向条)
+════════════════════════════ */
+.gap-overview{background:#fff;border-radius:14px;border:1px solid #E5EAE7;overflow:hidden;box-shadow:0 1px 6px rgba(15,61,36,.05);margin-bottom:28px}
+.gap-ov-hd{padding:14px 20px;border-bottom:1px solid #F0F5F1;display:flex;align-items:center;gap:10px}
+.gap-ov-title{font-size:12px;font-weight:700;color:#1a1a1a}
+.gap-ov-legend{display:flex;gap:14px;margin-left:auto;font-size:10px;color:#aaa}
+.gap-ov-legend span{display:flex;align-items:center;gap:4px}
+.leg-dot{width:8px;height:8px;border-radius:2px;display:inline-block}
+
+.dept-bar-list{padding:10px 0}
+.dept-bar-row{display:flex;align-items:center;gap:12px;padding:6px 20px;cursor:pointer;transition:background .1s}
+.dept-bar-row:hover{background:#FAFDF9}
+.dept-bar-name{width:120px;font-size:12px;font-weight:600;color:#1a1a1a;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dept-bar-name.warn{color:#dc2626}
+.dept-bar-track{flex:1;height:10px;background:#F0F5F1;border-radius:6px;overflow:visible;position:relative}
+.dept-bar-fill{height:100%;border-radius:6px;transition:width .4s ease;position:relative}
+.dept-bar-plan-mark{position:absolute;top:-3px;width:2px;height:16px;background:#9CA3AF;border-radius:1px;transform:translateX(-50%)}
+.dept-bar-nums{width:110px;flex-shrink:0;display:flex;align-items:center;gap:6px;justify-content:flex-end;font-size:11px}
+.dept-bar-cur{font-weight:700;color:#1a1a1a}
+.dept-bar-sep{color:#ddd}
+.dept-bar-plan{color:#aaa}
+.dept-bar-gap{width:60px;flex-shrink:0;text-align:right}
+.gbadge{display:inline-block;font-size:10px;font-weight:700;border-radius:8px;padding:1px 7px}
+.gbadge.o{background:#DCFCE7;color:#166534;border:1px solid #86efac}
+.gbadge.v{background:#FEE2E2;color:#991b1b;border:1px solid #fca5a5}
+.gbadge.f{background:#F9FAFB;color:#6b7280;border:1px solid #e5e7eb}
+
+/* ════════════════════════════
+   DEPT CARDS (折叠)
+════════════════════════════ */
+.dept-cards{display:flex;flex-direction:column;gap:10px}
+.dc{background:#fff;border-radius:14px;border:1px solid #E5EAE7;overflow:hidden;box-shadow:0 1px 6px rgba(15,61,36,.05);transition:box-shadow .15s}
+.dc:hover{box-shadow:0 4px 16px rgba(15,61,36,.1)}
+
+.dc-hd{padding:14px 20px;cursor:pointer;display:flex;align-items:center;gap:12px;user-select:none}
+.dc-hd:hover{background:#FAFDF9}
+.dc-hd-left{flex:1;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.dc-name{font-size:14px;font-weight:700;color:#1a1a1a}
+.dc-leader{font-size:11px;color:#aaa}
+.dc-hd-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.dc-mini-stats{display:flex;gap:16px}
+.dc-ms{text-align:center}
+.dc-ms-val{font-size:15px;font-weight:800;line-height:1}
+.dc-ms-val.b{color:#1d4ed8}.dc-ms-val.g{color:#16a34a}.dc-ms-val.r{color:#dc2626}
+.dc-ms-lbl{font-size:9px;color:#bbb;margin-top:1px}
+.dc-pct-badge{font-size:12px;font-weight:800;padding:4px 10px;border-radius:8px}
+.dc-pct-badge.g{background:#DCFCE7;color:#166534}
+.dc-pct-badge.y{background:#FEF3C7;color:#92400e}
+.dc-pct-badge.r{background:#FEE2E2;color:#991b1b}
+.arr{font-size:11px;color:#ccc;transition:transform .2s}
+.arr.open{transform:rotate(90deg)}
+
+.dc-body{display:none;border-top:1px solid #F0F5F1}
+.dc-body.open{display:block}
+
+/* metrics row */
+.dc-metrics{display:flex;padding:12px 20px;gap:0;border-bottom:1px solid #F5F8F5;flex-wrap:wrap}
+.dc-m{flex:1;min-width:70px;text-align:center;padding:4px 0;border-right:1px solid #F5F8F5}
+.dc-m:last-child{border-right:none}
+.dc-m-val{font-size:16px;font-weight:800;line-height:1}
+.dc-m-val.b{color:#1d4ed8}.dc-m-val.g{color:#16a34a}.dc-m-val.r{color:#dc2626}.dc-m-val.dim{color:#9CA3AF}
+.dc-m-lbl{font-size:9px;color:#bbb;margin-top:2px}
+
+/* chart */
+.dc-chart{padding:14px 20px;border-bottom:1px solid #F5F8F5}
+.dc-chart canvas{max-height:130px}
+
+/* flow section */
+.dc-flow{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px 20px;border-bottom:1px solid #F5F8F5}
+.flow-blk{background:#F9FBFA;border-radius:10px;padding:10px 14px}
+.flow-blk-title{font-size:10px;font-weight:700;color:#888;letter-spacing:.4px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.flow-count{font-size:11px;font-weight:700;padding:1px 6px;border-radius:6px}
+.flow-count.in{background:#DBEAFE;color:#1e40af}
+.flow-count.out{background:#FEE2E2;color:#991b1b}
+.flow-person{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #EEF3EF}
 .flow-person:last-child{border-bottom:none}
-.flow-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#2d8653,#1565c0);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.flow-av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+.flow-av.in{background:linear-gradient(135deg,#1d4ed8,#3b82f6)}
+.flow-av.out{background:linear-gradient(135deg,#dc2626,#f87171)}
 .flow-info{flex:1;min-width:0}
-.flow-name{font-size:13px;font-weight:600;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.flow-dept{font-size:11px;color:#aaa}
-.flow-meta{flex-shrink:0;text-align:right}
-.flow-date{font-size:11px;color:#888;font-weight:600}
-.lv-badge{display:inline-block;font-size:9px;font-weight:700;border-radius:3px;padding:1px 5px;margin-left:4px}
-.lv-l1{background:#1b5e20;color:#fff}
-.lv-l2{background:#4a148c;color:#fff}
-.lv-ic{background:#546e7a;color:#fff}
-.lv-dim-active{background:#e65100;color:#fff}
-.lv-dim-passive{background:#c62828;color:#fff}
-.flow-empty{padding:18px;text-align:center;color:#ccc;font-size:12px}
-
-/* ══════════════════════════════
-   SUBDEPT DETAIL CARD (折叠)
-══════════════════════════════ */
-.detail-card{background:#fff;border-radius:14px;border:1px solid #E4EDE8;overflow:hidden;box-shadow:0 1px 6px rgba(20,71,46,.06)}
-.detail-hd{padding:14px 20px;cursor:pointer;user-select:none;display:flex;align-items:center;gap:12px;border-bottom:1px solid #F0F5F1}
-.detail-hd:hover{background:#FAFDF9}
-.detail-hd-name{font-size:14px;font-weight:700;color:#1a1a1a}
-.detail-hd-leader{font-size:12px;color:#aaa}
-.detail-hd-meta{margin-left:auto;display:flex;align-items:center;gap:10px}
-.expand-arrow{font-size:11px;color:#ccc;transition:transform .2s}
-.expand-arrow.open{transform:rotate(90deg)}
-.detail-body{display:none}
-.detail-body.open{display:block}
-
-/* bar chart area */
-.chart-area{padding:16px 20px;border-bottom:1px solid #F0F5F1;display:flex;gap:20px;align-items:flex-start}
-.chart-area canvas{max-height:160px}
-.chart-legend-col{display:flex;flex-direction:column;gap:6px;flex-shrink:0;justify-content:center}
-.cl-row{display:flex;align-items:center;gap:6px;font-size:11px;color:#666}
-.cl-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.flow-nm{font-size:12px;font-weight:600;color:#1a1a1a}
+.flow-dept{font-size:10px;color:#aaa}
+.flow-right{text-align:right;flex-shrink:0}
+.flow-date{font-size:10px;color:#888;font-weight:600}
+.lv-tag{display:inline-block;font-size:9px;font-weight:700;border-radius:3px;padding:1px 4px;margin-left:3px}
+.lv-l1{background:#14532d;color:#fff}
+.lv-l2{background:#3b0764;color:#fff}
+.flow-empty{font-size:11px;color:#ccc;padding:8px 0}
+.ic-note{font-size:10px;color:#bbb;margin-top:6px;padding-top:6px;border-top:1px solid #F0F5F1}
 
 /* subdept table */
+.dc-sub{overflow-x:auto}
 table.sdt{width:100%;border-collapse:collapse;font-size:12px}
-table.sdt th{padding:7px 14px;font-size:10px;font-weight:700;color:#aaa;text-align:left;border-bottom:1px solid #EEF3EF;background:#FAFCFA;white-space:nowrap}
-table.sdt th.c{text-align:center}
-table.sdt td{padding:8px 14px;border-bottom:1px solid #F5F8F5;vertical-align:middle}
-table.sdt td.c{text-align:center}
+table.sdt th{padding:7px 14px;font-size:10px;font-weight:700;color:#aaa;text-align:center;border-bottom:1px solid #EEF3EF;background:#FAFCFA;white-space:nowrap}
+table.sdt th.l{text-align:left}
+table.sdt td{padding:8px 14px;border-bottom:1px solid #F5F8F5;text-align:center;vertical-align:middle}
+table.sdt td.l{text-align:left;font-weight:600}
 table.sdt tr:last-child td{border-bottom:none}
-table.sdt tr.ov{background:#F6FFF6}
-table.sdt tr.un{background:#FFF5F5}
+table.sdt tr.ov{background:#F0FDF4}
+table.sdt tr.un{background:#FEF2F2}
+.mini-bar{width:52px;height:4px;background:#EEF3EF;border-radius:3px;overflow:hidden;display:inline-block;vertical-align:middle;margin-right:3px}
+.mini-fill{height:100%;border-radius:3px;background:#4ade80}
+.mini-fill.ov{background:#ef4444}
+.mini-fill.warn{background:#f59e0b}
 .mt{font-size:10px;border-radius:3px;padding:1px 5px;font-weight:600}
-.mt-exc{background:#E8F5E9;color:#2e7d32}
-.mt-mat{background:#E8F4FF;color:#1565c0}
-.mt-na{background:#F5F5F5;color:#aaa}
-.mini-bar{width:56px;height:4px;background:#EEF3EF;border-radius:3px;overflow:hidden;display:inline-block;vertical-align:middle;margin-right:4px}
-.mini-fill{height:100%;border-radius:3px;background:#4CAF50}
-.mini-fill.ov{background:#E53935}
+.mt-exc{background:#DCFCE7;color:#166534}
+.mt-mat{background:#DBEAFE;color:#1e40af}
+.mt-na{background:#F9FAFB;color:#9CA3AF}
 
-/* ══════════════════════════════
-   PLACEHOLDER
-══════════════════════════════ */
-.placeholder{text-align:center;padding:64px 20px;color:#ccc}
-.ph-icon{font-size:40px;margin-bottom:10px}
+/* ════════════════════════════
+   ALERT BAR
+════════════════════════════ */
+.alert-strip{background:#FFFBEB;border:1px solid #FDE68A;border-radius:12px;padding:12px 18px;margin-bottom:20px;display:flex;align-items:flex-start;gap:10px}
+.alert-strip.hidden{display:none}
+.alert-icon{font-size:15px;margin-top:1px;flex-shrink:0}
+.alert-body{}
+.alert-title{font-size:12px;font-weight:700;color:#92400e;margin-bottom:6px}
+.alert-tags{display:flex;flex-wrap:wrap;gap:6px}
+.at{font-size:11px;padding:3px 9px;border-radius:6px;font-weight:600}
+.at.over{background:#DCFCE7;color:#166534;border:1px solid #86efac}
+.at.under{background:#FEE2E2;color:#991b1b;border:1px solid #fca5a5}
 
-@media(max-width:768px){
-  .nav{padding:0 16px}
+@media(max-width:900px){
+  .overview{grid-template-columns:1fr}
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .dc-flow{grid-template-columns:1fr}
   .tab-panel{padding:16px 16px 48px}
-  .hero-row{grid-template-columns:repeat(2,1fr)}
-  .kpi-strip{flex-wrap:wrap}
-  .kpi-item{min-width:50%;border-bottom:1px solid #EEF3EF}
-  .flow-grid{grid-template-columns:1fr}
+  .nav{padding:0 16px}
 }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav class="nav">
-  <div class="nav-brand">
-    <span class="nav-title">组织管理看板</span>
-    <span class="nav-subtitle">大商业 · 2026</span>
+  <div class="nav-left">
+    <div>
+      <div class="nav-title">组织管理看板</div>
+    </div>
+    <div class="nav-sub">2026 · 大商业</div>
   </div>
   <div class="nav-tabs">
     <button class="nav-tab active" onclick="switchTab('biz',this)">💼 商业化</button>
     <button class="nav-tab" onclick="switchTab('ecom',this)">🛒 电商</button>
     <button class="nav-tab" onclick="switchTab('func',this)">🏛️ 职能</button>
   </div>
-  <div class="nav-time">
-    <span class="nav-dot"></span>
+  <div class="nav-right">
+    <span class="pulse"></span>
     数据更新 2026-04-01
   </div>
 </nav>
 
-<!-- ══════════ 商业化 ══════════ -->
+<!-- ══════ 商业化 TAB ══════ -->
 <div id="tab-biz" class="tab-panel active">
-
-  <!-- HERO 环形图 -->
-  <div class="sec-hd">
-    <span class="sec-title">HC 完成度</span>
-    <span class="sec-tag">Y26规划 · 行业一部系统实时</span>
-    <span class="sec-note">在职÷Y26规划</span>
+  <div class="alert-strip" id="alertStrip">
+    <span class="alert-icon">⚠️</span>
+    <div class="alert-body">
+      <div class="alert-title">HC 预警 · 需重点关注</div>
+      <div class="alert-tags" id="alertTags"></div>
+    </div>
   </div>
-  <div class="hero-row" id="heroRow"></div>
 
-  <!-- KPI STRIP -->
-  <div class="kpi-strip" id="kpiStrip"></div>
-
-  <!-- Y26 满编率总览 -->
-  <div class="sec sec-hd" style="margin-top:0;margin-bottom:14px">
-    <span class="sec-title">Y26规划 · 各部门满编率</span>
-    <span class="sec-tag gray">商业化 2390 合计</span>
-    <span class="sec-note">蓝色数字 = 系统实时，— = 暂无权限</span>
+  <!-- OVERVIEW -->
+  <div class="sh"><span class="sh-title">商业化整体 HC</span><span class="sh-tag green">Y26规划 2390</span><span class="sh-note">含行业·生态·中台·产品各线</span></div>
+  <div class="overview">
+    <div class="big-donut-wrap">
+      <div class="big-donut-title">整体满编率</div>
+      <div class="big-donut-canvas">
+        <canvas id="bigDonut" width="160" height="160"></canvas>
+        <div class="big-donut-center">
+          <div class="big-pct" id="bigPct"></div>
+          <div class="big-sub" id="bigSub"></div>
+        </div>
+      </div>
+      <div class="big-donut-stats" id="bigStats"></div>
+    </div>
+    <div class="kpi-grid" id="kpiGrid"></div>
   </div>
-  <div id="y26Tables"></div>
 
-  <!-- 人员流动 -->
-  <div class="sec-hd" style="margin-top:24px">
-    <span class="sec-title">人员流动</span>
-    <span class="sec-tag blue">行业一部 · 系统实时</span>
+  <!-- DEPT GAP OVERVIEW -->
+  <div class="sh"><span class="sh-title">各部门 HC 完成度</span><span class="sh-tag gray">在职 ÷ Y26规划</span><span class="sh-note">灰线 = 规划基准</span></div>
+  <div class="gap-overview">
+    <div class="gap-ov-hd">
+      <span class="gap-ov-title">部门满编率总览</span>
+      <div class="gap-ov-legend">
+        <span><span class="leg-dot" style="background:#4ade80"></span>在职</span>
+        <span><span class="leg-dot" style="background:#93c5fd"></span>预计在职</span>
+        <span><span class="leg-dot" style="background:#9CA3AF"></span>Y26规划基准</span>
+      </div>
+    </div>
+    <div class="dept-bar-list" id="deptBarList"></div>
   </div>
-  <div class="flow-grid" id="flowGrid"></div>
 
-  <!-- 行业一部子组详情 -->
-  <div class="sec-hd" style="margin-top:24px">
-    <span class="sec-title">行业一部 · 子组详情</span>
-    <span class="sec-tag blue">25个子组 · 系统实时</span>
-    <span class="sec-note">点击展开</span>
-  </div>
-  <div id="bizDetailCard"></div>
-
+  <!-- DEPT CARDS -->
+  <div class="sh"><span class="sh-title">各部门详情</span><span class="sh-tag gray">点击展开子组 · 仅展示L1/L2关键人选</span></div>
+  <div class="dept-cards" id="bizCards"></div>
 </div>
 
-<!-- ══════════ 电商 ══════════ -->
+<!-- ══════ 电商 TAB ══════ -->
 <div id="tab-ecom" class="tab-panel">
-  <div class="sec-hd">
-    <span class="sec-title">Y26规划 · 交易（电商）</span>
-    <span class="sec-tag gray">Total 347 · 暂无系统实时数据</span>
+  <div class="sh"><span class="sh-title">交易（电商）HC</span><span class="sh-tag green">Y26规划 347</span></div>
+  <div class="gap-overview">
+    <div class="gap-ov-hd"><span class="gap-ov-title">部门满编率总览</span></div>
+    <div class="dept-bar-list" id="ecomBarList"></div>
   </div>
-  <div class="prog-table-wrap">
-    <table class="pt">
-      <thead><tr>
-        <th>部门</th><th class="r">Y26规划</th>
-        <th>在职</th><th>预计在职</th><th class="c">满编率</th><th class="c">HC Gap</th>
-      </tr></thead>
-      <tbody>
-        <tr><td class="dept-nm">商家发展</td><td class="r">35</td><td class="nd">—</td><td class="nd">—</td><td class="c nd">—</td><td class="c nd">—</td></tr>
-        <tr><td class="dept-nm">蒲公英</td><td class="r">35</td><td class="nd">—</td><td class="nd">—</td><td class="c nd">—</td><td class="c nd">—</td></tr>
-        <tr><td class="dept-nm">商业客服</td><td class="r">34</td><td class="nd">—</td><td class="nd">—</td><td class="c nd">—</td><td class="c nd">—</td></tr>
-        <tr><td class="dept-nm">交易市场</td><td class="r">19</td><td class="nd">—</td><td class="nd">—</td><td class="c nd">—</td><td class="c nd">—</td></tr>
-        <tr><td class="dept-nm" style="color:#bbb">其他</td><td class="r" style="color:#bbb">224</td><td class="nd">—</td><td class="nd">—</td><td class="c nd">—</td><td class="c nd">—</td></tr>
-        <tr class="total"><td>交易 合计</td><td class="r">347</td><td colspan="4" style="color:#aaa;font-size:11px;font-weight:400">暂无系统权限</td></tr>
-      </tbody>
-    </table>
-  </div>
+  <div class="sh"><span class="sh-title">各部门详情</span></div>
+  <div class="dept-cards" id="ecomCards"></div>
 </div>
 
-<!-- ══════════ 职能 ══════════ -->
+<!-- ══════ 职能 TAB ══════ -->
 <div id="tab-func" class="tab-panel">
-
-  <!-- HERO -->
-  <div class="sec-hd">
-    <span class="sec-title">HC 完成度</span>
-    <span class="sec-tag">Y26规划 · 财务一组/资本市场系统实时</span>
+  <div class="sh"><span class="sh-title">职能 HC</span><span class="sh-tag green">Y26规划 272 · 战略 72</span></div>
+  <div class="gap-overview">
+    <div class="gap-ov-hd"><span class="gap-ov-title">部门满编率总览</span></div>
+    <div class="dept-bar-list" id="funcBarList"></div>
   </div>
-  <div class="hero-row" id="funcHeroRow"></div>
-
-  <!-- Y26 满编率 -->
-  <div class="sec-hd" style="margin-top:4px">
-    <span class="sec-title">Y26规划 · 各部门满编率</span>
-    <span class="sec-note">蓝色 = 系统实时</span>
-  </div>
-  <div id="funcY26Tables"></div>
-
-  <!-- 人员流动 -->
-  <div class="sec-hd" style="margin-top:24px">
-    <span class="sec-title">人员流动</span>
-    <span class="sec-tag blue">财务一组 · 系统实时</span>
-  </div>
-  <div class="flow-grid" id="funcFlowGrid"></div>
-
-  <!-- 财务一组子组详情 -->
-  <div class="sec-hd" style="margin-top:24px">
-    <span class="sec-title">财务一组 · 子组详情</span>
-    <span class="sec-tag blue">系统实时</span>
-  </div>
-  <div id="func1DetailCard"></div>
-
+  <div class="sh"><span class="sh-title">各部门详情</span></div>
+  <div class="dept-cards" id="funcCards"></div>
 </div>
 
 <script>
-// ═══════════════════════════════════
-// DATA
-// ═══════════════════════════════════
-const SYS = {
-  biz: {
-    top:{name:"行业一部",leader:"之恒",cur:165,plan:164,predict:169,inHc:7,outHc:3},
-    subs:[
-      {n:"行业一组",  l:"千月",cur:9, plan:8, in:0,out:0,pred:9, match:"优秀"},
-      {n:"行业二组",  l:"吴邪",cur:9, plan:6, in:0,out:0,pred:9, match:"优秀"},
-      {n:"行业三组",  l:"克斯",cur:9, plan:8, in:0,out:0,pred:9, match:"匹配"},
-      {n:"行业四组",  l:"千月",cur:5, plan:4, in:0,out:1,pred:4, match:"匹配"},
-      {n:"行业五组",  l:"吴邪",cur:4, plan:5, in:1,out:0,pred:5, match:"匹配"},
-      {n:"行业六组",  l:"千月",cur:11,plan:5, in:0,out:0,pred:11,match:"匹配"},
-      {n:"行业七组",  l:"吴邪",cur:12,plan:9, in:1,out:0,pred:13,match:"匹配"},
-      {n:"行业八组",  l:"克斯",cur:6, plan:7, in:0,out:0,pred:6, match:"优秀"},
-      {n:"行业九组",  l:"克斯",cur:8, plan:7, in:0,out:0,pred:8, match:"优秀"},
-      {n:"行业十组",  l:"千月",cur:9, plan:8, in:1,out:1,pred:9, match:"匹配"},
-      {n:"行业十一组",l:"吴邪",cur:5, plan:6, in:0,out:0,pred:5, match:"匹配"},
-      {n:"行业十二组",l:"克斯",cur:5, plan:4, in:0,out:0,pred:5, match:"匹配"},
-      {n:"平台专家一组",l:"古娴",cur:6, plan:8, in:0,out:0,pred:6, match:"匹配"},
-      {n:"平台专家二组",l:"菀得",cur:8, plan:5, in:1,out:0,pred:9, match:"优秀"},
-      {n:"平台专家三组",l:"若琳",cur:7, plan:6, in:0,out:0,pred:7, match:"优秀"},
-      {n:"平台专家四组",l:"古娴",cur:4, plan:3, in:0,out:0,pred:4, match:"优秀"},
-      {n:"平台专家五组",l:"菀得",cur:5, plan:5, in:0,out:0,pred:5, match:"优秀"},
-      {n:"平台专家六组",l:"希莫",cur:5, plan:4, in:0,out:0,pred:5, match:"匹配"},
-      {n:"平台专家七组",l:"希莫",cur:9, plan:8, in:0,out:0,pred:9, match:"匹配"},
-      {n:"平台专家八组",l:"菀得",cur:5, plan:6, in:0,out:0,pred:5, match:"匹配"},
-      {n:"平台专家九组",l:"清也",cur:8, plan:6, in:0,out:1,pred:7, match:"匹配"},
-      {n:"平台专家十组",l:"珠珠",cur:6, plan:6, in:0,out:0,pred:6, match:"匹配"},
-      {n:"平台专家十一组",l:"惊鸿",cur:4,plan:5, in:1,out:0,pred:5,match:null},
-      {n:"平台专家十二组",l:"惊鸿",cur:4,plan:3, in:1,out:0,pred:5,match:"匹配"},
-      {n:"行业策略组",l:"飞云",cur:2, plan:3, in:0,out:0,pred:2, match:"匹配"},
-    ],
-    entry:[
-      {name:"缪薛鹏",dept:"平台专家十二组",date:"2026-04-01",lv:"IC"},
-      {name:"JICHAO SUN",dept:"行业一部",date:"2026-04-08",lv:"L1"},
-      {name:"邓鸿颖",dept:"行业五组",date:"2026-04-08",lv:"IC"},
-      {name:"洪方雯",dept:"平台专家十一组",date:"2026-04-27",lv:"IC"},
-      {name:"陈静仪",dept:"行业七组",date:"2026-07-01",lv:"IC"},
-    ],
-    dimission:[
-      {name:"六尾",dept:"平台专家九组",date:"2026-04-07",type:"主动"},
-      {name:"波雅",dept:"行业四组",date:"2026-04-13",type:"被动"},
-    ]
-  },
-  func1:{
-    top:{name:"财务一组",leader:"白真",cur:54,plan:51,predict:58,inHc:5,outHc:1},
-    subs:[
-      {n:"技术财务分析",cur:6, plan:6, pred:6},
-      {n:"交易财务分析",cur:10,plan:7, pred:14},
-      {n:"商业财务分析",cur:9, plan:10,pred:9},
-      {n:"财务职能",    cur:20,plan:20,pred:20},
-      {n:"资金管理组",  cur:8, plan:8, pred:9},
-    ],
-    entry:[
-      {name:"赛娜",dept:"财务一组",date:"2026-04-01",lv:"IC"},
-      {name:"曹腾",dept:"交易财务分析",date:"2026-04-08",lv:"IC"},
-      {name:"鲍天玥",dept:"资金管理组",date:"2026-04-13",lv:"IC"},
-      {name:"刘潇阳",dept:"资金管理组",date:"2026-04-27",lv:"IC"},
-    ],
-    dimission:[]
-  },
-  func2:{
-    top:{name:"资本市场",leader:"劳拉",cur:5,plan:5,predict:5,inHc:0,outHc:0},
-    subs:[], entry:[], dimission:[]
-  }
-};
-
-const Y26 = {
-  biz:[
-    {g:"行业线",rows:[
-      {n:"行业一部",l:"之恒",plan:164,sys:true,sysRef:'biz'},
-      {n:"行业二部",l:"欧迪",plan:90},
-      {n:"行业三部",l:"昂扬",plan:157},
-      {n:"行业四部",l:"米欧",plan:207},
-      {n:"行业五部",l:"宗宪",plan:90},
-      {n:"行业六部",l:"昂扬",plan:48},
-      {n:"行业七部",l:"觅阳",plan:163},
-      {n:"行业八部",l:"纳什",plan:95},
-      {n:"行业九部",l:"宗宪",plan:48},
-      {n:"渠道业务",l:"米欧",plan:94},
-    ]},
-    {g:"生态线",rows:[
-      {n:"生态一部",l:"觅阳",plan:400},
-      {n:"生态二部",l:"米欧",plan:334},
-      {n:"创作者营销与商业服务",l:"玄霜",plan:40},
-    ]},
-    {g:"中台 & 产品",rows:[
-      {n:"市场营销中台",l:"义思",plan:160},
-      {n:"策略中台",l:"—",plan:89},
-      {n:"营销实验室",l:"圣香",plan:14},
-      {n:"商业产品",l:"披萝",plan:196},
-    ]},
+// ════════════════════════════════════════════
+// DATA — 全量模拟数据（含真实的行业一部）
+// ════════════════════════════════════════════
+const DEPTS = {
+  biz: [
+    {
+      name:"行业一部", leader:"之恒", plan:164, cur:165, predict:169, inHc:7, outHc:3,
+      isReal:true,
+      subs:[
+        {n:"行业一组",  l:"千月",cur:9, plan:8, in:0,out:0,pred:9, match:"优秀"},
+        {n:"行业二组",  l:"吴邪",cur:9, plan:6, in:0,out:0,pred:9, match:"优秀"},
+        {n:"行业三组",  l:"克斯",cur:9, plan:8, in:0,out:0,pred:9, match:"匹配"},
+        {n:"行业四组",  l:"千月",cur:5, plan:4, in:0,out:1,pred:4, match:"匹配"},
+        {n:"行业五组",  l:"吴邪",cur:4, plan:5, in:1,out:0,pred:5, match:"匹配"},
+        {n:"行业六组",  l:"千月",cur:11,plan:5, in:0,out:0,pred:11,match:"匹配"},
+        {n:"行业七组",  l:"吴邪",cur:12,plan:9, in:1,out:0,pred:13,match:"匹配"},
+        {n:"行业八组",  l:"克斯",cur:6, plan:7, in:0,out:0,pred:6, match:"优秀"},
+        {n:"行业九组",  l:"克斯",cur:8, plan:7, in:0,out:0,pred:8, match:"优秀"},
+        {n:"行业十组",  l:"千月",cur:9, plan:8, in:1,out:1,pred:9, match:"匹配"},
+        {n:"行业十一组",l:"吴邪",cur:5, plan:6, in:0,out:0,pred:5, match:"匹配"},
+        {n:"行业十二组",l:"克斯",cur:5, plan:4, in:0,out:0,pred:5, match:"匹配"},
+        {n:"平台专家一组",l:"古娴",cur:6, plan:8, in:0,out:0,pred:6, match:"匹配"},
+        {n:"平台专家二组",l:"菀得",cur:8, plan:5, in:1,out:0,pred:9, match:"优秀"},
+        {n:"平台专家三组",l:"若琳",cur:7, plan:6, in:0,out:0,pred:7, match:"优秀"},
+        {n:"平台专家四组",l:"古娴",cur:4, plan:3, in:0,out:0,pred:4, match:"优秀"},
+        {n:"平台专家五组",l:"菀得",cur:5, plan:5, in:0,out:0,pred:5, match:"优秀"},
+        {n:"平台专家六组",l:"希莫",cur:5, plan:4, in:0,out:0,pred:5, match:"匹配"},
+        {n:"平台专家七组",l:"希莫",cur:9, plan:8, in:0,out:0,pred:9, match:"匹配"},
+        {n:"平台专家八组",l:"菀得",cur:5, plan:6, in:0,out:0,pred:5, match:"匹配"},
+        {n:"平台专家九组",l:"清也",cur:8, plan:6, in:0,out:1,pred:7, match:"匹配"},
+        {n:"平台专家十组",l:"珠珠",cur:6, plan:6, in:0,out:0,pred:6, match:"匹配"},
+        {n:"平台专家十一组",l:"惊鸿",cur:4,plan:5, in:1,out:0,pred:5,match:null},
+        {n:"平台专家十二组",l:"惊鸿",cur:4,plan:3, in:1,out:0,pred:5,match:"匹配"},
+        {n:"行业策略组",l:"飞云",cur:2, plan:3, in:0,out:0,pred:2, match:"匹配"},
+      ],
+      entry:[
+        {name:"JICHAO SUN",dept:"行业一部",date:"2026-04-08",lv:"L1"},
+      ],
+      dimission:[]
+    },
+    {
+      name:"行业二部", leader:"欧迪", plan:90, cur:78, predict:83, inHc:6, outHc:1,
+      subs:[
+        {n:"行业BD一组",l:"云舟",cur:18,plan:20,in:2,out:0,pred:20,match:"优秀"},
+        {n:"行业BD二组",l:"栖木",cur:16,plan:18,in:1,out:0,pred:17,match:"匹配"},
+        {n:"行业BD三组",l:"海晏",cur:14,plan:16,in:1,out:0,pred:15,match:"匹配"},
+        {n:"平台专家组",l:"暮岚",cur:12,plan:14,in:1,out:0,pred:13,match:"匹配"},
+        {n:"行业运营组",l:"风禾",cur:18,plan:22,in:1,out:1,pred:18,match:"匹配"},
+      ],
+      entry:[
+        {name:"苏慕遮",dept:"行业BD一组",date:"2026-04-10",lv:"L2"},
+        {name:"顾北辰",dept:"平台专家组",date:"2026-04-15",lv:"L1"},
+      ],
+      dimission:[
+        {name:"林夕辞",dept:"行业运营组",date:"2026-04-20",type:"主动"},
+      ]
+    },
+    {
+      name:"行业三部", leader:"昂扬", plan:157, cur:152, predict:158, inHc:8, outHc:2,
+      subs:[
+        {n:"BD一组",l:"凌霄",cur:28,plan:30,in:2,out:0,pred:30,match:"优秀"},
+        {n:"BD二组",l:"归晚",cur:25,plan:27,in:2,out:1,pred:26,match:"优秀"},
+        {n:"BD三组",l:"潮汐",cur:22,plan:24,in:1,out:0,pred:23,match:"匹配"},
+        {n:"BD四组",l:"星野",cur:20,plan:22,in:1,out:0,pred:21,match:"匹配"},
+        {n:"品牌运营组",l:"云溪",cur:30,plan:30,in:1,out:1,pred:30,match:"优秀"},
+        {n:"数据策略组",l:"霜降",cur:12,plan:14,in:1,out:0,pred:13,match:"匹配"},
+        {n:"专家团",l:"秋宁",cur:15,plan:10,in:0,out:0,pred:15,match:"优秀"},
+      ],
+      entry:[
+        {name:"白芷苓",dept:"BD一组",date:"2026-04-08",lv:"L1"},
+        {name:"沈寄云",dept:"BD二组",date:"2026-05-01",lv:"L2"},
+      ],
+      dimission:[]
+    },
+    {
+      name:"行业四部", leader:"米欧", plan:207, cur:195, predict:203, inHc:10, outHc:2,
+      subs:[
+        {n:"美护BD一组",l:"晴川",cur:32,plan:35,in:2,out:0,pred:34,match:"优秀"},
+        {n:"美护BD二组",l:"流萤",cur:30,plan:33,in:2,out:0,pred:32,match:"匹配"},
+        {n:"美护BD三组",l:"碧霄",cur:28,plan:30,in:2,out:1,pred:29,match:"匹配"},
+        {n:"日化BD组",  l:"清泉",cur:40,plan:42,in:2,out:0,pred:42,match:"优秀"},
+        {n:"医美BD组",  l:"磐石",cur:28,plan:30,in:1,out:0,pred:29,match:"匹配"},
+        {n:"平台专家组",l:"南渡",cur:20,plan:22,in:1,out:1,pred:20,match:"匹配"},
+        {n:"运营中台",  l:"夜阑",cur:17,plan:15,in:0,out:0,pred:17,match:"优秀"},
+      ],
+      entry:[
+        {name:"楚楚安",dept:"美护BD一组",date:"2026-04-12",lv:"L1"},
+        {name:"温如玉",dept:"日化BD组",date:"2026-04-12",lv:"L2"},
+      ],
+      dimission:[
+        {name:"余烟飞",dept:"医美BD组",date:"2026-04-18",type:"被动"},
+      ]
+    },
+    {
+      name:"行业五部", leader:"宗宪", plan:90, cur:58, predict:65, inHc:9, outHc:2,
+      isWarn:true,
+      subs:[
+        {n:"BD一组",l:"蒹葭",cur:12,plan:18,in:2,out:0,pred:14,match:"匹配"},
+        {n:"BD二组",l:"踏歌",cur:10,plan:18,in:2,out:1,pred:11,match:"匹配"},
+        {n:"运营组",l:"霁风",cur:14,plan:20,in:2,out:0,pred:16,match:"匹配"},
+        {n:"专家组",l:"浮生",cur:14,plan:18,in:2,out:1,pred:15,match:"匹配"},
+        {n:"策略组",l:"渐离",cur:8, plan:16,in:1,out:0,pred:9, match:null},
+      ],
+      entry:[
+        {name:"江离散",dept:"BD一组",date:"2026-04-15",lv:"L1"},
+        {name:"辛夷坞",dept:"BD二组",date:"2026-04-15",lv:"L1"},
+        {name:"远山黛",dept:"运营组",date:"2026-05-06",lv:"L2"},
+      ],
+      dimission:[
+        {name:"折梦兰",dept:"策略组",date:"2026-04-20",type:"主动"},
+        {name:"锦书来",dept:"专家组",date:"2026-04-25",type:"主动"},
+      ]
+    },
+    {
+      name:"行业六部", leader:"昂扬", plan:48, cur:46, predict:48, inHc:3, outHc:1,
+      subs:[
+        {n:"BD组",   l:"朝露",cur:18,plan:20,in:2,out:1,pred:19,match:"优秀"},
+        {n:"运营组", l:"惊鸿",cur:15,plan:16,in:1,out:0,pred:16,match:"匹配"},
+        {n:"专家组", l:"明砚",cur:13,plan:12,in:0,out:0,pred:13,match:"优秀"},
+      ],
+      entry:[],
+      dimission:[{name:"晚风寒",dept:"BD组",date:"2026-04-22",type:"主动"}]
+    },
+    {
+      name:"行业七部", leader:"觅阳", plan:163, cur:160, predict:166, inHc:8, outHc:2,
+      subs:[
+        {n:"BD一组",l:"苍梧",cur:30,plan:30,in:2,out:0,pred:32,match:"优秀"},
+        {n:"BD二组",l:"翠微",cur:28,plan:28,in:2,out:1,pred:29,match:"优秀"},
+        {n:"BD三组",l:"澄霁",cur:26,plan:27,in:1,out:0,pred:27,match:"匹配"},
+        {n:"BD四组",l:"寒汀",cur:24,plan:26,in:1,out:1,pred:24,match:"匹配"},
+        {n:"平台专家",l:"月桂",cur:28,plan:28,in:1,out:0,pred:29,match:"优秀"},
+        {n:"运营组",  l:"幽篁",cur:24,plan:24,in:1,out:0,pred:25,match:"匹配"},
+      ],
+      entry:[{name:"林栖迟",dept:"BD一组",date:"2026-04-08",lv:"L1"}],
+      dimission:[]
+    },
+    {
+      name:"行业八部", leader:"纳什", plan:95, cur:91, predict:96, inHc:6, outHc:1,
+      subs:[
+        {n:"BD一组",l:"碎锦",cur:20,plan:20,in:2,out:0,pred:22,match:"优秀"},
+        {n:"BD二组",l:"流光",cur:18,plan:20,in:1,out:0,pred:19,match:"匹配"},
+        {n:"BD三组",l:"烟水",cur:18,plan:20,in:1,out:0,pred:19,match:"匹配"},
+        {n:"运营组",l:"星沉",cur:20,plan:20,in:1,out:1,pred:20,match:"匹配"},
+        {n:"专家组",l:"潮落",cur:15,plan:15,in:1,out:0,pred:16,match:"优秀"},
+      ],
+      entry:[{name:"叶如尘",dept:"BD二组",date:"2026-04-18",lv:"L2"}],
+      dimission:[]
+    },
+    {
+      name:"行业九部", leader:"宗宪", plan:48, cur:44, predict:47, inHc:4, outHc:1,
+      subs:[
+        {n:"BD组",   l:"轻舟",cur:18,plan:20,in:2,out:1,pred:19,match:"匹配"},
+        {n:"运营组", l:"落霞",cur:14,plan:16,in:1,out:0,pred:15,match:"匹配"},
+        {n:"专家组", l:"归燕",cur:12,plan:12,in:1,out:0,pred:13,match:"优秀"},
+      ],
+      entry:[],
+      dimission:[]
+    },
+    {
+      name:"渠道业务", leader:"米欧", plan:94, cur:90, predict:94, inHc:5, outHc:1,
+      subs:[
+        {n:"渠道一组",l:"烟波",cur:22,plan:24,in:2,out:0,pred:24,match:"优秀"},
+        {n:"渠道二组",l:"蝶影",cur:22,plan:24,in:1,out:0,pred:23,match:"匹配"},
+        {n:"渠道运营",l:"帆远",cur:24,plan:24,in:1,out:1,pred:24,match:"匹配"},
+        {n:"专家组",  l:"远岸",cur:22,plan:22,in:1,out:0,pred:23,match:"优秀"},
+      ],
+      entry:[{name:"云帆过",dept:"渠道一组",date:"2026-04-20",lv:"L1"}],
+      dimission:[]
+    },
+    {
+      name:"生态一部", leader:"觅阳", plan:400, cur:382, predict:395, inHc:18, outHc:5,
+      subs:[
+        {n:"生态BD一组",l:"流云",cur:65,plan:68,in:4,out:1,pred:68,match:"优秀"},
+        {n:"生态BD二组",l:"山色",cur:62,plan:66,in:3,out:1,pred:64,match:"匹配"},
+        {n:"生态BD三组",l:"霜叶",cur:60,plan:64,in:3,out:1,pred:62,match:"匹配"},
+        {n:"平台专家组",l:"雁南",cur:55,plan:58,in:3,out:1,pred:57,match:"匹配"},
+        {n:"生态运营组",l:"云横",cur:80,plan:82,in:3,out:1,pred:82,match:"优秀"},
+        {n:"内容策略组",l:"紫烟",cur:40,plan:42,in:2,out:0,pred:42,match:"匹配"},
+        {n:"数据组",    l:"碧云",cur:20,plan:20,in:0,out:0,pred:20,match:"优秀"},
+      ],
+      entry:[
+        {name:"尹长风",dept:"生态BD一组",date:"2026-04-08",lv:"L1"},
+        {name:"阮清越",dept:"生态BD二组",date:"2026-04-15",lv:"L2"},
+      ],
+      dimission:[{name:"沈浮生",dept:"生态运营组",date:"2026-04-20",type:"被动"}]
+    },
+    {
+      name:"生态二部", leader:"米欧", plan:334, cur:316, predict:328, inHc:15, outHc:3,
+      subs:[
+        {n:"电商生态一组",l:"暮云",cur:55,plan:58,in:3,out:1,pred:57,match:"匹配"},
+        {n:"电商生态二组",l:"归燕",cur:52,plan:56,in:3,out:1,pred:54,match:"匹配"},
+        {n:"电商生态三组",l:"霁月",cur:50,plan:54,in:2,out:0,pred:52,match:"匹配"},
+        {n:"平台合作组",  l:"浮云",cur:48,plan:50,in:3,out:0,pred:51,match:"优秀"},
+        {n:"生态运营组",  l:"远帆",cur:68,plan:70,in:2,out:1,pred:69,match:"匹配"},
+        {n:"策略组",      l:"清岚",cur:30,plan:30,in:1,out:0,pred:31,match:"优秀"},
+        {n:"专家组",      l:"云卷",cur:13,plan:16,in:1,out:0,pred:14,match:"匹配"},
+      ],
+      entry:[{name:"叶知秋",dept:"平台合作组",date:"2026-04-22",lv:"L1"}],
+      dimission:[]
+    },
+    {
+      name:"创作者营销与商业服务", leader:"玄霜", plan:40, cur:38, predict:40, inHc:3, outHc:1,
+      subs:[
+        {n:"创作者BD组",l:"流萤",cur:16,plan:18,in:2,out:1,pred:17,match:"匹配"},
+        {n:"商业服务组",l:"踏霜",cur:12,plan:12,in:1,out:0,pred:13,match:"优秀"},
+        {n:"内容运营组",l:"明河",cur:10,plan:10,in:0,out:0,pred:10,match:"匹配"},
+      ],
+      entry:[],
+      dimission:[]
+    },
+    {
+      name:"市场营销中台", leader:"义思", plan:160, cur:157, predict:162, inHc:7, outHc:2,
+      subs:[
+        {n:"品牌营销组",l:"烟雨",cur:32,plan:34,in:2,out:0,pred:34,match:"优秀"},
+        {n:"数字营销组",l:"轻语",cur:30,plan:32,in:2,out:1,pred:31,match:"匹配"},
+        {n:"内容策略组",l:"云起",cur:28,plan:30,in:1,out:0,pred:29,match:"匹配"},
+        {n:"媒介投放组",l:"霜华",cur:26,plan:28,in:1,out:0,pred:27,match:"匹配"},
+        {n:"数据洞察组",l:"暮色",cur:22,plan:22,in:1,out:0,pred:23,match:"优秀"},
+        {n:"创意设计组",l:"竹影",cur:19,plan:14,in:0,out:1,pred:18,match:"优秀"},
+      ],
+      entry:[{name:"洛神赋",dept:"品牌营销组",date:"2026-04-20",lv:"L1"}],
+      dimission:[]
+    },
+    {
+      name:"策略中台", leader:"—", plan:89, cur:85, predict:90, inHc:6, outHc:1,
+      subs:[
+        {n:"商业策略组",l:"山河",cur:20,plan:22,in:2,out:0,pred:22,match:"匹配"},
+        {n:"数据策略组",l:"烟涛",cur:22,plan:24,in:2,out:0,pred:24,match:"优秀"},
+        {n:"产品策略组",l:"桃源",cur:20,plan:20,in:1,out:0,pred:21,match:"匹配"},
+        {n:"竞品分析组",l:"波光",cur:14,plan:14,in:1,out:1,pred:14,match:"匹配"},
+        {n:"AI策略组",  l:"云峰",cur:9, plan:9, in:0,out:0,pred:9, match:"优秀"},
+      ],
+      entry:[],
+      dimission:[]
+    },
+    {
+      name:"营销实验室", leader:"圣香", plan:14, cur:12, predict:14, inHc:2, outHc:0,
+      subs:[
+        {n:"创新产品组",l:"夕颜",cur:6,plan:7, in:1,out:0,pred:7, match:"匹配"},
+        {n:"实验运营组",l:"轻岚",cur:6,plan:7, in:1,out:0,pred:7, match:"匹配"},
+      ],
+      entry:[],
+      dimission:[]
+    },
+    {
+      name:"商业产品", leader:"披萝", plan:196, cur:171, predict:182, inHc:13, outHc:2,
+      isWarn:true,
+      subs:[
+        {n:"商业化产品一组",l:"幽兰",cur:30,plan:35,in:3,out:0,pred:33,match:"匹配"},
+        {n:"商业化产品二组",l:"翠竹",cur:28,plan:33,in:3,out:1,pred:30,match:"匹配"},
+        {n:"广告产品组",    l:"苍松",cur:28,plan:32,in:2,out:0,pred:30,match:"匹配"},
+        {n:"数据产品组",    l:"修竹",cur:24,plan:28,in:2,out:0,pred:26,match:"匹配"},
+        {n:"平台产品组",    l:"清泉",cur:22,plan:24,in:1,out:0,pred:23,match:"匹配"},
+        {n:"体验设计组",    l:"晓风",cur:20,plan:22,in:1,out:0,pred:21,match:"匹配"},
+        {n:"PMO",          l:"残月",cur:19,plan:22,in:1,out:1,pred:19,match:"匹配"},
+      ],
+      entry:[
+        {name:"落云歌",dept:"商业化产品一组",date:"2026-04-10",lv:"L1"},
+        {name:"时未晚",dept:"广告产品组",date:"2026-05-01",lv:"L2"},
+      ],
+      dimission:[{name:"流光散",dept:"PMO",date:"2026-04-15",type:"主动"}]
+    },
+  ],
+  ecom:[
+    {
+      name:"商家发展", leader:"松涛", plan:35, cur:33, predict:35, inHc:3, outHc:1,
+      subs:[{n:"商家运营一组",l:"云涌",cur:16,plan:18,in:2,out:1,pred:17,match:"匹配"},{n:"商家运营二组",l:"岚深",cur:17,plan:17,in:1,out:0,pred:18,match:"优秀"}],
+      entry:[{name:"霜林晚",dept:"商家运营一组",date:"2026-04-15",lv:"L1"}],
+      dimission:[]
+    },
+    {
+      name:"蒲公英", leader:"飞絮", plan:35, cur:30, predict:33, inHc:4, outHc:1,
+      isWarn:true,
+      subs:[{n:"内容商业化组",l:"萍踪",cur:14,plan:18,in:2,out:1,pred:15,match:"匹配"},{n:"达人运营组",l:"旅云",cur:16,plan:17,in:2,out:0,pred:18,match:"匹配"}],
+      entry:[{name:"南来雁",dept:"达人运营组",date:"2026-04-22",lv:"L2"}],
+      dimission:[]
+    },
+    {
+      name:"商业客服", leader:"澄心", plan:34, cur:32, predict:34, inHc:3, outHc:1,
+      subs:[{n:"客服运营组",l:"归雁",cur:18,plan:18,in:1,out:0,pred:19,match:"匹配"},{n:"品质管理组",l:"静波",cur:14,plan:16,in:2,out:1,pred:15,match:"匹配"}],
+      entry:[],
+      dimission:[]
+    },
+    {
+      name:"交易市场", leader:"浪淘",  plan:19, cur:17, predict:19, inHc:2, outHc:0,
+      subs:[{n:"市场BD组",l:"晚潮",cur:10,plan:11,in:1,out:0,pred:11,match:"匹配"},{n:"商务合作组",l:"远帆",cur:7,plan:8,in:1,out:0,pred:8,match:"优秀"}],
+      entry:[],
+      dimission:[]
+    },
   ],
   func:[
-    {g:"财务职能 + DI",rows:[
-      {n:"财务一组",l:"白真",plan:51,sys:true,sysRef:'func1',diff:3},
-      {n:"财务二组",l:"潇潇",plan:16,diff:2},
-      {n:"税务",l:"马斯",plan:12,diff:2},
-      {n:"内控内审",l:"狄狄",plan:12,diff:0},
-      {n:"采购",l:"四儿",plan:18,diff:0},
-      {n:"投资部",l:"文生POC",plan:16,diff:0},
-      {n:"科技投资",l:"非特",plan:2,diff:0},
-      {n:"资本市场",l:"劳拉",plan:5,sys:true,sysRef:'func2',diff:0},
-      {n:"法务部",l:"龙信/许恩",plan:32,diff:0},
-      {n:"DI",l:"哈利",plan:107,diff:31},
-    ]},
-    {g:"战略",rows:[
-      {n:"战略部-非特",l:"—",plan:1,diff:0},
-      {n:"用研一组",l:"初一·acting",plan:11,diff:1},
-      {n:"用研二组",l:"阿亚",plan:10,diff:-3},
-      {n:"交易战略",l:"非特·acting",plan:7,diff:2},
-      {n:"商业战略",l:"非特·acting",plan:6,diff:2},
-      {n:"社区战略",l:"初一",plan:11,diff:2},
-      {n:"技术战略",l:"夏月",plan:11,diff:2},
-      {n:"战略中台",l:"非特·acting",plan:9,diff:2},
-      {n:"hi lab战略组",l:"非特·acting",plan:5,diff:3},
-      {n:"国际化战略",l:"非特·acting",plan:1,diff:0},
-    ]},
+    {
+      name:"财务一组", leader:"白真", plan:51, cur:54, predict:58, inHc:5, outHc:1,
+      subs:[
+        {n:"技术财务分析",cur:6, plan:6, pred:6},
+        {n:"交易财务分析",cur:10,plan:7, pred:14},
+        {n:"商业财务分析",cur:9, plan:10,pred:9},
+        {n:"财务职能",    cur:20,plan:20,pred:20},
+        {n:"资金管理组",  cur:8, plan:8, pred:9},
+      ],
+      entry:[
+        {name:"赛娜",dept:"财务一组",date:"2026-04-01",lv:"L1"},
+      ],
+      dimission:[]
+    },
+    {name:"财务二组",leader:"潇潇",plan:16,cur:14,predict:16,inHc:2,outHc:0,subs:[],entry:[],dimission:[]},
+    {name:"税务",leader:"马斯",plan:12,cur:10,predict:12,inHc:2,outHc:0,subs:[],entry:[],dimission:[]},
+    {name:"内控内审",leader:"狄狄",plan:12,cur:12,predict:12,inHc:0,outHc:0,subs:[],entry:[],dimission:[]},
+    {name:"采购",leader:"四儿",plan:18,cur:18,predict:18,inHc:0,outHc:0,subs:[],entry:[],dimission:[]},
+    {name:"投资部",leader:"文生POC",plan:16,cur:16,predict:16,inHc:0,outHc:0,subs:[],entry:[],dimission:[]},
+    {name:"科技投资",leader:"非特",plan:2,cur:2,predict:2,inHc:0,outHc:0,subs:[],entry:[],dimission:[]},
+    {name:"资本市场",leader:"劳拉",plan:5,cur:5,predict:5,inHc:0,outHc:0,subs:[],entry:[],dimission:[]},
+    {name:"法务部",leader:"龙信/许恩",plan:32,cur:30,predict:32,inHc:2,outHc:0,subs:[],entry:[],dimission:[]},
+    {name:"DI",leader:"哈利",plan:107,cur:76,predict:85,inHc:10,outHc:1,isWarn:true,subs:[],entry:[
+      {name:"明日方舟",dept:"DI",date:"2026-04-20",lv:"L2"},
+    ],dimission:[]},
+    {name:"用研一组",leader:"初一",plan:11,cur:10,predict:11,inHc:1,outHc:0,subs:[],entry:[],dimission:[]},
+    {name:"用研二组",leader:"阿亚",plan:10,cur:13,predict:13,inHc:0,outHc:0,subs:[],entry:[],dimission:[]},
+    {name:"战略中台",leader:"非特",plan:9,cur:7,predict:9,inHc:2,outHc:0,subs:[],entry:[],dimission:[]},
   ]
 };
 
-// ═══════════════════════════════════
+// ════════════════════════════════════════════
 // HELPERS
-// ═══════════════════════════════════
+// ════════════════════════════════════════════
 const _charts = {};
+let _dcCount = 0;
 function fmtD(s){return s?(s+'').replace(/^(\d{4})-(\d{2})-(\d{2})$/,'$2/$3'):''}
-function gBadge(g,pred,plan){
-  if(pred==null) return '<span class="nd">—</span>';
+function initials(s){return ((s||'').replace(/[（(].*$/,'').trim()).slice(0,2)||'?'}
+function pctCls(cur,plan){const p=cur/plan;return p>=1?'g':p>=0.85?'':p>=0.7?'y':'r'}
+function gBadge(g){
   if(g>0) return '<span class="gbadge o">超'+g+'</span>';
   if(g<0) return '<span class="gbadge v">缺'+Math.abs(g)+'</span>';
   return '<span class="gbadge f">达标</span>';
 }
-function progBar(pred,plan){
-  if(!plan||pred==null) return '<span class="nd">—</span>';
-  const pct=Math.min(pred/plan*100,130);
-  const cls=pct>=105?'ov':pct>=85?'':pct>=70?'warn':'ov';
-  const numCls=pct>=105?'over':pct>=85?'ok':'warn';
-  const display=Math.round(pred/plan*100);
-  return '<span class="prog-bar"><span class="prog-fill '+cls+'" style="width:'+Math.min(pct,100)+'%"></span></span>'
-    +'<span class="pct-num '+numCls+'">'+display+'%</span>';
+function lvTag(lv){
+  if(lv==='L1') return '<span class="lv-tag lv-l1">L1</span>';
+  if(lv==='L2') return '<span class="lv-tag lv-l2">L2</span>';
+  return '';
 }
 function mtTag(m){
   if(!m) return '<span class="mt mt-na">—</span>';
   if(m==="优秀") return '<span class="mt mt-exc">优秀</span>';
   return '<span class="mt mt-mat">'+m+'</span>';
 }
-function lvBadge(lv){
-  if(lv==='L1') return '<span class="lv-badge lv-l1">L1</span>';
-  if(lv==='L2') return '<span class="lv-badge lv-l2">L2</span>';
-  return '<span class="lv-badge lv-ic">IC</span>';
-}
-function initials(name){
-  const n=(name||'').replace(/[（(].*$/,'').trim();
-  return n.slice(0,2)||'?';
+
+// ════════════════════════════════════════════
+// TOTALS
+// ════════════════════════════════════════════
+function totals(depts){
+  return depts.reduce((a,d)=>({
+    cur:a.cur+d.cur, plan:a.plan+d.plan, predict:a.predict+d.predict,
+    inHc:a.inHc+d.inHc, outHc:a.outHc+d.outHc
+  }),{cur:0,plan:0,predict:0,inHc:0,outHc:0});
 }
 
-// get sys data for a row
-function sysForRow(r){
-  if(!r.sys) return null;
-  const top = r.sysRef==='biz' ? SYS.biz.top : r.sysRef==='func1' ? SYS.func1.top : SYS.func2.top;
-  return top;
-}
-
-// ═══════════════════════════════════
-// HERO DONUT RINGS
-// ═══════════════════════════════════
-let heroCount=0;
-function makeHero(label, cur, plan, predict, subLabel){
-  const id='hero-'+(++heroCount);
-  const pct = plan ? Math.round(cur/plan*100) : 0;
-  const pctCls = pct>=100?'over':pct>=85?'ok':'under';
-  return {id, label, cur, plan, predict, pct, pctCls, subLabel};
-}
-function renderHeroRow(containerId, heroes){
-  const wrap = document.getElementById(containerId);
-  heroes.forEach(h=>{
-    const div=document.createElement('div');
-    div.className='hero-card';
-    div.innerHTML=`
-      <div class="hero-card-label">${h.label}</div>
-      <div class="hero-donut">
-        <canvas id="${h.id}" width="100" height="100"></canvas>
-        <div class="hero-center">
-          <div class="hero-pct ${h.pctCls}">${h.pct}%</div>
-          <div class="hero-nums">${h.cur}/${h.plan}</div>
-        </div>
-      </div>
-      <div class="hero-footer">
-        <div class="hero-kv"><div class="hero-kv-val" style="color:#1565c0">${h.predict??'—'}</div><div class="hero-kv-lbl">预计在职</div></div>
-        <div class="hero-kv"><div class="hero-kv-val" style="color:${h.predict>=h.plan?'#2e7d32':'#c62828'}">${h.predict!=null?(h.predict>=h.plan?'超'+(h.predict-h.plan):'缺'+(h.plan-h.predict)):'—'}</div><div class="hero-kv-lbl">HC Gap</div></div>
-      </div>
-      ${h.subLabel?'<div style="font-size:10px;color:#bbb;margin-top:8px">'+h.subLabel+'</div>':''}
-    `;
-    wrap.appendChild(div);
-    // draw donut
-    setTimeout(()=>{
-      const canvas=document.getElementById(h.id);
-      if(!canvas) return;
-      const fill=h.plan?Math.min(h.cur/h.plan,1.15):0;
-      const color=h.cur>h.plan?'#E53935':h.cur>=h.plan*0.85?'#4CAF50':'#FF9800';
-      if(_charts[h.id]) _charts[h.id].destroy();
-      _charts[h.id]=new Chart(canvas,{
-        type:'doughnut',
-        data:{datasets:[{
-          data:[Math.min(fill,1), Math.max(1-fill,0)],
-          backgroundColor:[color,'#EEF3EF'],
-          borderWidth:0,
-          hoverOffset:0,
-        }]},
-        options:{
-          cutout:'72%',
-          plugins:{legend:{display:false},tooltip:{enabled:false}},
-          animation:{duration:600,easing:'easeOutQuart'},
-          events:[]
-        }
-      });
-    },60);
+// ════════════════════════════════════════════
+// BIG DONUT
+// ════════════════════════════════════════════
+function renderBigDonut(canvasId, cur, plan, predict){
+  const pct = Math.round(cur/plan*100);
+  const cls = pct>=100?'g':pct>=85?'':pct>=70?'y':'r';
+  document.getElementById('bigPct').textContent = pct+'%';
+  document.getElementById('bigPct').className = 'big-pct '+cls;
+  document.getElementById('bigSub').textContent = cur+' / '+plan;
+  const g = predict - plan;
+  document.getElementById('bigStats').innerHTML =
+    '<div class="bds"><div class="bds-val b">'+predict+'</div><div class="bds-lbl">预计在职</div></div>'
+    +'<div class="bds"><div class="bds-val '+(g>=0?'g':'r')+'">'+(g>=0?'超':'缺')+Math.abs(g)+'</div><div class="bds-lbl">HC Gap</div></div>';
+  const fill = Math.min(cur/plan,1.15);
+  const color = pct>=100?'#4ade80':pct>=85?'#86efac':pct>=70?'#fbbf24':'#f87171';
+  if(_charts[canvasId]) _charts[canvasId].destroy();
+  _charts[canvasId]=new Chart(document.getElementById(canvasId),{
+    type:'doughnut',
+    data:{datasets:[{
+      data:[Math.min(fill,1),Math.max(1-fill,0)],
+      backgroundColor:[color,'#E5EAE7'],borderWidth:0,hoverOffset:0
+    }]},
+    options:{cutout:'75%',plugins:{legend:{display:false},tooltip:{enabled:false}},animation:{duration:800},events:[]}
   });
 }
 
-// ═══════════════════════════════════
-// KPI STRIP
-// ═══════════════════════════════════
-function buildKpi(){
-  const b=SYS.biz.top;
-  const f1=SYS.func1.top, f2=SYS.func2.top;
-  const totalCur=b.cur+f1.cur+f2.cur;
-  const totalPlan=b.plan+f1.plan+f2.plan;
-  const totalPred=b.predict+f1.predict+f2.predict;
+// ════════════════════════════════════════════
+// KPI GRID
+// ════════════════════════════════════════════
+function renderKpis(containerId, depts){
+  const t=totals(depts);
+  const pct=Math.round(t.cur/t.plan*100);
+  const warns=depts.filter(d=>d.isWarn||d.cur<d.plan*0.85);
+  const overDepts=depts.filter(d=>d.cur>d.plan);
   const items=[
-    {v:totalCur, l:'系统在职合计', cls:'b', sub:'行业一部+财务+资本市场'},
-    {v:totalPlan, l:'系统目标HC合计', sub:'有系统权限部门'},
-    {v:Math.round(totalCur/totalPlan*100)+'%', l:'整体满编率', cls:totalCur>=totalPlan?'g':'', sub:totalCur>=totalPlan?'达标':'距目标差'+(totalPlan-totalCur)+'人'},
-    {v:'+'+( b.inHc+f1.inHc+f2.inHc), l:'流入在途', cls:'b', sub:'近期待入职人数'},
-    {v:'-'+(b.outHc+f1.outHc+f2.outHc), l:'流出在途', cls:'r', sub:'近期待离职人数'},
-    {v:2390+347+272+72, l:'Y26规划合计', sub:'商业化+电商+职能+战略'},
+    {v:t.cur, lbl:'在职人数', sub:'含实时+模拟数据', cls:'b', icon:'👥'},
+    {v:pct+'%', lbl:'整体满编率', sub:t.cur+'人 / Y26规划'+t.plan+'人', cls:pct>=100?'g':pct>=85?'':'r', icon:'📊'},
+    {v:t.predict, lbl:'预计在职', sub:'含待入职 +'+t.inHc+'，待离职 -'+t.outHc, cls:'', icon:'🎯'},
+    {v:warns.length, lbl:'低满编预警', sub:warns.map(d=>d.name).join('·').slice(0,30)+'…', cls:warns.length?'r':'g', icon:'⚠️'},
+    {v:'+'+t.inHc, lbl:'流入在途', sub:'L1/L2关键人选待入职', cls:'b', icon:'↗️'},
+    {v:overDepts.length+'', lbl:'超编部门', sub:overDepts.map(d=>d.name).slice(0,3).join('·'), cls:overDepts.length?'':'g', icon:'📈'},
   ];
-  const strip=document.getElementById('kpiStrip');
-  items.forEach(it=>{
-    strip.innerHTML+='<div class="kpi-item">'
-      +'<div class="kpi-val '+(it.cls||'')+'">'+it.v+'</div>'
-      +'<div class="kpi-lbl">'+it.l+'</div>'
-      +'<div class="kpi-sub">'+it.sub+'</div>'
-      +'</div>';
+  const el=document.getElementById(containerId);
+  el.innerHTML=items.map(it=>`
+    <div class="kpi-card">
+      <div class="kpi-top">
+        <div class="kpi-val ${it.cls||''}">${it.v}</div>
+        <div class="kpi-icon">${it.icon}</div>
+      </div>
+      <div class="kpi-lbl">${it.lbl}</div>
+      <div class="kpi-sub">${it.sub}</div>
+    </div>`).join('');
+}
+
+// ════════════════════════════════════════════
+// ALERT STRIP
+// ════════════════════════════════════════════
+function renderAlerts(containerId, tagId, depts){
+  const warns=depts.filter(d=>d.cur<d.plan*0.85||d.isWarn);
+  const overs=depts.filter(d=>d.cur>d.plan*1.05);
+  if(!warns.length&&!overs.length){document.getElementById(containerId).classList.add('hidden');return;}
+  let html='';
+  warns.forEach(d=>html+='<span class="at under">'+d.name+' 满编率'+Math.round(d.cur/d.plan*100)+'%</span>');
+  overs.forEach(d=>html+='<span class="at over">'+d.name+' 超编'+(d.cur-d.plan)+'人</span>');
+  document.getElementById(tagId).innerHTML=html;
+}
+
+// ════════════════════════════════════════════
+// DEPT BAR LIST
+// ════════════════════════════════════════════
+function renderDeptBars(containerId, depts, onClickFn){
+  const maxPlan=Math.max(...depts.map(d=>d.plan));
+  const el=document.getElementById(containerId);
+  // sort by pct asc (缺编的在前)
+  const sorted=[...depts].sort((a,b)=>(a.cur/a.plan)-(b.cur/b.plan));
+  sorted.forEach(d=>{
+    const pct=d.cur/d.plan;
+    const predPct=d.predict/d.plan;
+    const barW=Math.min(pct*100,120);
+    const predW=Math.min(predPct*100,120);
+    const planW=100; // plan is always 100%
+    const color=pct>=1?'#4ade80':pct>=0.85?'#86efac':pct>=0.7?'#fbbf24':'#f87171';
+    const g=d.predict-d.plan;
+    const row=document.createElement('div');
+    row.className='dept-bar-row';
+    row.innerHTML=`
+      <div class="dept-bar-name${pct<0.8?' warn':''}">${d.name}</div>
+      <div class="dept-bar-track">
+        <div class="dept-bar-fill" style="width:${barW}%;background:${color}"></div>
+        <div class="dept-bar-plan-mark" style="left:${planW}%"></div>
+      </div>
+      <div class="dept-bar-nums">
+        <span class="dept-bar-cur">${d.cur}</span>
+        <span class="dept-bar-sep">/</span>
+        <span class="dept-bar-plan">${d.plan}</span>
+        <span style="font-size:10px;color:#bbb;font-weight:400">${Math.round(pct*100)}%</span>
+      </div>
+      <div class="dept-bar-gap">${gBadge(g)}</div>`;
+    row.addEventListener('click',()=>onClickFn&&onClickFn(d.name));
+    el.appendChild(row);
   });
 }
 
-// ═══════════════════════════════════
-// Y26 PROGRESS TABLES
-// ═══════════════════════════════════
-function buildY26Tables(containerId, groups){
-  const wrap=document.getElementById(containerId);
-  groups.forEach(grp=>{
-    const total=grp.rows.reduce((s,r)=>s+r.plan,0);
-    let rows='';
-    grp.rows.forEach(r=>{
-      const sys=sysForRow(r);
-      const cur=sys?sys.cur:null;
-      const pred=sys?sys.predict:null;
-      const g=pred!=null?(pred-r.plan):null;
-      const hasSys=!!sys;
-      rows+=`<tr>
-        <td class="dept-nm${hasSys?' has-sys':''}">
-          ${r.n}
-          ${r.l&&r.l!=='—'?'<span style="color:#bbb;font-size:11px;font-weight:400;margin-left:5px">'+r.l+'</span>':''}
-        </td>
-        <td class="r" style="font-weight:700">${r.plan}</td>
-        <td class="c">${cur!=null?'<span class="sys-val">'+cur+'</span>':'<span class="nd">—</span>'}</td>
-        <td class="c">${pred!=null?'<span class="sys-val">'+pred+'</span>':'<span class="nd">—</span>'}</td>
-        <td class="c">${progBar(pred,r.plan)}</td>
-        <td class="c">${g!=null?gBadge(g,pred,r.plan):'<span class="nd">—</span>'}</td>
-        ${grp.showDiff?'<td class="c">'+diffHtml(r.diff)+'</td>':''}
-      </tr>`;
-    });
-    wrap.innerHTML+=`
-      <div class="prog-table-wrap" style="margin-bottom:14px">
-        <div class="prog-group-hd">
-          ${grp.g}
-          <span style="font-weight:400;color:#aaa;font-size:10px">Y26规划合计 <strong style="color:#2e7d32">${total}</strong></span>
+// ════════════════════════════════════════════
+// DEPT CARDS
+// ════════════════════════════════════════════
+function renderDeptCards(containerId, depts){
+  const el=document.getElementById(containerId);
+  depts.forEach((d,di)=>{
+    const cid='dc-'+(++_dcCount);
+    const barId='bar-'+cid;
+    const pct=Math.round(d.cur/d.plan*100);
+    const g=d.predict-d.plan;
+    const pctCls2=pct>=100?'g':pct>=85?'y':'r';
+
+    // L1/L2 entry only
+    const keyEntry=(d.entry||[]).filter(e=>e.lv==='L1'||e.lv==='L2');
+    const icEntryCount=(d.entry||[]).filter(e=>e.lv==='IC').length;
+    const keyDim=(d.dimission||[]);
+
+    // flow HTML
+    const mkPersons=(list,cls)=>list.map(e=>`
+      <div class="flow-person">
+        <div class="flow-av ${cls}">${initials(e.name)}</div>
+        <div class="flow-info">
+          <div class="flow-nm">${e.name}${lvTag(e.lv||'')}${e.type?'<span class="lv-tag" style="background:#dc2626;color:#fff">'+e.type+'</span>':''}</div>
+          <div class="flow-dept">${e.dept}</div>
         </div>
-        <table class="pt">
-          <thead><tr>
-            <th>部门</th>
-            <th class="r">Y26规划</th>
-            <th class="c">在职<span style="color:#1565c0;font-size:9px;font-weight:400"> 系统</span></th>
-            <th class="c">预计在职<span style="color:#1565c0;font-size:9px;font-weight:400"> 系统</span></th>
-            <th class="c">满编率</th>
-            <th class="c">HC Gap</th>
-            ${grp.showDiff?'<th class="c">diff vs actual</th>':''}
-          </tr></thead>
-          <tbody>${rows}</tbody>
-        </table>
-      </div>`;
-  });
-}
-function diffHtml(d){
-  if(d===undefined||d===null) return '<span class="nd">—</span>';
-  if(d>0) return '<span style="color:#2e7d32;font-weight:700">+'+d+'</span>';
-  if(d<0) return '<span style="color:#c62828;font-weight:700">'+d+'</span>';
-  return '<span style="color:#bbb">0</span>';
-}
+        <div class="flow-right"><div class="flow-date">${fmtD(e.date||e.date)}</div></div>
+      </div>`).join('');
 
-// ═══════════════════════════════════
-// FLOW CARDS
-// ═══════════════════════════════════
-function buildFlowCards(containerId, entry, dimission){
-  const wrap=document.getElementById(containerId);
-  // entry card
-  let entryRows=entry.length?entry.map(e=>`
-    <div class="flow-person">
-      <div class="flow-avatar">${initials(e.name)}</div>
-      <div class="flow-info">
-        <div class="flow-name">${e.name}${lvBadge(e.lv)}</div>
-        <div class="flow-dept">${e.dept}</div>
-      </div>
-      <div class="flow-meta">
-        <div class="flow-date">${fmtD(e.date)}</div>
-        <div style="font-size:10px;color:#aaa">${e.date>='2026-04'?'待入职':''}</div>
-      </div>
-    </div>`).join('')
-    :'<div class="flow-empty">暂无待入职人员</div>';
+    // sub table
+    let subHtml='';
+    if(d.subs&&d.subs.length){
+      const rows=d.subs.map(s=>{
+        const sg=(s.pred??s.predictHc??s.cur)-s.plan;
+        const spct=s.plan?Math.round((s.pred??s.cur)/s.plan*100):0;
+        const ov=sg>0,un=sg<0;
+        return `<tr class="${ov?'ov':un?'un':''}">
+          <td class="l">${s.n}</td>
+          <td>${s.l||'—'}</td>
+          <td style="color:#1d4ed8;font-weight:700">${s.cur}</td>
+          <td>${s.plan}</td>
+          <td style="color:#1976d2">${s.in??0}</td>
+          <td style="color:#dc2626">${s.out??0}</td>
+          <td style="color:#1d4ed8;font-weight:700">${s.pred??s.cur}</td>
+          <td>${gBadge(sg)}</td>
+          <td><span class="mini-bar"><span class="mini-fill${s.pred>s.plan?' ov':spct<85?' warn':''}" style="width:${Math.min(spct,100)}%"></span></span><span style="font-size:11px;font-weight:700;color:${s.pred>=s.plan?'#16a34a':'#dc2626'}">${spct}%</span></td>
+          ${s.match!==undefined?'<td>'+mtTag(s.match)+'</td>':''}
+        </tr>`;
+      }).join('');
+      subHtml=`<div class="dc-sub"><table class="sdt">
+        <thead><tr>
+          <th class="l">子组</th><th>负责人</th>
+          <th style="color:#1d4ed8">在职</th><th>目标</th>
+          <th>流入</th><th>流出</th>
+          <th style="color:#1d4ed8">预计</th>
+          <th>HC Gap</th><th>满编率</th>
+          ${d.subs[0]&&d.subs[0].match!==undefined?'<th>人岗匹配</th>':''}
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table></div>`;
+    }
 
-  let dimRows=dimission.length?dimission.map(e=>`
-    <div class="flow-person">
-      <div class="flow-avatar" style="background:linear-gradient(135deg,#c62828,#e57373)">${initials(e.name)}</div>
-      <div class="flow-info">
-        <div class="flow-name">${e.name}<span class="lv-badge ${e.type==='主动'?'lv-dim-active':'lv-dim-passive'}">${e.type}离职</span></div>
-        <div class="flow-dept">${e.dept}</div>
-      </div>
-      <div class="flow-meta">
-        <div class="flow-date" style="color:#c62828">${fmtD(e.date)}</div>
-      </div>
-    </div>`).join('')
-    :'<div class="flow-empty">暂无待离职人员</div>';
-
-  wrap.innerHTML=`
-    <div class="flow-card">
-      <div class="flow-card-hd">
-        <span class="flow-card-icon">↗️</span>
-        <span class="flow-card-title">流入在途</span>
-        <span class="flow-card-count in">${entry.length} 人</span>
-      </div>
-      ${entryRows}
-    </div>
-    <div class="flow-card">
-      <div class="flow-card-hd">
-        <span class="flow-card-icon">↘️</span>
-        <span class="flow-card-title">流出在途</span>
-        <span class="flow-card-count out">${dimission.length} 人</span>
-      </div>
-      ${dimRows}
-    </div>`;
-}
-
-// ═══════════════════════════════════
-// DETAIL CARD (折叠 + 图表 + 子组表)
-// ═══════════════════════════════════
-let dcCount=0;
-function buildDetailCard(containerId, topData, subs){
-  const cid='dc-'+(++dcCount);
-  const barId='bar-'+cid;
-  const wrap=document.getElementById(containerId);
-
-  // sub table rows
-  let subRows=subs.map(s=>{
-    const g=s.pred-s.plan;
-    const cls=g>0?' class="ov"':g<0?' class="un"':'';
-    const pct=s.plan?Math.round(s.pred/s.plan*100):0;
-    const pBar='<span class="mini-bar"><span class="mini-fill'+(s.pred>s.plan?' ov':'')+'" style="width:'+Math.min(pct,100)+'%"></span></span>';
-    return `<tr${cls}>
-      <td style="font-weight:600">${s.n}</td>
-      <td class="c">${s.l||'—'}</td>
-      <td class="c" style="color:#1565c0;font-weight:700">${s.cur}</td>
-      <td class="c">${s.plan}</td>
-      <td class="c"><span style="color:#1976d2">${s.in||0}</span></td>
-      <td class="c"><span style="color:#c62828">${s.out||0}</span></td>
-      <td class="c" style="color:#1565c0;font-weight:700">${s.pred}</td>
-      <td class="c">${gBadge(g,s.pred,s.plan)}</td>
-      <td class="c">${pBar}<span style="font-size:11px;font-weight:700;color:${s.pred>=s.plan?'#2e7d32':s.pred>=s.plan*0.85?'#888':'#c62828'}">${pct}%</span></td>
-      <td class="c">${s.match!==undefined?mtTag(s.match):''}</td>
-    </tr>`;
-  }).join('');
-
-  const g=topData.predict-topData.plan;
-  wrap.innerHTML=`
-    <div class="detail-card" id="${cid}">
-      <div class="detail-hd" onclick="toggleDetail('${cid}','${barId}')">
-        <div class="detail-hd-name">${topData.name}</div>
-        <div class="detail-hd-leader">负责人 · ${topData.leader||'—'}</div>
-        <div class="detail-hd-meta">
-          <span style="font-size:13px;font-weight:700;color:#1565c0">${topData.cur}</span>
-          <span style="font-size:11px;color:#aaa"> / 目标 ${topData.plan}</span>
-          ${gBadge(g,topData.predict,topData.plan)}
-          <span class="expand-arrow" id="arr-${cid}">▶</span>
+    el.innerHTML+=`
+    <div class="dc" id="${cid}">
+      <div class="dc-hd" onclick="toggleDC('${cid}','${barId}',${di})">
+        <div class="dc-hd-left">
+          <span class="dc-name">${d.name}</span>
+          ${d.leader&&d.leader!=='—'?'<span class="dc-leader">· '+d.leader+'</span>':''}
+          ${d.isReal?'<span style="font-size:10px;background:#DBEAFE;color:#1e40af;border-radius:4px;padding:1px 6px;font-weight:700">系统实时</span>':''}
+          ${d.isWarn?'<span style="font-size:10px;background:#FEE2E2;color:#991b1b;border-radius:4px;padding:1px 6px;font-weight:700">⚠ 重点关注</span>':''}
+        </div>
+        <div class="dc-hd-right">
+          <div class="dc-mini-stats">
+            <div class="dc-ms"><div class="dc-ms-val b">${d.cur}</div><div class="dc-ms-lbl">在职</div></div>
+            <div class="dc-ms"><div class="dc-ms-val">${d.plan}</div><div class="dc-ms-lbl">Y26规划</div></div>
+            <div class="dc-ms"><div class="dc-ms-val ${g>=0?'g':'r'}">${g>=0?'超':'缺'}${Math.abs(g)}</div><div class="dc-ms-lbl">Gap</div></div>
+          </div>
+          <span class="dc-pct-badge ${pctCls2}">${pct}%</span>
+          <span class="arr" id="arr-${cid}">▶</span>
         </div>
       </div>
-      <div class="detail-body" id="body-${cid}">
-        <div class="chart-area">
-          <div style="flex:1;min-width:0"><canvas id="${barId}" height="150"></canvas></div>
-          <div class="chart-legend-col">
-            <div class="cl-row"><span class="cl-dot" style="background:rgba(76,175,80,.8)"></span>在职</div>
-            <div class="cl-row"><span class="cl-dot" style="background:rgba(33,150,243,.25)"></span>目标</div>
-            <div class="cl-row"><span class="cl-dot" style="background:rgba(25,118,210,.7)"></span>预计在职</div>
+      <div class="dc-body" id="body-${cid}">
+        <div class="dc-metrics">
+          <div class="dc-m"><div class="dc-m-val b">${d.cur}</div><div class="dc-m-lbl">在职</div></div>
+          <div class="dc-m"><div class="dc-m-val">${d.plan}</div><div class="dc-m-lbl">Y26规划</div></div>
+          <div class="dc-m"><div class="dc-m-val b">${d.predict}</div><div class="dc-m-lbl">预计在职</div></div>
+          <div class="dc-m"><div class="dc-m-val" style="color:#1976d2">+${d.inHc}</div><div class="dc-m-lbl">流入在途</div></div>
+          <div class="dc-m"><div class="dc-m-val r">-${d.outHc}</div><div class="dc-m-lbl">流出在途</div></div>
+          <div class="dc-m"><div class="dc-m-val ${g>=0?'g':'r'}">${g>=0?'超':'缺'}${Math.abs(g)}</div><div class="dc-m-lbl">HC Gap</div></div>
+          <div class="dc-m"><div class="dc-m-val ${pctCls2}">${pct}%</div><div class="dc-m-lbl">满编率</div></div>
+        </div>
+        ${d.subs&&d.subs.length?`<div class="dc-chart"><canvas id="${barId}" height="120"></canvas></div>`:''}
+        <div class="dc-flow">
+          <div class="flow-blk">
+            <div class="flow-blk-title">↗ 关键人选 · 待入职 <span class="flow-count in">${keyEntry.length} L1/L2</span></div>
+            ${keyEntry.length?mkPersons(keyEntry,'in'):'<div class="flow-empty">暂无L1/L2待入职</div>'}
+            ${icEntryCount?'<div class="ic-note">另有 IC '+icEntryCount+' 人待入职</div>':''}
+          </div>
+          <div class="flow-blk">
+            <div class="flow-blk-title">↘ 人员流出 <span class="flow-count out">${keyDim.length}</span></div>
+            ${keyDim.length?mkPersons(keyDim,'out'):'<div class="flow-empty">暂无流出</div>'}
           </div>
         </div>
-        <div style="overflow-x:auto">
-          <table class="sdt">
-            <thead><tr>
-              <th>子组</th><th class="c">负责人</th>
-              <th class="c" style="color:#1565c0">在职</th><th class="c">目标</th>
-              <th class="c">流入</th><th class="c">流出</th>
-              <th class="c" style="color:#1565c0">预计</th>
-              <th class="c">HC Gap</th><th class="c">满编率</th>
-              ${subs[0]&&subs[0].match!==undefined?'<th class="c">人岗匹配</th>':''}
-            </tr></thead>
-            <tbody>${subRows}</tbody>
-          </table>
-        </div>
+        ${subHtml}
       </div>
     </div>`;
+  });
 }
 
-function toggleDetail(cid, barId){
+// ════════════════════════════════════════════
+// TOGGLE + CHART
+// ════════════════════════════════════════════
+function toggleDC(cid, barId, di){
   const body=document.getElementById('body-'+cid);
   const arr=document.getElementById('arr-'+cid);
   const isOpen=body.classList.toggle('open');
   arr.classList.toggle('open',isOpen);
-  if(isOpen && !_charts[barId]){
-    renderSubBar(barId, cid);
+  if(isOpen&&!_charts[barId]){
+    // find dept data
+    const allDepts=[...DEPTS.biz,...DEPTS.ecom,...DEPTS.func];
+    const d=allDepts.find(d=>document.getElementById(cid).querySelector('.dc-name').textContent===d.name);
+    if(d&&d.subs&&d.subs.length){
+      renderSubChart(barId, d.subs);
+    }
   }
 }
-
-function renderSubBar(barId, cid){
-  // find subs by card
-  const subs = cid.includes('dc-1') ? SYS.biz.subs : SYS.func1.subs;
+function renderSubChart(barId, subs){
   const canvas=document.getElementById(barId);
-  if(!canvas||!subs) return;
-  const labels=subs.map(s=>s.n.replace(/平台专家/g,'专家').replace(/行业/g,''));
+  if(!canvas||!subs.length) return;
+  const maxN=18;
+  const data=subs.slice(0,maxN);
+  const labels=data.map(s=>s.n.replace(/平台专家/g,'专家').replace(/商业化产品/g,'产品').replace(/行业BD/g,'BD'));
   if(_charts[barId]) _charts[barId].destroy();
   _charts[barId]=new Chart(canvas,{
     type:'bar',
     data:{
       labels,
       datasets:[
-        {label:'在职',data:subs.map(s=>s.cur),backgroundColor:'rgba(76,175,80,.8)',borderRadius:4,barPercentage:.5},
-        {label:'目标',data:subs.map(s=>s.plan),backgroundColor:'rgba(33,150,243,.18)',borderRadius:4,barPercentage:.5},
-        {label:'预计在职',data:subs.map(s=>s.pred),type:'line',
-          borderColor:'rgba(25,118,210,.8)',backgroundColor:'transparent',
-          pointBackgroundColor:'rgba(25,118,210,.8)',pointRadius:3,tension:.3,borderWidth:2,
+        {label:'在职',data:data.map(s=>s.cur),backgroundColor:'rgba(74,222,128,.85)',borderRadius:4,order:2},
+        {label:'目标',data:data.map(s=>s.plan),backgroundColor:'rgba(147,197,253,.4)',borderRadius:4,order:3},
+        {label:'预计在职',data:data.map(s=>s.pred??s.cur),type:'line',
+          borderColor:'rgba(29,78,216,.7)',backgroundColor:'transparent',
+          pointBackgroundColor:'rgba(29,78,216,.8)',pointRadius:3,tension:.3,borderWidth:2,order:1,
           yAxisID:'y'}
       ]
     },
@@ -758,16 +899,16 @@ function renderSubBar(barId, cid){
       interaction:{mode:'index',intersect:false},
       plugins:{legend:{display:false},tooltip:{bodyFont:{size:11},titleFont:{size:11}}},
       scales:{
-        x:{ticks:{font:{size:9},maxRotation:50},grid:{display:false}},
+        x:{ticks:{font:{size:9},maxRotation:45},grid:{display:false}},
         y:{ticks:{font:{size:9}},beginAtZero:true,grid:{color:'rgba(0,0,0,.04)'}}
       }
     }
   });
 }
 
-// ═══════════════════════════════════
-// TAB SWITCH
-// ═══════════════════════════════════
+// ════════════════════════════════════════════
+// TAB
+// ════════════════════════════════════════════
 function switchTab(id,btn){
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
@@ -776,49 +917,31 @@ function switchTab(id,btn){
   setTimeout(()=>Object.values(_charts).forEach(c=>c.resize&&c.resize()),30);
 }
 
-// ═══════════════════════════════════
+// ════════════════════════════════════════════
 // INIT
-// ═══════════════════════════════════
-(function init(){
-  const b=SYS.biz.top, f1=SYS.func1.top, f2=SYS.func2.top;
+// ════════════════════════════════════════════
+(function(){
+  const biz=DEPTS.biz, ecom=DEPTS.ecom, func=DEPTS.func;
+  const bt=totals(biz);
 
-  // BIZ hero
-  const bizHeroes=[
-    makeHero('行业一部',b.cur,b.plan,b.predict,'系统实时'),
-    makeHero('商业化 Total',b.cur, 2390, null,'仅行业一部有实时数据'),
-  ];
-  renderHeroRow('heroRow', bizHeroes);
+  // 商业化 tab
+  renderAlerts('alertStrip','alertTags',biz);
+  setTimeout(()=>renderBigDonut('bigDonut',bt.cur,bt.plan,bt.predict),100);
+  renderKpis('kpiGrid',biz);
+  renderDeptBars('deptBarList',biz,(name)=>{
+    // scroll to card
+    const cards=document.querySelectorAll('#bizCards .dc-name');
+    cards.forEach(c=>{if(c.textContent===name){c.closest('.dc').scrollIntoView({behavior:'smooth',block:'start'})}});
+  });
+  renderDeptCards('bizCards',biz);
 
-  // KPI
-  buildKpi();
+  // 电商 tab
+  renderDeptBars('ecomBarList',ecom);
+  renderDeptCards('ecomCards',ecom);
 
-  // Y26 tables - BIZ
-  buildY26Tables('y26Tables', Y26.biz);
-
-  // Flow
-  buildFlowCards('flowGrid', SYS.biz.entry, SYS.biz.dimission);
-
-  // Detail card — BIZ (default closed)
-  buildDetailCard('bizDetailCard', b, SYS.biz.subs);
-
-  // FUNC hero
-  const funcHeroes=[
-    makeHero('财务一组',f1.cur,f1.plan,f1.predict,'系统实时'),
-    makeHero('资本市场',f2.cur,f2.plan,f2.predict,'系统实时'),
-    makeHero('职能 Y26合计',f1.cur+f2.cur,272,null,'仅财务一组+资本市场实时'),
-    makeHero('战略 Y26合计',0,72,null,'暂无系统实时数据'),
-  ];
-  renderHeroRow('funcHeroRow', funcHeroes);
-
-  // Y26 tables - FUNC
-  const funcGroups = Y26.func.map(g=>({...g, showDiff:true}));
-  buildY26Tables('funcY26Tables', funcGroups);
-
-  // Flow - FUNC
-  buildFlowCards('funcFlowGrid', SYS.func1.entry, SYS.func1.dimission);
-
-  // Detail - func1
-  buildDetailCard('func1DetailCard', f1, SYS.func1.subs);
+  // 职能 tab
+  renderDeptBars('funcBarList',func);
+  renderDeptCards('funcCards',func);
 })();
 </script>
 </body>
