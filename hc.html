@@ -266,6 +266,14 @@ table.sdt tr.un{background:#FEF2F2}
   .tab-panel{padding:16px 16px 48px}
   .nav{padding:0 16px}
 }
+
+/* ── LOADING OVERLAY ── */
+#loadOverlay{position:fixed;inset:0;background:#F4FAF6;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+#loadOverlay.hidden{display:none}
+.load-spinner{width:44px;height:44px;border:4px solid #E5EAE7;border-top-color:#16a34a;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.load-txt{font-size:13px;color:#888;font-weight:500}
+.load-err{color:#dc2626;font-size:13px;font-weight:600;text-align:center;max-width:340px;line-height:1.6}
 </style>
 </head>
 <body>
@@ -417,6 +425,166 @@ table.sdt tr.un{background:#FEF2F2}
 
 <script>
 // ════════════════════════════════════════════
+
+// ════════════════════════════════════════════
+// Y26 规划（固定，不因权限变化）
+// ════════════════════════════════════════════
+const Y26 = {
+  // 商业化
+  "行业一部":164,"行业二部":90,"行业三部":157,"行业四部":207,"行业五部":90,
+  "行业六部":48,"行业七部":163,"行业八部":95,"行业九部":48,"渠道业务":94,
+  "生态一部":400,"生态二部":334,"创作者营销与商业服务":40,
+  "市场营销中台":160,"策略中台":89,"营销实验室":14,"商业产品":196,
+  // 电商
+  "商家发展":35,"蒲公英":35,"商业客服":34,"交易市场":19,
+  // 职能
+  "财务一组":51,"财务二组":16,"税务":12,"内控内审":12,"采购":18,
+  "投资部":16,"科技投资":2,"资本市场":5,"法务部":32,"DI":107,
+  "用研一组":11,"用研二组":10,"社区战略":11,"技术战略":11,"战略中台":9,
+  "交易战略":7,"商业战略":6,"hi lab战略组":5,"国际化战略":1,"战略部-非特":1,
+};
+
+
+// ════════════════════════════════════════════
+// 实时数据拉取（从浏览器直接调 HRBP 接口）
+// ════════════════════════════════════════════
+const BASE = 'https://hr.xiaohongshu.com/oasis/api/ehrworkbench';
+
+async function apiFetch(path, body) {
+  const opts = body
+    ? { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) }
+    : { method:'GET' };
+  const r = await fetch(BASE + path, opts);
+  const d = await r.json();
+  if (!d || d.code === 403) throw new Error('无权限: ' + path);
+  return d.data || d;
+}
+
+function lvMap(manageLevel) {
+  if (!manageLevel) return 'IC';
+  if (manageLevel.startsWith('L1')) return 'L1';
+  if (manageLevel.startsWith('L2')) return 'L2';
+  return 'IC';
+}
+
+function typeMap(dimissionTypeName) {
+  if (!dimissionTypeName) return '主动';
+  if (dimissionTypeName.includes('主动')) return '主动';
+  if (dimissionTypeName.includes('被动')) return '被动';
+  if (dimissionTypeName.includes('调动') || dimissionTypeName.includes('活水') || dimissionTypeName.includes('转')) return '转岗';
+  return '主动';
+}
+
+async function fetchDeptLive(deptId) {
+  // 子组
+  const subs = await apiFetch('/hrbp/pc/department/subDepartments', {departmentId: deptId, needChildren: true});
+  // 流入
+  const entryData = await apiFetch('/entry/pc/entryProcessDetail/query', {departmentIdList:[deptId], pageNum:1, pageSize:50});
+  // 流出
+  const dimData = await apiFetch('/dimission/pc/dimissionProcessDetail/query', {departmentIdList:[deptId], pageNum:1, pageSize:50});
+
+  const entryList = (Array.isArray(entryData) ? entryData : entryData.list || []);
+  const dimList   = (Array.isArray(dimData)   ? dimData   : dimData.list   || []);
+
+  const entry = entryList.map(e => ({
+    name: e.showName || e.employeeName || '?',
+    dept: e.departmentName || '',
+    date: e.entryDate || '',
+    lv:   lvMap(e.manageLevel),
+  }));
+  const dimission = dimList.map(e => ({
+    name: e.showName || e.employeeName || '?',
+    dept: e.departmentName || '',
+    date: e.lastDate || '',
+    type: typeMap(e.dimissionTypeName),
+    lv:   lvMap(e.manageLevel),
+  }));
+
+  // 子组汇总
+  const subArr = Array.isArray(subs) ? subs : [];
+  const flatSubs = subArr.flatMap(g => (g.children && g.children.length ? g.children : [g]));
+
+  return { entry, dimission, flatSubs };
+}
+
+async function fetchTopDepts() {
+  // 获取当前用户有权限的所有顶层部门
+  const data = await apiFetch('/hrbp/pc/department/query?departmentId=5000273');
+  // data 是数组，每个元素有 departmentId, departmentName, currentHc, totalHc
+  return Array.isArray(data) ? data : [];
+}
+
+// 将系统数据 merge 进 DEPTS 模板
+async function mergeSystemData() {
+  setLoad('正在获取部门权限…');
+  let topDepts;
+  try {
+    topDepts = await fetchTopDepts();
+  } catch(e) {
+    // 没有权限或未登录，用静态数据
+    return;
+  }
+
+  for (const top of topDepts) {
+    const deptId = top.departmentId;
+    const deptName = top.departmentName;
+    setLoad('正在拉取 ' + deptName + ' 数据…');
+
+    // 找到 DEPTS 里对应的部门对象
+    const all = [...DEPTS.biz, ...DEPTS.ecom, ...DEPTS.func];
+    const target = all.find(d => d.name === deptName);
+    if (!target) continue;
+
+    try {
+      const { entry, dimission, flatSubs } = await fetchDeptLive(deptId);
+      const cur = top.currentHc || target.cur;
+      const plan = Y26[deptName] || target.plan;
+      const inHc = entry.length;
+      const outHc = dimission.filter(e => e.type !== '转岗').length;
+      const predict = cur + inHc - outHc;
+
+      target.cur = cur;
+      target.plan = plan;
+      target.predict = predict;
+      target.inHc = inHc;
+      target.outHc = outHc;
+      target.entry = entry;
+      target.dimission = dimission;
+      target.isReal = true;
+
+      // 更新子组 cur
+      if (flatSubs.length) {
+        target.subs = flatSubs.map(s => ({
+          n: s.departmentName,
+          l: target.subs.find(x => x.n === s.departmentName)?.l || '—',
+          cur: s.currentHc || 0,
+          plan: Y26[s.departmentName] || (target.subs.find(x => x.n === s.departmentName)?.plan || 0),
+          in: 0, out: 0,
+          pred: s.currentHc || 0,
+        }));
+      }
+    } catch(e) {
+      // 单个部门失败不影响其他部门
+    }
+  }
+}
+
+function setLoad(txt) {
+  const el = document.getElementById('loadTxt');
+  if (el) el.textContent = txt;
+}
+function hideLoad() {
+  const el = document.getElementById('loadOverlay');
+  if (el) el.classList.add('hidden');
+}
+function showLoadErr(msg) {
+  document.getElementById('loadTxt').style.display='none';
+  document.querySelector('.load-spinner').style.display='none';
+  const err = document.getElementById('loadErr');
+  err.style.display='block';
+  err.innerHTML = msg;
+}
+
 // DATA — 全量模拟数据（含真实的行业一部）
 // ════════════════════════════════════════════
 const DEPTS = {
@@ -1180,7 +1348,15 @@ function buildSummaryTab(){
 // INIT
 // ════════════════════════════════════════════
 let _currentDepts=[];
-(function(){
+(async function(){
+  // 1. 先尝试从系统拉取实时数据（merge 进 DEPTS）
+  try {
+    await mergeSystemData();
+  } catch(e) {
+    // 静默失败，继续用静态数据
+  }
+  hideLoad();
+
   const biz=DEPTS.biz, ecom=DEPTS.ecom, func=DEPTS.func;
   const bt=totals(biz);
 
