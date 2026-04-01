@@ -461,7 +461,31 @@ table.sdt tr.un{background:#fef2f2}
       </div>
       <div style="margin-bottom:10px"><span style="font-size:10px;font-weight:700;color:#991b1b">⚠ 重点关注：</span><span style="font-size:10px;background:#FEE2E2;color:#991b1b;border-radius:4px;padding:1px 6px;margin-left:3px">税务</span><span style="font-size:10px;background:#FEE2E2;color:#991b1b;border-radius:4px;padding:1px 6px;margin-left:3px">DI</span><span style="font-size:10px;background:#FEE2E2;color:#991b1b;border-radius:4px;padding:1px 6px;margin-left:3px">战略中台</span></div>
       <div style="font-size:10px;color:#aaa;border-top:1px solid #f0f0f0;padding-top:8px">L1/L2待入职 <strong style="color:#1d4ed8">1</strong> 人 · 离职在途 <strong style="color:#dc2626">0</strong> · 转岗在途 <strong style="color:#7c3aed">0</strong> · <a href="javascript:void(0)" onclick="switchTabByName(&#39;func&#39;)" style="color:#1d4ed8">查看详情 →</a></div></div></div>
-  <div class="sh"><span class="sh-title">全部门满编率一览</span><span class="sh-note">🟢商业化 · 🔵电商 · 🟡职能 &nbsp;|&nbsp; 按满编率升序</span></div>
+  <div class="sh"><span class="sh-title">部门人力分布矩阵</span><span class="sh-note">横轴=满编率 · 纵轴=Y26规划规模 · 气泡=Gap大小</span></div>
+  <div class="matrix-wrap" style="background:#fff;border-radius:12px;border:1px solid #E5EAE7;padding:20px;margin-bottom:24px">
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#666"><span style="width:10px;height:10px;border-radius:50%;background:#22c55e"></span>商业化</div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#666"><span style="width:10px;height:10px;border-radius:50%;background:#3b82f6"></span>电商</div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#666"><span style="width:10px;height:10px;border-radius:50%;background:#f59e0b"></span>职能</div>
+      <div style="margin-left:auto;font-size:11px;color:#999">🔴 重点关注：左下（大规模+低满编）</div>
+    </div>
+    <canvas id="deptMatrixChart" height="320"></canvas>
+  </div>
+
+  <div class="sh"><span class="sh-title">流入流出 TOP5</span><span class="sh-note">人员流动最剧烈的部门</span></div>
+  <div class="flow-rank-wrap" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+    <div style="background:#fff;border-radius:12px;border:1px solid #E5EAE7;padding:16px">
+      <div style="font-size:13px;font-weight:700;color:#1d4ed8;margin-bottom:12px">↗ 流入 TOP5（待入职最多）</div>
+      <div id="inFlowTop5"></div>
+    </div>
+    <div style="background:#fff;border-radius:12px;border:1px solid #E5EAE7;padding:16px">
+      <div style="font-size:13px;font-weight:700;color:#dc2626;margin-bottom:12px">↘ 流出 TOP5（离职+转岗最多）</div>
+      <div id="outFlowTop5"></div>
+    </div>
+  </div>
+
+  <!-- OLD DESIGN - DEPRECATED -->
+  <div style="display:none">
   <div class="gap-overview">
     <div class="gap-ov-hd"><span class="gap-ov-title">所有部门（按满编率低→高）</span></div>
     <div class="dept-bar-list" id="summaryBarList"><div class="dept-bar-row"><div class="dept-bar-name">行业五部<span style="font-size:9px;color:#bbb;margin-left:4px">商业化</span></div>
@@ -5104,30 +5128,111 @@ function buildSummaryTab(){
     cardsEl.appendChild(div);
   });
 
-  // 全部门满编率条（按升序）
+  // 部门人力分布矩阵（散点图）
+  renderDeptMatrix();
+
+  // 流入流出 TOP5
+  renderFlowTop5();
+}
+
+function renderDeptMatrix(){
   const allDepts=[
-    ...DEPTS.biz.map(d=>({...d,_color:'#4ade80',_group:'商业化'})),
-    ...DEPTS.ecom.map(d=>({...d,_color:'#93c5fd',_group:'电商'})),
-    ...DEPTS.func.map(d=>({...d,_color:'#fcd34d',_group:'职能'})),
-  ].sort((a,b)=>(a.cur/a.plan)-(b.cur/b.plan));
-  const listEl=document.getElementById('summaryBarList');
-  listEl.innerHTML='';
-  allDepts.forEach(d=>{
-    const pct=d.cur/d.plan;
-    const g=d.predict-d.plan;
-    const maxW=Math.min(pct*100,120);
-    const row=document.createElement('div');
-    row.className='dept-bar-row';
-    row.innerHTML=`<div class="dept-bar-name">${d.name}<span style="font-size:9px;color:#bbb;margin-left:4px">${d._group}</span></div>
-      <div class="dept-bar-track">
-        <div class="dept-bar-fill" style="width:${maxW}%;background:${d._color}"></div>
-        <div class="dept-bar-plan-mark" style="left:100%"></div>
-      </div>
-      <div class="dept-bar-nums"><span class="dept-bar-cur">${d.cur}</span><span class="dept-bar-sep">/</span><span class="dept-bar-plan">${d.plan}</span><span style="font-size:10px;color:#bbb">${Math.round(pct*100)}%</span></div>
-      <div class="dept-bar-gap">${gBadge(g)}</div>
-      <div class="dept-bar-flow"><span style="color:#1d4ed8">↗${d.inHc||0}</span><span style="color:#dc2626">↘${(d.dimission||[]).filter(e=>e.type!=='转岗').length}</span><span style="color:#7c3aed">⇄${(d.dimission||[]).filter(e=>e.type==='转岗').length}</span><span style="color:#888">→${d.predict}</span></div>`;
-    listEl.appendChild(row);
+    ...DEPTS.biz.map(d=>({...d,_color:'#22c55e',_group:'商业化'})),
+    ...DEPTS.ecom.map(d=>({...d,_color:'#3b82f6',_group:'电商'})),
+    ...DEPTS.func.map(d=>({...d,_color:'#f59e0b',_group:'职能'})),
+  ];
+  const ctx=document.getElementById('deptMatrixChart');
+  if(!ctx)return;
+  new Chart(ctx,{
+    type:'bubble',
+    data:{
+      datasets:allDepts.map(d=>({
+        label:d.name,
+        data:[{
+          x:Math.round(d.cur/d.plan*100),
+          y:d.plan,
+          r:Math.min(Math.abs(d.predict-d.plan)/2+3,20)
+        }],
+        backgroundColor:d._color,
+        borderColor:d._color,
+        borderWidth:0
+      }))
+    },
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          callbacks:{
+            label:(ctx)=>{
+              const d=allDepts[ctx.datasetIndex];
+              return [`${d.name}(${d._group})`,`满编率: ${Math.round(d.cur/d.plan*100)}%`,`规划: ${d.plan}人`,
+                `Gap: ${d.predict>=d.plan?'超'+(d.predict-d.plan):'缺'+(d.plan-d.predict)}`,
+                `流入: ${d.inHc||0} / 流出: ${(d.dimission||[]).length}`];
+            }
+          }
+        }
+      },
+      scales:{
+        x:{
+          title:{display:true,text:'满编率 %',font:{size:11}},
+          min:60,max:135,
+          grid:{color:'#f0f0f0'}
+        },
+        y:{
+          title:{display:true,text:'Y26规划人数（规模）',font:{size:11}},
+          min:0,
+          grid:{color:'#f0f0f0'}
+        }
+      }
+    }
   });
+}
+
+function renderFlowTop5(){
+  const allDepts=[...DEPTS.biz,...DEPTS.ecom,...DEPTS.func];
+  const inTop=allDepts.sort((a,b)=>(b.inHc||0)-(a.inHc||0)).slice(0,5);
+  const outTop=allDepts.sort((a,b)=>{
+    const outA=(a.dimission||[]).length;
+    const outB=(b.dimission||[]).length;
+    return outB-outA;
+  }).slice(0,5);
+
+  const inEl=document.getElementById('inFlowTop5');
+  const outEl=document.getElementById('outFlowTop5');
+  if(inEl){
+    inEl.innerHTML=inTop.map((d,i)=>{
+      const pct=Math.round(d.cur/d.plan*100);
+      const barW=Math.min((d.inHc||0)/15*100,100);
+      return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:12px">
+        <span style="width:14px;text-align:center;color:#999">${i+1}</span>
+        <span style="flex:1;font-weight:600">${d.name}</span>
+        <span style="color:#666">${d.inHc||0}人</span>
+        <div style="width:80px;height:6px;background:#eef3ef;border-radius:3px;overflow:hidden">
+          <div style="width:${barW}%;height:100%;background:#1d4ed8;border-radius:3px"></div>
+        </div>
+        <span style="width:50px;text-align:right;color:${pct<85?'#dc2626':'#888'}">${pct}%</span>
+      </div>`;
+    }).join('');
+  }
+  if(outEl){
+    outEl.innerHTML=outTop.map((d,i)=>{
+      const out=(d.dimission||[]).length;
+      const dim=(d.dimission||[]).filter(e=>e.type!=='转岗').length;
+      const trans=(d.dimission||[]).filter(e=>e.type==='转岗').length;
+      const barW=Math.min(out/10*100,100);
+      return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:12px">
+        <span style="width:14px;text-align:center;color:#999">${i+1}</span>
+        <span style="flex:1;font-weight:600">${d.name}</span>
+        <span style="color:#666">${out}人</span>
+        <div style="width:80px;height:6px;background:#eef3ef;border-radius:3px;overflow:hidden">
+          <div style="width:${barW}%;height:100%;background:${trans>0?'#7c3aed':'#dc2626'};border-radius:3px"></div>
+        </div>
+        <span style="font-size:10px;color:#999">${dim>0?`离职${dim}`:''}${trans>0?`转岗${trans}`:''}</span>
+      </div>`;
+    }).join('');
+  }
 }
 
 // ════════════════════════════════════════════
