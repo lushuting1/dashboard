@@ -4,7 +4,59 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>组织管理看板</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
+function closeKpiModal(e){if(e.target===document.getElementById('kpiModal'))document.getElementById('kpiModal').style.display='none';}
+function showKpiModal(title, html){
+  document.getElementById('kpiModalTitle').innerHTML=title;
+  document.getElementById('kpiModalBody').innerHTML=html;
+  document.getElementById('kpiModal').style.display='block';
+}
+function kpiDetail(type, depts){
+  const allEntry=depts.flatMap(d=>d.entry||[]);
+  const allDim=depts.flatMap(d=>d.dimission||[]);
+  const dimOut=allDim.filter(e=>e.type==='主动'||e.type==='被动');
+  const transOut=allDim.filter(e=>e.type==='转岗');
+  const t=totals(depts);
+  const pct=Math.round(t.cur/t.plan*100);
+
+  const personRow=(e,tag)=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f5f5f5">
+    <div style="width:32px;height:32px;border-radius:50%;background:${tag==='in'?'#dbeafe':'#fee2e2'};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:${tag==='in'?'#1d4ed8':'#dc2626'};flex-shrink:0">${(e.name||'').replace(/[（(].*$/,'').trim().slice(0,2)}</div>
+    <div style="flex:1;min-width:0">
+      <div style="font-size:12px;font-weight:700;color:#1a1a1a">${e.name||''}${e.lv?'<span style="font-size:9px;background:'+(e.lv==='L1'?'#7c3aed':e.lv==='L2'?'#2563eb':'#888')+';color:#fff;border-radius:3px;padding:0 4px;margin-left:4px">'+e.lv+'</span>':''}</div>
+      <div style="font-size:10px;color:#aaa;margin-top:1px">${e.dept||''}</div>
+    </div>
+    <div style="text-align:right;flex-shrink:0">
+      <div style="font-size:10px;color:#888">${(e.date||'').slice(5)}</div>
+      ${e.type?'<div style="font-size:9px;margin-top:2px;padding:1px 6px;border-radius:4px;background:'+(e.type==='转岗'?'#f5f3ff':e.type==='主动'?'#fee2e2':'#fff7ed')+';color:'+(e.type==='转岗'?'#7c3aed':e.type==='主动'?'#dc2626':'#92400e')+'">'+e.type+'</div>':''}
+    </div>
+  </div>`;
+
+  let title='', body='';
+  if(type==='plan'){
+    title='📋 HC 规划详情';
+    body='<div style="font-size:13px;color:#444;line-height:2">Y26规划总目标 <strong style="font-size:22px;color:#1a1a1a">'+t.plan+'</strong> 人</div><div style="margin-top:12px;display:grid;grid-template-columns:repeat(2,1fr);gap:6px">'+depts.slice(0,10).map(d=>'<div style="background:#f8fafc;border-radius:8px;padding:8px 10px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;color:#666">'+d.name+'</span><span style="font-size:13px;font-weight:800;color:#1a1a1a">'+d.plan+'</span></div>').join('')+'</div>';
+  } else if(type==='cur'){
+    title='👥 在职人数明细';
+    body='<div style="font-size:13px;color:#444;line-height:2">当前在职 <strong style="font-size:22px;color:#1d4ed8">'+t.cur+'</strong> 人 · Y26规划 '+t.plan+' 人</div><div style="margin-top:12px;display:grid;grid-template-columns:repeat(2,1fr);gap:6px">'+depts.map(d=>{const p=Math.round(d.cur/d.plan*100);const c=p>=100?'#16a34a':p>=85?'#888':'#dc2626';return '<div style="background:#f8fafc;border-radius:8px;padding:8px 10px"><div style="display:flex;justify-content:space-between"><span style="font-size:10px;color:#888">'+d.name+'</span><span style="font-size:12px;font-weight:800;color:'+c+'">'+p+'%</span></div><div style="margin-top:4px;background:#e5e7eb;border-radius:3px;height:4px"><div style="height:4px;border-radius:3px;background:'+c+';width:'+Math.min(p,100)+'%"></div></div><div style="font-size:10px;color:#aaa;margin-top:2px">'+d.cur+' / '+d.plan+'</div></div>'}).join('')+'</div>';
+  } else if(type==='in'){
+    title='↗ 流入在途 · '+allEntry.length+'人';
+    body='<div style="margin-bottom:8px;font-size:11px;color:#aaa">按入职日期排序</div>'+allEntry.sort((a,b)=>a.date>b.date?1:-1).map(e=>personRow(e,'in')).join('')||'<div style="color:#aaa;text-align:center;padding:20px">暂无数据</div>';
+  } else if(type==='out'){
+    title='↘ 流出在途 · '+allDim.length+'人';
+    body=(allDim.length?allDim.sort((a,b)=>a.date>b.date?1:-1).map(e=>personRow(e,'out')).join(''):'<div style="color:#aaa;text-align:center;padding:20px">暂无数据</div>');
+  } else if(type==='predict'){
+    title='🎯 预计在职详情';
+    const g=t.predict-t.plan;
+    body='<div style="font-size:13px;color:#444;line-height:2">预计在职 <strong style="font-size:22px;color:'+(g>=0?'#16a34a':'#dc2626')+'">'+t.predict+'</strong> 人 · '+(g>=0?'<span style="color:#16a34a">超编 '+g+' 人</span>':'<span style="color:#dc2626">缺编 '+Math.abs(g)+' 人</span>')+'</div><div style="margin-top:12px;display:grid;grid-template-columns:repeat(2,1fr);gap:6px">'+depts.map(d=>{const pg=d.predict-d.plan;return '<div style="background:#f8fafc;border-radius:8px;padding:8px 10px"><div style="display:flex;justify-content:space-between"><span style="font-size:10px;color:#888">'+d.name+'</span><span style="font-size:12px;font-weight:800;color:'+(pg>0?'#dc2626':pg<0?'#1d4ed8':'#16a34a')+'">'+(pg>0?'超'+pg:pg<0?'缺'+Math.abs(pg):'达标')+'</span></div><div style="font-size:10px;color:#aaa;margin-top:2px">预计 '+d.predict+' / 规划 '+d.plan+'</div></div>'}).join('')+'</div>';
+  } else if(type==='pct'){
+    const warns=depts.filter(d=>d.cur/d.plan<0.85||d.isWarn);
+    title='📊 满编率分析';
+    body='<div style="font-size:13px;color:#444;margin-bottom:12px">整体满编率 <strong style="font-size:22px;color:'+(pct>=100?'#16a34a':pct>=85?'#888':'#dc2626')+'">'+pct+'%</strong></div>'+depts.sort((a,b)=>a.cur/a.plan-b.cur/b.plan).map(d=>{const p=Math.round(d.cur/d.plan*100);const cc=p>=100?'#16a34a':p>=85?'#888':'#dc2626';return '<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:11px;color:#555">'+d.name+'</span><span style="font-size:11px;font-weight:700;color:'+cc+'">'+p+'%</span></div><div style="background:#e5e7eb;border-radius:4px;height:6px"><div style="height:6px;border-radius:4px;background:'+cc+';width:'+Math.min(p,100)+'%;transition:width .3s"></div></div></div>'}).join('');
+  }
+  showKpiModal(title, body);
+}
+
+</script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",sans-serif;background:#F1F4F2;color:#1a1a1a;font-size:14px;line-height:1.5}
@@ -767,16 +819,17 @@ function renderKpis(containerId, depts){
   const flowOut=allDim.length;
   const gapText=t.predict>=t.plan?'超'+(t.predict-t.plan)+'人':t.predict<t.plan?'缺'+(t.plan-t.predict)+'人':'达标';
   const items=[
-    {v:t.plan,    lbl:'HC 规划',   sub:'Y26总目标',                             cls:'',                                accent:'gray',   icon:'📋'},
-    {v:t.cur,     lbl:'在职人数', sub:'系统实时',                               cls:'b',                               accent:'blue',   icon:'👥'},
-    {v:'+'+flowIn, lbl:'流入在途', sub:'L1/L2 '+(allEntry.filter(e=>e.lv==='L1'||e.lv==='L2').length)+' · IC '+(allEntry.filter(e=>!e.lv||e.lv==='IC').length), cls:'b', accent:'blue', icon:'↗'},
-    {v:'-'+flowOut,lbl:'流出在途', sub:'离职 '+dimOut.length+' · 转岗 '+transOut.length, cls:flowOut?'r':'',           accent:flowOut?'red':'gray', icon:'↘'},
-    {v:t.predict,  lbl:'预计在职', sub:gapText,                                 cls:'',                                accent:'green',  icon:'🎯'},
-    {v:pct+'%',    lbl:'满编率',   sub:t.cur+' / '+t.plan,                      cls:pct>=100?'g':pct>=85?'':'r',       accent:pct>=100?'green':pct>=85?'gray':'red', icon:'📊'},
+    {v:t.plan,     lbl:'HC 规划',  sub:'Y26总目标',                                                                    cls:'',  accent:'gray',                                 icon:'📋', action:'plan'},
+    {v:t.cur,      lbl:'在职人数', sub:'系统实时',                                                                     cls:'b', accent:'blue',                                 icon:'👥', action:'cur'},
+    {v:'+'+flowIn, lbl:'流入在途', sub:'L1/L2 '+(allEntry.filter(e=>e.lv==='L1'||e.lv==='L2').length)+' · IC '+(allEntry.filter(e=>!e.lv||e.lv==='IC').length), cls:'b', accent:'blue', icon:'↗', action:'in'},
+    {v:'-'+flowOut,lbl:'流出在途', sub:'离职 '+dimOut.length+' · 转岗 '+transOut.length,                               cls:flowOut?'r':'', accent:flowOut?'red':'gray',         icon:'↘', action:'out'},
+    {v:t.predict,  lbl:'预计在职', sub:gapText,                                                                        cls:'',  accent:'green',                                icon:'🎯', action:'predict'},
+    {v:pct+'%',    lbl:'满编率',   sub:t.cur+' / '+t.plan,                                                             cls:pct>=100?'g':pct>=85?'':'r', accent:pct>=100?'green':pct>=85?'gray':'red', icon:'📊', action:'pct'},
   ];
+  const _depts=depts;
   const el=document.getElementById(containerId);
   el.innerHTML=items.map(it=>`
-    <div class="kpi-card accent-${it.accent}">
+    <div class="kpi-card accent-${it.accent}" onclick="kpiDetail('${it.action}',_currentDepts)" style="cursor:pointer" title="点击查看明细">
       <div class="kpi-top">
         <div class="kpi-val ${it.cls||''}">${it.v}</div>
         <div class="kpi-icon">${it.icon}</div>
@@ -1031,6 +1084,9 @@ function switchTab(id,btn){
   document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
   document.getElementById('tab-'+id).classList.add('active');
   btn.classList.add('active');
+  if(id==='biz') _currentDepts=DEPTS.biz;
+  else if(id==='ecom') _currentDepts=DEPTS.ecom;
+  else if(id==='func') _currentDepts=DEPTS.func;
   setTimeout(()=>Object.values(_charts).forEach(c=>c.resize&&c.resize()),30);
 }
 
@@ -1122,9 +1178,12 @@ function buildSummaryTab(){
 // ════════════════════════════════════════════
 // INIT
 // ════════════════════════════════════════════
+let _currentDepts=[];
 (function(){
   const biz=DEPTS.biz, ecom=DEPTS.ecom, func=DEPTS.func;
   const bt=totals(biz);
+
+  _currentDepts=biz; // 默认总览tab点击KPI用商业化数据，切tab后自动更新
 
   // 商业化 tab
   renderAlerts('alertUrgent','alertUrgentTags','alertNotice','alertNoticeTags',biz);
@@ -1156,6 +1215,69 @@ function buildSummaryTab(){
   // 总览 tab
   buildSummaryTab();
 })();
+
+function closeKpiModal(e){if(e.target===document.getElementById('kpiModal'))document.getElementById('kpiModal').style.display='none';}
+function showKpiModal(title, html){
+  document.getElementById('kpiModalTitle').innerHTML=title;
+  document.getElementById('kpiModalBody').innerHTML=html;
+  document.getElementById('kpiModal').style.display='block';
+}
+function kpiDetail(type, depts){
+  const allEntry=depts.flatMap(d=>d.entry||[]);
+  const allDim=depts.flatMap(d=>d.dimission||[]);
+  const dimOut=allDim.filter(e=>e.type==='主动'||e.type==='被动');
+  const transOut=allDim.filter(e=>e.type==='转岗');
+  const t=totals(depts);
+  const pct=Math.round(t.cur/t.plan*100);
+
+  const personRow=(e,tag)=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f5f5f5">
+    <div style="width:32px;height:32px;border-radius:50%;background:${tag==='in'?'#dbeafe':'#fee2e2'};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:${tag==='in'?'#1d4ed8':'#dc2626'};flex-shrink:0">${(e.name||'').replace(/[（(].*$/,'').trim().slice(0,2)}</div>
+    <div style="flex:1;min-width:0">
+      <div style="font-size:12px;font-weight:700;color:#1a1a1a">${e.name||''}${e.lv?'<span style="font-size:9px;background:'+(e.lv==='L1'?'#7c3aed':e.lv==='L2'?'#2563eb':'#888')+';color:#fff;border-radius:3px;padding:0 4px;margin-left:4px">'+e.lv+'</span>':''}</div>
+      <div style="font-size:10px;color:#aaa;margin-top:1px">${e.dept||''}</div>
+    </div>
+    <div style="text-align:right;flex-shrink:0">
+      <div style="font-size:10px;color:#888">${(e.date||'').slice(5)}</div>
+      ${e.type?'<div style="font-size:9px;margin-top:2px;padding:1px 6px;border-radius:4px;background:'+(e.type==='转岗'?'#f5f3ff':e.type==='主动'?'#fee2e2':'#fff7ed')+';color:'+(e.type==='转岗'?'#7c3aed':e.type==='主动'?'#dc2626':'#92400e')+'">'+e.type+'</div>':''}
+    </div>
+  </div>`;
+
+  let title='', body='';
+  if(type==='plan'){
+    title='📋 HC 规划详情';
+    body='<div style="font-size:13px;color:#444;line-height:2">Y26规划总目标 <strong style="font-size:22px;color:#1a1a1a">'+t.plan+'</strong> 人</div><div style="margin-top:12px;display:grid;grid-template-columns:repeat(2,1fr);gap:6px">'+depts.slice(0,10).map(d=>'<div style="background:#f8fafc;border-radius:8px;padding:8px 10px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;color:#666">'+d.name+'</span><span style="font-size:13px;font-weight:800;color:#1a1a1a">'+d.plan+'</span></div>').join('')+'</div>';
+  } else if(type==='cur'){
+    title='👥 在职人数明细';
+    body='<div style="font-size:13px;color:#444;line-height:2">当前在职 <strong style="font-size:22px;color:#1d4ed8">'+t.cur+'</strong> 人 · Y26规划 '+t.plan+' 人</div><div style="margin-top:12px;display:grid;grid-template-columns:repeat(2,1fr);gap:6px">'+depts.map(d=>{const p=Math.round(d.cur/d.plan*100);const c=p>=100?'#16a34a':p>=85?'#888':'#dc2626';return '<div style="background:#f8fafc;border-radius:8px;padding:8px 10px"><div style="display:flex;justify-content:space-between"><span style="font-size:10px;color:#888">'+d.name+'</span><span style="font-size:12px;font-weight:800;color:'+c+'">'+p+'%</span></div><div style="margin-top:4px;background:#e5e7eb;border-radius:3px;height:4px"><div style="height:4px;border-radius:3px;background:'+c+';width:'+Math.min(p,100)+'%"></div></div><div style="font-size:10px;color:#aaa;margin-top:2px">'+d.cur+' / '+d.plan+'</div></div>'}).join('')+'</div>';
+  } else if(type==='in'){
+    title='↗ 流入在途 · '+allEntry.length+'人';
+    body='<div style="margin-bottom:8px;font-size:11px;color:#aaa">按入职日期排序</div>'+allEntry.sort((a,b)=>a.date>b.date?1:-1).map(e=>personRow(e,'in')).join('')||'<div style="color:#aaa;text-align:center;padding:20px">暂无数据</div>';
+  } else if(type==='out'){
+    title='↘ 流出在途 · '+allDim.length+'人';
+    body=(allDim.length?allDim.sort((a,b)=>a.date>b.date?1:-1).map(e=>personRow(e,'out')).join(''):'<div style="color:#aaa;text-align:center;padding:20px">暂无数据</div>');
+  } else if(type==='predict'){
+    title='🎯 预计在职详情';
+    const g=t.predict-t.plan;
+    body='<div style="font-size:13px;color:#444;line-height:2">预计在职 <strong style="font-size:22px;color:'+(g>=0?'#16a34a':'#dc2626')+'">'+t.predict+'</strong> 人 · '+(g>=0?'<span style="color:#16a34a">超编 '+g+' 人</span>':'<span style="color:#dc2626">缺编 '+Math.abs(g)+' 人</span>')+'</div><div style="margin-top:12px;display:grid;grid-template-columns:repeat(2,1fr);gap:6px">'+depts.map(d=>{const pg=d.predict-d.plan;return '<div style="background:#f8fafc;border-radius:8px;padding:8px 10px"><div style="display:flex;justify-content:space-between"><span style="font-size:10px;color:#888">'+d.name+'</span><span style="font-size:12px;font-weight:800;color:'+(pg>0?'#dc2626':pg<0?'#1d4ed8':'#16a34a')+'">'+(pg>0?'超'+pg:pg<0?'缺'+Math.abs(pg):'达标')+'</span></div><div style="font-size:10px;color:#aaa;margin-top:2px">预计 '+d.predict+' / 规划 '+d.plan+'</div></div>'}).join('')+'</div>';
+  } else if(type==='pct'){
+    const warns=depts.filter(d=>d.cur/d.plan<0.85||d.isWarn);
+    title='📊 满编率分析';
+    body='<div style="font-size:13px;color:#444;margin-bottom:12px">整体满编率 <strong style="font-size:22px;color:'+(pct>=100?'#16a34a':pct>=85?'#888':'#dc2626')+'">'+pct+'%</strong></div>'+depts.sort((a,b)=>a.cur/a.plan-b.cur/b.plan).map(d=>{const p=Math.round(d.cur/d.plan*100);const cc=p>=100?'#16a34a':p>=85?'#888':'#dc2626';return '<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:11px;color:#555">'+d.name+'</span><span style="font-size:11px;font-weight:700;color:'+cc+'">'+p+'%</span></div><div style="background:#e5e7eb;border-radius:4px;height:6px"><div style="height:6px;border-radius:4px;background:'+cc+';width:'+Math.min(p,100)+'%;transition:width .3s"></div></div></div>'}).join('');
+  }
+  showKpiModal(title, body);
+}
+
 </script>
+
+<!-- KPI Modal -->
+<div id="kpiModal" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.45);backdrop-filter:blur(4px)" onclick="closeKpiModal(event)">
+  <div id="kpiModalBox" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;border-radius:20px;padding:28px 32px;min-width:340px;max-width:520px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.2);max-height:80vh;overflow-y:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+      <div id="kpiModalTitle" style="font-size:15px;font-weight:800;color:#1a1a1a"></div>
+      <button onclick="document.getElementById('kpiModal').style.display='none'" style="background:none;border:none;font-size:20px;cursor:pointer;color:#aaa;line-height:1">×</button>
+    </div>
+    <div id="kpiModalBody"></div>
+  </div>
+</div>
 </body>
 </html>
