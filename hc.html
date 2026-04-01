@@ -7,895 +7,819 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",sans-serif;background:#F0F4F1;color:#1a1a1a;font-size:14px;line-height:1.5}
-a{color:#1a7a4a;text-decoration:none}
-a:hover{text-decoration:underline}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",sans-serif;background:#F2F5F3;color:#1a1a1a;font-size:14px;line-height:1.5}
 
-/* ── TOP NAV ── */
-.topnav{background:linear-gradient(135deg,#1a5c36 0%,#2d8653 60%,#1e7a47 100%);padding:0 32px;display:flex;align-items:stretch;gap:0;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.18)}
-.topnav-brand{display:flex;align-items:center;gap:10px;padding:14px 0;margin-right:28px}
-.topnav-logo{font-size:22px}
-.topnav-title{font-size:15px;font-weight:700;color:#fff}
-.topnav-tabs{display:flex;align-items:stretch}
-.nav-tab{background:none;border:none;padding:0 20px;font-size:13px;font-weight:500;color:rgba(255,255,255,.65);cursor:pointer;border-bottom:3px solid transparent;transition:all .15s;display:flex;align-items:center;gap:6px}
+/* ── NAV ── */
+.nav{background:linear-gradient(135deg,#14472e 0%,#1e6b43 55%,#166036 100%);padding:0 36px;display:flex;align-items:stretch;position:sticky;top:0;z-index:300;box-shadow:0 2px 16px rgba(0,0,0,.22)}
+.nav-brand{display:flex;align-items:center;gap:0;padding:16px 0;margin-right:32px;border-right:1px solid rgba(255,255,255,.12);padding-right:28px}
+.nav-title{font-size:16px;font-weight:800;color:#fff;letter-spacing:.2px}
+.nav-subtitle{font-size:11px;color:rgba(255,255,255,.45);margin-left:10px;padding-top:3px}
+.nav-tabs{display:flex;align-items:stretch;margin-left:4px}
+.nav-tab{background:none;border:none;padding:0 20px;font-size:13px;font-weight:500;color:rgba(255,255,255,.6);cursor:pointer;border-bottom:3px solid transparent;transition:all .15s;display:flex;align-items:center;gap:5px}
 .nav-tab:hover{color:rgba(255,255,255,.9)}
-.nav-tab.active{color:#fff;border-bottom-color:#7FFFD4;font-weight:700}
-.topnav-time{margin-left:auto;display:flex;align-items:center;font-size:11px;color:rgba(255,255,255,.45);padding:14px 0}
-
-/* ── SUMMARY STRIP ── */
-.summary-strip{background:#fff;border-bottom:2px solid #E4EDE8;padding:0 32px;overflow-x:auto}
-.summary-row{display:flex;min-width:600px}
-.sum-card{flex:1;padding:14px 20px;border-right:1px solid #EEF3EF;cursor:pointer;transition:background .15s}
-.sum-card:last-child{border-right:none}
-.sum-card:hover{background:#F4FAF6}
-.sum-label{font-size:10px;color:#aaa;font-weight:600;letter-spacing:.4px;margin-bottom:3px}
-.sum-val{font-size:24px;font-weight:800;line-height:1;color:#1a1a1a}
-.sum-val.g{color:#2e7d32}.sum-val.r{color:#c62828}.sum-val.b{color:#1565c0}
-.sum-sub{font-size:11px;color:#888;margin-top:4px;display:flex;gap:8px;flex-wrap:wrap}
-.seg{font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px}
-.seg-biz{background:#E8F5E9;color:#2e7d32}
-.seg-eco{background:#E3F2FD;color:#1565c0}
-.seg-func{background:#FFF3E0;color:#e65100}
-
-/* ── ALERT BAR ── */
-.alert-bar{margin:14px 32px;background:#FFFBF0;border:1px solid #FFD54F;border-radius:10px;padding:11px 16px;display:flex;align-items:flex-start;gap:10px}
-.alert-bar.hidden{display:none}
-.alert-icon{font-size:16px;flex-shrink:0;margin-top:2px}
-.alert-title{font-weight:700;font-size:12px;color:#B45309;margin-bottom:5px}
-.alert-tags{display:flex;flex-wrap:wrap;gap:6px}
-.alert-tag{font-size:11px;padding:3px 9px;border-radius:6px;font-weight:600}
-.alert-tag.vacancy{background:#FFEBEE;color:#c62828;border:1px solid #EF9A9A}
-.alert-tag.overstaff{background:#F1F8E9;color:#2e7d32;border:1px solid #A5D6A7}
+.nav-tab.active{color:#fff;border-bottom-color:#52e8a0;font-weight:700}
+.nav-time{margin-left:auto;font-size:11px;color:rgba(255,255,255,.4);display:flex;align-items:center;gap:6px}
+.nav-dot{width:6px;height:6px;border-radius:50%;background:#52e8a0;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
 /* ── TAB PANELS ── */
-.tab-panel{display:none;padding:20px 32px 60px}
+.tab-panel{display:none;padding:28px 36px 64px}
 .tab-panel.active{display:block}
 
-/* ── SECTION TITLE ── */
-.sec-head{display:flex;align-items:center;gap:10px;margin:20px 0 12px}
-.sec-title{font-size:15px;font-weight:800;color:#1a1a1a}
-.sec-badge{font-size:11px;font-weight:700;background:#E8F5E9;color:#2e7d32;border-radius:20px;padding:2px 10px}
-.sec-badge.gray{background:#F0F0F0;color:#888}
-.sec-note{font-size:11px;color:#aaa;margin-left:auto}
+/* ── SECTION ── */
+.sec{margin-bottom:28px}
+.sec-hd{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.sec-title{font-size:14px;font-weight:800;color:#1a1a1a;letter-spacing:.2px}
+.sec-tag{font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px;background:#E8F5E9;color:#2e7d32}
+.sec-tag.blue{background:#E3F2FD;color:#1565c0}
+.sec-tag.gray{background:#F0F0F0;color:#888}
+.sec-note{font-size:11px;color:#bbb;margin-left:auto}
 
-/* ── Y26 TABLE (multi-dept overview) ── */
-.y26-table-wrap{background:#fff;border-radius:12px;border:1px solid #E4EDE8;overflow:hidden;margin-bottom:20px;box-shadow:0 1px 6px rgba(26,92,54,.06)}
-table.y26t{width:100%;border-collapse:collapse;font-size:12px}
-table.y26t th{padding:9px 12px;text-align:center;font-size:10px;font-weight:700;color:#888;background:#FAFCFA;border-bottom:2px solid #E4EDE8;white-space:nowrap}
-table.y26t th.left{text-align:left}
-table.y26t td{padding:8px 12px;border-bottom:1px solid #F2F6F3;text-align:center;vertical-align:middle}
-table.y26t td.left{text-align:left}
-table.y26t tr:hover{background:#FAFDF9}
-table.y26t tr.total-row td{background:#F4FAF6;font-weight:700;border-top:2px solid #C8E6C9}
-table.y26t tr.total-row td.left{font-weight:800;color:#1a5c36}
-table.y26t tr.has-sys td.dept-cell::after{content:'实时';font-size:9px;background:#E3F2FD;color:#1565c0;border-radius:3px;padding:1px 4px;margin-left:5px;font-weight:600;vertical-align:middle}
-.sys-num{color:#1565c0;font-weight:700}
-.plan-num{font-weight:700;color:#1a1a1a}
-.no-d{color:#ccc}
-.gap-pill{display:inline-block;font-size:10px;font-weight:700;border-radius:10px;padding:2px 8px;white-space:nowrap}
-.gv{background:#FFEBEE;color:#c62828;border:1px solid #EF9A9A}
-.go{background:#F1F8E9;color:#2e7d32;border:1px solid #A5D6A7}
-.gf{background:#F5F5F5;color:#888;border:1px solid #DDD}
+/* ══════════════════════════════
+   HERO — 环形图阵列
+══════════════════════════════ */
+.hero-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:28px}
+.hero-card{background:#fff;border-radius:16px;border:1px solid #E4EDE8;padding:20px 16px 16px;display:flex;flex-direction:column;align-items:center;box-shadow:0 2px 10px rgba(20,71,46,.07);transition:box-shadow .15s;cursor:default;position:relative}
+.hero-card:hover{box-shadow:0 6px 24px rgba(20,71,46,.13)}
+.hero-card-label{font-size:11px;font-weight:700;color:#888;letter-spacing:.4px;margin-bottom:10px;text-align:center}
+.hero-donut{position:relative;width:100px;height:100px}
+.hero-donut canvas{position:absolute;top:0;left:0}
+.hero-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none}
+.hero-pct{font-size:20px;font-weight:900;line-height:1}
+.hero-pct.over{color:#2e7d32}
+.hero-pct.under{color:#c62828}
+.hero-pct.ok{color:#1976d2}
+.hero-nums{font-size:10px;color:#aaa;margin-top:2px}
+.hero-footer{margin-top:10px;width:100%;display:flex;justify-content:center;gap:12px}
+.hero-kv{text-align:center}
+.hero-kv-val{font-size:15px;font-weight:800;color:#1a1a1a}
+.hero-kv-lbl{font-size:9px;color:#bbb;letter-spacing:.3px}
+.hero-gap{position:absolute;top:12px;right:14px}
 
-/* ── DEPT CARD (rich, collapsible) ── */
-.dept-cards{display:flex;flex-direction:column;gap:12px}
-.dept-card{background:#fff;border-radius:12px;border:1px solid #E4EDE8;overflow:hidden;transition:box-shadow .15s}
-.dept-card:hover{box-shadow:0 3px 16px rgba(26,92,54,.09)}
+/* ══════════════════════════════
+   KPI STRIP
+══════════════════════════════ */
+.kpi-strip{background:#fff;border-radius:14px;border:1px solid #E4EDE8;display:flex;margin-bottom:28px;overflow:hidden;box-shadow:0 1px 6px rgba(20,71,46,.06)}
+.kpi-item{flex:1;padding:16px 20px;border-right:1px solid #EEF3EF;text-align:center}
+.kpi-item:last-child{border-right:none}
+.kpi-val{font-size:28px;font-weight:900;line-height:1;color:#1a1a1a}
+.kpi-val.g{color:#2e7d32}.kpi-val.r{color:#c62828}.kpi-val.b{color:#1565c0}
+.kpi-lbl{font-size:10px;color:#aaa;margin-top:4px;font-weight:600;letter-spacing:.3px}
+.kpi-sub{font-size:11px;color:#888;margin-top:5px}
 
-.dept-head{padding:14px 20px 10px;border-bottom:1px solid #F0F5F1;cursor:pointer;user-select:none}
-.dept-head-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.dept-name{font-size:15px;font-weight:700;color:#1a1a1a}
-.dept-lv{font-size:10px;background:#E8F5E9;color:#2e7d32;border-radius:4px;padding:2px 7px;font-weight:700}
-.dept-leader{font-size:12px;color:#888;margin-left:auto;padding-right:8px}
-.expand-icon{font-size:11px;color:#bbb;transition:transform .22s;flex-shrink:0}
-.expand-icon.open{transform:rotate(90deg)}
+/* ══════════════════════════════
+   PROGRESS TABLE (满编率)
+══════════════════════════════ */
+.prog-table-wrap{background:#fff;border-radius:14px;border:1px solid #E4EDE8;overflow:hidden;box-shadow:0 1px 6px rgba(20,71,46,.06)}
+.prog-table-wrap + .prog-table-wrap{margin-top:14px}
+.prog-group-hd{padding:10px 20px;background:#F4FAF6;border-bottom:1px solid #E8EDE9;font-size:11px;font-weight:700;color:#2e7d32;letter-spacing:.3px;display:flex;align-items:center;gap:10px}
+table.pt{width:100%;border-collapse:collapse}
+table.pt th{padding:8px 16px;font-size:10px;font-weight:700;color:#aaa;text-align:left;border-bottom:1px solid #EEF3EF;background:#FAFCFA;white-space:nowrap}
+table.pt th.r{text-align:right}
+table.pt th.c{text-align:center}
+table.pt td{padding:10px 16px;border-bottom:1px solid #F5F8F5;font-size:13px;vertical-align:middle}
+table.pt td.r{text-align:right}
+table.pt td.c{text-align:center}
+table.pt tr:last-child td{border-bottom:none}
+table.pt tr:hover{background:#FAFDF9}
+table.pt tr.total td{background:#F4FAF6;font-weight:700;border-top:2px solid #C8E6C9}
+.sys-val{color:#1565c0;font-weight:700}
+.nd{color:#d0d0d0;font-size:12px}
+/* progress bar */
+.prog-bar{height:6px;background:#EEF3EF;border-radius:4px;overflow:hidden;width:80px;display:inline-block;vertical-align:middle;margin-right:6px}
+.prog-fill{height:100%;border-radius:4px;background:#4CAF50;transition:width .3s}
+.prog-fill.over{background:#E53935}
+.prog-fill.warn{background:#FF9800}
+.pct-num{font-size:12px;font-weight:700;display:inline-block;vertical-align:middle}
+.pct-num.over{color:#c62828}
+.pct-num.ok{color:#2e7d32}
+.pct-num.warn{color:#e65100}
+/* gap badge */
+.gbadge{display:inline-block;font-size:10px;font-weight:700;border-radius:10px;padding:2px 8px}
+.gbadge.o{background:#E8F5E9;color:#2e7d32;border:1px solid #A5D6A7}
+.gbadge.v{background:#FFEBEE;color:#c62828;border:1px solid #EF9A9A}
+.gbadge.f{background:#F5F5F5;color:#888;border:1px solid #DDD}
+/* dept name */
+.dept-nm{font-weight:600;color:#1a1a1a}
+.dept-nm.has-sys::after{content:'实时';font-size:9px;background:#E3F2FD;color:#1565c0;border-radius:3px;padding:1px 4px;margin-left:5px;font-weight:700;vertical-align:middle}
 
-.dept-body{display:none}
-.dept-body.open{display:block}
+/* ══════════════════════════════
+   FLOW CARDS (流入/流出)
+══════════════════════════════ */
+.flow-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.flow-card{background:#fff;border-radius:14px;border:1px solid #E4EDE8;overflow:hidden;box-shadow:0 1px 6px rgba(20,71,46,.06)}
+.flow-card-hd{padding:11px 18px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #F0F5F1}
+.flow-card-icon{font-size:14px}
+.flow-card-title{font-size:12px;font-weight:700;color:#1a1a1a}
+.flow-card-count{margin-left:auto;font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px}
+.flow-card-count.in{background:#E3F2FD;color:#1565c0}
+.flow-card-count.out{background:#FFEBEE;color:#c62828}
+.flow-person{display:flex;align-items:center;gap:10px;padding:9px 18px;border-bottom:1px solid #F8FAF9}
+.flow-person:last-child{border-bottom:none}
+.flow-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#2d8653,#1565c0);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.flow-info{flex:1;min-width:0}
+.flow-name{font-size:13px;font-weight:600;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.flow-dept{font-size:11px;color:#aaa}
+.flow-meta{flex-shrink:0;text-align:right}
+.flow-date{font-size:11px;color:#888;font-weight:600}
+.lv-badge{display:inline-block;font-size:9px;font-weight:700;border-radius:3px;padding:1px 5px;margin-left:4px}
+.lv-l1{background:#1b5e20;color:#fff}
+.lv-l2{background:#4a148c;color:#fff}
+.lv-ic{background:#546e7a;color:#fff}
+.lv-dim-active{background:#e65100;color:#fff}
+.lv-dim-passive{background:#c62828;color:#fff}
+.flow-empty{padding:18px;text-align:center;color:#ccc;font-size:12px}
 
-/* ── METRICS ROW ── */
-.dept-metrics{padding:10px 20px;display:flex;gap:0;border-bottom:1px solid #F5F8F5;flex-wrap:wrap}
-.metric{flex:1;min-width:80px;text-align:center;border-right:1px solid #F0F5F1;padding:4px 0}
-.metric:last-child{border-right:none}
-.metric-val{font-size:18px;font-weight:800;color:#1a1a1a;line-height:1}
-.metric-val.sys{color:#1565c0}
-.metric-val.in{color:#1976d2}
-.metric-val.out{color:#c62828}
-.metric-val.gv{color:#c62828}
-.metric-val.go{color:#2e7d32}
-.metric-lbl{font-size:10px;color:#aaa;margin-top:2px}
+/* ══════════════════════════════
+   SUBDEPT DETAIL CARD (折叠)
+══════════════════════════════ */
+.detail-card{background:#fff;border-radius:14px;border:1px solid #E4EDE8;overflow:hidden;box-shadow:0 1px 6px rgba(20,71,46,.06)}
+.detail-hd{padding:14px 20px;cursor:pointer;user-select:none;display:flex;align-items:center;gap:12px;border-bottom:1px solid #F0F5F1}
+.detail-hd:hover{background:#FAFDF9}
+.detail-hd-name{font-size:14px;font-weight:700;color:#1a1a1a}
+.detail-hd-leader{font-size:12px;color:#aaa}
+.detail-hd-meta{margin-left:auto;display:flex;align-items:center;gap:10px}
+.expand-arrow{font-size:11px;color:#ccc;transition:transform .2s}
+.expand-arrow.open{transform:rotate(90deg)}
+.detail-body{display:none}
+.detail-body.open{display:block}
 
-/* ── CHART ROW ── */
-.dept-charts{padding:12px 20px;display:flex;gap:16px;border-bottom:1px solid #F5F8F5;align-items:center;flex-wrap:wrap}
-.chart-donut{flex-shrink:0}
-.chart-legend{display:flex;flex-direction:column;gap:4px}
-.legend-row{display:flex;align-items:center;gap:6px;font-size:11px;color:#666}
-.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.chart-bar-wrap{flex:1;min-width:200px}
-.chart-bar-title{font-size:10px;font-weight:700;color:#aaa;letter-spacing:.4px;margin-bottom:6px}
+/* bar chart area */
+.chart-area{padding:16px 20px;border-bottom:1px solid #F0F5F1;display:flex;gap:20px;align-items:flex-start}
+.chart-area canvas{max-height:160px}
+.chart-legend-col{display:flex;flex-direction:column;gap:6px;flex-shrink:0;justify-content:center}
+.cl-row{display:flex;align-items:center;gap:6px;font-size:11px;color:#666}
+.cl-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
 
-/* ── FLOW SECTION ── */
-.dept-flow{padding:10px 20px;display:flex;gap:12px;border-bottom:1px solid #F5F8F5;flex-wrap:wrap}
-.flow-block{flex:1;min-width:130px;background:#FAFCFA;border-radius:8px;padding:8px 12px}
-.flow-title{font-size:10px;font-weight:700;color:#888;letter-spacing:.4px;margin-bottom:5px}
-.flow-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:2px 0}
-.flow-key{color:#666}
-.flow-num{font-weight:700}
-.flow-num.b{color:#1976d2}.flow-num.r{color:#c62828}.flow-num.g{color:#aaa}
-
-/* ── L1 PILLS ── */
-.dept-l1{padding:8px 20px;border-bottom:1px solid #F5F8F5}
-.l1-title{font-size:10px;font-weight:700;color:#2e7d32;margin-bottom:5px}
-.l1-pills{display:flex;gap:6px;flex-wrap:wrap}
-.l1-pill{background:#E8F5E9;border:1px solid #A5D6A7;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600;color:#1b5e20;cursor:pointer}
-.l1-pill:hover{background:#C8E6C9}
-
-/* ── IC BAR ── */
-.ic-bar{padding:6px 20px 10px;font-size:11px;color:#888}
-.ic-bar span{font-weight:600;color:#555}
-
-/* ── SUB-DEPT TABLE ── */
-.subdept-wrap{overflow-x:auto;border-top:1px solid #F0F5F1}
-table.st{width:100%;border-collapse:collapse;font-size:12px}
-table.st th{padding:6px 11px;text-align:left;color:#aaa;font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:.3px;border-bottom:1px solid #EEF3EF;background:#FAFCFA;white-space:nowrap}
-table.st td{padding:7px 11px;border-bottom:1px solid #F5F8F5;vertical-align:middle}
-table.st tr:last-child td{border-bottom:none}
-table.st tr.rv{background:#FFF5F5}
-table.st tr.ro{background:#F6FFF6}
-.mini-bar{width:64px;height:4px;background:#EEF3EF;border-radius:3px;overflow:hidden;display:inline-block;vertical-align:middle;margin-right:3px}
-.mini-fill{height:100%;border-radius:3px;background:#4CAF50}
-.mini-fill.over{background:#E53935}
-.match-tag{font-size:10px;border-radius:3px;padding:1px 5px;font-weight:600}
+/* subdept table */
+table.sdt{width:100%;border-collapse:collapse;font-size:12px}
+table.sdt th{padding:7px 14px;font-size:10px;font-weight:700;color:#aaa;text-align:left;border-bottom:1px solid #EEF3EF;background:#FAFCFA;white-space:nowrap}
+table.sdt th.c{text-align:center}
+table.sdt td{padding:8px 14px;border-bottom:1px solid #F5F8F5;vertical-align:middle}
+table.sdt td.c{text-align:center}
+table.sdt tr:last-child td{border-bottom:none}
+table.sdt tr.ov{background:#F6FFF6}
+table.sdt tr.un{background:#FFF5F5}
+.mt{font-size:10px;border-radius:3px;padding:1px 5px;font-weight:600}
 .mt-exc{background:#E8F5E9;color:#2e7d32}
 .mt-mat{background:#E8F4FF;color:#1565c0}
 .mt-na{background:#F5F5F5;color:#aaa}
+.mini-bar{width:56px;height:4px;background:#EEF3EF;border-radius:3px;overflow:hidden;display:inline-block;vertical-align:middle;margin-right:4px}
+.mini-fill{height:100%;border-radius:3px;background:#4CAF50}
+.mini-fill.ov{background:#E53935}
 
-/* ── RECRUIT CARD ── */
-.recruit-card{background:#fff;border-radius:12px;border:1px solid #E4EDE8;padding:16px 20px;margin-bottom:16px;box-shadow:0 1px 6px rgba(26,92,54,.06)}
-.recruit-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:10px}
-.recruit-item{background:#F4FAF6;border-radius:8px;padding:10px 14px;text-align:center}
-.recruit-item-val{font-size:22px;font-weight:800;color:#1a5c36}
-.recruit-item-lbl{font-size:10px;color:#888;margin-top:3px}
+/* ══════════════════════════════
+   PLACEHOLDER
+══════════════════════════════ */
+.placeholder{text-align:center;padding:64px 20px;color:#ccc}
+.ph-icon{font-size:40px;margin-bottom:10px}
 
-/* ── DATA NOTE ── */
-.data-note{font-size:11px;color:#aaa;background:#FAFCFA;border:1px solid #E8EDE9;border-radius:8px;padding:7px 12px;margin-bottom:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.dot-sys{display:inline-block;width:7px;height:7px;border-radius:50%;background:#1565c0}
-.dot-plan{display:inline-block;width:7px;height:7px;border-radius:50%;background:#2e7d32}
-
-/* ── MODAL ── */
-.moverlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(3px)}
-.moverlay.open{display:flex}
-.modal{background:#fff;border-radius:14px;padding:24px 28px;max-width:580px;width:92%;box-shadow:0 12px 48px rgba(0,0,0,.2);max-height:85vh;overflow-y:auto}
-.modal-title{font-size:17px;font-weight:700;margin-bottom:3px}
-.modal-sub{font-size:11px;color:#aaa;margin-bottom:18px}
-.modal-close{float:right;background:none;border:none;font-size:18px;cursor:pointer;color:#aaa}
-.modal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
-.modal-card{background:#F4FAF6;border-radius:8px;padding:10px 14px}
-.modal-card-val{font-size:22px;font-weight:800;color:#1a1a1a}
-.modal-card-val.r{color:#c62828}.modal-card-val.g{color:#2e7d32}.modal-card-val.b{color:#1565c0}
-.modal-card-lbl{font-size:10px;color:#888;margin-top:2px}
-.person-row{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:7px;font-size:12px}
-.person-row:hover{background:#F4FAF6}
-.person-name{font-weight:600;min-width:100px}
-.person-dept{color:#aaa;flex:1}
-.person-date{font-size:11px;color:#bbb;white-space:nowrap}
-.badge{font-size:10px;border-radius:3px;padding:1px 5px;font-weight:700}
-.badge-l1{background:#1b5e20;color:#fff}
-.badge-ic{background:#546e7a;color:#fff}
-.badge-active{background:#e65100;color:#fff}
-.badge-passive{background:#c62828;color:#fff}
-
-@media(max-width:700px){
-  .topnav{padding:0 12px}
-  .tab-panel{padding:12px 12px 40px}
-  .nav-tab{padding:0 10px;font-size:12px}
-  .summary-strip{padding:0 12px}
-  table.y26t th,table.y26t td{padding:7px 8px;font-size:11px}
+@media(max-width:768px){
+  .nav{padding:0 16px}
+  .tab-panel{padding:16px 16px 48px}
+  .hero-row{grid-template-columns:repeat(2,1fr)}
+  .kpi-strip{flex-wrap:wrap}
+  .kpi-item{min-width:50%;border-bottom:1px solid #EEF3EF}
+  .flow-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
 
-<!-- ═══ TOP NAV ═══ -->
-<nav class="topnav">
-  <div class="topnav-brand">
-    <span class="topnav-title">组织管理看板</span>
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-brand">
+    <span class="nav-title">组织管理看板</span>
+    <span class="nav-subtitle">大商业 · 2026</span>
   </div>
-  <div class="topnav-tabs">
+  <div class="nav-tabs">
     <button class="nav-tab active" onclick="switchTab('biz',this)">💼 商业化</button>
     <button class="nav-tab" onclick="switchTab('ecom',this)">🛒 电商</button>
     <button class="nav-tab" onclick="switchTab('func',this)">🏛️ 职能</button>
   </div>
-  <div class="topnav-time">更新于 2026-04-01</div>
+  <div class="nav-time">
+    <span class="nav-dot"></span>
+    数据更新 2026-04-01
+  </div>
 </nav>
 
-<!-- ═══ SUMMARY STRIP ═══ -->
-<div class="summary-strip">
-  <div class="summary-row" id="summaryRow"></div>
-</div>
-
-<!-- ═══ ALERT BAR ═══ -->
-<div class="alert-bar hidden" id="alertBar">
-  <span class="alert-icon">⚠️</span>
-  <div>
-    <div class="alert-title">HC 预警 · 建议关注</div>
-    <div class="alert-tags" id="alertTags"></div>
-  </div>
-</div>
-
-<!-- ═══════════ 商业化 ═══════════ -->
+<!-- ══════════ 商业化 ══════════ -->
 <div id="tab-biz" class="tab-panel active">
 
-  <!-- Y26 规划总览表 -->
-  <div class="sec-head">
-    <span class="sec-title">📊 Y26规划总览</span>
-    <span class="sec-badge">商业化 Total 2390</span>
-    <span class="sec-note">来源：2026大商业&职能HC管理Dashboard</span>
+  <!-- HERO 环形图 -->
+  <div class="sec-hd">
+    <span class="sec-title">HC 完成度</span>
+    <span class="sec-tag">Y26规划 · 行业一部系统实时</span>
+    <span class="sec-note">在职÷Y26规划</span>
   </div>
-  <div class="y26-table-wrap">
-    <table class="y26t">
-      <thead>
-        <tr>
-          <th class="left" style="min-width:140px">部门</th>
-          <th>负责人</th>
-          <th>Y26规划</th>
-          <th>在职<br><span style="color:#1565c0;font-weight:400">系统</span></th>
-          <th>预计在职<br><span style="color:#1565c0;font-weight:400">系统</span></th>
-          <th>HC Gap<br><span style="color:#888;font-weight:400;font-size:9px">预计-规划</span></th>
-        </tr>
-      </thead>
-      <tbody id="y26-biz-tbody"></tbody>
-    </table>
-  </div>
+  <div class="hero-row" id="heroRow"></div>
 
-  <!-- 行业一部详细卡片 -->
-  <div class="sec-head">
-    <span class="sec-title">🏢 行业一部 · 详细</span>
-    <span class="sec-badge" style="background:#E3F2FD;color:#1565c0">系统实时数据</span>
-    <span class="sec-note">负责人：之恒</span>
-  </div>
-  <div class="dept-cards" id="biz-dept-cards"></div>
+  <!-- KPI STRIP -->
+  <div class="kpi-strip" id="kpiStrip"></div>
 
-  <!-- 在招岗位 -->
-  <div class="sec-head" style="margin-top:20px">
-    <span class="sec-title">🎯 在招岗位</span>
+  <!-- Y26 满编率总览 -->
+  <div class="sec sec-hd" style="margin-top:0;margin-bottom:14px">
+    <span class="sec-title">Y26规划 · 各部门满编率</span>
+    <span class="sec-tag gray">商业化 2390 合计</span>
+    <span class="sec-note">蓝色数字 = 系统实时，— = 暂无权限</span>
   </div>
-  <div class="recruit-card" id="recruitCard"></div>
+  <div id="y26Tables"></div>
+
+  <!-- 人员流动 -->
+  <div class="sec-hd" style="margin-top:24px">
+    <span class="sec-title">人员流动</span>
+    <span class="sec-tag blue">行业一部 · 系统实时</span>
+  </div>
+  <div class="flow-grid" id="flowGrid"></div>
+
+  <!-- 行业一部子组详情 -->
+  <div class="sec-hd" style="margin-top:24px">
+    <span class="sec-title">行业一部 · 子组详情</span>
+    <span class="sec-tag blue">25个子组 · 系统实时</span>
+    <span class="sec-note">点击展开</span>
+  </div>
+  <div id="bizDetailCard"></div>
 
 </div>
 
-<!-- ═══════════ 电商 ═══════════ -->
+<!-- ══════════ 电商 ══════════ -->
 <div id="tab-ecom" class="tab-panel">
-  <div class="data-note">
-    <span class="dot-plan"></span> Y26规划来自表格，暂无系统实时数据权限
+  <div class="sec-hd">
+    <span class="sec-title">Y26规划 · 交易（电商）</span>
+    <span class="sec-tag gray">Total 347 · 暂无系统实时数据</span>
   </div>
-  <div class="sec-head">
-    <span class="sec-title">📊 交易（电商）</span>
-    <span class="sec-badge">Y26规划 Total 347</span>
-  </div>
-  <div class="y26-table-wrap">
-    <table class="y26t">
-      <thead>
-        <tr>
-          <th class="left">子部门</th>
-          <th>Y26规划</th>
-          <th>在职</th>
-          <th>预计在职</th>
-          <th>HC Gap</th>
-        </tr>
-      </thead>
+  <div class="prog-table-wrap">
+    <table class="pt">
+      <thead><tr>
+        <th>部门</th><th class="r">Y26规划</th>
+        <th>在职</th><th>预计在职</th><th class="c">满编率</th><th class="c">HC Gap</th>
+      </tr></thead>
       <tbody>
-        <tr><td class="left">商家发展</td><td class="plan-num">35</td><td class="no-d">—</td><td class="no-d">—</td><td class="no-d">—</td></tr>
-        <tr><td class="left">蒲公英</td><td class="plan-num">35</td><td class="no-d">—</td><td class="no-d">—</td><td class="no-d">—</td></tr>
-        <tr><td class="left">商业客服</td><td class="plan-num">34</td><td class="no-d">—</td><td class="no-d">—</td><td class="no-d">—</td></tr>
-        <tr><td class="left">交易市场</td><td class="plan-num">19</td><td class="no-d">—</td><td class="no-d">—</td><td class="no-d">—</td></tr>
-        <tr><td class="left" style="color:#bbb">其他</td><td class="plan-num" style="color:#bbb">224</td><td class="no-d">—</td><td class="no-d">—</td><td class="no-d">—</td></tr>
-        <tr class="total-row"><td class="left">合计</td><td>347</td><td colspan="3" style="text-align:left;font-size:10px;color:#aaa;font-weight:400">暂无系统权限</td></tr>
+        <tr><td class="dept-nm">商家发展</td><td class="r">35</td><td class="nd">—</td><td class="nd">—</td><td class="c nd">—</td><td class="c nd">—</td></tr>
+        <tr><td class="dept-nm">蒲公英</td><td class="r">35</td><td class="nd">—</td><td class="nd">—</td><td class="c nd">—</td><td class="c nd">—</td></tr>
+        <tr><td class="dept-nm">商业客服</td><td class="r">34</td><td class="nd">—</td><td class="nd">—</td><td class="c nd">—</td><td class="c nd">—</td></tr>
+        <tr><td class="dept-nm">交易市场</td><td class="r">19</td><td class="nd">—</td><td class="nd">—</td><td class="c nd">—</td><td class="c nd">—</td></tr>
+        <tr><td class="dept-nm" style="color:#bbb">其他</td><td class="r" style="color:#bbb">224</td><td class="nd">—</td><td class="nd">—</td><td class="c nd">—</td><td class="c nd">—</td></tr>
+        <tr class="total"><td>交易 合计</td><td class="r">347</td><td colspan="4" style="color:#aaa;font-size:11px;font-weight:400">暂无系统权限</td></tr>
       </tbody>
     </table>
   </div>
 </div>
 
-<!-- ═══════════ 职能 ═══════════ -->
+<!-- ══════════ 职能 ══════════ -->
 <div id="tab-func" class="tab-panel">
 
-  <!-- Y26 规划总览 -->
-  <div class="sec-head">
-    <span class="sec-title">📊 Y26规划总览</span>
-    <span class="sec-badge">职能(财务+DI) 272 · 战略 72</span>
+  <!-- HERO -->
+  <div class="sec-hd">
+    <span class="sec-title">HC 完成度</span>
+    <span class="sec-tag">Y26规划 · 财务一组/资本市场系统实时</span>
   </div>
-  <div class="y26-table-wrap">
-    <table class="y26t">
-      <thead>
-        <tr>
-          <th class="left" style="min-width:120px">部门/子组</th>
-          <th>负责人</th>
-          <th>Y26规划</th>
-          <th>在职<br><span style="color:#1565c0;font-weight:400">系统</span></th>
-          <th>预计在职<br><span style="color:#1565c0;font-weight:400">系统</span></th>
-          <th>HC Gap</th>
-          <th style="min-width:70px">diff vs actual</th>
-        </tr>
-      </thead>
-      <tbody id="y26-func-tbody"></tbody>
-    </table>
-  </div>
+  <div class="hero-row" id="funcHeroRow"></div>
 
-  <!-- 财务一组详细卡片 -->
-  <div class="sec-head">
-    <span class="sec-title">💰 财务一组 · 详细</span>
-    <span class="sec-badge" style="background:#E3F2FD;color:#1565c0">系统实时数据</span>
+  <!-- Y26 满编率 -->
+  <div class="sec-hd" style="margin-top:4px">
+    <span class="sec-title">Y26规划 · 各部门满编率</span>
+    <span class="sec-note">蓝色 = 系统实时</span>
   </div>
-  <div class="dept-cards" id="func1-dept-cards"></div>
+  <div id="funcY26Tables"></div>
 
-  <!-- 资本市场详细 -->
-  <div class="sec-head" style="margin-top:16px">
-    <span class="sec-title">📈 资本市场 · 详细</span>
-    <span class="sec-badge" style="background:#E3F2FD;color:#1565c0">系统实时数据</span>
+  <!-- 人员流动 -->
+  <div class="sec-hd" style="margin-top:24px">
+    <span class="sec-title">人员流动</span>
+    <span class="sec-tag blue">财务一组 · 系统实时</span>
   </div>
-  <div class="dept-cards" id="func2-dept-cards"></div>
+  <div class="flow-grid" id="funcFlowGrid"></div>
 
-</div>
-
-<!-- MODAL -->
-<div class="moverlay" id="moverlay" onclick="closeMod(event)">
-  <div class="modal">
-    <button class="modal-close" onclick="closeMod()">✕</button>
-    <div class="modal-title" id="mod-title"></div>
-    <div class="modal-sub" id="mod-sub"></div>
-    <div id="mod-body"></div>
+  <!-- 财务一组子组详情 -->
+  <div class="sec-hd" style="margin-top:24px">
+    <span class="sec-title">财务一组 · 子组详情</span>
+    <span class="sec-tag blue">系统实时</span>
   </div>
+  <div id="func1DetailCard"></div>
+
 </div>
 
 <script>
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════
 // DATA
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════
 const SYS = {
-  fetchTime: "2026-03-31 20:54",
   biz: {
-    top: {departmentName:"行业一部", currentHc:165, totalHc:164, predictHc:169, transInHc:7, transOutHc:3, leaderName:"之恒", matchingDegreeName:"优秀"},
-    children: [
-      {departmentName:"行业一组",currentHc:9,totalHc:8,transInHc:0,transOutHc:0,predictHc:9,matchingDegreeName:"优秀",leaderId:500002996,leaderName:"千月"},
-      {departmentName:"行业二组",currentHc:9,totalHc:6,transInHc:0,transOutHc:0,predictHc:9,matchingDegreeName:"优秀",leaderName:"吴邪"},
-      {departmentName:"行业三组",currentHc:9,totalHc:8,transInHc:0,transOutHc:0,predictHc:9,matchingDegreeName:"匹配",leaderName:"克斯"},
-      {departmentName:"行业四组",currentHc:5,totalHc:4,transInHc:0,transOutHc:1,predictHc:4,matchingDegreeName:"匹配",leaderName:"千月"},
-      {departmentName:"行业五组",currentHc:4,totalHc:5,transInHc:1,transOutHc:0,predictHc:5,matchingDegreeName:"匹配",leaderName:"吴邪"},
-      {departmentName:"行业六组",currentHc:11,totalHc:5,transInHc:0,transOutHc:0,predictHc:11,matchingDegreeName:"匹配",leaderName:"千月"},
-      {departmentName:"行业七组",currentHc:12,totalHc:9,transInHc:1,transOutHc:0,predictHc:13,matchingDegreeName:"匹配",leaderName:"吴邪"},
-      {departmentName:"行业八组",currentHc:6,totalHc:7,transInHc:0,transOutHc:0,predictHc:6,matchingDegreeName:"优秀",leaderName:"克斯"},
-      {departmentName:"行业九组",currentHc:8,totalHc:7,transInHc:0,transOutHc:0,predictHc:8,matchingDegreeName:"优秀",leaderName:"克斯"},
-      {departmentName:"行业十组",currentHc:9,totalHc:8,transInHc:1,transOutHc:1,predictHc:9,matchingDegreeName:"匹配",leaderName:"千月"},
-      {departmentName:"行业十一组",currentHc:5,totalHc:6,transInHc:0,transOutHc:0,predictHc:5,matchingDegreeName:"匹配",leaderName:"吴邪"},
-      {departmentName:"行业十二组",currentHc:5,totalHc:4,transInHc:0,transOutHc:0,predictHc:5,matchingDegreeName:"匹配",leaderName:"克斯"},
-      {departmentName:"平台专家一组",currentHc:6,totalHc:8,transInHc:0,transOutHc:0,predictHc:6,matchingDegreeName:"匹配",leaderName:"古娴"},
-      {departmentName:"平台专家二组",currentHc:8,totalHc:5,transInHc:1,transOutHc:0,predictHc:9,matchingDegreeName:"优秀",leaderName:"菀得"},
-      {departmentName:"平台专家三组",currentHc:7,totalHc:6,transInHc:0,transOutHc:0,predictHc:7,matchingDegreeName:"优秀",leaderName:"若琳"},
-      {departmentName:"平台专家四组",currentHc:4,totalHc:3,transInHc:0,transOutHc:0,predictHc:4,matchingDegreeName:"优秀",leaderName:"古娴"},
-      {departmentName:"平台专家五组",currentHc:5,totalHc:5,transInHc:0,transOutHc:0,predictHc:5,matchingDegreeName:"优秀",leaderName:"菀得"},
-      {departmentName:"平台专家六组",currentHc:5,totalHc:4,transInHc:0,transOutHc:0,predictHc:5,matchingDegreeName:"匹配",leaderName:"希莫"},
-      {departmentName:"平台专家七组",currentHc:9,totalHc:8,transInHc:0,transOutHc:0,predictHc:9,matchingDegreeName:"匹配",leaderName:"希莫"},
-      {departmentName:"平台专家八组",currentHc:5,totalHc:6,transInHc:0,transOutHc:0,predictHc:5,matchingDegreeName:"匹配",leaderName:"菀得"},
-      {departmentName:"平台专家九组",currentHc:8,totalHc:6,transInHc:0,transOutHc:1,predictHc:7,matchingDegreeName:"匹配",leaderName:"清也"},
-      {departmentName:"平台专家十组",currentHc:6,totalHc:6,transInHc:0,transOutHc:0,predictHc:6,matchingDegreeName:"匹配",leaderName:"珠珠"},
-      {departmentName:"平台专家十一组",currentHc:4,totalHc:5,transInHc:1,transOutHc:0,predictHc:5,matchingDegreeName:null,leaderName:"惊鸿"},
-      {departmentName:"平台专家十二组",currentHc:4,totalHc:3,transInHc:1,transOutHc:0,predictHc:5,matchingDegreeName:"匹配",leaderName:"惊鸿"},
-      {departmentName:"行业策略组",currentHc:2,totalHc:3,transInHc:0,transOutHc:0,predictHc:2,matchingDegreeName:"匹配",leaderName:"飞云"},
+    top:{name:"行业一部",leader:"之恒",cur:165,plan:164,predict:169,inHc:7,outHc:3},
+    subs:[
+      {n:"行业一组",  l:"千月",cur:9, plan:8, in:0,out:0,pred:9, match:"优秀"},
+      {n:"行业二组",  l:"吴邪",cur:9, plan:6, in:0,out:0,pred:9, match:"优秀"},
+      {n:"行业三组",  l:"克斯",cur:9, plan:8, in:0,out:0,pred:9, match:"匹配"},
+      {n:"行业四组",  l:"千月",cur:5, plan:4, in:0,out:1,pred:4, match:"匹配"},
+      {n:"行业五组",  l:"吴邪",cur:4, plan:5, in:1,out:0,pred:5, match:"匹配"},
+      {n:"行业六组",  l:"千月",cur:11,plan:5, in:0,out:0,pred:11,match:"匹配"},
+      {n:"行业七组",  l:"吴邪",cur:12,plan:9, in:1,out:0,pred:13,match:"匹配"},
+      {n:"行业八组",  l:"克斯",cur:6, plan:7, in:0,out:0,pred:6, match:"优秀"},
+      {n:"行业九组",  l:"克斯",cur:8, plan:7, in:0,out:0,pred:8, match:"优秀"},
+      {n:"行业十组",  l:"千月",cur:9, plan:8, in:1,out:1,pred:9, match:"匹配"},
+      {n:"行业十一组",l:"吴邪",cur:5, plan:6, in:0,out:0,pred:5, match:"匹配"},
+      {n:"行业十二组",l:"克斯",cur:5, plan:4, in:0,out:0,pred:5, match:"匹配"},
+      {n:"平台专家一组",l:"古娴",cur:6, plan:8, in:0,out:0,pred:6, match:"匹配"},
+      {n:"平台专家二组",l:"菀得",cur:8, plan:5, in:1,out:0,pred:9, match:"优秀"},
+      {n:"平台专家三组",l:"若琳",cur:7, plan:6, in:0,out:0,pred:7, match:"优秀"},
+      {n:"平台专家四组",l:"古娴",cur:4, plan:3, in:0,out:0,pred:4, match:"优秀"},
+      {n:"平台专家五组",l:"菀得",cur:5, plan:5, in:0,out:0,pred:5, match:"优秀"},
+      {n:"平台专家六组",l:"希莫",cur:5, plan:4, in:0,out:0,pred:5, match:"匹配"},
+      {n:"平台专家七组",l:"希莫",cur:9, plan:8, in:0,out:0,pred:9, match:"匹配"},
+      {n:"平台专家八组",l:"菀得",cur:5, plan:6, in:0,out:0,pred:5, match:"匹配"},
+      {n:"平台专家九组",l:"清也",cur:8, plan:6, in:0,out:1,pred:7, match:"匹配"},
+      {n:"平台专家十组",l:"珠珠",cur:6, plan:6, in:0,out:0,pred:6, match:"匹配"},
+      {n:"平台专家十一组",l:"惊鸿",cur:4,plan:5, in:1,out:0,pred:5,match:null},
+      {n:"平台专家十二组",l:"惊鸿",cur:4,plan:3, in:1,out:0,pred:5,match:"匹配"},
+      {n:"行业策略组",l:"飞云",cur:2, plan:3, in:0,out:0,pred:2, match:"匹配"},
     ],
-    entry: [
-      {showName:"缪薛鹏",departmentName:"平台专家十二组",entryDate:"2026-04-01",manageLevel:"IC"},
-      {showName:"JICHAO SUN",departmentName:"行业一部",entryDate:"2026-04-08",manageLevel:"L1"},
-      {showName:"邓鸿颖",departmentName:"行业五组",entryDate:"2026-04-08",manageLevel:"IC"},
-      {showName:"洪方雯",departmentName:"平台专家十一组",entryDate:"2026-04-27",manageLevel:"IC"},
-      {showName:"陈静仪",departmentName:"行业七组",entryDate:"2026-07-01",manageLevel:"IC"},
+    entry:[
+      {name:"缪薛鹏",dept:"平台专家十二组",date:"2026-04-01",lv:"IC"},
+      {name:"JICHAO SUN",dept:"行业一部",date:"2026-04-08",lv:"L1"},
+      {name:"邓鸿颖",dept:"行业五组",date:"2026-04-08",lv:"IC"},
+      {name:"洪方雯",dept:"平台专家十一组",date:"2026-04-27",lv:"IC"},
+      {name:"陈静仪",dept:"行业七组",date:"2026-07-01",lv:"IC"},
     ],
-    dimission: [
-      {showName:"六尾(许凌豪)",departmentName:"平台专家九组",lastDate:"2026-04-07",dimissionTypeName:"主动离职"},
-      {showName:"波雅(李淑华)",departmentName:"行业四组",lastDate:"2026-04-13",dimissionTypeName:"被动离职"},
-    ],
-    alerts: [
-      {name:"行业六组",gap:-6,type:"overstaff"},
-      {name:"行业七组",gap:-4,type:"overstaff"},
-      {name:"平台专家二组",gap:-4,type:"overstaff"},
+    dimission:[
+      {name:"六尾",dept:"平台专家九组",date:"2026-04-07",type:"主动"},
+      {name:"波雅",dept:"行业四组",date:"2026-04-13",type:"被动"},
     ]
   },
-  func1: {
-    top: {departmentName:"财务一组",currentHc:54,totalHc:51,predictHc:58,transInHc:5,transOutHc:1,leaderName:"白真"},
-    children: [
-      {departmentName:"技术财务分析",currentHc:6,totalHc:6,predictHc:6},
-      {departmentName:"交易财务分析",currentHc:10,totalHc:7,predictHc:14},
-      {departmentName:"商业财务分析",currentHc:9,totalHc:10,predictHc:9},
-      {departmentName:"财务职能",currentHc:20,totalHc:20,predictHc:20},
-      {departmentName:"资金管理组",currentHc:8,totalHc:8,predictHc:9},
+  func1:{
+    top:{name:"财务一组",leader:"白真",cur:54,plan:51,predict:58,inHc:5,outHc:1},
+    subs:[
+      {n:"技术财务分析",cur:6, plan:6, pred:6},
+      {n:"交易财务分析",cur:10,plan:7, pred:14},
+      {n:"商业财务分析",cur:9, plan:10,pred:9},
+      {n:"财务职能",    cur:20,plan:20,pred:20},
+      {n:"资金管理组",  cur:8, plan:8, pred:9},
     ],
-    entry: [
-      {showName:"赛娜(李木子)",departmentName:"财务一组",entryDate:"2026-04-01",manageLevel:"IC"},
-      {showName:"曹腾",departmentName:"交易财务分析",entryDate:"2026-04-08",manageLevel:"IC"},
-      {showName:"鲍天玥",departmentName:"资金管理组",entryDate:"2026-04-13",manageLevel:"IC"},
-      {showName:"刘潇阳",departmentName:"资金管理组",entryDate:"2026-04-27",manageLevel:"IC"},
+    entry:[
+      {name:"赛娜",dept:"财务一组",date:"2026-04-01",lv:"IC"},
+      {name:"曹腾",dept:"交易财务分析",date:"2026-04-08",lv:"IC"},
+      {name:"鲍天玥",dept:"资金管理组",date:"2026-04-13",lv:"IC"},
+      {name:"刘潇阳",dept:"资金管理组",date:"2026-04-27",lv:"IC"},
     ],
-    dimission: [],
-    alerts: [{name:"交易财务分析",gap:-4,type:"overstaff"}]
+    dimission:[]
   },
-  func2: {
-    top: {departmentName:"资本市场",currentHc:5,totalHc:5,predictHc:5,transInHc:0,transOutHc:0},
-    children: [],
-    entry: [],
-    dimission: [],
-    alerts: []
-  },
-  recruit: {allPositionCount:49,allPositionProcessCount:179,followPositionCount:5,followPositionProcessCount:1},
-  allAlerts: [
-    {name:"行业六组",gap:-6,type:"overstaff"},
-    {name:"行业七组",gap:-4,type:"overstaff"},
-    {name:"平台专家二组",gap:-4,type:"overstaff"},
-    {name:"交易财务分析",gap:-4,type:"overstaff"},
-  ],
-  total: {current:224,target:220,predict:232,inflow:12,outflow:4,gap:-12},
-  bizSummary: {current:165,target:164,predict:169,inflow:7,outflow:3,gap:-5},
-  func1Summary: {current:54,target:51,predict:58,inflow:5,outflow:1,gap:-7},
-  func2Summary: {current:5,target:5,predict:5,inflow:0,outflow:0,gap:0},
+  func2:{
+    top:{name:"资本市场",leader:"劳拉",cur:5,plan:5,predict:5,inHc:0,outHc:0},
+    subs:[], entry:[], dimission:[]
+  }
 };
 
-// Y26 规划数据（来自表格）
 const Y26 = {
-  biz: [
-    // 行业线
-    {name:"行业一部",leader:"之恒",plan:164,group:"行业线",hasSys:true,sysKey:"biz"},
-    {name:"行业二部",leader:"欧迪",plan:90,group:"行业线"},
-    {name:"行业三部",leader:"昂扬",plan:157,group:"行业线"},
-    {name:"行业四部",leader:"米欧",plan:207,group:"行业线"},
-    {name:"行业五部",leader:"宗宪",plan:90,group:"行业线"},
-    {name:"行业六部",leader:"昂扬",plan:48,group:"行业线"},
-    {name:"行业七部",leader:"觅阳",plan:163,group:"行业线"},
-    {name:"行业八部",leader:"纳什",plan:95,group:"行业线"},
-    {name:"行业九部",leader:"宗宪",plan:48,group:"行业线"},
-    {name:"渠道业务",leader:"米欧",plan:94,group:"行业线"},
-    // 生态线
-    {name:"生态一部",leader:"觅阳",plan:400,group:"生态线"},
-    {name:"生态二部",leader:"米欧",plan:334,group:"生态线"},
-    {name:"创作者营销与商业服务",leader:"玄霜",plan:40,group:"生态线"},
-    // 中台&产品
-    {name:"市场营销中台",leader:"义思",plan:160,group:"中台&产品"},
-    {name:"策略中台",leader:"—",plan:89,group:"中台&产品"},
-    {name:"营销实验室",leader:"圣香",plan:14,group:"中台&产品"},
-    {name:"商业产品",leader:"披萝",plan:196,group:"中台&产品"},
+  biz:[
+    {g:"行业线",rows:[
+      {n:"行业一部",l:"之恒",plan:164,sys:true,sysRef:'biz'},
+      {n:"行业二部",l:"欧迪",plan:90},
+      {n:"行业三部",l:"昂扬",plan:157},
+      {n:"行业四部",l:"米欧",plan:207},
+      {n:"行业五部",l:"宗宪",plan:90},
+      {n:"行业六部",l:"昂扬",plan:48},
+      {n:"行业七部",l:"觅阳",plan:163},
+      {n:"行业八部",l:"纳什",plan:95},
+      {n:"行业九部",l:"宗宪",plan:48},
+      {n:"渠道业务",l:"米欧",plan:94},
+    ]},
+    {g:"生态线",rows:[
+      {n:"生态一部",l:"觅阳",plan:400},
+      {n:"生态二部",l:"米欧",plan:334},
+      {n:"创作者营销与商业服务",l:"玄霜",plan:40},
+    ]},
+    {g:"中台 & 产品",rows:[
+      {n:"市场营销中台",l:"义思",plan:160},
+      {n:"策略中台",l:"—",plan:89},
+      {n:"营销实验室",l:"圣香",plan:14},
+      {n:"商业产品",l:"披萝",plan:196},
+    ]},
   ],
-  func: [
-    // 职能
-    {name:"财务一组",leader:"白真",plan:51,group:"财务职能+DI",hasSys:true,sysKey:"func1",diffActual:3},
-    {name:"财务二组",leader:"潇潇",plan:16,group:"财务职能+DI",diffActual:2},
-    {name:"税务",leader:"马斯",plan:12,group:"财务职能+DI",diffActual:2},
-    {name:"内控内审",leader:"狄狄",plan:12,group:"财务职能+DI",diffActual:0},
-    {name:"采购",leader:"四儿",plan:18,group:"财务职能+DI",diffActual:0},
-    {name:"投资部",leader:"文生POC",plan:16,group:"财务职能+DI",diffActual:0},
-    {name:"科技投资",leader:"非特",plan:2,group:"财务职能+DI",diffActual:0},
-    {name:"资本市场",leader:"劳拉",plan:5,group:"财务职能+DI",hasSys:true,sysKey:"func2",diffActual:0},
-    {name:"法务部",leader:"龙信/许恩",plan:32,group:"财务职能+DI",diffActual:0},
-    {name:"DI",leader:"哈利",plan:107,group:"财务职能+DI",diffActual:31},
-    // 战略
-    {name:"战略部-非特",leader:"—",plan:1,group:"战略",diffActual:0},
-    {name:"用研一组",leader:"初一·acting",plan:11,group:"战略",diffActual:1},
-    {name:"用研二组",leader:"阿亚",plan:10,group:"战略",diffActual:-3},
-    {name:"交易战略",leader:"非特·acting",plan:7,group:"战略",diffActual:2},
-    {name:"商业战略",leader:"非特·acting",plan:6,group:"战略",diffActual:2},
-    {name:"社区战略",leader:"初一",plan:11,group:"战略",diffActual:2},
-    {name:"技术战略",leader:"夏月",plan:11,group:"战略",diffActual:2},
-    {name:"战略中台",leader:"非特·acting",plan:9,group:"战略",diffActual:2},
-    {name:"hi lab战略组",leader:"非特·acting",plan:5,group:"战略",diffActual:3},
-    {name:"国际化战略",leader:"非特·acting",plan:1,group:"战略",diffActual:0},
+  func:[
+    {g:"财务职能 + DI",rows:[
+      {n:"财务一组",l:"白真",plan:51,sys:true,sysRef:'func1',diff:3},
+      {n:"财务二组",l:"潇潇",plan:16,diff:2},
+      {n:"税务",l:"马斯",plan:12,diff:2},
+      {n:"内控内审",l:"狄狄",plan:12,diff:0},
+      {n:"采购",l:"四儿",plan:18,diff:0},
+      {n:"投资部",l:"文生POC",plan:16,diff:0},
+      {n:"科技投资",l:"非特",plan:2,diff:0},
+      {n:"资本市场",l:"劳拉",plan:5,sys:true,sysRef:'func2',diff:0},
+      {n:"法务部",l:"龙信/许恩",plan:32,diff:0},
+      {n:"DI",l:"哈利",plan:107,diff:31},
+    ]},
+    {g:"战略",rows:[
+      {n:"战略部-非特",l:"—",plan:1,diff:0},
+      {n:"用研一组",l:"初一·acting",plan:11,diff:1},
+      {n:"用研二组",l:"阿亚",plan:10,diff:-3},
+      {n:"交易战略",l:"非特·acting",plan:7,diff:2},
+      {n:"商业战略",l:"非特·acting",plan:6,diff:2},
+      {n:"社区战略",l:"初一",plan:11,diff:2},
+      {n:"技术战略",l:"夏月",plan:11,diff:2},
+      {n:"战略中台",l:"非特·acting",plan:9,diff:2},
+      {n:"hi lab战略组",l:"非特·acting",plan:5,diff:3},
+      {n:"国际化战略",l:"非特·acting",plan:1,diff:0},
+    ]},
   ]
 };
 
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════
 // HELPERS
-// ═══════════════════════════════════════════════
-function gap(pred, plan) { return pred - plan; }
-function gapHtml(g, pred, plan) {
-  if (pred === null || pred === undefined) return '<span class="no-d">—</span>';
-  if (g > 0) return '<span class="gap-pill go">超'+g+'</span>';
-  if (g < 0) return '<span class="gap-pill gv">缺'+Math.abs(g)+'</span>';
-  return '<span class="gap-pill gf">达标</span>';
+// ═══════════════════════════════════
+const _charts = {};
+function fmtD(s){return s?(s+'').replace(/^(\d{4})-(\d{2})-(\d{2})$/,'$2/$3'):''}
+function gBadge(g,pred,plan){
+  if(pred==null) return '<span class="nd">—</span>';
+  if(g>0) return '<span class="gbadge o">超'+g+'</span>';
+  if(g<0) return '<span class="gbadge v">缺'+Math.abs(g)+'</span>';
+  return '<span class="gbadge f">达标</span>';
 }
-function matchTag(m) {
-  if (!m) return '<span class="match-tag mt-na">—</span>';
-  if (m === "优秀") return '<span class="match-tag mt-exc">优秀</span>';
-  return '<span class="match-tag mt-mat">'+m+'</span>';
+function progBar(pred,plan){
+  if(!plan||pred==null) return '<span class="nd">—</span>';
+  const pct=Math.min(pred/plan*100,130);
+  const cls=pct>=105?'ov':pct>=85?'':pct>=70?'warn':'ov';
+  const numCls=pct>=105?'over':pct>=85?'ok':'warn';
+  const display=Math.round(pred/plan*100);
+  return '<span class="prog-bar"><span class="prog-fill '+cls+'" style="width:'+Math.min(pct,100)+'%"></span></span>'
+    +'<span class="pct-num '+numCls+'">'+display+'%</span>';
 }
-function miniBar(pred, total) {
-  if (!total) return '';
-  const pct = Math.min(pred/total*100, 120);
-  const over = pred > total;
-  return '<span class="mini-bar"><span class="mini-fill'+(over?' over':'')+'" style="width:'+Math.min(pct,100)+'%"></span></span>';
+function mtTag(m){
+  if(!m) return '<span class="mt mt-na">—</span>';
+  if(m==="优秀") return '<span class="mt mt-exc">优秀</span>';
+  return '<span class="mt mt-mat">'+m+'</span>';
 }
-function diffHtml(d) {
-  if (d === undefined) return '<span class="no-d">—</span>';
-  if (d > 0) return '<span style="color:#2e7d32;font-weight:700">+'+d+'</span>';
-  if (d < 0) return '<span style="color:#c62828;font-weight:700">'+d+'</span>';
-  return '<span style="color:#bbb">0</span>';
+function lvBadge(lv){
+  if(lv==='L1') return '<span class="lv-badge lv-l1">L1</span>';
+  if(lv==='L2') return '<span class="lv-badge lv-l2">L2</span>';
+  return '<span class="lv-badge lv-ic">IC</span>';
 }
-function formatDate(s) {
-  if (!s) return '';
-  return s.replace(/^(\d{4})-(\d{2})-(\d{2})$/, '$2/$3');
-}
-let _charts = {};
-function donutSVG(cur, total, id) {
-  const r = 36, cx = 40, cy = 40, sw = 9;
-  const circ = 2 * Math.PI * r;
-  const fill = total ? Math.min(cur/total, 1.2) : 0;
-  const dash = fill * circ;
-  const color = cur > total ? '#E53935' : '#4CAF50';
-  return '<svg width="80" height="80" viewBox="0 0 80 80">'
-    +'<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="#EEF3EF" stroke-width="'+sw+'"/>'
-    +'<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="'+sw
-    +'" stroke-dasharray="'+dash+' '+circ+'" stroke-dashoffset="'+circ/4+'" stroke-linecap="round"/>'
-    +'<text x="40" y="37" text-anchor="middle" font-size="13" font-weight="800" fill="#1a1a1a">'+cur+'</text>'
-    +'<text x="40" y="52" text-anchor="middle" font-size="10" fill="#aaa">'+total+'</text>'
-    +'</svg>';
+function initials(name){
+  const n=(name||'').replace(/[（(].*$/,'').trim();
+  return n.slice(0,2)||'?';
 }
 
-// ═══════════════════════════════════════════════
-// SUMMARY STRIP
-// ═══════════════════════════════════════════════
-function buildSummary() {
-  const t = SYS.total;
-  const g = t.predict - t.target;
-  const summaryRow = document.getElementById('summaryRow');
-  const items = [
-    {label:'在职 HC', val:t.current, cls:'', sub:[
-      '<span class="seg seg-biz">商业化 '+SYS.bizSummary.current+'</span>',
-      '<span class="seg seg-func">职能 '+(SYS.func1Summary.current+SYS.func2Summary.current)+'</span>'
-    ]},
-    {label:'目标 HC', val:t.target, cls:'', sub:[
-      '<span class="seg seg-biz">商业化 '+SYS.bizSummary.target+'</span>',
-      '<span class="seg seg-func">职能 '+(SYS.func1Summary.target+SYS.func2Summary.target)+'</span>'
-    ]},
-    {label:'预计在职', val:t.predict, cls:'', sub:[
-      '<span class="seg seg-biz">商业化 '+SYS.bizSummary.predict+'</span>',
-      '<span class="seg seg-func">职能 '+(SYS.func1Summary.predict+SYS.func2Summary.predict)+'</span>'
-    ]},
-    {label:'流入在途', val:'+'+t.inflow, cls:'b', sub:[]},
-    {label:'流出在途', val:'-'+t.outflow, cls:'r', sub:[]},
-    {label:'HC Gap', val:(g>0?'超':'缺')+Math.abs(g), cls:g>0?'g':'r', sub:['<small style="font-size:10px;color:#bbb">含系统权限部门</small>']},
-    {label:'在招岗位', val:SYS.recruit.allPositionCount, cls:'', sub:['<span style="font-size:10px;color:#aaa">候选人 '+SYS.recruit.allPositionProcessCount+'</span>']},
-  ];
-  items.forEach(it => {
-    const div = document.createElement('div');
-    div.className = 'sum-card';
-    div.innerHTML = '<div class="sum-label">'+it.label+'</div>'
-      +'<div class="sum-val '+(it.cls||'')+'">'+it.val+'</div>'
-      +'<div class="sum-sub">'+it.sub.join('')+'</div>';
-    summaryRow.appendChild(div);
-  });
+// get sys data for a row
+function sysForRow(r){
+  if(!r.sys) return null;
+  const top = r.sysRef==='biz' ? SYS.biz.top : r.sysRef==='func1' ? SYS.func1.top : SYS.func2.top;
+  return top;
 }
 
-// ═══════════════════════════════════════════════
-// ALERT BAR
-// ═══════════════════════════════════════════════
-function buildAlerts() {
-  const alerts = SYS.allAlerts;
-  if (!alerts.length) return;
-  const bar = document.getElementById('alertBar');
-  const tags = document.getElementById('alertTags');
-  bar.classList.remove('hidden');
-  alerts.forEach(a => {
-    const span = document.createElement('span');
-    span.className = 'alert-tag ' + (a.type === 'overstaff' ? 'overstaff' : 'vacancy');
-    span.textContent = a.name + ' ' + (a.type === 'overstaff' ? '超编' : '缺编') + Math.abs(a.gap);
-    tags.appendChild(span);
-  });
+// ═══════════════════════════════════
+// HERO DONUT RINGS
+// ═══════════════════════════════════
+let heroCount=0;
+function makeHero(label, cur, plan, predict, subLabel){
+  const id='hero-'+(++heroCount);
+  const pct = plan ? Math.round(cur/plan*100) : 0;
+  const pctCls = pct>=100?'over':pct>=85?'ok':'under';
+  return {id, label, cur, plan, predict, pct, pctCls, subLabel};
 }
-
-// ═══════════════════════════════════════════════
-// Y26 TABLE — BIZ
-// ═══════════════════════════════════════════════
-function buildY26Biz() {
-  const tbody = document.getElementById('y26-biz-tbody');
-  let lastGroup = '';
-  const groupTotals = {};
-  Y26.biz.forEach(d => {
-    groupTotals[d.group] = (groupTotals[d.group]||0) + d.plan;
-  });
-  Y26.biz.forEach(d => {
-    // group header
-    if (d.group !== lastGroup) {
-      lastGroup = d.group;
-      const gt = groupTotals[d.group];
-      tbody.innerHTML += '<tr class="group-header" style="background:#F0F5F1"><td class="left" colspan="6" style="font-weight:700;color:#2e7d32;font-size:11px">▸ '+d.group+' <span style="font-weight:400;color:#aaa;font-size:10px">Y26规划合计 '+gt+'</span></td></tr>';
-    }
-    // sys data
-    let curHtml = '<span class="no-d">—</span>';
-    let predHtml = '<span class="no-d">—</span>';
-    let gHtml = '<span class="no-d">—</span>';
-    if (d.hasSys && d.sysKey === 'biz') {
-      const s = SYS.bizSummary;
-      curHtml = '<span class="sys-num">'+s.current+'</span>';
-      predHtml = '<span class="sys-num">'+s.predict+'</span>';
-      const g2 = s.predict - d.plan;
-      gHtml = gapHtml(g2, s.predict, d.plan);
-    }
-    const hasSysClass = d.hasSys ? ' class="has-sys"' : '';
-    tbody.innerHTML += '<tr'+hasSysClass+'>'
-      +'<td class="left dept-cell" style="font-weight:600">'+d.name+'</td>'
-      +'<td style="color:#888;font-size:12px">'+d.leader+'</td>'
-      +'<td class="plan-num">'+d.plan+'</td>'
-      +'<td>'+curHtml+'</td>'
-      +'<td>'+predHtml+'</td>'
-      +'<td>'+gHtml+'</td>'
-      +'</tr>';
-  });
-  // total row
-  const total = Y26.biz.reduce((s,d)=>s+d.plan,0);
-  tbody.innerHTML += '<tr class="total-row"><td class="left">商业化 Total</td><td></td><td>'+total+'</td>'
-    +'<td><span class="sys-num">'+SYS.bizSummary.current+'</span><span style="font-size:9px;color:#aaa"> 仅行业一部</span></td>'
-    +'<td><span class="sys-num">'+SYS.bizSummary.predict+'</span></td><td>—</td></tr>';
-}
-
-// ═══════════════════════════════════════════════
-// Y26 TABLE — FUNC
-// ═══════════════════════════════════════════════
-function buildY26Func() {
-  const tbody = document.getElementById('y26-func-tbody');
-  let lastGroup = '';
-  const groupTotals = {};
-  Y26.func.forEach(d => { groupTotals[d.group] = (groupTotals[d.group]||0) + d.plan; });
-  Y26.func.forEach(d => {
-    if (d.group !== lastGroup) {
-      lastGroup = d.group;
-      tbody.innerHTML += '<tr style="background:#F0F5F1"><td class="left" colspan="7" style="font-weight:700;color:#2e7d32;font-size:11px">▸ '+d.group+' <span style="font-weight:400;color:#aaa;font-size:10px">Y26规划合计 '+groupTotals[d.group]+'</span></td></tr>';
-    }
-    let curHtml = '<span class="no-d">—</span>';
-    let predHtml = '<span class="no-d">—</span>';
-    let gHtml = '<span class="no-d">—</span>';
-    if (d.hasSys) {
-      const s = d.sysKey === 'func1' ? SYS.func1Summary : SYS.func2Summary;
-      curHtml = '<span class="sys-num">'+s.current+'</span>';
-      predHtml = '<span class="sys-num">'+s.predict+'</span>';
-      const g2 = s.predict - d.plan;
-      gHtml = gapHtml(g2, s.predict, d.plan);
-    }
-    tbody.innerHTML += '<tr'+(d.hasSys?' class="has-sys"':'')+'>'
-      +'<td class="left dept-cell" style="font-weight:600">'+d.name+'</td>'
-      +'<td style="color:#888;font-size:12px">'+d.leader+'</td>'
-      +'<td class="plan-num">'+d.plan+'</td>'
-      +'<td>'+curHtml+'</td>'
-      +'<td>'+predHtml+'</td>'
-      +'<td>'+gHtml+'</td>'
-      +'<td>'+diffHtml(d.diffActual)+'</td>'
-      +'</tr>';
-  });
-  // totals
-  const t1 = Y26.func.filter(d=>d.group==='财务职能+DI').reduce((s,d)=>s+d.plan,0);
-  const t2 = Y26.func.filter(d=>d.group==='战略').reduce((s,d)=>s+d.plan,0);
-  tbody.innerHTML += '<tr class="total-row"><td class="left">职能(财务+DI) Total</td><td></td><td>'+t1+'</td>'
-    +'<td><span class="sys-num">'+SYS.func1Summary.current+'</span><span style="font-size:9px;color:#aaa"> 仅财务一组</span></td>'
-    +'<td><span class="sys-num">'+SYS.func1Summary.predict+'</span></td><td colspan="2">—</td></tr>';
-  tbody.innerHTML += '<tr class="total-row"><td class="left">战略 Total</td><td></td><td>'+t2+'</td>'
-    +'<td class="no-d">—</td><td class="no-d">—</td><td colspan="2" style="text-align:left;font-size:10px;color:#aaa;font-weight:400">和25年规划保持一致</td></tr>';
-}
-
-// ═══════════════════════════════════════════════
-// DEPT CARD (rich, collapsible)
-// ═══════════════════════════════════════════════
-let cardCount = 0;
-function buildDeptCard(container, sysData, defaultOpen) {
-  const top = sysData.top;
-  const children = sysData.children || [];
-  const entry = sysData.entry || [];
-  const dimission = sysData.dimission || [];
-  const alerts = sysData.alerts || [];
-  const cid = 'card-'+(++cardCount);
-  const chartId = 'donut-'+cid;
-  const barChartId = 'bar-'+cid;
-
-  const g = (top.predictHc||0) - (top.totalHc||0);
-  let pillHtml = gapHtml(g, top.predictHc, top.totalHc);
-
-  const l1s = entry.filter(e => e.manageLevel === 'L1');
-  const ics = entry.filter(e => e.manageLevel !== 'L1');
-
-  // build sub-dept table
-  let subRows = '';
-  children.forEach(c => {
-    const pg = (c.predictHc||0) - (c.totalHc||0);
-    const rowCls = pg > 0 ? ' class="ro"' : (pg < 0 ? ' class="rv"' : '');
-    const pct = c.totalHc ? Math.round((c.predictHc||0)/c.totalHc*100) : 0;
-    subRows += '<tr'+rowCls+'>'
-      +'<td style="font-weight:600">'+c.departmentName+'</td>'
-      +'<td>'+(c.leaderName||'—')+'</td>'
-      +'<td style="color:#1565c0;font-weight:700">'+c.currentHc+'</td>'
-      +'<td>'+c.totalHc+'</td>'
-      +'<td style="color:#1976d2">'+c.transInHc+'</td>'
-      +'<td style="color:#c62828">'+c.transOutHc+'</td>'
-      +'<td style="color:#1565c0;font-weight:700">'+(c.predictHc||0)+'</td>'
-      +'<td>'+gapHtml(pg, c.predictHc, c.totalHc)+'</td>'
-      +'<td>'+miniBar(c.predictHc,c.totalHc)+pct+'%</td>'
-      +'<td>'+matchTag(c.matchingDegreeName)+'</td>'
-      +'</tr>';
-  });
-
-  // alert pills
-  let alertHtml = '';
-  if (alerts.length) {
-    alertHtml = '<div style="padding:6px 20px 8px;border-bottom:1px solid #F5F8F5;display:flex;gap:6px;flex-wrap:wrap">'
-      + alerts.map(a => '<span class="alert-tag '+(a.type==='overstaff'?'overstaff':'vacancy')+'">'+a.name+(a.type==='overstaff'?' 超编':' 缺编')+Math.abs(a.gap)+'</span>').join('')
-      +'</div>';
-  }
-
-  const html = `
-  <div class="dept-card" id="${cid}">
-    <div class="dept-head" onclick="toggleCard('${cid}')">
-      <div class="dept-head-row">
-        <span class="dept-name">${top.departmentName}</span>
-        <span class="dept-lv">L2</span>
-        ${pillHtml}
-        <span class="dept-leader">👤 ${top.leaderName||'—'}</span>
-        <span class="expand-icon${defaultOpen?' open':''}" id="icon-${cid}">▶</span>
-      </div>
-    </div>
-    <div class="dept-body${defaultOpen?' open':''}" id="body-${cid}">
-      <!-- METRICS -->
-      <div class="dept-metrics">
-        <div class="metric"><div class="metric-val sys">${top.currentHc}</div><div class="metric-lbl">在职</div></div>
-        <div class="metric"><div class="metric-val">${top.totalHc}</div><div class="metric-lbl">目标HC</div></div>
-        <div class="metric"><div class="metric-val sys">${top.predictHc||0}</div><div class="metric-lbl">预计在职</div></div>
-        <div class="metric"><div class="metric-val in">+${top.transInHc||0}</div><div class="metric-lbl">流入</div></div>
-        <div class="metric"><div class="metric-val out">-${top.transOutHc||0}</div><div class="metric-lbl">流出</div></div>
-        <div class="metric"><div class="metric-val ${g>0?'go':'gv'}">${g>0?'超'+g:'缺'+Math.abs(g)}</div><div class="metric-lbl">HC Gap</div></div>
-      </div>
-      <!-- CHART ROW -->
-      <div class="dept-charts">
-        <div class="chart-donut" id="donut-wrap-${cid}">
-          ${donutSVG(top.currentHc, top.totalHc, chartId)}
-        </div>
-        <div class="chart-legend">
-          <div class="legend-row"><span class="legend-dot" style="background:#4CAF50"></span>在职 ${top.currentHc}</div>
-          <div class="legend-row"><span class="legend-dot" style="background:#EEF3EF;border:1px solid #ccc"></span>目标 ${top.totalHc}</div>
-          <div class="legend-row"><span class="legend-dot" style="background:#1976d2"></span>预计在职 ${top.predictHc||0}</div>
-        </div>
-        <div class="chart-bar-wrap">
-          <div class="chart-bar-title">SUB-DEPT 在职 vs 目标</div>
-          <canvas id="${barChartId}" height="90"></canvas>
+function renderHeroRow(containerId, heroes){
+  const wrap = document.getElementById(containerId);
+  heroes.forEach(h=>{
+    const div=document.createElement('div');
+    div.className='hero-card';
+    div.innerHTML=`
+      <div class="hero-card-label">${h.label}</div>
+      <div class="hero-donut">
+        <canvas id="${h.id}" width="100" height="100"></canvas>
+        <div class="hero-center">
+          <div class="hero-pct ${h.pctCls}">${h.pct}%</div>
+          <div class="hero-nums">${h.cur}/${h.plan}</div>
         </div>
       </div>
-      <!-- ALERTS -->
-      ${alertHtml}
-      <!-- FLOW -->
-      <div class="dept-flow">
-        <div class="flow-block">
-          <div class="flow-title">↗ 流入在途</div>
-          ${entry.map(e=>`<div class="flow-row"><span class="flow-key">${e.showName} · ${e.departmentName}</span><span class="flow-num b">${formatDate(e.entryDate)}</span></div>`).join('') || '<div class="flow-row"><span style="color:#ccc;font-size:11px">暂无</span></div>'}
-        </div>
-        <div class="flow-block">
-          <div class="flow-title">↘ 流出在途</div>
-          ${dimission.map(e=>`<div class="flow-row"><span class="flow-key">${e.showName} · ${e.departmentName}</span><span class="flow-num r">${formatDate(e.lastDate)}</span></div>`).join('') || '<div class="flow-row"><span style="color:#ccc;font-size:11px">暂无</span></div>'}
-        </div>
+      <div class="hero-footer">
+        <div class="hero-kv"><div class="hero-kv-val" style="color:#1565c0">${h.predict??'—'}</div><div class="hero-kv-lbl">预计在职</div></div>
+        <div class="hero-kv"><div class="hero-kv-val" style="color:${h.predict>=h.plan?'#2e7d32':'#c62828'}">${h.predict!=null?(h.predict>=h.plan?'超'+(h.predict-h.plan):'缺'+(h.plan-h.predict)):'—'}</div><div class="hero-kv-lbl">HC Gap</div></div>
       </div>
-      <!-- L1 PILLS -->
-      ${l1s.length ? `<div class="dept-l1">
-        <div class="l1-title">🌟 L1 待入职</div>
-        <div class="l1-pills">${l1s.map(e=>'<span class="l1-pill">'+e.showName+' <small style="color:#aaa">'+formatDate(e.entryDate)+'</small></span>').join('')}</div>
-      </div>` : ''}
-      <!-- IC BAR -->
-      ${ics.length ? `<div class="ic-bar">IC 待入职：<span>${ics.length}</span> 人（含校招 ${ics.filter(e=>e.empTagList&&e.empTagList.includes('2')).length} 人）</div>` : ''}
-      <!-- SUB-DEPT TABLE -->
-      ${children.length ? `<div class="subdept-wrap">
-        <table class="st">
-          <thead><tr>
-            <th>子组</th><th>负责人</th><th style="color:#1565c0">在职</th><th>目标</th>
-            <th>流入</th><th>流出</th><th style="color:#1565c0">预计</th>
-            <th>Gap</th><th>完成率</th><th>人岗匹配</th>
-          </tr></thead>
-          <tbody>${subRows}</tbody>
-        </table>
-      </div>` : ''}
-    </div>
-  </div>`;
-  container.innerHTML += html;
-
-  // render bar chart after DOM inserted
-  if (children.length) {
-    setTimeout(() => {
-      const canvas = document.getElementById(barChartId);
-      if (!canvas) return;
-      const labels = children.slice(0,12).map(c=>c.departmentName.replace(/平台专家/g,'专家'));
-      const curData = children.slice(0,12).map(c=>c.currentHc);
-      const tgtData = children.slice(0,12).map(c=>c.totalHc);
-      if (_charts[barChartId]) _charts[barChartId].destroy();
-      _charts[barChartId] = new Chart(canvas.getContext('2d'), {
-        type: 'bar',
-        data: {
-          labels,
-          datasets: [
-            {label:'在职',data:curData,backgroundColor:'rgba(76,175,80,.75)',borderRadius:3},
-            {label:'目标',data:tgtData,backgroundColor:'rgba(200,230,201,.5)',borderRadius:3},
-          ]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: {legend:{display:false}},
-          scales: {
-            x:{ticks:{font:{size:9},maxRotation:45}},
-            y:{ticks:{font:{size:9}},beginAtZero:true}
-          }
+      ${h.subLabel?'<div style="font-size:10px;color:#bbb;margin-top:8px">'+h.subLabel+'</div>':''}
+    `;
+    wrap.appendChild(div);
+    // draw donut
+    setTimeout(()=>{
+      const canvas=document.getElementById(h.id);
+      if(!canvas) return;
+      const fill=h.plan?Math.min(h.cur/h.plan,1.15):0;
+      const color=h.cur>h.plan?'#E53935':h.cur>=h.plan*0.85?'#4CAF50':'#FF9800';
+      if(_charts[h.id]) _charts[h.id].destroy();
+      _charts[h.id]=new Chart(canvas,{
+        type:'doughnut',
+        data:{datasets:[{
+          data:[Math.min(fill,1), Math.max(1-fill,0)],
+          backgroundColor:[color,'#EEF3EF'],
+          borderWidth:0,
+          hoverOffset:0,
+        }]},
+        options:{
+          cutout:'72%',
+          plugins:{legend:{display:false},tooltip:{enabled:false}},
+          animation:{duration:600,easing:'easeOutQuart'},
+          events:[]
         }
       });
-    }, 80);
+    },60);
+  });
+}
+
+// ═══════════════════════════════════
+// KPI STRIP
+// ═══════════════════════════════════
+function buildKpi(){
+  const b=SYS.biz.top;
+  const f1=SYS.func1.top, f2=SYS.func2.top;
+  const totalCur=b.cur+f1.cur+f2.cur;
+  const totalPlan=b.plan+f1.plan+f2.plan;
+  const totalPred=b.predict+f1.predict+f2.predict;
+  const items=[
+    {v:totalCur, l:'系统在职合计', cls:'b', sub:'行业一部+财务+资本市场'},
+    {v:totalPlan, l:'系统目标HC合计', sub:'有系统权限部门'},
+    {v:Math.round(totalCur/totalPlan*100)+'%', l:'整体满编率', cls:totalCur>=totalPlan?'g':'', sub:totalCur>=totalPlan?'达标':'距目标差'+(totalPlan-totalCur)+'人'},
+    {v:'+'+( b.inHc+f1.inHc+f2.inHc), l:'流入在途', cls:'b', sub:'近期待入职人数'},
+    {v:'-'+(b.outHc+f1.outHc+f2.outHc), l:'流出在途', cls:'r', sub:'近期待离职人数'},
+    {v:2390+347+272+72, l:'Y26规划合计', sub:'商业化+电商+职能+战略'},
+  ];
+  const strip=document.getElementById('kpiStrip');
+  items.forEach(it=>{
+    strip.innerHTML+='<div class="kpi-item">'
+      +'<div class="kpi-val '+(it.cls||'')+'">'+it.v+'</div>'
+      +'<div class="kpi-lbl">'+it.l+'</div>'
+      +'<div class="kpi-sub">'+it.sub+'</div>'
+      +'</div>';
+  });
+}
+
+// ═══════════════════════════════════
+// Y26 PROGRESS TABLES
+// ═══════════════════════════════════
+function buildY26Tables(containerId, groups){
+  const wrap=document.getElementById(containerId);
+  groups.forEach(grp=>{
+    const total=grp.rows.reduce((s,r)=>s+r.plan,0);
+    let rows='';
+    grp.rows.forEach(r=>{
+      const sys=sysForRow(r);
+      const cur=sys?sys.cur:null;
+      const pred=sys?sys.predict:null;
+      const g=pred!=null?(pred-r.plan):null;
+      const hasSys=!!sys;
+      rows+=`<tr>
+        <td class="dept-nm${hasSys?' has-sys':''}">
+          ${r.n}
+          ${r.l&&r.l!=='—'?'<span style="color:#bbb;font-size:11px;font-weight:400;margin-left:5px">'+r.l+'</span>':''}
+        </td>
+        <td class="r" style="font-weight:700">${r.plan}</td>
+        <td class="c">${cur!=null?'<span class="sys-val">'+cur+'</span>':'<span class="nd">—</span>'}</td>
+        <td class="c">${pred!=null?'<span class="sys-val">'+pred+'</span>':'<span class="nd">—</span>'}</td>
+        <td class="c">${progBar(pred,r.plan)}</td>
+        <td class="c">${g!=null?gBadge(g,pred,r.plan):'<span class="nd">—</span>'}</td>
+        ${grp.showDiff?'<td class="c">'+diffHtml(r.diff)+'</td>':''}
+      </tr>`;
+    });
+    wrap.innerHTML+=`
+      <div class="prog-table-wrap" style="margin-bottom:14px">
+        <div class="prog-group-hd">
+          ${grp.g}
+          <span style="font-weight:400;color:#aaa;font-size:10px">Y26规划合计 <strong style="color:#2e7d32">${total}</strong></span>
+        </div>
+        <table class="pt">
+          <thead><tr>
+            <th>部门</th>
+            <th class="r">Y26规划</th>
+            <th class="c">在职<span style="color:#1565c0;font-size:9px;font-weight:400"> 系统</span></th>
+            <th class="c">预计在职<span style="color:#1565c0;font-size:9px;font-weight:400"> 系统</span></th>
+            <th class="c">满编率</th>
+            <th class="c">HC Gap</th>
+            ${grp.showDiff?'<th class="c">diff vs actual</th>':''}
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
+  });
+}
+function diffHtml(d){
+  if(d===undefined||d===null) return '<span class="nd">—</span>';
+  if(d>0) return '<span style="color:#2e7d32;font-weight:700">+'+d+'</span>';
+  if(d<0) return '<span style="color:#c62828;font-weight:700">'+d+'</span>';
+  return '<span style="color:#bbb">0</span>';
+}
+
+// ═══════════════════════════════════
+// FLOW CARDS
+// ═══════════════════════════════════
+function buildFlowCards(containerId, entry, dimission){
+  const wrap=document.getElementById(containerId);
+  // entry card
+  let entryRows=entry.length?entry.map(e=>`
+    <div class="flow-person">
+      <div class="flow-avatar">${initials(e.name)}</div>
+      <div class="flow-info">
+        <div class="flow-name">${e.name}${lvBadge(e.lv)}</div>
+        <div class="flow-dept">${e.dept}</div>
+      </div>
+      <div class="flow-meta">
+        <div class="flow-date">${fmtD(e.date)}</div>
+        <div style="font-size:10px;color:#aaa">${e.date>='2026-04'?'待入职':''}</div>
+      </div>
+    </div>`).join('')
+    :'<div class="flow-empty">暂无待入职人员</div>';
+
+  let dimRows=dimission.length?dimission.map(e=>`
+    <div class="flow-person">
+      <div class="flow-avatar" style="background:linear-gradient(135deg,#c62828,#e57373)">${initials(e.name)}</div>
+      <div class="flow-info">
+        <div class="flow-name">${e.name}<span class="lv-badge ${e.type==='主动'?'lv-dim-active':'lv-dim-passive'}">${e.type}离职</span></div>
+        <div class="flow-dept">${e.dept}</div>
+      </div>
+      <div class="flow-meta">
+        <div class="flow-date" style="color:#c62828">${fmtD(e.date)}</div>
+      </div>
+    </div>`).join('')
+    :'<div class="flow-empty">暂无待离职人员</div>';
+
+  wrap.innerHTML=`
+    <div class="flow-card">
+      <div class="flow-card-hd">
+        <span class="flow-card-icon">↗️</span>
+        <span class="flow-card-title">流入在途</span>
+        <span class="flow-card-count in">${entry.length} 人</span>
+      </div>
+      ${entryRows}
+    </div>
+    <div class="flow-card">
+      <div class="flow-card-hd">
+        <span class="flow-card-icon">↘️</span>
+        <span class="flow-card-title">流出在途</span>
+        <span class="flow-card-count out">${dimission.length} 人</span>
+      </div>
+      ${dimRows}
+    </div>`;
+}
+
+// ═══════════════════════════════════
+// DETAIL CARD (折叠 + 图表 + 子组表)
+// ═══════════════════════════════════
+let dcCount=0;
+function buildDetailCard(containerId, topData, subs){
+  const cid='dc-'+(++dcCount);
+  const barId='bar-'+cid;
+  const wrap=document.getElementById(containerId);
+
+  // sub table rows
+  let subRows=subs.map(s=>{
+    const g=s.pred-s.plan;
+    const cls=g>0?' class="ov"':g<0?' class="un"':'';
+    const pct=s.plan?Math.round(s.pred/s.plan*100):0;
+    const pBar='<span class="mini-bar"><span class="mini-fill'+(s.pred>s.plan?' ov':'')+'" style="width:'+Math.min(pct,100)+'%"></span></span>';
+    return `<tr${cls}>
+      <td style="font-weight:600">${s.n}</td>
+      <td class="c">${s.l||'—'}</td>
+      <td class="c" style="color:#1565c0;font-weight:700">${s.cur}</td>
+      <td class="c">${s.plan}</td>
+      <td class="c"><span style="color:#1976d2">${s.in||0}</span></td>
+      <td class="c"><span style="color:#c62828">${s.out||0}</span></td>
+      <td class="c" style="color:#1565c0;font-weight:700">${s.pred}</td>
+      <td class="c">${gBadge(g,s.pred,s.plan)}</td>
+      <td class="c">${pBar}<span style="font-size:11px;font-weight:700;color:${s.pred>=s.plan?'#2e7d32':s.pred>=s.plan*0.85?'#888':'#c62828'}">${pct}%</span></td>
+      <td class="c">${s.match!==undefined?mtTag(s.match):''}</td>
+    </tr>`;
+  }).join('');
+
+  const g=topData.predict-topData.plan;
+  wrap.innerHTML=`
+    <div class="detail-card" id="${cid}">
+      <div class="detail-hd" onclick="toggleDetail('${cid}','${barId}')">
+        <div class="detail-hd-name">${topData.name}</div>
+        <div class="detail-hd-leader">负责人 · ${topData.leader||'—'}</div>
+        <div class="detail-hd-meta">
+          <span style="font-size:13px;font-weight:700;color:#1565c0">${topData.cur}</span>
+          <span style="font-size:11px;color:#aaa"> / 目标 ${topData.plan}</span>
+          ${gBadge(g,topData.predict,topData.plan)}
+          <span class="expand-arrow" id="arr-${cid}">▶</span>
+        </div>
+      </div>
+      <div class="detail-body" id="body-${cid}">
+        <div class="chart-area">
+          <div style="flex:1;min-width:0"><canvas id="${barId}" height="150"></canvas></div>
+          <div class="chart-legend-col">
+            <div class="cl-row"><span class="cl-dot" style="background:rgba(76,175,80,.8)"></span>在职</div>
+            <div class="cl-row"><span class="cl-dot" style="background:rgba(33,150,243,.25)"></span>目标</div>
+            <div class="cl-row"><span class="cl-dot" style="background:rgba(25,118,210,.7)"></span>预计在职</div>
+          </div>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="sdt">
+            <thead><tr>
+              <th>子组</th><th class="c">负责人</th>
+              <th class="c" style="color:#1565c0">在职</th><th class="c">目标</th>
+              <th class="c">流入</th><th class="c">流出</th>
+              <th class="c" style="color:#1565c0">预计</th>
+              <th class="c">HC Gap</th><th class="c">满编率</th>
+              ${subs[0]&&subs[0].match!==undefined?'<th class="c">人岗匹配</th>':''}
+            </tr></thead>
+            <tbody>${subRows}</tbody>
+          </table>
+        </div>
+      </div>
+    </div>`;
+}
+
+function toggleDetail(cid, barId){
+  const body=document.getElementById('body-'+cid);
+  const arr=document.getElementById('arr-'+cid);
+  const isOpen=body.classList.toggle('open');
+  arr.classList.toggle('open',isOpen);
+  if(isOpen && !_charts[barId]){
+    renderSubBar(barId, cid);
   }
 }
 
-// ═══════════════════════════════════════════════
-// TOGGLE CARD
-// ═══════════════════════════════════════════════
-function toggleCard(cid) {
-  const body = document.getElementById('body-'+cid);
-  const icon = document.getElementById('icon-'+cid);
-  const isOpen = body.classList.toggle('open');
-  icon.classList.toggle('open', isOpen);
-  // lazy render chart when opening
-  if (isOpen) {
-    const barId = 'bar-card-'+cid;
-    // trigger resize for charts
-    Object.values(_charts).forEach(c => c.resize && c.resize());
-  }
+function renderSubBar(barId, cid){
+  // find subs by card
+  const subs = cid.includes('dc-1') ? SYS.biz.subs : SYS.func1.subs;
+  const canvas=document.getElementById(barId);
+  if(!canvas||!subs) return;
+  const labels=subs.map(s=>s.n.replace(/平台专家/g,'专家').replace(/行业/g,''));
+  if(_charts[barId]) _charts[barId].destroy();
+  _charts[barId]=new Chart(canvas,{
+    type:'bar',
+    data:{
+      labels,
+      datasets:[
+        {label:'在职',data:subs.map(s=>s.cur),backgroundColor:'rgba(76,175,80,.8)',borderRadius:4,barPercentage:.5},
+        {label:'目标',data:subs.map(s=>s.plan),backgroundColor:'rgba(33,150,243,.18)',borderRadius:4,barPercentage:.5},
+        {label:'预计在职',data:subs.map(s=>s.pred),type:'line',
+          borderColor:'rgba(25,118,210,.8)',backgroundColor:'transparent',
+          pointBackgroundColor:'rgba(25,118,210,.8)',pointRadius:3,tension:.3,borderWidth:2,
+          yAxisID:'y'}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false},tooltip:{bodyFont:{size:11},titleFont:{size:11}}},
+      scales:{
+        x:{ticks:{font:{size:9},maxRotation:50},grid:{display:false}},
+        y:{ticks:{font:{size:9}},beginAtZero:true,grid:{color:'rgba(0,0,0,.04)'}}
+      }
+    }
+  });
 }
 
-// ═══════════════════════════════════════════════
-// RECRUIT CARD
-// ═══════════════════════════════════════════════
-function buildRecruit() {
-  const r = SYS.recruit;
-  const card = document.getElementById('recruitCard');
-  card.innerHTML = '<div style="font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:4px">在招岗位 · 行业一部</div>'
-    +'<div class="recruit-grid">'
-    +'<div class="recruit-item"><div class="recruit-item-val">'+r.allPositionCount+'</div><div class="recruit-item-lbl">在招岗位数</div></div>'
-    +'<div class="recruit-item"><div class="recruit-item-val" style="color:#1565c0">'+r.allPositionProcessCount+'</div><div class="recruit-item-lbl">候选人总数</div></div>'
-    +'<div class="recruit-item"><div class="recruit-item-val" style="color:#e65100">'+r.followPositionCount+'</div><div class="recruit-item-lbl">关注岗位</div></div>'
-    +'<div class="recruit-item"><div class="recruit-item-val" style="color:#1976d2">'+r.followPositionProcessCount+'</div><div class="recruit-item-lbl">关注人选</div></div>'
-    +'</div>';
-}
-
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════
 // TAB SWITCH
-// ═══════════════════════════════════════════════
-function switchTab(id, btn) {
+// ═══════════════════════════════════
+function switchTab(id,btn){
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
   document.getElementById('tab-'+id).classList.add('active');
   btn.classList.add('active');
-  // refresh charts on switch
-  setTimeout(()=>Object.values(_charts).forEach(c=>c.resize&&c.resize()),50);
+  setTimeout(()=>Object.values(_charts).forEach(c=>c.resize&&c.resize()),30);
 }
 
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════
 // INIT
-// ═══════════════════════════════════════════════
-buildSummary();
-buildAlerts();
-buildY26Biz();
-buildY26Func();
+// ═══════════════════════════════════
+(function init(){
+  const b=SYS.biz.top, f1=SYS.func1.top, f2=SYS.func2.top;
 
-// BIZ dept card — default CLOSED
-buildDeptCard(document.getElementById('biz-dept-cards'), SYS.biz, false);
+  // BIZ hero
+  const bizHeroes=[
+    makeHero('行业一部',b.cur,b.plan,b.predict,'系统实时'),
+    makeHero('商业化 Total',b.cur, 2390, null,'仅行业一部有实时数据'),
+  ];
+  renderHeroRow('heroRow', bizHeroes);
 
-// FUNC dept cards
-buildDeptCard(document.getElementById('func1-dept-cards'), SYS.func1, false);
-buildDeptCard(document.getElementById('func2-dept-cards'), SYS.func2, false);
+  // KPI
+  buildKpi();
 
-buildRecruit();
+  // Y26 tables - BIZ
+  buildY26Tables('y26Tables', Y26.biz);
 
-// Modal helpers (keep for future use)
-function openMod(title, sub, bodyHtml) {
-  document.getElementById('mod-title').textContent = title;
-  document.getElementById('mod-sub').textContent = sub;
-  document.getElementById('mod-body').innerHTML = bodyHtml;
-  document.getElementById('moverlay').classList.add('open');
-}
-function closeMod(e) {
-  if (!e || e.target === document.getElementById('moverlay')) {
-    document.getElementById('moverlay').classList.remove('open');
-  }
-}
+  // Flow
+  buildFlowCards('flowGrid', SYS.biz.entry, SYS.biz.dimission);
+
+  // Detail card — BIZ (default closed)
+  buildDetailCard('bizDetailCard', b, SYS.biz.subs);
+
+  // FUNC hero
+  const funcHeroes=[
+    makeHero('财务一组',f1.cur,f1.plan,f1.predict,'系统实时'),
+    makeHero('资本市场',f2.cur,f2.plan,f2.predict,'系统实时'),
+    makeHero('职能 Y26合计',f1.cur+f2.cur,272,null,'仅财务一组+资本市场实时'),
+    makeHero('战略 Y26合计',0,72,null,'暂无系统实时数据'),
+  ];
+  renderHeroRow('funcHeroRow', funcHeroes);
+
+  // Y26 tables - FUNC
+  const funcGroups = Y26.func.map(g=>({...g, showDiff:true}));
+  buildY26Tables('funcY26Tables', funcGroups);
+
+  // Flow - FUNC
+  buildFlowCards('funcFlowGrid', SYS.func1.entry, SYS.func1.dimission);
+
+  // Detail - func1
+  buildDetailCard('func1DetailCard', f1, SYS.func1.subs);
+})();
 </script>
 </body>
 </html>
