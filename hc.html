@@ -1664,6 +1664,10 @@ function renderDeptMatrix(){
   const ctx=canvas.getContext('2d');
   if(!ctx){console.warn('Canvas context not available');return;}
   
+  // Debug
+  console.log('Rendering bubble chart with', allDepts.length, 'departments');
+  if(allDepts.length===0){console.warn('No departments to render');return;}
+  
   // Destroy existing chart if any
   if(canvas._chartInstance){
     canvas._chartInstance.destroy();
