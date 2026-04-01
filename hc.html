@@ -58,7 +58,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue"
 .bds-lbl{font-size:9px;color:#aaa;letter-spacing:.3px;margin-top:2px}
 
 /* KPI 网格 */
-.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.kpi-section{margin-bottom:20px}
+.kpi-section-title{font-size:10px;font-weight:700;color:#aaa;letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px;padding-left:2px;display:flex;align-items:center;gap:6px}
+.kpi-section-title::after{content:'';flex:1;height:1px;background:#E5EAE7}
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .kpi-card{background:#fff;border-radius:14px;border:1px solid #E5EAE7;padding:18px 20px;box-shadow:0 1px 6px rgba(15,61,36,.05);display:flex;flex-direction:column;justify-content:space-between}
 .kpi-top{display:flex;align-items:flex-start;justify-content:space-between}
 .kpi-val{font-size:36px;font-weight:900;line-height:1;color:#1a1a1a}
@@ -180,15 +183,20 @@ table.sdt tr.un{background:#FEF2F2}
 .mt-na{background:#F9FAFB;color:#9CA3AF}
 
 /* ════════════════════════════
-   ALERT BAR
+   ALERT BARS
 ════════════════════════════ */
-.alert-strip{background:#FFFBEB;border:1px solid #FDE68A;border-radius:12px;padding:12px 18px;margin-bottom:20px;display:flex;align-items:flex-start;gap:10px}
+.alert-wrap{display:flex;flex-direction:column;gap:6px;margin-bottom:20px}
+.alert-strip{border-radius:10px;padding:10px 16px;display:flex;align-items:flex-start;gap:10px}
 .alert-strip.hidden{display:none}
-.alert-icon{font-size:15px;margin-top:1px;flex-shrink:0}
-.alert-body{}
-.alert-title{font-size:12px;font-weight:700;color:#92400e;margin-bottom:6px}
-.alert-tags{display:flex;flex-wrap:wrap;gap:6px}
-.at{font-size:11px;padding:3px 9px;border-radius:6px;font-weight:600}
+.alert-strip.urgent{background:#FEF2F2;border:1px solid #fca5a5}
+.alert-strip.notice{background:#FFFBEB;border:1px solid #FDE68A}
+.alert-icon{font-size:14px;margin-top:1px;flex-shrink:0}
+.alert-label{font-size:11px;font-weight:800;margin-right:6px;white-space:nowrap}
+.alert-label.urgent{color:#991b1b}
+.alert-label.notice{color:#92400e}
+.alert-body{display:flex;align-items:center;flex-wrap:wrap;gap:5px}
+.alert-tags{display:flex;flex-wrap:wrap;gap:5px}
+.at{font-size:10px;padding:2px 8px;border-radius:5px;font-weight:600}
 .at.over{background:#DCFCE7;color:#166534;border:1px solid #86efac}
 .at.under{background:#FEE2E2;color:#991b1b;border:1px solid #fca5a5}
 
@@ -223,11 +231,20 @@ table.sdt tr.un{background:#FEF2F2}
 
 <!-- ══════ 商业化 TAB ══════ -->
 <div id="tab-biz" class="tab-panel active">
-  <div class="alert-strip" id="alertStrip">
-    <span class="alert-icon">⚠️</span>
-    <div class="alert-body">
-      <div class="alert-title">HC 预警 · 需重点关注</div>
-      <div class="alert-tags" id="alertTags"></div>
+  <div class="alert-wrap">
+    <div class="alert-strip urgent" id="alertUrgent">
+      <span class="alert-icon">🚨</span>
+      <div class="alert-body">
+        <span class="alert-label urgent">立即关注：</span>
+        <div class="alert-tags" id="alertUrgentTags"></div>
+      </div>
+    </div>
+    <div class="alert-strip notice" id="alertNotice">
+      <span class="alert-icon">📌</span>
+      <div class="alert-body">
+        <span class="alert-label notice">建议追进：</span>
+        <div class="alert-tags" id="alertNoticeTags"></div>
+      </div>
     </div>
   </div>
 
@@ -245,7 +262,7 @@ table.sdt tr.un{background:#FEF2F2}
       </div>
       <div class="big-donut-stats" id="bigStats"></div>
     </div>
-    <div class="kpi-grid" id="kpiGrid"></div>
+    <div id="kpiGrid"></div>
   </div>
 
   <!-- DEPT GAP OVERVIEW -->
@@ -327,8 +344,15 @@ const DEPTS = {
       ],
       entry:[
         {name:"JICHAO SUN",dept:"行业一部",date:"2026-04-08",lv:"L1"},
+        {name:"缪薛鹏",dept:"平台专家十二组",date:"2026-04-01",lv:"IC"},
+        {name:"邓鸿颖",dept:"行业五组",date:"2026-04-08",lv:"IC"},
+        {name:"洪方雯",dept:"平台专家十一组",date:"2026-04-27",lv:"IC"},
+        {name:"陈静仪",dept:"行业七组",date:"2026-07-01",lv:"IC"},
       ],
-      dimission:[]
+      dimission:[
+        {name:"波雅(李淑华)",dept:"行业四组",date:"2026-04-13",type:"被动",lv:"L1"},
+        {name:"六尾(许凌豪)",dept:"平台专家九组",date:"2026-04-07",type:"主动",lv:"IC"},
+      ]
     },
     {
       name:"行业二部", leader:"欧迪", plan:90, cur:78, predict:83, inHc:6, outHc:1,
@@ -344,7 +368,7 @@ const DEPTS = {
         {name:"顾北辰",dept:"平台专家组",date:"2026-04-15",lv:"L1"},
       ],
       dimission:[
-        {name:"林夕辞",dept:"行业运营组",date:"2026-04-20",type:"主动"},
+        {name:"林夕辞",dept:"行业运营组",date:"2026-04-20",type:"主动",lv:"IC"},
       ]
     },
     {
@@ -380,7 +404,7 @@ const DEPTS = {
         {name:"温如玉",dept:"日化BD组",date:"2026-04-12",lv:"L2"},
       ],
       dimission:[
-        {name:"余烟飞",dept:"医美BD组",date:"2026-04-18",type:"被动"},
+        {name:"余烟飞",dept:"医美BD组",date:"2026-04-18",type:"被动",lv:"L1"},
       ]
     },
     {
@@ -399,8 +423,8 @@ const DEPTS = {
         {name:"远山黛",dept:"运营组",date:"2026-05-06",lv:"L2"},
       ],
       dimission:[
-        {name:"折梦兰",dept:"策略组",date:"2026-04-20",type:"主动"},
-        {name:"锦书来",dept:"专家组",date:"2026-04-25",type:"主动"},
+        {name:"折梦兰",dept:"策略组",date:"2026-04-20",type:"主动",lv:"IC"},
+        {name:"锦书来",dept:"专家组",date:"2026-04-25",type:"转岗",lv:"L1"},
       ]
     },
     {
@@ -411,7 +435,7 @@ const DEPTS = {
         {n:"专家组", l:"明砚",cur:13,plan:12,in:0,out:0,pred:13,match:"优秀"},
       ],
       entry:[],
-      dimission:[{name:"晚风寒",dept:"BD组",date:"2026-04-22",type:"主动"}]
+      dimission:[{name:"晚风寒",dept:"BD组",date:"2026-04-22",type:"主动",lv:"IC"}]
     },
     {
       name:"行业七部", leader:"觅阳", plan:163, cur:160, predict:166, inHc:8, outHc:2,
@@ -474,7 +498,7 @@ const DEPTS = {
         {name:"尹长风",dept:"生态BD一组",date:"2026-04-08",lv:"L1"},
         {name:"阮清越",dept:"生态BD二组",date:"2026-04-15",lv:"L2"},
       ],
-      dimission:[{name:"沈浮生",dept:"生态运营组",date:"2026-04-20",type:"被动"}]
+      dimission:[{name:"沈浮生",dept:"生态运营组",date:"2026-04-20",type:"转岗",lv:"L2"}]
     },
     {
       name:"生态二部", leader:"米欧", plan:334, cur:316, predict:328, inHc:15, outHc:3,
@@ -550,7 +574,7 @@ const DEPTS = {
         {name:"落云歌",dept:"商业化产品一组",date:"2026-04-10",lv:"L1"},
         {name:"时未晚",dept:"广告产品组",date:"2026-05-01",lv:"L2"},
       ],
-      dimission:[{name:"流光散",dept:"PMO",date:"2026-04-15",type:"主动"}]
+      dimission:[{name:"流光散",dept:"PMO",date:"2026-04-15",type:"主动",lv:"IC"}]
     },
   ],
   ecom:[
@@ -680,37 +704,92 @@ function renderKpis(containerId, depts){
   const pct=Math.round(t.cur/t.plan*100);
   const warns=depts.filter(d=>d.isWarn||d.cur<d.plan*0.85);
   const overDepts=depts.filter(d=>d.cur>d.plan);
-  const items=[
-    {v:t.cur, lbl:'在职人数', sub:'含实时+模拟数据', cls:'b', icon:'👥'},
-    {v:pct+'%', lbl:'整体满编率', sub:t.cur+'人 / Y26规划'+t.plan+'人', cls:pct>=100?'g':pct>=85?'':'r', icon:'📊'},
-    {v:t.predict, lbl:'预计在职', sub:'含待入职 +'+t.inHc+'，待离职 -'+t.outHc, cls:'', icon:'🎯'},
-    {v:warns.length, lbl:'低满编预警', sub:warns.map(d=>d.name).join('·').slice(0,30)+'…', cls:warns.length?'r':'g', icon:'⚠️'},
-    {v:'+'+t.inHc, lbl:'流入在途', sub:'L1/L2关键人选待入职', cls:'b', icon:'↗️'},
-    {v:overDepts.length+'', lbl:'超编部门', sub:overDepts.map(d=>d.name).slice(0,3).join('·'), cls:overDepts.length?'':'g', icon:'📈'},
+  // 统计L1/L2流入流出
+  const allEntry=depts.flatMap(d=>d.entry||[]);
+  const allDim=depts.flatMap(d=>d.dimission||[]);
+  const keyIn=allEntry.filter(e=>e.lv==='L1'||e.lv==='L2');
+  const keyOut=allDim.filter(e=>e.lv==='L1'||e.lv==='L2');
+  const dimOut=allDim.filter(e=>e.type==='主动'||e.type==='被动');
+  const transOut=allDim.filter(e=>e.type==='转岗');
+
+  const sections=[
+    {
+      title:'HC 数据',
+      items:[
+        {v:t.cur, lbl:'在职人数', sub:'Y26规划 '+t.plan+' 人', cls:'b', icon:'👥'},
+        {v:pct+'%', lbl:'整体满编率', sub:t.cur+' / '+t.plan, cls:pct>=100?'g':pct>=85?'':'r', icon:'📊'},
+        {v:t.predict, lbl:'预计在职', sub:'预计缺/超 '+(t.predict>=t.plan?'超'+(t.predict-t.plan):'缺'+(t.plan-t.predict))+'人', cls:'', icon:'🎯'},
+      ]
+    },
+    {
+      title:'流动数据',
+      items:[
+        {v:'+'+keyIn.length, lbl:'L1/L2 流入在途', sub:'IC另有 '+(allEntry.length-keyIn.length)+' 人待入职', cls:'b', icon:'↗️'},
+        {v:'-'+keyOut.length, lbl:'L1/L2 流出在途', sub:'离职 '+dimOut.filter(e=>e.lv==='L1'||e.lv==='L2').length+' · 转岗 '+transOut.filter(e=>e.lv==='L1'||e.lv==='L2').length, cls:keyOut.length?'r':'', icon:'↘️'},
+        {v:transOut.length+'', lbl:'转岗在途', sub:transOut.map(e=>e.name).join('·')||'暂无', cls:transOut.length?'':'', icon:'🔄'},
+      ]
+    },
+    {
+      title:'建议关注',
+      items:[
+        {v:warns.length+'', lbl:'低满编部门', sub:warns.slice(0,2).map(d=>d.name).join('·')+(warns.length>2?'等':''), cls:warns.length?'r':'g', icon:'⚠️'},
+        {v:overDepts.length+'', lbl:'超编部门', sub:overDepts.slice(0,2).map(d=>d.name).join('·')||'暂无', cls:'', icon:'📈'},
+        {v:dimOut.length+'', lbl:'离职在途', sub:dimOut.map(e=>(e.lv==='L1'||e.lv==='L2'?'★':'')+e.name).join('·').slice(0,28)||'暂无', cls:dimOut.length?'r':'', icon:'🚪'},
+      ]
+    }
   ];
   const el=document.getElementById(containerId);
-  el.innerHTML=items.map(it=>`
-    <div class="kpi-card">
-      <div class="kpi-top">
-        <div class="kpi-val ${it.cls||''}">${it.v}</div>
-        <div class="kpi-icon">${it.icon}</div>
+  el.innerHTML=sections.map(sec=>`
+    <div class="kpi-section">
+      <div class="kpi-section-title">${sec.title}</div>
+      <div class="kpi-grid">
+        ${sec.items.map(it=>`
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <div class="kpi-val ${it.cls||''}">${it.v}</div>
+            <div class="kpi-icon">${it.icon}</div>
+          </div>
+          <div class="kpi-lbl">${it.lbl}</div>
+          <div class="kpi-sub">${it.sub}</div>
+        </div>`).join('')}
       </div>
-      <div class="kpi-lbl">${it.lbl}</div>
-      <div class="kpi-sub">${it.sub}</div>
     </div>`).join('');
 }
 
 // ════════════════════════════════════════════
 // ALERT STRIP
 // ════════════════════════════════════════════
-function renderAlerts(containerId, tagId, depts){
-  const warns=depts.filter(d=>d.cur<d.plan*0.85||d.isWarn);
-  const overs=depts.filter(d=>d.cur>d.plan*1.05);
-  if(!warns.length&&!overs.length){document.getElementById(containerId).classList.add('hidden');return;}
-  let html='';
-  warns.forEach(d=>html+='<span class="at under">'+d.name+' 满编率'+Math.round(d.cur/d.plan*100)+'%</span>');
-  overs.forEach(d=>html+='<span class="at over">'+d.name+' 超编'+(d.cur-d.plan)+'人</span>');
-  document.getElementById(tagId).innerHTML=html;
+function renderAlerts(urgentId, urgentTagId, noticeId, noticeTagId, depts){
+  // 立即关注：满编率<70% 或 isWarn
+  const urgent=depts.filter(d=>d.cur<d.plan*0.70||d.isWarn);
+  // 建议追进：满编率70~85%，或有L1/L2流出
+  const allDim=depts.flatMap(d=>d.dimission||[]);
+  const keyOutDepts=depts.filter(d=>(d.dimission||[]).some(e=>e.lv==='L1'||e.lv==='L2'));
+  const notice=depts.filter(d=>!urgent.includes(d)&&(d.cur/d.plan<0.85||(d.dimission||[]).some(e=>e.lv==='L1'||e.lv==='L2')));
+
+  const urgentEl=document.getElementById(urgentId);
+  const noticeEl=document.getElementById(noticeId);
+
+  if(!urgent.length) urgentEl.classList.add('hidden');
+  else {
+    let html='';
+    urgent.forEach(d=>{
+      const pct=Math.round(d.cur/d.plan*100);
+      html+='<span class="at under">'+d.name+' '+pct+'%</span>';
+    });
+    document.getElementById(urgentTagId).innerHTML=html;
+  }
+  if(!notice.length) noticeEl.classList.add('hidden');
+  else {
+    let html='';
+    notice.forEach(d=>{
+      const hasDim=(d.dimission||[]).some(e=>e.lv==='L1'||e.lv==='L2');
+      const pct=Math.round(d.cur/d.plan*100);
+      const tag=hasDim?d.name+' L1/L2流出':d.name+' '+pct+'%';
+      html+='<span class="at '+(hasDim?'under':'under')+'">'+tag+'</span>';
+    });
+    document.getElementById(noticeTagId).innerHTML=html;
+  }
 }
 
 // ════════════════════════════════════════════
@@ -763,15 +842,16 @@ function renderDeptCards(containerId, depts){
 
     // L1/L2 entry only
     const keyEntry=(d.entry||[]).filter(e=>e.lv==='L1'||e.lv==='L2');
-    const icEntryCount=(d.entry||[]).filter(e=>e.lv==='IC').length;
-    const keyDim=(d.dimission||[]);
+    const icEntryCount=(d.entry||[]).filter(e=>e.lv==='IC'||!e.lv).length;
+    const keyDim=(d.dimission||[]).filter(e=>e.lv==='L1'||e.lv==='L2');
+    const icDimCount=(d.dimission||[]).filter(e=>!e.lv||e.lv==='IC').length;
 
     // flow HTML
     const mkPersons=(list,cls)=>list.map(e=>`
       <div class="flow-person">
         <div class="flow-av ${cls}">${initials(e.name)}</div>
         <div class="flow-info">
-          <div class="flow-nm">${e.name}${lvTag(e.lv||'')}${e.type?'<span class="lv-tag" style="background:#dc2626;color:#fff">'+e.type+'</span>':''}</div>
+          <div class="flow-nm">${e.name}${lvTag(e.lv||'')}${e.type==='转岗'?'<span class="lv-tag" style="background:#7c3aed;color:#fff">转岗</span>':e.type==='主动'?'<span class="lv-tag" style="background:#dc2626;color:#fff">主动</span>':e.type==='被动'?'<span class="lv-tag" style="background:#92400e;color:#fff">被动</span>':''}</div>
           <div class="flow-dept">${e.dept}</div>
         </div>
         <div class="flow-right"><div class="flow-date">${fmtD(e.date||e.date)}</div></div>
@@ -847,8 +927,9 @@ function renderDeptCards(containerId, depts){
             ${icEntryCount?'<div class="ic-note">另有 IC '+icEntryCount+' 人待入职</div>':''}
           </div>
           <div class="flow-blk">
-            <div class="flow-blk-title">↘ 人员流出 <span class="flow-count out">${keyDim.length}</span></div>
-            ${keyDim.length?mkPersons(keyDim,'out'):'<div class="flow-empty">暂无流出</div>'}
+            <div class="flow-blk-title">↘ L1/L2 流出 <span class="flow-count out">${keyDim.length}</span></div>
+            ${keyDim.length?mkPersons(keyDim,'out'):'<div class="flow-empty">暂无L1/L2流出</div>'}
+            ${icDimCount?'<div class="ic-note">另有 IC '+icDimCount+' 人流出（离职/转岗）</div>':''}
           </div>
         </div>
         ${subHtml}
@@ -925,7 +1006,7 @@ function switchTab(id,btn){
   const bt=totals(biz);
 
   // 商业化 tab
-  renderAlerts('alertStrip','alertTags',biz);
+  renderAlerts('alertUrgent','alertUrgentTags','alertNotice','alertNoticeTags',biz);
   setTimeout(()=>renderBigDonut('bigDonut',bt.cur,bt.plan,bt.predict),100);
   renderKpis('kpiGrid',biz);
   renderDeptBars('deptBarList',biz,(name)=>{
