@@ -58,18 +58,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue"
 .bds-lbl{font-size:9px;color:#aaa;letter-spacing:.3px;margin-top:2px}
 
 /* KPI 网格 */
-.kpi-row{display:flex;gap:8px;flex-wrap:nowrap;margin-bottom:20px}
-.kpi-row .kpi-card{flex:1;min-width:0;padding:12px 14px}
+.kpi-row{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:20px}
 .kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .dept-bar-flow{display:flex;gap:6px;font-size:10px;font-weight:700;min-width:120px;justify-content:flex-end;align-items:center;margin-left:8px}
 .flow-prev{font-size:10px;color:#aaa;margin-top:1px}
-.kpi-card{background:#fff;border-radius:14px;border:1px solid #E5EAE7;padding:18px 20px;box-shadow:0 1px 6px rgba(15,61,36,.05);display:flex;flex-direction:column;justify-content:space-between}
-.kpi-top{display:flex;align-items:flex-start;justify-content:space-between}
-.kpi-val{font-size:24px;font-weight:900;line-height:1;color:#1a1a1a;word-break:break-all}
+.kpi-card{background:#fff;border-radius:14px;border:1px solid #E5EAE7;padding:14px 16px;box-shadow:0 2px 8px rgba(15,61,36,.06);display:flex;flex-direction:column;justify-content:space-between;cursor:default;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--kpi-accent,#E5EAE7);border-radius:14px 0 0 14px}
+.kpi-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(15,61,36,.12)}
+.kpi-card.accent-blue{--kpi-accent:#3b82f6;background:linear-gradient(135deg,#fff 70%,#eff6ff)}
+.kpi-card.accent-green{--kpi-accent:#16a34a;background:linear-gradient(135deg,#fff 70%,#f0fdf4)}
+.kpi-card.accent-red{--kpi-accent:#dc2626;background:linear-gradient(135deg,#fff 70%,#fff5f5)}
+.kpi-card.accent-purple{--kpi-accent:#7c3aed;background:linear-gradient(135deg,#fff 70%,#f5f3ff)}
+.kpi-card.accent-gray{--kpi-accent:#9ca3af;background:#fafafa}
+.kpi-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px}
+.kpi-val{font-size:26px;font-weight:900;line-height:1;color:#1a1a1a;word-break:break-all}
 .kpi-val.g{color:#16a34a}.kpi-val.r{color:#dc2626}.kpi-val.b{color:#1d4ed8}
-.kpi-icon{font-size:16px;opacity:.6;flex-shrink:0}
-.kpi-lbl{font-size:10px;font-weight:700;color:#888;letter-spacing:.2px;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.kpi-sub{font-size:9px;color:#aaa;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi-icon{font-size:18px;opacity:.7;flex-shrink:0;margin-top:2px}
+.kpi-lbl{font-size:10px;font-weight:700;color:#666;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi-sub{font-size:9px;color:#aaa;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .kpi-trend{display:flex;align-items:center;gap:4px;margin-top:8px;font-size:11px;font-weight:700}
 .trend-up{color:#16a34a}.trend-dn{color:#dc2626}
 
@@ -757,19 +763,20 @@ function renderKpis(containerId, depts){
   const allDim=depts.flatMap(d=>d.dimission||[]);
   const dimOut=allDim.filter(e=>e.type==='主动'||e.type==='被动');
   const transOut=allDim.filter(e=>e.type==='转岗');
+  const flowIn=allEntry.length;
+  const flowOut=allDim.length;
+  const gapText=t.predict>=t.plan?'超'+(t.predict-t.plan)+'人':t.predict<t.plan?'缺'+(t.plan-t.predict)+'人':'达标';
   const items=[
-    {v:t.plan,        lbl:'HC规划数',   sub:'Y26总目标',                               cls:'',  icon:'📋'},
-    {v:t.cur,         lbl:'在职人数',   sub:'实时在职',                                cls:'b', icon:'👥'},
-    {v:allEntry.length,lbl:'入职在途',  sub:'L1/L2+'+(allEntry.filter(e=>!e.lv||e.lv==='IC').length)+' IC', cls:'b', icon:'↗️'},
-    {v:dimOut.length, lbl:'离职在途',   sub:dimOut.map(e=>e.name).slice(0,2).join('·')||'暂无', cls:dimOut.length?'r':'', icon:'🚪'},
-    {v:transOut.length,lbl:'转岗在途',  sub:transOut.map(e=>e.name).join('·')||'暂无', cls:transOut.length?'':'', icon:'🔄'},
-    {v:0,             lbl:'转入在途',   sub:'待补充',                                  cls:'',  icon:'📥'},
-    {v:t.predict,     lbl:'预计在职',   sub:(t.predict>=t.plan?'超'+(t.predict-t.plan):t.predict<t.plan?'缺'+(t.plan-t.predict):'达标'), cls:'', icon:'🎯'},
-    {v:pct+'%',       lbl:'满编率',     sub:t.cur+' / '+t.plan,                       cls:pct>=100?'g':pct>=85?'':'r', icon:'📊'},
+    {v:t.plan,    lbl:'HC 规划',   sub:'Y26总目标',                             cls:'',                                accent:'gray',   icon:'📋'},
+    {v:t.cur,     lbl:'在职人数', sub:'系统实时',                               cls:'b',                               accent:'blue',   icon:'👥'},
+    {v:'+'+flowIn, lbl:'流入在途', sub:'L1/L2 '+(allEntry.filter(e=>e.lv==='L1'||e.lv==='L2').length)+' · IC '+(allEntry.filter(e=>!e.lv||e.lv==='IC').length), cls:'b', accent:'blue', icon:'↗'},
+    {v:'-'+flowOut,lbl:'流出在途', sub:'离职 '+dimOut.length+' · 转岗 '+transOut.length, cls:flowOut?'r':'',           accent:flowOut?'red':'gray', icon:'↘'},
+    {v:t.predict,  lbl:'预计在职', sub:gapText,                                 cls:'',                                accent:'green',  icon:'🎯'},
+    {v:pct+'%',    lbl:'满编率',   sub:t.cur+' / '+t.plan,                      cls:pct>=100?'g':pct>=85?'':'r',       accent:pct>=100?'green':pct>=85?'gray':'red', icon:'📊'},
   ];
   const el=document.getElementById(containerId);
   el.innerHTML=items.map(it=>`
-    <div class="kpi-card">
+    <div class="kpi-card accent-${it.accent}">
       <div class="kpi-top">
         <div class="kpi-val ${it.cls||''}">${it.v}</div>
         <div class="kpi-icon">${it.icon}</div>
