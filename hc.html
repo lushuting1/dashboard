@@ -1048,7 +1048,7 @@ const DEPTS = {
       dimission:[]
     },
     {
-      name:"行业八部", leader:"纳什", plan:95, cur:91, predict:96, inHc:6, outHc:1,
+      name:"行业八部", leader:"纳什", plan:95, cur:80, predict:79, inHc:1, outHc:2,
       subs:[
         {n:"BD一组",l:"碎锦",cur:20,plan:20,in:2,out:0,pred:22,match:"优秀"},
         {n:"BD二组",l:"流光",cur:18,plan:20,in:1,out:0,pred:19,match:"匹配"},
@@ -1057,20 +1057,25 @@ const DEPTS = {
         {n:"专家组",l:"潮落",cur:15,plan:15,in:1,out:0,pred:16,match:"优秀"},
       ],
       entry:[{name:"叶如尘",dept:"BD二组",date:"2026-04-18",lv:"L2"}],
-      dimission:[]
+      dimission:[
+        {name:"折丹(王梦瑶)",dept:"平台专家四组",date:"2026-04-03",type:"主动",lv:"IC"},
+        {name:"椿木(沈欣)",dept:"平台专家四组",date:"2026-04-30",type:"被动",lv:"IC"}
+      ]
     },
     {
-      name:"行业九部", leader:"宗宪", plan:48, cur:44, predict:47, inHc:4, outHc:1,
+      name:"行业九部", leader:"宗宪", plan:48, cur:39, predict:39, inHc:1, outHc:1,
       subs:[
         {n:"BD组",   l:"轻舟",cur:18,plan:20,in:2,out:1,pred:19,match:"匹配"},
         {n:"运营组", l:"落霞",cur:14,plan:16,in:1,out:0,pred:15,match:"匹配"},
         {n:"专家组", l:"归燕",cur:12,plan:12,in:1,out:0,pred:13,match:"优秀"},
       ],
       entry:[],
-      dimission:[]
+      dimission:[
+        {name:"世一(刘贤浩)",dept:"平台专家组",date:"2026-04-03",type:"主动",lv:"IC"}
+      ]
     },
     {
-      name:"渠道业务", leader:"米欧", plan:94, cur:90, predict:94, inHc:5, outHc:1,
+      name:"渠道业务", leader:"米欧", plan:94, cur:97, predict:97, inHc:2, outHc:2,
       subs:[
         {n:"渠道一组",l:"烟波",cur:22,plan:24,in:2,out:0,pred:24,match:"优秀"},
         {n:"渠道二组",l:"蝶影",cur:22,plan:24,in:1,out:0,pred:23,match:"匹配"},
@@ -1078,7 +1083,10 @@ const DEPTS = {
         {n:"专家组",  l:"远岸",cur:22,plan:22,in:1,out:0,pred:23,match:"优秀"},
       ],
       entry:[{name:"云帆过",dept:"渠道一组",date:"2026-04-20",lv:"L1"}],
-      dimission:[]
+      dimission:[
+        {name:"林飒(明蓉)",dept:"渠道二组",date:"2026-04-30",type:"主动",lv:"IC"},
+        {name:"果然(周健宇)",dept:"交易服务商组",date:"2026-05-08",type:"被动",lv:"IC"}
+      ]
     },
     {
       name:"生态一部", leader:"觅阳", plan:400, cur:382, predict:395, inHc:18, outHc:5,
@@ -1112,7 +1120,7 @@ const DEPTS = {
       dimission:[]
     },
     {
-      name:"创作者营销与商业服务", leader:"玄霜", plan:40, cur:38, predict:40, inHc:3, outHc:1,
+      name:"创作者营销与商业服务", leader:"玄霜", plan:40, cur:89, predict:95, inHc:6, outHc:0,
       subs:[
         {n:"创作者BD组",l:"流萤",cur:16,plan:18,in:2,out:1,pred:17,match:"匹配"},
         {n:"商业服务组",l:"踏霜",cur:12,plan:12,in:1,out:0,pred:13,match:"优秀"},
@@ -1135,7 +1143,7 @@ const DEPTS = {
       dimission:[]
     },
     {
-      name:"策略中台", leader:"—", plan:89, cur:85, predict:90, inHc:6, outHc:1,
+      name:"策略中台", leader:"—", plan:89, cur:72, predict:77, inHc:5, outHc:0,
       subs:[
         {n:"商业策略组",l:"山河",cur:20,plan:22,in:2,out:0,pred:22,match:"匹配"},
         {n:"数据策略组",l:"烟涛",cur:22,plan:24,in:2,out:0,pred:24,match:"优秀"},
@@ -1171,7 +1179,8 @@ const DEPTS = {
         {name:"落云歌",dept:"商业化产品一组",date:"2026-04-10",lv:"L1"},
         {name:"时未晚",dept:"广告产品组",date:"2026-05-01",lv:"L2"},
       ],
-      dimission:[{name:"流光散",dept:"PMO",date:"2026-04-15",type:"主动",lv:"IC"}]
+      dimission:[{name:"流光散",dept:"PMO",date:"2026-04-15",type:"主动",lv:"IC"},
+        {name:"久悠(Mike)",dept:"商业交易体验服务",date:"2026-04-14",type:"主动",lv:"L1",status:"审批中"}]
     },
   ],
   ecom:[
@@ -1203,7 +1212,7 @@ const DEPTS = {
   ],
   func:[
     {
-      name:"财务一组", leader:"白真", plan:51, cur:54, predict:57, inHc:3, outHc:0,
+      name:"财务一组", leader:"白真", plan:51, cur:54, predict:57, inHc:4, outHc:1,
       subs:[
         {n:"技术财务分析",cur:6, plan:6, pred:6},
         {n:"交易财务分析",cur:10,plan:7, pred:14},
@@ -1216,12 +1225,14 @@ const DEPTS = {
         {name:"鲍天玥",dept:"资金管理组",date:"2026-04-13",lv:"IC"},
         {name:"刘潇阳",dept:"资金管理组",date:"2026-04-27",lv:"IC"},
       ],
-      dimission:[]
+      dimission:[
+        {name:"诗源(杨骑宇)",dept:"财务职能",date:"2026-04-23",type:"被动",lv:"IC"}
+      ]
     },
-    {name:"财务二组",leader:"潇潇",plan:16,cur:14,predict:16,inHc:2,outHc:0,subs:[],entry:[],dimission:[]},
+    {name:"财务二组",leader:"潇潇",plan:16,cur:12,predict:12,inHc:0,outHc:0,subs:[],entry:[],dimission:[]},
     {name:"税务",leader:"马斯",plan:12,cur:10,predict:12,inHc:2,outHc:0,subs:[],entry:[],dimission:[]},
     {name:"内控内审",leader:"狄狄",plan:12,cur:12,predict:12,inHc:0,outHc:0,subs:[],entry:[],dimission:[]},
-    {name:"采购",leader:"四儿",plan:18,cur:18,predict:18,inHc:0,outHc:0,subs:[],entry:[],dimission:[]},
+    {name:"采购",leader:"四儿",plan:18,cur:20,predict:22,inHc:2,outHc:0,subs:[],entry:[],dimission:[]},
     {name:"投资部",leader:"文生POC",plan:16,cur:16,predict:16,inHc:0,outHc:0,subs:[],entry:[],dimission:[]},
     {name:"科技投资",leader:"非特",plan:2,cur:2,predict:2,inHc:0,outHc:0,subs:[],entry:[],dimission:[]},
     {name:"资本市场",leader:"劳拉",plan:5,cur:5,predict:5,inHc:0,outHc:0,subs:[],entry:[],dimission:[]},
