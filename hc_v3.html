@@ -523,6 +523,205 @@ body {
 /* ── COUNTUP ── */
 .countup { display: inline-block; }
 
+/* ── DEPT DETAIL PANEL ── */
+.dept-panel-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 600;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+}
+.dept-panel-overlay.open { display: flex; }
+.dept-panel {
+  background: white;
+  width: 100%;
+  max-width: 1100px;
+  max-height: 90vh;
+  border-radius: 24px 24px 0 0;
+  overflow-y: auto;
+  box-shadow: 0 -8px 40px rgba(0,0,0,0.18);
+  animation: panelSlideUp 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes panelSlideUp {
+  from { opacity: 0; transform: translateY(60px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.dept-panel-header {
+  padding: 28px 32px 20px;
+  background: linear-gradient(135deg, #ffffff 0%, #FFF0F2 100%);
+  border-bottom: 1px solid var(--gray-3);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-radius: 24px 24px 0 0;
+}
+.dept-panel-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.dept-panel-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--gray-9);
+}
+.dept-panel-subtitle {
+  font-size: 13px;
+  color: var(--gray-5);
+  margin-top: 2px;
+}
+.dept-panel-close {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--gray-2);
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+  font-family: inherit;
+  flex-shrink: 0;
+}
+.dept-panel-close:hover { background: var(--gray-3); }
+.dept-panel-header-stats {
+  display: flex;
+  gap: 24px;
+  font-size: 13px;
+  color: var(--gray-7);
+}
+.dept-panel-header-stats span { font-weight: 700; }
+.dept-panel-body { padding: 24px 32px 40px; }
+
+/* 7 KPI mini cards */
+.dp-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.dp-kpi-card {
+  background: var(--gray-1);
+  border-radius: 12px;
+  padding: 14px 12px;
+  text-align: center;
+  border: 2px solid transparent;
+}
+.dp-kpi-label { font-size: 11px; color: var(--gray-5); margin-bottom: 6px; font-weight: 500; }
+.dp-kpi-value { font-size: 22px; font-weight: 800; line-height: 1; }
+
+/* sub-group chart */
+.dp-chart-wrap {
+  background: var(--gray-1);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 24px;
+  position: relative;
+}
+.dp-chart-title { font-size: 14px; font-weight: 700; margin-bottom: 14px; }
+.dp-chart-legend {
+  display: flex; gap: 14px; font-size: 11px; color: var(--gray-5);
+  margin-bottom: 10px;
+}
+.dp-chart-legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: middle; }
+#dpChartSvg { width: 100%; display: block; overflow: visible; }
+.dp-svg-tooltip {
+  position: fixed;
+  background: rgba(26,32,44,0.92);
+  color: white;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 12px;
+  line-height: 1.7;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.15s;
+  backdrop-filter: blur(8px);
+  max-width: 180px;
+  white-space: pre-wrap;
+}
+.dp-svg-tooltip.show { opacity: 1; }
+
+/* key people section */
+.dp-people-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.dp-people-card {
+  background: var(--gray-1);
+  border-radius: 14px;
+  padding: 18px 20px;
+}
+.dp-people-title {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.dp-person-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--gray-3);
+  font-size: 12px;
+}
+.dp-person-row:last-child { border-bottom: none; padding-bottom: 0; }
+.dp-person-name { font-weight: 600; color: var(--gray-9); }
+.dp-person-dept { color: var(--gray-5); flex: 1; }
+.dp-person-date { color: var(--green); font-weight: 600; }
+.dp-person-type { color: var(--red); font-weight: 600; }
+.dp-empty-tip { color: var(--gray-5); font-size: 12px; padding: 8px 0; }
+
+/* sub-group detail table */
+.dp-table-wrap {
+  background: white;
+  border-radius: 14px;
+  border: 1px solid var(--gray-3);
+  overflow: hidden;
+}
+.dp-table-title { font-size: 14px; font-weight: 700; padding: 16px 20px; border-bottom: 1px solid var(--gray-3); }
+.dp-table-wrap table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.dp-table-wrap thead th {
+  background: var(--gray-1);
+  padding: 10px 14px;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--gray-5);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--gray-3);
+}
+.dp-table-wrap thead th:first-child { text-align: left; }
+.dp-table-wrap tbody tr { border-bottom: 1px solid var(--gray-2); }
+.dp-table-wrap tbody tr:nth-child(even) { background: #FAFBFC; }
+.dp-table-wrap tbody tr:last-child { border-bottom: none; }
+.dp-table-wrap tbody tr:hover { background: var(--red-bg); }
+.dp-table-wrap td { padding: 11px 14px; text-align: center; }
+.dp-table-wrap td:first-child { text-align: left; font-weight: 600; }
+.match-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+}
+.match-green { background: #E8F5E9; color: #2E7D32; }
+.match-blue { background: #E3F2FD; color: var(--blue); }
+.match-orange { background: #FFF3E0; color: #E65100; }
+
 /* ── RESPONSIVE ── */
 @media (max-width: 900px) {
   .donut-grid { grid-template-columns: 1fr; }
@@ -567,6 +766,40 @@ body {
     <div id="modalBody"></div>
   </div>
 </div>
+
+<!-- DEPT DETAIL PANEL -->
+<div class="dept-panel-overlay" id="deptPanelOverlay">
+  <div class="dept-panel" id="deptPanel">
+    <div class="dept-panel-header">
+      <div class="dept-panel-header-top">
+        <div>
+          <div class="dept-panel-title" id="dpTitle">—</div>
+          <div class="dept-panel-subtitle" id="dpSubtitle">系统实时数据</div>
+        </div>
+        <button class="dept-panel-close" id="dpClose">✕</button>
+      </div>
+      <div class="dept-panel-header-stats" id="dpHeaderStats"></div>
+    </div>
+    <div class="dept-panel-body">
+      <div class="dp-kpi-grid" id="dpKpiGrid"></div>
+      <div class="dp-chart-wrap">
+        <div class="dp-chart-title">子组 HC 对比图</div>
+        <div class="dp-chart-legend">
+          <span><span class="dp-chart-legend-dot" style="background:#00C853"></span>在职</span>
+          <span><span class="dp-chart-legend-dot" style="background:#90CAF9;border:1.5px dashed #1565C0;width:9px;height:9px;box-sizing:border-box"></span>目标</span>
+          <span><span class="dp-chart-legend-dot" style="background:#1565C0;border-radius:50%"></span>满编率趋势</span>
+        </div>
+        <svg id="dpChartSvg" height="220"></svg>
+      </div>
+      <div class="dp-people-grid" id="dpPeopleGrid"></div>
+      <div class="dp-table-wrap" id="dpTableWrap">
+        <div class="dp-table-title">子组明细</div>
+        <div id="dpTableBody"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dp-svg-tooltip" id="dpSvgTooltip"></div>
 
 <!-- MAIN -->
 <div class="main">
@@ -1074,6 +1307,363 @@ function closeModal() {
 document.getElementById('kpiModal').addEventListener('click', e => {
   if (e.target === document.getElementById('kpiModal')) closeModal();
 });
+
+/* ═══════════════════════════════════════════
+   DEPT DETAIL PANEL DATA
+═══════════════════════════════════════════ */
+const HANGYIBU_SUBS = [
+  {name:'行业一组', leader:'千月(陈思琪)', current:9, total:8, transIn:0, transOut:0, predict:9, match:'优秀'},
+  {name:'行业二组', leader:'吴邪(吴建成)', current:9, total:6, transIn:0, transOut:0, predict:9, match:'优秀'},
+  {name:'行业三组', leader:'克斯(陈宇田)', current:9, total:8, transIn:0, transOut:0, predict:9, match:'匹配'},
+  {name:'行业四组', leader:'千月(陈思琪)', current:5, total:4, transIn:0, transOut:1, predict:4, match:'匹配'},
+  {name:'行业五组', leader:'吴邪(吴建成)', current:4, total:5, transIn:1, transOut:0, predict:5, match:'匹配'},
+  {name:'行业六组', leader:'嘉莉(惠江雯)', current:11, total:5, transIn:0, transOut:0, predict:11, match:'匹配'},
+  {name:'行业七组', leader:'昭燃(千艺)', current:12, total:9, transIn:1, transOut:0, predict:13, match:'匹配'},
+  {name:'行业八组', leader:'吴邪(吴建成)', current:6, total:7, transIn:0, transOut:0, predict:6, match:'优秀'},
+  {name:'行业九组', leader:'白泉(陈可茵)', current:8, total:7, transIn:0, transOut:0, predict:8, match:'优秀'},
+  {name:'行业十组', leader:'昂扬(李昂)', current:9, total:8, transIn:1, transOut:1, predict:9, match:'匹配'},
+  {name:'行业十一组', leader:'南舟(姚苒)', current:5, total:6, transIn:0, transOut:0, predict:5, match:'匹配'},
+  {name:'行业十二组', leader:'希坦(贺琼)', current:5, total:4, transIn:0, transOut:1, predict:4, match:'匹配'},
+  {name:'平台专家一组', leader:'古娴(高逸群)', current:6, total:8, transIn:0, transOut:0, predict:6, match:'匹配'},
+  {name:'平台专家二组', leader:'菀得(杨森)', current:9, total:5, transIn:0, transOut:0, predict:9, match:'优秀'},
+  {name:'平台专家三组', leader:'若琳(陈若琳)', current:7, total:6, transIn:0, transOut:0, predict:7, match:'优秀'},
+  {name:'平台专家四组', leader:'古娴(高逸群)', current:4, total:3, transIn:0, transOut:0, predict:4, match:'优秀'},
+  {name:'平台专家五组', leader:'菀得(杨森)', current:5, total:5, transIn:0, transOut:0, predict:5, match:'优秀'},
+  {name:'平台专家六组', leader:'希莫(焦潞林)', current:5, total:4, transIn:0, transOut:0, predict:5, match:'匹配'},
+  {name:'平台专家七组', leader:'希莫(焦潞林)', current:9, total:8, transIn:0, transOut:0, predict:9, match:'匹配'},
+  {name:'平台专家八组', leader:'菀得(杨森)', current:5, total:6, transIn:0, transOut:0, predict:5, match:'匹配'},
+  {name:'平台专家九组', leader:'清也(刘月)', current:8, total:6, transIn:0, transOut:1, predict:7, match:'匹配'},
+  {name:'平台专家十组', leader:'珠珠(朱梦倩)', current:6, total:6, transIn:0, transOut:0, predict:6, match:'匹配'},
+  {name:'平台专家十一组', leader:'惊鸿(王晶晶)', current:4, total:5, transIn:1, transOut:0, predict:5, match:null},
+  {name:'平台专家十二组', leader:'惊鸿(王晶晶)', current:5, total:3, transIn:0, transOut:0, predict:5, match:'匹配'},
+  {name:'行业策略组', leader:'飞云(张一鸣)', current:2, total:3, transIn:0, transOut:0, predict:2, match:'匹配'},
+];
+
+const HANGYIBU_PENDING_L1L2 = [
+  {name:'JICHAO SUN', level:'L1', dept:'行业一部', date:'04-08'},
+];
+const HANGYIBU_LEAVING_L1L2 = [];
+
+const DEPT_DETAIL_DB = {
+  '行业一部': {
+    deptName: '行业一部',
+    leader: '昂扬',
+    currentHc: 167,
+    budgetHc: 164,
+    transIn: 5,
+    transOut: 4,
+    pendingL1L2: HANGYIBU_PENDING_L1L2,
+    leavingL1L2: HANGYIBU_LEAVING_L1L2,
+    subs: HANGYIBU_SUBS,
+  }
+};
+
+/* ═══════════════════════════════════════════
+   DEPT DETAIL PANEL LOGIC
+═══════════════════════════════════════════ */
+function openDeptPanel(deptName) {
+  const data = DEPT_DETAIL_DB[deptName];
+  const overlay = document.getElementById('deptPanelOverlay');
+
+  if (!data) {
+    // No data available – show friendly notice via existing KPI modal
+    document.getElementById('modalTitle').textContent = deptName + ' · 子组详情';
+    document.getElementById('modalBody').innerHTML =
+      '<div style="color:#8D9BAB;font-size:14px;padding:20px 0;text-align:center">该部门暂无子组数据权限</div>';
+    document.getElementById('kpiModal').classList.add('open');
+    return;
+  }
+
+  // --- Header ---
+  const predict = data.currentHc + data.transIn - data.transOut;
+  const gap = data.currentHc - data.budgetHc; // positive = over budget
+  const fillRate = Math.round(data.currentHc / data.budgetHc * 100);
+
+  document.getElementById('dpTitle').textContent = data.deptName + ' · ' + data.leader;
+  document.getElementById('dpSubtitle').textContent = '系统实时';
+  document.getElementById('dpHeaderStats').innerHTML =
+    '<span>' + data.currentHc + '在职</span>' +
+    '<span>' + data.budgetHc + '规划</span>' +
+    '<span style="color:' + (gap > 0 ? '#1565C0' : '#FF2442') + '">' + (gap > 0 ? '超' + gap : '缺' + Math.abs(gap)) + ' Gap</span>' +
+    '<span style="color:#00C853">' + fillRate + '%满编率</span>';
+
+  // --- 7 KPI cards ---
+  var kpiDefs2 = [
+    {label:'在职', value: data.currentHc, color:'#1565C0', prefix:'', suffix:''},
+    {label:'Y26规划', value: data.budgetHc, color:'#4A5568', prefix:'', suffix:''},
+    {label:'预计在职', value: predict, color:'#1565C0', prefix:'', suffix:''},
+    {label:'流入在途', value: data.transIn, color:'#00C853', prefix:'+', suffix:''},
+    {label:'流出在途', value: data.transOut, color:'#FF2442', prefix:'-', suffix:''},
+    {label:'HC Gap', value: Math.abs(gap), color: gap >= 0 ? '#FF2442' : '#FF8C00',
+      prefix: gap > 0 ? '超' : gap < 0 ? '缺' : '', suffix:''},
+    {label:'满编率', value: fillRate, color: fillRate >= 100 ? '#1565C0' : fillRate >= 90 ? '#00C853' : '#FF8C00', prefix:'', suffix:'%'},
+  ];
+  var kpiHtml = '';
+  kpiDefs2.forEach(function(k) {
+    kpiHtml += '<div class="dp-kpi-card">' +
+      '<div class="dp-kpi-label">' + k.label + '</div>' +
+      '<div class="dp-kpi-value" style="color:' + k.color + '">' + k.prefix + k.value + k.suffix + '</div>' +
+      '</div>';
+  });
+  document.getElementById('dpKpiGrid').innerHTML = kpiHtml;
+
+  // --- SVG combo chart ---
+  buildDpChart(data.subs);
+
+  // --- Key people ---
+  var pendingHtml = '';
+  if (data.pendingL1L2 && data.pendingL1L2.length > 0) {
+    data.pendingL1L2.forEach(function(p) {
+      pendingHtml += '<div class="dp-person-row">' +
+        '<span class="dp-person-name">' + p.name + '</span>' +
+        '<span class="dp-person-dept">' + p.dept + ' · ' + p.level + '</span>' +
+        '<span class="dp-person-date">预计 ' + p.date + '</span>' +
+        '</div>';
+    });
+    pendingHtml += '<div class="dp-empty-tip" style="margin-top:6px;color:#8D9BAB">另有 IC 3 人待入职</div>';
+  } else {
+    pendingHtml = '<div class="dp-empty-tip">暂无 L1/L2 待入职</div>';
+  }
+
+  var leavingHtml = '';
+  if (data.leavingL1L2 && data.leavingL1L2.length > 0) {
+    data.leavingL1L2.forEach(function(p) {
+      leavingHtml += '<div class="dp-person-row">' +
+        '<span class="dp-person-name">' + p.name + '</span>' +
+        '<span class="dp-person-dept">' + p.dept + '</span>' +
+        '<span class="dp-person-type">' + p.type + '</span>' +
+        '</div>';
+    });
+  } else {
+    leavingHtml = '<div class="dp-empty-tip">暂无 L1/L2 流出</div>' +
+      '<div class="dp-empty-tip" style="margin-top:4px">另有 IC 2 人流出（离职/转岗）</div>';
+  }
+
+  document.getElementById('dpPeopleGrid').innerHTML =
+    '<div class="dp-people-card">' +
+      '<div class="dp-people-title">🌱 关键人选 · 待入职 L1/L2</div>' +
+      pendingHtml +
+    '</div>' +
+    '<div class="dp-people-card">' +
+      '<div class="dp-people-title">🚪 L1/L2 流出</div>' +
+      leavingHtml +
+    '</div>';
+
+  // --- Detail table ---
+  var tableHtml = '<table><thead><tr>' +
+    '<th>子组</th><th>负责人</th><th>在职</th><th>目标</th>' +
+    '<th>流入</th><th>流出</th><th>预计</th><th>HC Gap</th><th>满编率</th><th>人岗匹配</th>' +
+    '</tr></thead><tbody>';
+  data.subs.forEach(function(sub, idx) {
+    var subRate = Math.round(sub.current / sub.total * 100);
+    var subGap = sub.current - sub.total;
+    var gapHtml = subGap > 0
+      ? '<span style="color:#FF2442;font-weight:700">超' + subGap + '</span>'
+      : subGap < 0
+      ? '<span style="color:#FF8C00;font-weight:600">' + subGap + '</span>'
+      : '<span style="color:#8D9BAB">达标</span>';
+    var rateColor = subRate >= 100 ? '#1565C0' : subRate >= 90 ? '#00C853' : subRate >= 75 ? '#FF8C00' : '#FF2442';
+    var matchHtml = '';
+    if (sub.match === '优秀') matchHtml = '<span class="match-badge match-green">优秀</span>';
+    else if (sub.match === '匹配') matchHtml = '<span class="match-badge match-blue">匹配</span>';
+    else if (sub.match === '存疑') matchHtml = '<span class="match-badge match-orange">存疑</span>';
+    else matchHtml = '<span style="color:#CBD5E0">—</span>';
+
+    tableHtml += '<tr>' +
+      '<td>' + sub.name + '</td>' +
+      '<td style="color:#4A5568">' + sub.leader + '</td>' +
+      '<td style="font-weight:700;color:#1565C0">' + sub.current + '</td>' +
+      '<td>' + sub.total + '</td>' +
+      '<td style="color:#00C853">' + (sub.transIn > 0 ? '+' + sub.transIn : '—') + '</td>' +
+      '<td style="color:#FF2442">' + (sub.transOut > 0 ? '-' + sub.transOut : '—') + '</td>' +
+      '<td style="font-weight:600">' + sub.predict + '</td>' +
+      '<td>' + gapHtml + '</td>' +
+      '<td style="color:' + rateColor + ';font-weight:700">' + subRate + '%</td>' +
+      '<td>' + matchHtml + '</td>' +
+      '</tr>';
+  });
+  tableHtml += '</tbody></table>';
+  document.getElementById('dpTableBody').innerHTML = tableHtml;
+
+  // Show panel
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDeptPanel() {
+  document.getElementById('deptPanelOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('dpClose').addEventListener('click', closeDeptPanel);
+document.getElementById('deptPanelOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeDeptPanel();
+});
+
+/* ═══════════════════════════════════════════
+   DEPT PANEL SVG COMBO CHART
+═══════════════════════════════════════════ */
+function buildDpChart(subs) {
+  var svgEl = document.getElementById('dpChartSvg');
+  var tooltip2 = document.getElementById('dpSvgTooltip');
+  svgEl.innerHTML = '';
+
+  var H = 220;
+  var PAD2 = {l: 36, r: 50, t: 10, b: 60};
+  var ns2 = 'http://www.w3.org/2000/svg';
+
+  function el2(tag, attrs, parent) {
+    var e = document.createElementNS(ns2, tag);
+    Object.entries(attrs).forEach(function(pair) { e.setAttribute(pair[0], pair[1]); });
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+
+  // We use clientWidth but SVG is responsive; use a fixed logical width
+  var W2 = 1040;
+  svgEl.setAttribute('viewBox', '0 0 ' + W2 + ' ' + H);
+  svgEl.setAttribute('height', H);
+
+  var cW2 = W2 - PAD2.l - PAD2.r;
+  var cH2 = H - PAD2.t - PAD2.b;
+  var n = subs.length;
+  var slotW = cW2 / n;
+  var barW = Math.min(slotW * 0.3, 18);
+
+  var maxVal = Math.max.apply(null, subs.map(function(s){ return Math.max(s.current, s.total); }));
+  maxVal = Math.ceil(maxVal * 1.15);
+
+  // Y-axis left (count)
+  var yTicks = [0, Math.round(maxVal*0.25), Math.round(maxVal*0.5), Math.round(maxVal*0.75), maxVal];
+  yTicks.forEach(function(v) {
+    var y2 = PAD2.t + cH2 - (v / maxVal) * cH2;
+    el2('line', {x1: PAD2.l, y1: y2, x2: PAD2.l + cW2, y2: y2, stroke:'#E4E8EC', 'stroke-width':1}, svgEl);
+    var t = el2('text', {x: PAD2.l - 4, y: y2 + 4, 'text-anchor':'end', fill:'#8D9BAB', 'font-size':'9', 'font-family':'Inter'}, svgEl);
+    t.textContent = v;
+  });
+
+  // Right Y-axis (满编率 %)
+  var maxRate = 180;
+  [0, 50, 100, 150].forEach(function(rv) {
+    var y2 = PAD2.t + cH2 - (rv / maxRate) * cH2;
+    var t = el2('text', {x: PAD2.l + cW2 + 4, y: y2 + 4, fill:'#90CAF9', 'font-size':'9', 'font-family':'Inter'}, svgEl);
+    t.textContent = rv + '%';
+  });
+
+  // Axes
+  el2('line', {x1: PAD2.l, y1: PAD2.t + cH2, x2: PAD2.l + cW2, y2: PAD2.t + cH2, stroke:'#CBD5E0', 'stroke-width':1.5}, svgEl);
+  el2('line', {x1: PAD2.l, y1: PAD2.t, x2: PAD2.l, y2: PAD2.t + cH2, stroke:'#CBD5E0', 'stroke-width':1.5}, svgEl);
+
+  // Line points collector
+  var linePoints = [];
+
+  subs.forEach(function(sub, i) {
+    var cx = PAD2.l + i * slotW + slotW / 2;
+    var barX1 = cx - barW - 1;
+    var barX2 = cx + 1;
+
+    // Green bar: current
+    var curH = (sub.current / maxVal) * cH2;
+    var curY = PAD2.t + cH2 - curH;
+    var gBar = el2('rect', {
+      x: barX1, y: curY, width: barW, height: curH,
+      fill: '#00C853', rx: 2, opacity: 0.85, style: 'cursor:pointer'
+    }, svgEl);
+
+    // Blue dashed bar: total (outline only)
+    var totH = (sub.total / maxVal) * cH2;
+    var totY = PAD2.t + cH2 - totH;
+    var tBar = el2('rect', {
+      x: barX2, y: totY, width: barW, height: totH,
+      fill: '#E3F2FD', stroke: '#1565C0', 'stroke-width': 1.5, 'stroke-dasharray': '3,2', rx: 2,
+      style: 'cursor:pointer'
+    }, svgEl);
+
+    // X label (45° rotated)
+    var labelEl = el2('text', {
+      x: cx, y: PAD2.t + cH2 + 8,
+      'text-anchor': 'end',
+      fill: '#4A5568', 'font-size': '8', 'font-family': 'Inter',
+      transform: 'rotate(-45 ' + cx + ' ' + (PAD2.t + cH2 + 8) + ')'
+    }, svgEl);
+    labelEl.textContent = sub.name;
+
+    // Line point: fill rate mapped to right Y-axis
+    var subRate = Math.round(sub.current / sub.total * 100);
+    var ly = PAD2.t + cH2 - (Math.min(subRate, maxRate) / maxRate) * cH2;
+    linePoints.push([cx, ly, sub, subRate]);
+
+    // Hover group
+    var hoverG = el2('g', {style:'cursor:pointer'}, svgEl);
+    el2('rect', {x: barX1 - 2, y: PAD2.t, width: slotW, height: cH2 + 2, fill:'transparent'}, hoverG);
+
+    function showTip(e) {
+      tooltip2.innerHTML = sub.name + '\n在职: ' + sub.current + '  目标: ' + sub.total + '\n满编率: ' + subRate + '%';
+      tooltip2.style.left = (e.clientX + 12) + 'px';
+      tooltip2.style.top = (e.clientY - 10) + 'px';
+      tooltip2.classList.add('show');
+    }
+    function hideTip() { tooltip2.classList.remove('show'); }
+
+    [gBar, tBar, hoverG].forEach(function(el3) {
+      el3.addEventListener('mousemove', showTip);
+      el3.addEventListener('mouseleave', hideTip);
+    });
+  });
+
+  // Draw line
+  if (linePoints.length > 1) {
+    var pathD = linePoints.map(function(pt, i) {
+      return (i === 0 ? 'M' : 'L') + pt[0] + ',' + pt[1];
+    }).join(' ');
+    el2('path', {d: pathD, fill:'none', stroke:'#1565C0', 'stroke-width':2, 'stroke-linejoin':'round', opacity:0.8}, svgEl);
+  }
+
+  // Dots on line
+  linePoints.forEach(function(pt) {
+    el2('circle', {cx: pt[0], cy: pt[1], r: 3.5, fill:'#1565C0', stroke:'white', 'stroke-width':1.5}, svgEl);
+  });
+}
+
+/* ═══════════════════════════════════════════
+   BIND BUBBLE CHART CLICKS → DEPT PANEL
+═══════════════════════════════════════════ */
+(function() {
+  // We need to re-wire bubble click after the bubble chart is built.
+  // Since bubble chart is built in IIFE above, we attach click handlers
+  // via event delegation on the SVG.
+  var bubbleSvg = document.getElementById('bubbleSvg');
+  bubbleSvg.addEventListener('click', function(e) {
+    var g = e.target.closest('.bubble-g');
+    if (!g) return;
+    // find matching data by reading label text from child text elements
+    var texts = g.querySelectorAll('text');
+    var labelText = '';
+    texts.forEach(function(t) { if (!labelText) labelText = t.textContent; });
+    // match against BUDGET_DATA
+    var matched = BUDGET_DATA.find(function(d) {
+      return labelText && d.l2.indexOf(labelText.replace('…','')) === 0;
+    });
+    if (matched) openDeptPanel(matched.l2);
+  });
+})();
+
+/* ═══════════════════════════════════════════
+   BIND TABLE ROW CLICKS → DEPT PANEL
+═══════════════════════════════════════════ */
+(function bindTableClicks() {
+  // Use event delegation on dept-table-card containers
+  document.querySelectorAll('.dept-table-card').forEach(function(card) {
+    card.addEventListener('click', function(e) {
+      var tr = e.target.closest('tbody tr');
+      if (!tr) return;
+      var deptNameEl = tr.querySelector('.dept-name');
+      if (!deptNameEl) return;
+      var deptName = deptNameEl.textContent.trim();
+      openDeptPanel(deptName);
+    });
+  });
+})();
 
 /* ═══════════════════════════════════════════
    TABS
