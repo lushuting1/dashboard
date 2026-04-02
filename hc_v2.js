@@ -47,7 +47,7 @@ function renderMckTable(id, l1){
     +'<th>部门</th><th>Budget</th><th>在职</th><th>转入↑</th><th>转出↓</th>'
     +'<th>待入职</th><th>待离职</th><th>预计</th><th>Gap</th><th>满编率</th>'
     +'</tr></thead><tbody>';
-  h+='<tr class="mck-l1-row" onclick="_expanded[''+l1+'']=!_expanded[''+l1+''];renderMckTable(''+id+'',''+l1+'')">';
+  h+='<tr class="mck-l1-row" onclick="_expanded[\"'+l1+'\"]=!_expanded[\"'+l1+'\"];renderMckTable(\"'+id+'\",\"'+l1+'\")">';
   h+='<td><em class="mck-toggle">'+(open?'−':'+')+'</em>■ '+grp.l1+'('+grp.rows.length+')</td>';
   h+='<td>'+grp.budget+'</td><td>'+grp.actual+'</td>';
   h+='<td>'+(grp.transIn||naCell())+'</td><td>'+(grp.transOut||naCell())+'</td>';
