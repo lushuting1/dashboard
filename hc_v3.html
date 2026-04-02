@@ -799,8 +799,8 @@ L1_NAMES.forEach(n => buildDonut(n));
 
   svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
 
-  // Filter to rows with actual > 0
-  const data = BUDGET_DATA.filter(d => d.actual > 0 || d.budget > 0);
+  // Filter to rows with actual > 0 only (skip no-permission depts)
+  const data = BUDGET_DATA.filter(d => d.actual > 0);
   const maxBudget = Math.max(...data.map(d => d.budget));
   const maxActual = Math.max(...data.map(d => d.actual > 0 ? d.actual : d.budget));
 
