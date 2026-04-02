@@ -211,9 +211,4 @@ function switchTab(id, btn){
   renderDimTable('func-dim', ['财务','税务','内控','内审','采购','资本市场','法务','DI']);
   renderMckTable('mck-finance','职能&DI');
   renderBars('finance-bars', func.rows);
-}  } catch(e) {
-    document.body.insertAdjacentHTML('afterbegin',
-      '<div style="background:red;color:white;padding:20px;font-size:14px;z-index:9999;position:fixed;top:0;left:0;right:0">JS ERROR: '+e.message+'</div>'
-    );
-  }
 })();
