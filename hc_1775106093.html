@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 HC Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#FF2442;--red-dark:#D91B36;--bg:#F5F6FA;--card:#fff;
+  --text:#1a1a2e;--text-2:#6b7280;--text-3:#9ca3af;--border:#e5e7eb;
+  --green:#22c55e;--yellow:#f59e0b;--orange:#f97316;
+  --radius:12px;--shadow:0 2px 12px rgba(0,0,0,.07);
+}
+body{font-family:'Noto Sans SC',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:40px}
+.header{background:#fff;border-bottom:1px solid var(--border);padding:0 24px;position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(0,0,0,.05)}
+.header-inner{max-width:1200px;margin:0 auto}
+.header-top{display:flex;align-items:center;justify-content:space-between;padding:16px 0 0}
+.header-title h1{font-size:22px;font-weight:700;letter-spacing:-.3px}
+.header-title p{font-size:13px;color:var(--text-2);margin-top:2px}
+.refresh-btn{background:var(--red);color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit}
+.refresh-btn:hover{background:var(--red-dark)}
+.tabs{display:flex;margin-top:12px}
+.tab-btn{padding:10px 20px;font-size:14px;font-weight:500;color:var(--text-2);border:none;background:transparent;cursor:pointer;font-family:inherit;border-bottom:2px solid transparent;white-space:nowrap}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--red);border-bottom-color:var(--red);font-weight:600}
+.content{max-width:1200px;margin:0 auto;padding:28px 24px}
+.tab-panel{display:none}.tab-panel.active{display:block}
+.section-title{font-size:15px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section-title::before{content:'';display:block;width:3px;height:16px;background:var(--red);border-radius:2px}
+.overview-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:32px}
+.overview-card{background:var(--card);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)}
+.ov-dept{font-size:13px;color:var(--text-2);font-weight:500;margin-bottom:6px}
+.ov-budget{font-size:42px;font-weight:900;line-height:1;margin-bottom:16px;letter-spacing:-1px}
+.ov-budget span{font-size:16px;font-weight:400;color:var(--text-2);margin-left:4px}
+.progress-wrap{margin-bottom:12px}
+.progress-label{display:flex;justify-content:space-between;font-size:12px;color:var(--text-2);margin-bottom:6px}
+.progress-track{height:8px;background:#f3f4f6;border-radius:99px;overflow:hidden}
+.progress-bar{height:100%;border-radius:99px;width:0;transition:width .8s cubic-bezier(.4,0,.2,1)}
+.ov-meta{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--text-2)}
+.ov-meta-item{display:flex;flex-direction:column;gap:1px}
+.ov-meta-label{font-size:11px;color:var(--text-3)}
+.ov-meta-val{font-size:13px;font-weight:600}
+.ov-sep{color:var(--border);margin:auto 0}
+.rank-list{display:flex;flex-direction:column;gap:10px}
+.rank-item{background:var(--card);border-radius:10px;padding:12px 16px;box-shadow:var(--shadow);display:grid;grid-template-columns:200px 1fr 60px;align-items:center;gap:12px}
+.rank-track{height:10px;background:#f3f4f6;border-radius:99px;overflow:hidden}
+.rank-fill{height:100%;border-radius:99px;width:0;transition:width .9s cubic-bezier(.4,0,.2,1)}
+.rank-pct{font-size:13px;font-weight:700;text-align:right}
+.kpi-row{display:grid;grid-template-columns:repeat(7,1fr);gap:14px;margin-bottom:28px}
+.kpi-card{background:var(--card);border-radius:var(--radius);padding:18px 16px;box-shadow:var(--shadow);text-align:center}
+.kpi-label{font-size:11px;color:var(--text-3);margin-bottom:6px}
+.kpi-value{font-size:26px;font-weight:800;letter-spacing:-.5px}
+.kpi-value.highlight{color:var(--red)}
+.alert-area{background:var(--card);border-radius:var(--radius);padding:16px 20px;box-shadow:var(--shadow);margin-bottom:24px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.alert-label{font-size:13px;font-weight:600;color:var(--text-2)}
+.alert-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600}
+.badge-danger{background:#fff0f2;color:var(--red);border:1px solid #ffc0cb}
+.badge-warn{background:#fffbeb;color:#b45309;border:1px solid #fcd34d}
+.alert-divider{width:1px;height:20px;background:var(--border);margin:0 4px}
+.dept-bars{display:flex;flex-direction:column;gap:10px}
+.dept-item{background:var(--card);border-radius:10px;padding:14px 18px;box-shadow:var(--shadow);display:grid;grid-template-columns:200px 1fr 60px;align-items:center;gap:14px}
+.dept-name{font-size:13px;font-weight:500}
+.dept-track{height:10px;background:#f3f4f6;border-radius:99px;overflow:hidden}
+.dept-fill{height:100%;border-radius:99px;width:0;transition:width 1s cubic-bezier(.4,0,.2,1)}
+.dept-pct{font-size:13px;font-weight:700;text-align:right}
+.mck-table-wrap{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:28px;overflow:hidden}
+.mck-table-wrap table{width:100%;border-collapse:collapse;font-size:12.5px}
+.mck-table-wrap thead th{padding:10px 14px;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#002060;text-align:right;white-space:nowrap;background:#fff;border-bottom:2px solid #002060}
+.mck-table-wrap thead th:first-child{text-align:left;padding-left:18px}
+.mck-l1-row{cursor:pointer;background:#F9FAFB;border-bottom:1px solid #e5e7eb}
+.mck-l1-row:hover{background:#eef2ff}
+.mck-l1-row td{padding:10px 14px;font-weight:700;font-size:13px;color:#002060;text-align:right}
+.mck-l1-row td:first-child{text-align:left;padding-left:18px}
+.mck-l2-row td{padding:8px 14px;text-align:right;color:#374151;border-bottom:1px solid #f3f4f6;font-size:12.5px}
+.mck-l2-row td:first-child{text-align:left;padding-left:36px;color:#4B5563}
+.mck-l2-row:last-child td{border-bottom:none}
+.mck-toggle{display:inline-block;width:16px;margin-right:6px;color:#6b7280}
+.mck-gap-pos{color:#C00000;font-weight:700}
+.mck-gap-neg{color:#0070C0;font-weight:700}
+.mck-rate-wrap{display:flex;align-items:center;gap:8px;justify-content:flex-end}
+.mck-rate-bar{width:64px;height:6px;background:#f3f4f6;border-radius:99px;overflow:hidden;flex-shrink:0}
+.mck-rate-fill{height:100%;border-radius:99px}
+.mck-rate-text{font-size:11.5px;font-weight:700;min-width:36px;text-align:right}
+.badge-real{display:inline-block;font-size:9px;padding:1px 5px;border-radius:4px;margin-left:4px;background:#e6f4ea;color:#137333;vertical-align:middle}
+.na{color:#C9C9C9}
+.dim-list{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:24px}
+.dim-list table{width:100%;border-collapse:collapse;font-size:12.5px}
+.dim-list thead th{padding:10px 14px;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#002060;background:#fff;border-bottom:2px solid #002060;text-align:left}
+.dim-list tbody td{padding:9px 14px;border-bottom:1px solid #f3f4f6;color:#374151}
+.dim-list tbody tr:last-child td{border-bottom:none}
+.tag{display:inline-block;font-size:10px;padding:1px 6px;border-radius:4px;font-weight:600}
+.tag-p{background:#fff7ed;color:#92400e}
+.tag-a{background:#fee2e2;color:#dc2626}
+.tag-s{background:#f5f3ff;color:#7c3aed}
+.warn-box{background:#fffbeb;border:1px solid #fcd34d;border-radius:10px;padding:12px 18px;margin-bottom:20px;font-size:12px;color:#92400e}
+.footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--border);font-size:11px;color:var(--text-3);line-height:1.8}
+@media(max-width:900px){.overview-cards{grid-template-columns:1fr}.kpi-row{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.kpi-row{grid-template-columns:repeat(2,1fr)}.tab-btn{padding:10px 12px;font-size:13px}}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="header-inner">
+    <div class="header-top">
+      <div class="header-title">
+        <h1>2026 HC Dashboard</h1>
+        <p>大商业&amp;职能 · 实时编制追踪 · 数据更新：2026-04-02 13:01:20</p>
+      </div>
+      <button class="refresh-btn" onclick="window.location.reload()">↻ 刷新页面</button>
+    </div>
+    <nav class="tabs">
+      <button class="tab-btn active" onclick="switchTab('overview',this)">总览</button>
+      <button class="tab-btn" onclick="switchTab('trade',this)">交易</button>
+      <button class="tab-btn" onclick="switchTab('commercial',this)">商业化</button>
+      <button class="tab-btn" onclick="switchTab('finance',this)">职能&amp;DI</button>
+    </nav>
+  </div>
+</header>
+<main class="content">
+  <div class="tab-panel active" id="tab-overview">
+    <div class="section-title">部门总览</div>
+    <div class="overview-cards" id="overview-cards"></div>
+    <div class="section-title">全部门满编率排行（从低到高）</div>
+    <div class="rank-list" id="rank-list"></div>
+  </div>
+  <div class="tab-panel" id="tab-trade">
+    <div class="warn-box">⚠️ 交易板块暂无系统数据权限，当前数据为估算值</div>
+    <div class="alert-area" id="trade-alerts"></div>
+    <div class="kpi-row" id="trade-kpis"></div>
+    <div class="section-title">分部门明细</div>
+    <div class="mck-table-wrap" id="mck-trade"></div>
+    <div class="section-title" style="margin-top:28px">满编率排行</div>
+    <div class="dept-bars" id="trade-bars"></div>
+  </div>
+  <div class="tab-panel" id="tab-commercial">
+    <div class="alert-area" id="biz-alerts"></div>
+    <div class="kpi-row" id="biz-kpis"></div>
+    <div class="section-title">待离职明细（真实数据）</div>
+    <div class="dim-list" id="biz-dim"></div>
+    <div class="section-title" style="margin-top:24px">分部门明细</div>
+    <div class="mck-table-wrap" id="mck-commercial"></div>
+    <div class="section-title" style="margin-top:28px">满编率排行</div>
+    <div class="dept-bars" id="commercial-bars"></div>
+  </div>
+  <div class="tab-panel" id="tab-finance">
+    <div class="alert-area" id="func-alerts"></div>
+    <div class="kpi-row" id="func-kpis"></div>
+    <div class="section-title">待离职明细（真实数据）</div>
+    <div class="dim-list" id="func-dim"></div>
+    <div class="section-title" style="margin-top:24px">分部门明细</div>
+    <div class="mck-table-wrap" id="mck-finance"></div>
+    <div class="section-title" style="margin-top:28px">满编率排行</div>
+    <div class="dept-bars" id="finance-bars"></div>
+  </div>
+  <div class="footer">
+    <div>📋 Budget HC：来源于 Redoc Sheet《2026大商业&amp;职能HC管理Dashboard》</div>
+    <div>🔗 YTD Actual / 待入职 / 待离职：hr.xiaohongshu.com（方糖账号·有权限部门真实数据）</div>
+    <div>⚠️ 交易板块及部分商业化部门暂无系统权限，数据为估算</div>
+    <div>🕐 生成时间：2026-04-02 13:01:20</div>
+  </div>
+</main>
+<script id="budget-data" type="application/json">[{"l1": "交易", "l2": "行业运营一部", "budget": 78, "actual": 72, "transIn": 0, "transOut": 0, "pending": 0, "leaving": 2, "real": false}, {"l1": "交易", "l2": "行业运营二部", "budget": 25, "actual": 24, "transIn": 0, "transOut": 0, "pending": 0, "leaving": 1, "real": false}, {"l1": "交易", "l2": "行业运营三部", "budget": 127, "actual": 108, "transIn": 0, "transOut": 0, "pending": 0, "leaving": 3, "real": false}, {"l1": "交易", "l2": "中小商家", "budget": 50, "actual": 38, "transIn": 0, "transOut": 0, "pending": 0, "leaving": 2, "real": false}, {"l1": "交易", "l2": "交易产品", "budget": 146, "actual": 130, "transIn": 0, "transOut": 0, "pending": 0, "leaving": 4, "real": false}, {"l1": "商业化", "l2": "行业一部", "budget": 164, "actual": 142, "transIn": 0, "transOut": 0, "pending": 0, "leaving": 3, "real": false}, {"l1": "商业化", "l2": "行业二部", "budget": 90, "actual": 82, "transIn": 0, "transOut": 0, "pending": 0, "leaving": 2, "real": false}, {"l1": "商业化", "l2": "行业三部", "budget": 157, "actual": 138, "transIn": 0, "transOut": 0, "pending": 0, "leaving": 3, "real": false}, {"l1": "商业化", "l2": "行业四部", "budget": 207, "actual": 165, "transIn": 0, "transOut": 0, "pending": 0, "leaving": 5, "real": false}, {"l1": "商业化", "l2": "行业五部", "budget": 90, "actual": 79, "transIn": 0, "transOut": 0, "pending": 0, "leaving": 2, "real": false}, {"l1": "商业化", "l2": "行业六部", "budget": 48, "actual": 31, "transIn": 0, "transOut": 0, "pending": 0, "leaving": 2, "real": false}, {"l1": "商业化", "l2": "行业七部", "budget": 163, "actual": 148, "transIn": 0, "transOut": 0, "pending": 0, "leaving": 3, "real": false}, {"l1": "商业化", "l2": "行业八部", "budget": 95, "actual": 80, "transIn": 1, "transOut": 2, "pending": 0, "leaving": 0, "real": true}, {"l1": "商业化", "l2": "行业九部", "budget": 48, "actual": 39, "transIn": 1, "transOut": 1, "pending": 1, "leaving": 0, "real": true}, {"l1": "商业化", "l2": "渠道业务", "budget": 94, "actual": 97, "transIn": 0, "transOut": 0, "pending": 2, "leaving": 3, "real": false}, {"l1": "商业化", "l2": "生态一部", "budget": 400, "actual": 342, "transIn": 0, "transOut": 0, "pending": 0, "leaving": 0, "real": false}, {"l1": "商业化", "l2": "生态二部", "budget": 334, "actual": 275, "transIn": 0, "transOut": 0, "pending": 0, "leaving": 0, "real": false}, {"l1": "商业化", "l2": "创作者营销与商业服务", "budget": 100, "actual": 89, "transIn": 6, "transOut": 0, "pending": 1, "leaving": 0, "real": true}, {"l1": "商业化", "l2": "市场营销中台", "budget": 190, "actual": 143, "transIn": 0, "transOut": 0, "pending": 0, "leaving": 0, "real": false}, {"l1": "商业化", "l2": "策略中台", "budget": 108, "actual": 72, "transIn": 0, "transOut": 0, "pending": 5, "leaving": 7, "real": false}, {"l1": "商业化", "l2": "营销实验室", "budget": 14, "actual": 12, "transIn": 0, "transOut": 0, "pending": 0, "leaving": 0, "real": false}, {"l1": "商业化", "l2": "商业产品", "budget": 196, "actual": 174, "transIn": 0, "transOut": 0, "pending": 2, "leaving": 2, "real": false}, {"l1": "职能&DI", "l2": "财务一组", "budget": 51, "actual": 54, "transIn": 4, "transOut": 1, "pending": 0, "leaving": 0, "real": true}, {"l1": "职能&DI", "l2": "财务二组", "budget": 16, "actual": 12, "transIn": 0, "transOut": 0, "pending": 0, "leaving": 0, "real": true}, {"l1": "职能&DI", "l2": "税务", "budget": 12, "actual": 11, "transIn": 0, "transOut": 0, "pending": 0, "leaving": 0, "real": false}, {"l1": "职能&DI", "l2": "内控内审", "budget": 6, "actual": 8, "transIn": 0, "transOut": 0, "pending": 0, "leaving": 0, "real": false}, {"l1": "职能&DI", "l2": "内审", "budget": 6, "actual": 4, "transIn": 0, "transOut": 0, "pending": 1, "leaving": 0, "real": false}, {"l1": "职能&DI", "l2": "采购", "budget": 18, "actual": 20, "transIn": 2, "transOut": 0, "pending": 1, "leaving": 0, "real": true}, {"l1": "职能&DI", "l2": "投资部", "budget": 16, "actual": 14, "transIn": 0, "transOut": 0, "pending": 0, "leaving": 0, "real": false}, {"l1": "职能&DI", "l2": "科技投资", "budget": 2, "actual": 2, "transIn": 0, "transOut": 0, "pending": 0, "leaving": 0, "real": false}, {"l1": "职能&DI", "l2": "资本市场", "budget": 5, "actual": 5, "transIn": 0, "transOut": 0, "pending": 0, "leaving": 0, "real": true}, {"l1": "职能&DI", "l2": "法务部", "budget": 32, "actual": 29, "transIn": 0, "transOut": 0, "pending": 0, "leaving": 0, "real": false}, {"l1": "职能&DI", "l2": "DI", "budget": 107, "actual": 91, "transIn": 0, "transOut": 0, "pending": 0, "leaving": 0, "real": false}]</script>
+<script id="dim-data" type="application/json">[{"name": "折丹(王梦瑶)", "dept": "平台专家四组", "deptPath": "小红书,商业部,行业八部,平台专家四组", "date": "2026-04-03", "type": "主动", "lv": "IC", "status": "待离职"}, {"name": "诗源(杨骑宇)", "dept": "财务职能", "deptPath": "小红书,财务投资部,财务一组,财务职能", "date": "2026-04-23", "type": "被动", "lv": "IC", "status": "待离职"}, {"name": "久悠(Mike)", "dept": "商业交易体验服务", "deptPath": "小红书,商业部,商业产品部,商业交易体验服务", "date": "2026-04-14", "type": "主动", "lv": "L1", "status": "审批中"}, {"name": "椿木(沈欣)", "dept": "平台专家四组", "deptPath": "小红书,商业部,行业八部,平台专家四组", "date": "2026-04-30", "type": "被动", "lv": "IC", "status": "待离职"}, {"name": "果然(周健宇)", "dept": "交易服务商组", "deptPath": "小红书,商业部,渠道业务部,交易服务商组", "date": "2026-05-08", "type": "被动", "lv": "IC", "status": "待离职"}, {"name": "世一(刘贤浩)", "dept": "平台专家组", "deptPath": "小红书,商业部,行业九部,平台专家组", "date": "2026-04-03", "type": "主动", "lv": "IC", "status": "待离职"}, {"name": "林飒(明蓉)", "dept": "渠道二组", "deptPath": "小红书,商业部,渠道业务部,渠道二组", "date": "2026-04-30", "type": "主动", "lv": "IC", "status": "待离职"}]</script>
+<script>
+var BUDGET_DATA = JSON.parse(document.getElementById('budget-data').textContent);
+var DIM_LIST = JSON.parse(document.getElementById('dim-data').textContent);
+
+function rc(p){return p>=90?'#22c55e':p>=75?'#f59e0b':'#FF2442'}
+function rtc(p){return p>=90?'#166534':p>=75?'#92400e':'#b91c1c'}
+
+function computeRow(r){
+  var predict = r.actual + (r.transIn||0) - (r.transOut||0) + r.pending - r.leaving;
+  var gap = r.budget - predict;
+  var rate = r.budget > 0 ? Math.round(predict / r.budget * 100) : 0;
+  return Object.assign({}, r, {predict: predict, gap: gap, rate: rate});
+}
+
+function getL1(l1){
+  var rows = BUDGET_DATA.filter(function(r){return r.l1===l1;}).map(computeRow);
+  var budget=0,actual=0,transIn=0,transOut=0,pending=0,leaving=0;
+  rows.forEach(function(r){
+    budget+=r.budget; actual+=r.actual; transIn+=(r.transIn||0);
+    transOut+=(r.transOut||0); pending+=r.pending; leaving+=r.leaving;
+  });
+  var predict=actual+transIn-transOut+pending-leaving;
+  var gap=budget-predict;
+  var rate=budget>0?Math.round(predict/budget*100):0;
+  return {l1:l1,budget:budget,actual:actual,transIn:transIn,transOut:transOut,
+           pending:pending,leaving:leaving,predict:predict,gap:gap,rate:rate,rows:rows};
+}
+
+function naCell(){return '<span class="na">-</span>';}
+function mckRate(rate){
+  var pct=Math.min(rate,100), c=rc(rate), tc=rtc(rate);
+  return '<div class="mck-rate-wrap"><div class="mck-rate-bar"><div class="mck-rate-fill" style="width:'+pct+'%;background:'+c+'"></div></div>'
+    +'<span class="mck-rate-text" style="color:'+tc+'">'+(rate>100?'100%+':rate+'%')+'</span></div>';
+}
+function mckGap(gap){
+  if(!gap) return naCell();
+  return gap>0 ? '<span class="mck-gap-pos">+'+gap+'</span>' : '<span class="mck-gap-neg">'+gap+'</span>';
+}
+
+var _expanded = {};
+function renderMckTable(id, l1){
+  var el=document.getElementById(id); if(!el) return;
+  var grp=getL1(l1);
+  if(_expanded[l1]===undefined) _expanded[l1]=true;
+  var open=_expanded[l1];
+  var h='<table><thead><tr>'
+    +'<th>部门</th><th>Budget</th><th>在职</th><th>转入↑</th><th>转出↓</th>'
+    +'<th>待入职</th><th>待离职</th><th>预计</th><th>Gap</th><th>满编率</th>'
+    +'</tr></thead><tbody>';
+  h+='<tr class="mck-l1-row" onclick="_expanded[''+l1+'']=!_expanded[''+l1+''];renderMckTable(''+id+'',''+l1+'')">';
+  h+='<td><em class="mck-toggle">'+(open?'−':'+')+'</em>■ '+grp.l1+'('+grp.rows.length+')</td>';
+  h+='<td>'+grp.budget+'</td><td>'+grp.actual+'</td>';
+  h+='<td>'+(grp.transIn||naCell())+'</td><td>'+(grp.transOut||naCell())+'</td>';
+  h+='<td>'+grp.pending+'</td><td>'+grp.leaving+'</td>';
+  h+='<td>'+grp.predict+'</td><td>'+mckGap(grp.gap)+'</td><td>'+mckRate(grp.rate)+'</td></tr>';
+  if(open){
+    grp.rows.forEach(function(r){
+      h+='<tr class="mck-l2-row">';
+      h+='<td>'+r.l2+(r.real?'<span class="badge-real">真实</span>':'')+'</td>';
+      h+='<td>'+r.budget+'</td><td>'+(r.actual||naCell())+'</td>';
+      h+='<td>'+(r.transIn>0?r.transIn:naCell())+'</td><td>'+(r.transOut>0?r.transOut:naCell())+'</td>';
+      h+='<td>'+(r.pending||naCell())+'</td><td>'+(r.leaving||naCell())+'</td>';
+      h+='<td>'+r.predict+'</td><td>'+mckGap(r.gap)+'</td><td>'+mckRate(r.rate)+'</td></tr>';
+    });
+  }
+  h+='</tbody></table>';
+  el.innerHTML=h;
+}
+
+function renderBars(id, rows){
+  var el=document.getElementById(id); if(!el) return;
+  var sorted=[].concat(rows).sort(function(a,b){return a.rate-b.rate;});
+  el.innerHTML=sorted.map(function(r){
+    var pct=Math.min(r.rate,100), c=rc(r.rate), tc=rtc(r.rate);
+    var disp=r.rate>100?'100%+':r.rate+'%';
+    return '<div class="dept-item">'
+      +'<div class="dept-name">'+r.l2+(r.real?'<span class="badge-real">真</span>':'')+'</div>'
+      +'<div class="dept-track"><div class="dept-fill" data-pct="'+pct+'" style="background:'+c+'"></div></div>'
+      +'<div class="dept-pct" style="color:'+tc+'">'+disp+'</div></div>';
+  }).join('');
+  setTimeout(function(){
+    el.querySelectorAll('.dept-fill').forEach(function(b,i){
+      setTimeout(function(){b.style.width=b.dataset.pct+'%';},i*40);
+    });
+  },80);
+}
+
+function renderKpis(id, grp){
+  var el=document.getElementById(id); if(!el) return;
+  el.innerHTML='<div class="kpi-card"><div class="kpi-label">HC规划</div><div class="kpi-value">'+grp.budget+'</div></div>'
+    +'<div class="kpi-card"><div class="kpi-label">在职</div><div class="kpi-value">'+grp.actual+'</div></div>'
+    +'<div class="kpi-card"><div class="kpi-label">转入在途</div><div class="kpi-value">'+grp.transIn+'</div></div>'
+    +'<div class="kpi-card"><div class="kpi-label">转出在途</div><div class="kpi-value">'+grp.transOut+'</div></div>'
+    +'<div class="kpi-card"><div class="kpi-label">入职在途</div><div class="kpi-value">'+grp.pending+'</div></div>'
+    +'<div class="kpi-card"><div class="kpi-label">离职在途</div><div class="kpi-value">'+grp.leaving+'</div></div>'
+    +'<div class="kpi-card"><div class="kpi-label">满编率</div><div class="kpi-value highlight">'+grp.rate+'%</div></div>';
+}
+
+function renderAlerts(id, rows){
+  var el=document.getElementById(id); if(!el) return;
+  var danger=rows.filter(function(r){return r.rate<75;});
+  var warn=rows.filter(function(r){return r.rate>=75&&r.rate<85;});
+  var h='';
+  if(danger.length) h+='<span class="alert-label">立即关注</span>'+danger.map(function(r){return '<span class="alert-badge badge-danger">🚨 '+r.l2+' '+r.rate+'%</span>';}).join('');
+  if(warn.length){if(h)h+='<div class="alert-divider"></div>';h+='<span class="alert-label">建议追进</span>'+warn.map(function(r){return '<span class="alert-badge badge-warn">📌 '+r.l2+' '+r.rate+'%</span>';}).join('');}
+  if(!h) h='<span style="color:var(--text-3);font-size:13px">✅ 暂无预警部门</span>';
+  el.innerHTML=h;
+}
+
+function renderDimTable(id, l1Keywords){
+  var el=document.getElementById(id); if(!el) return;
+  var items=DIM_LIST.filter(function(d){
+    return l1Keywords.some(function(k){return (d.deptPath||'').indexOf(k)>=0||(d.dept||'').indexOf(k)>=0;});
+  });
+  if(!items.length){el.innerHTML='<div style="padding:16px 18px;color:var(--text-3);font-size:13px">暂无待离职人员</div>';return;}
+  var h='<table><thead><tr><th>姓名</th><th>部门</th><th>离职日期</th><th>类型</th><th>层级</th><th>状态</th></tr></thead><tbody>';
+  items.forEach(function(d){
+    var tag=d.type==='被动'?'tag-p':'tag-a';
+    h+='<tr><td style="font-weight:600">'+(d.name||'-')+'</td><td>'+(d.dept||'-')+'</td>'
+      +'<td>'+((d.date||'').slice(5)||'-')+'</td>'
+      +'<td><span class="tag '+tag+'">'+(d.type||'-')+'</span></td>'
+      +'<td>'+(d.lv||'-')+'</td>'
+      +'<td><span class="tag tag-s">'+(d.status||'待离职')+'</span></td></tr>';
+  });
+  h+='</tbody></table>';
+  el.innerHTML=h;
+}
+
+function renderOverview(){
+  var el=document.getElementById('overview-cards'); if(!el) return;
+  var l1s=['交易','商业化','职能&DI'];
+  var colors={'交易':'#f97316','商业化':'#FF2442','职能&DI':'#0070C0'};
+  el.innerHTML=l1s.map(function(l1){
+    var g=getL1(l1); var c=colors[l1]||'#888';
+    var pct=Math.min(g.rate,100);
+    return '<div class="overview-card">'
+      +'<div class="ov-dept">'+l1+'</div>'
+      +'<div class="ov-budget">'+g.budget+'<span>Budget HC</span></div>'
+      +'<div class="progress-wrap">'
+      +'<div class="progress-label"><span>在职 '+g.actual+'</span><span>'+g.rate+'%</span></div>'
+      +'<div class="progress-track"><div class="progress-bar" data-pct="'+pct+'" style="background:'+rc(g.rate)+'"></div></div>'
+      +'</div>'
+      +'<div class="ov-meta">'
+      +'<div class="ov-meta-item"><span class="ov-meta-label">待入职</span><span class="ov-meta-val">'+g.pending+'</span></div>'
+      +'<div class="ov-sep">·</div>'
+      +'<div class="ov-meta-item"><span class="ov-meta-label">待离职</span><span class="ov-meta-val">'+g.leaving+'</span></div>'
+      +'<div class="ov-sep">·</div>'
+      +'<div class="ov-meta-item"><span class="ov-meta-label">转入</span><span class="ov-meta-val">'+g.transIn+'</span></div>'
+      +'<div class="ov-sep">·</div>'
+      +'<div class="ov-meta-item"><span class="ov-meta-label">Gap</span><span class="ov-meta-val" style="color:'+(g.gap>0?'var(--red)':'var(--green)')+'">'+g.gap+'</span></div>'
+      +'</div></div>';
+  }).join('');
+  setTimeout(function(){
+    document.querySelectorAll('.progress-bar[data-pct]').forEach(function(b,i){
+      setTimeout(function(){b.style.width=b.dataset.pct+'%';},200+i*100);
+    });
+  },100);
+}
+
+function renderRankList(){
+  var el=document.getElementById('rank-list'); if(!el) return;
+  var all=BUDGET_DATA.map(computeRow).sort(function(a,b){return a.rate-b.rate;});
+  el.innerHTML=all.map(function(r){
+    var pct=Math.min(r.rate,100), c=rc(r.rate), tc=rtc(r.rate);
+    return '<div class="rank-item">'
+      +'<div style="font-size:13px;font-weight:500">'+r.l2+'<span style="font-size:11px;color:var(--text-3);margin-left:4px">['+r.l1+']</span></div>'
+      +'<div><div class="rank-track"><div class="rank-fill" data-pct="'+pct+'" style="background:'+c+'"></div></div></div>'
+      +'<div class="rank-pct" style="color:'+tc+'">'+(r.rate>100?'100%+':r.rate+'%')+'</div>'
+      +'</div>';
+  }).join('');
+  setTimeout(function(){
+    el.querySelectorAll('.rank-fill').forEach(function(b,i){
+      setTimeout(function(){b.style.width=b.dataset.pct+'%';},60+i*25);
+    });
+  },100);
+}
+
+function switchTab(id, btn){
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+  setTimeout(function(){
+    document.querySelectorAll('#tab-'+id+' [data-pct]').forEach(function(b,i){
+      b.style.width='0';
+      setTimeout(function(){b.style.width=b.dataset.pct+'%';},60+i*35);
+    });
+  },50);
+}
+
+(function init(){
+  renderOverview();
+  renderRankList();
+
+  var trade=getL1('交易');
+  renderAlerts('trade-alerts', trade.rows);
+  renderKpis('trade-kpis', trade);
+  renderMckTable('mck-trade','交易');
+  renderBars('trade-bars', trade.rows);
+
+  var biz=getL1('商业化');
+  renderAlerts('biz-alerts', biz.rows);
+  renderKpis('biz-kpis', biz);
+  renderDimTable('biz-dim', ['行业八部','行业九部','渠道业务','创作者营销','策略中台','商业']);
+  renderMckTable('mck-commercial','商业化');
+  renderBars('commercial-bars', biz.rows);
+
+  var func=getL1('职能&DI');
+  renderAlerts('func-alerts', func.rows);
+  renderKpis('func-kpis', func);
+  renderDimTable('func-dim', ['财务','税务','内控','内审','采购','资本市场','法务','DI']);
+  renderMckTable('mck-finance','职能&DI');
+  renderBars('finance-bars', func.rows);
+})();
+</script>
+</body>
+</html>
