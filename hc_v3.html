@@ -825,7 +825,7 @@ body {
       <svg id="bubbleSvg" height="380"></svg>
     </div>
 
-    <div class="section-title" style="margin-top:28px;">🔄 人员流动在途</div>
+    <div class="section-title" style="margin-top:28px;">🔄 关键人流动（L1/L2）</div>
     <div class="flow-grid" id="flowGrid"></div>
 
   </div>
@@ -838,6 +838,8 @@ body {
     <div class="bar-ranking" id="bar-shyl"><div class="bar-ranking-title">各子部门满编率排行（仅含有真实数据）</div><div id="bars-shyl"></div></div>
     <div class="section-title">部门明细</div>
     <div class="dept-table-card" id="table-shyl"></div>
+    <div class="section-title" style="margin-top:28px;">🔄 流入流出明细</div>
+    <div id="flow-detail-shyl"></div>
   </div>
 
   <!-- ===== 财务职能+DI TAB ===== -->
@@ -848,6 +850,8 @@ body {
     <div class="bar-ranking" id="bar-cw"><div class="bar-ranking-title">各子部门满编率排行（仅含有真实数据）</div><div id="bars-cw"></div></div>
     <div class="section-title">部门明细</div>
     <div class="dept-table-card" id="table-cw"></div>
+    <div class="section-title" style="margin-top:28px;">🔄 流入流出明细</div>
+    <div id="flow-detail-cw"></div>
   </div>
 
   <!-- ===== 交易 TAB ===== -->
@@ -858,6 +862,8 @@ body {
     <div class="bar-ranking" id="bar-jy"><div class="bar-ranking-title">各子部门满编率排行（仅含有真实数据）</div><div id="bars-jy"></div></div>
     <div class="section-title">部门明细</div>
     <div class="dept-table-card" id="table-jy"></div>
+    <div class="section-title" style="margin-top:28px;">🔄 流入流出明细</div>
+    <div id="flow-detail-jy"></div>
   </div>
 
 </div><!-- /main -->
@@ -902,14 +908,22 @@ const BUDGET_DATA = [
   { l1:'财务职能+DI', l2:'DI', budget:107, actual:0, transIn:0, transOut:0, pending:0, leaving:0, real:false },
 ];
 
-const KEY_PEOPLE = {
+// 真实入离职数据（来自 ehr-workbench/hrbp 2026-04-02）
+const FLOW_DATA = {
   transIn: [
-    { dept:'行业一部', count:5, names:['（待入职5人）'] },
-    { dept:'财务一组', count:4, names:['（待入职4人）'] },
+    { name:'JICHAO SUN', level:'L1', dept:'行业一部', subDept:'行业一部', date:'2026-04-08', manager:'昂扬(李昂)', highlight:true },
+    { name:'邓鸿颖', level:'IC', dept:'行业一部', subDept:'行业五组', date:'2026-04-08', manager:'吴邪(吴建成)', highlight:false },
+    { name:'洪方雯', level:'IC', dept:'行业一部', subDept:'平台专家十一组', date:'2026-04-27', manager:'惊鸿(王晶晶)', highlight:false },
+    { name:'陈静仪', level:'IC', dept:'行业一部', subDept:'行业七组', date:'2026-07-01', manager:'昭燃(千艺)', highlight:false },
+    { name:'曹腾', level:'IC', dept:'财务职能+DI', subDept:'交易财务分析', date:'2026-04-08', manager:'白真(白乐天)', highlight:false },
+    { name:'鲍天玥', level:'IC', dept:'财务职能+DI', subDept:'资金管理组', date:'2026-04-13', manager:'绫波(李静)', highlight:false },
+    { name:'刘潇阳', level:'IC', dept:'财务职能+DI', subDept:'资金管理组', date:'2026-04-27', manager:'绫波(李静)', highlight:false },
   ],
   transOut: [
-    { dept:'行业一部', count:4, names:['（待离职4人）'] },
-    { dept:'财务一组', count:1, names:['（待离职1人）'] },
+    { name:'房心(黄鑫)', level:'IC', dept:'行业一部', subDept:'行业十二组', date:'2026-04-02', type:'主动离职', highlight:false },
+    { name:'六尾(许凌豪)', level:'IC', dept:'行业一部', subDept:'平台专家九组', date:'2026-04-07', type:'主动离职', highlight:false },
+    { name:'波雅(李淑华)', level:'IC', dept:'行业一部', subDept:'行业四组', date:'2026-04-13', type:'被动离职', highlight:false },
+    { name:'诗源(杨骑宇)', level:'IC', dept:'财务职能+DI', subDept:'财务职能', date:'2026-04-23', type:'被动离职', highlight:false },
   ],
 };
 
@@ -1128,49 +1142,122 @@ L1_NAMES.forEach(n => buildDonut(n));
 })();
 
 /* ═══════════════════════════════════════════
-   FLOW CARDS
+   FLOW CARDS（总览 - 仅展示L1/L2）
 ═══════════════════════════════════════════ */
 (function() {
   const grid = document.getElementById('flowGrid');
-  const totalIn = KEY_PEOPLE.transIn.reduce((s,d)=>s+d.count,0);
-  const totalOut = KEY_PEOPLE.transOut.reduce((s,d)=>s+d.count,0);
 
-  function buildFlowCard(type) {
-    const isIn = type === 'in';
-    const items = isIn ? KEY_PEOPLE.transIn : KEY_PEOPLE.transOut;
-    const total = isIn ? totalIn : totalOut;
+  // 总览只显示 L1/L2 高亮人员
+  const l12In  = FLOW_DATA.transIn.filter(p => p.level === 'L1' || p.level === 'L2');
+  const l12Out = FLOW_DATA.transOut.filter(p => p.level === 'L1' || p.level === 'L2');
+
+  function levelBadge(lv) {
+    const c = lv==='L1'?'#D91B36':lv==='L2'?'#FF8C00':'#6B7280';
+    return `<span style="display:inline-block;padding:1px 7px;border-radius:4px;font-size:11px;font-weight:700;background:${c}15;color:${c};border:1px solid ${c}40;margin-right:6px">${lv}</span>`;
+  }
+
+  function buildFlowCard(isIn) {
+    const items = isIn ? l12In : l12Out;
+    const allCount = isIn ? FLOW_DATA.transIn.length : FLOW_DATA.transOut.length;
     const card = document.createElement('div');
     card.className = 'flow-card';
+    const rows = items.length > 0
+      ? items.map(p => `
+        <div class="flow-item" style="border-left:3px solid ${isIn?'#22c55e':'#FF2442'};padding-left:10px;margin-bottom:8px;background:${isIn?'#f0fdf4':'#fff0f2'};border-radius:0 8px 8px 0;padding:8px 10px 8px 12px">
+          ${levelBadge(p.level)}
+          <strong style="font-size:13px">${p.name}</strong>
+          <span style="font-size:12px;color:#6b7280;margin-left:6px">${p.subDept}</span>
+          <span style="float:right;font-size:12px;color:${isIn?'#16a34a':'#dc2626'}">${isIn?p.date:p.type}</span>
+        </div>`).join('')
+      : `<div style="padding:14px;text-align:center;color:#9ca3af;font-size:13px">暂无 L1/L2 ${isIn?'流入':'流出'}</div>`;
+
     card.innerHTML = `
       <div class="flow-card-header">
-        <div class="flow-icon ${isIn ? 'flow-icon-in' : 'flow-icon-out'}">${isIn ? '🟢' : '🔴'}</div>
-        <div class="flow-card-title">${isIn ? '流入在途' : '流出在途'}</div>
-        <div class="flow-total"><strong class="countup" data-val="${total}">0</strong> 人</div>
+        <div class="flow-icon ${isIn?'flow-icon-in':'flow-icon-out'}">${isIn?'🟢':'🔴'}</div>
+        <div class="flow-card-title">${isIn?'流入在途 · L1/L2':'流出在途 · L1/L2'}</div>
+        <div class="flow-total" style="font-size:12px;color:#6b7280">共 ${allCount} 人</div>
       </div>
-      ${items.map(item => `
-        <div class="flow-item">
-          <span class="flow-dept-tag ${isIn ? 'flow-dept-tag-in' : 'flow-dept-tag-out'}">${item.dept}</span>
-          <span class="flow-names">${item.names.join('、')}</span>
-          <span class="flow-count ${isIn ? 'flow-count-in' : 'flow-count-out'}">${isIn ? '+' : '-'}${item.count}</span>
-        </div>
-      `).join('')}
-      <div style="margin-top:16px;padding:10px 14px;background:${isIn?'#E8F5E9':'#FFF0F2'};border-radius:10px;font-size:12px;color:${isIn?'#2E7D32':'#FF2442'}">
-        ⚠️ 具体姓名待系统权限接入后实时同步
-      </div>
+      ${rows}
+      ${allCount > items.length ? `<div style="margin-top:8px;font-size:11px;color:#9ca3af">另有 IC ${allCount-items.length} 人（见各tab明细）</div>` : ''}
     `;
     grid.appendChild(card);
   }
 
-  buildFlowCard('in');
-  buildFlowCard('out');
-
-  // Animate countups
-  setTimeout(() => {
-    document.querySelectorAll('.countup[data-val]').forEach(el => {
-      countUp(el, parseInt(el.dataset.val), 900);
-    });
-  }, 200);
+  buildFlowCard(true);
+  buildFlowCard(false);
 })();
+
+/* ═══════════════════════════════════════════
+   FLOW DETAIL TABLE（各业务tab底部）
+═══════════════════════════════════════════ */
+function renderFlowDetail(containerId, l1Filter) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+
+  const inItems  = FLOW_DATA.transIn.filter(p => l1Filter === '全部' || p.dept.includes(l1Filter) || (l1Filter==='财务职能+DI' && p.dept==='财务职能+DI'));
+  const outItems = FLOW_DATA.transOut.filter(p => l1Filter === '全部' || p.dept.includes(l1Filter) || (l1Filter==='财务职能+DI' && p.dept==='财务职能+DI'));
+
+  function levelBadge(lv) {
+    if (lv==='L1') return `<span style="padding:1px 6px;border-radius:4px;font-size:11px;font-weight:700;background:#fee2e2;color:#dc2626;border:1px solid #fca5a5">${lv}</span>`;
+    if (lv==='L2') return `<span style="padding:1px 6px;border-radius:4px;font-size:11px;font-weight:700;background:#fff7ed;color:#ea580c;border:1px solid #fdba74">${lv}</span>`;
+    return `<span style="padding:1px 6px;border-radius:4px;font-size:11px;color:#9ca3af;border:1px solid #e5e7eb">${lv}</span>`;
+  }
+
+  function buildTable(items, isIn) {
+    if (!items.length) return `<div style="padding:14px 18px;color:#9ca3af;font-size:13px">暂无数据</div>`;
+    const headers = isIn
+      ? ['人员','层级','所在部门/小组','入职日期','直接上级']
+      : ['人员','层级','所在部门/小组','离职日期','离职类型'];
+    const rows = items.map(p => {
+      const isHL = p.level==='L1'||p.level==='L2';
+      const bg = isHL ? (isIn?'#f0fdf4':'#fff0f2') : '';
+      const vals = isIn
+        ? [p.name, levelBadge(p.level), p.subDept, p.date, p.manager||'—']
+        : [p.name, levelBadge(p.level), p.subDept, p.date, p.type||'—'];
+      return `<tr style="background:${bg}">
+        <td style="font-weight:${isHL?'700':'400'};color:${isHL?(isIn?'#16a34a':'#dc2626'):'inherit'}">${vals[0]}</td>
+        <td>${vals[1]}</td>
+        <td style="color:#4b5563">${vals[2]}</td>
+        <td style="color:#6b7280">${vals[3]}</td>
+        <td style="color:#6b7280">${vals[4]}</td>
+      </tr>`;
+    }).join('');
+    return `<table style="width:100%;border-collapse:collapse;font-size:13px">
+      <thead><tr style="background:#f9fafb;border-bottom:2px solid #e5e7eb">
+        ${headers.map(h=>`<th style="padding:10px 14px;text-align:left;font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px">${h}</th>`).join('')}
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+  }
+
+  el.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div style="background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.07);overflow:hidden">
+        <div style="padding:14px 18px;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;gap:8px">
+          <span style="width:8px;height:8px;border-radius:50%;background:#22c55e;display:inline-block"></span>
+          <span style="font-weight:600;font-size:14px">流入在途</span>
+          <span style="margin-left:auto;font-size:12px;color:#6b7280">${inItems.length} 人</span>
+        </div>
+        ${buildTable(inItems, true)}
+      </div>
+      <div style="background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.07);overflow:hidden">
+        <div style="padding:14px 18px;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;gap:8px">
+          <span style="width:8px;height:8px;border-radius:50%;background:#FF2442;display:inline-block"></span>
+          <span style="font-weight:600;font-size:14px">流出在途</span>
+          <span style="margin-left:auto;font-size:12px;color:#6b7280">${outItems.length} 人</span>
+        </div>
+        ${buildTable(outItems, false)}
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:#9ca3af">
+      ✅ 数据来源：hr.xiaohongshu.com 系统实时数据 · L1/L2 高亮显示 · 仅限有权限部门
+    </div>`;
+}
+
+// 渲染各tab流入流出明细
+renderFlowDetail('flow-detail-shyl', '行业一部');
+renderFlowDetail('flow-detail-cw', '财务职能+DI');
+renderFlowDetail('flow-detail-jy', '交易');
 
 /* ═══════════════════════════════════════════
    DETAIL TABS - KPI / BAR / TABLE
