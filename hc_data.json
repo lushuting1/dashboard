@@ -1,0 +1,150 @@
+{
+  "updated": "2026-04-02",
+  "budget": [
+    {
+      "l1": "商业化",
+      "l2": "行业一部",
+      "budget": 164,
+      "actual": 167,
+      "transIn": 4,
+      "transOut": 4,
+      "pending": 0,
+      "leaving": 0,
+      "real": true
+    },
+    {
+      "l1": "财务职能+DI",
+      "l2": "财务一组",
+      "budget": 51,
+      "actual": 54,
+      "transIn": 3,
+      "transOut": 1,
+      "pending": 0,
+      "leaving": 0,
+      "real": true
+    },
+    {
+      "l1": "财务职能+DI",
+      "l2": "资本市场",
+      "budget": 5,
+      "actual": 5,
+      "transIn": 0,
+      "transOut": 0,
+      "pending": 0,
+      "leaving": 0,
+      "real": true
+    }
+  ],
+  "flow_in": [
+    {
+      "name": "JICHAO SUN",
+      "level": "L1",
+      "dept": "商业化",
+      "subDept": "行业一部",
+      "date": "2026-04-08",
+      "manager": "",
+      "highlight": true
+    },
+    {
+      "name": "邓鸿颖",
+      "level": "IC",
+      "dept": "商业化",
+      "subDept": "行业一部",
+      "date": "2026-04-08",
+      "manager": "",
+      "highlight": false
+    },
+    {
+      "name": "洪方雯",
+      "level": "IC",
+      "dept": "商业化",
+      "subDept": "行业一部",
+      "date": "2026-04-27",
+      "manager": "",
+      "highlight": false
+    },
+    {
+      "name": "陈静仪",
+      "level": "IC",
+      "dept": "商业化",
+      "subDept": "行业一部",
+      "date": "2026-07-01",
+      "manager": "",
+      "highlight": false
+    },
+    {
+      "name": "曹腾",
+      "level": "IC",
+      "dept": "财务职能+DI",
+      "subDept": "财务一组",
+      "date": "2026-04-08",
+      "manager": "",
+      "highlight": false
+    },
+    {
+      "name": "鲍天玥",
+      "level": "IC",
+      "dept": "财务职能+DI",
+      "subDept": "财务一组",
+      "date": "2026-04-13",
+      "manager": "",
+      "highlight": false
+    },
+    {
+      "name": "刘潇阳",
+      "level": "IC",
+      "dept": "财务职能+DI",
+      "subDept": "财务一组",
+      "date": "2026-04-27",
+      "manager": "",
+      "highlight": false
+    }
+  ],
+  "flow_out": [
+    {
+      "name": "夏实(钱依琳)",
+      "level": "IC",
+      "dept": "商业化",
+      "subDept": "行业一部",
+      "date": "2026-05-06",
+      "type": "主动离职",
+      "highlight": false
+    },
+    {
+      "name": "房心(黄鑫)",
+      "level": "IC",
+      "dept": "商业化",
+      "subDept": "行业一部",
+      "date": "2026-04-02",
+      "type": "主动离职",
+      "highlight": false
+    },
+    {
+      "name": "六尾(许凌豪)",
+      "level": "IC",
+      "dept": "商业化",
+      "subDept": "行业一部",
+      "date": "2026-04-07",
+      "type": "主动离职",
+      "highlight": false
+    },
+    {
+      "name": "波雅(李淑华)",
+      "level": "IC",
+      "dept": "商业化",
+      "subDept": "行业一部",
+      "date": "2026-04-13",
+      "type": "被动离职",
+      "highlight": false
+    },
+    {
+      "name": "诗源(杨骑宇)",
+      "level": "IC",
+      "dept": "财务职能+DI",
+      "subDept": "财务一组",
+      "date": "2026-04-23",
+      "type": "被动离职",
+      "highlight": false
+    }
+  ]
+}
