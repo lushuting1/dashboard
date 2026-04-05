@@ -120,16 +120,17 @@ body {
 
 /* ── SECTION TITLE ── */
 .section-title {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--gray-5);
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--gray-9);
+  letter-spacing: 0.3px;
   margin-bottom: 16px;
   margin-top: 32px;
   display: flex;
   align-items: center;
   gap: 8px;
+  border-left: 3px solid var(--red);
+  padding-left: 10px;
 }
 .section-title:first-child { margin-top: 0; }
 .section-title::after {
@@ -329,7 +330,7 @@ body {
 /* ── KPI CARDS (Detail tabs) ── */
 .kpi-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(8, 1fr);
   gap: 14px;
   margin-bottom: 24px;
 }
@@ -594,19 +595,20 @@ body {
 /* 7 KPI mini cards */
 .dp-kpi-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 12px;
-  margin-bottom: 28px;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 8px;
+  margin-bottom: 24px;
 }
 .dp-kpi-card {
   background: var(--gray-1);
-  border-radius: 12px;
-  padding: 14px 12px;
+  border-radius: 10px;
+  padding: 10px 8px;
   text-align: center;
   border: 2px solid transparent;
+  min-width: 0;
 }
-.dp-kpi-label { font-size: 11px; color: var(--gray-5); margin-bottom: 6px; font-weight: 500; }
-.dp-kpi-value { font-size: 22px; font-weight: 800; line-height: 1; }
+.dp-kpi-label { font-size: 10px; color: var(--gray-5); margin-bottom: 4px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dp-kpi-value { font-size: 18px; font-weight: 800; line-height: 1; }
 
 /* sub-group chart */
 .dp-chart-wrap {
@@ -768,7 +770,7 @@ body {
   </div>
   <div class="topbar-meta">
     <span class="badge-live">LIVE</span>
-    2026 Q2 · 更新于 04-02
+    2026 Q2 · 更新于 2026-04-05
   </div>
 </div>
 
@@ -818,6 +820,7 @@ body {
         </div>
         <svg id="dpChartSvg" height="220"></svg>
       </div>
+      <div id="dpMiniTrend" style="display:none;background:#F8F9FA;border-radius:10px;padding:12px 16px;margin-bottom:16px;border:1px solid #E4E8EC;"></div>
       <div class="dp-people-grid" id="dpPeopleGrid"></div>
       <div class="dp-table-wrap" id="dpTableWrap">
         <div class="dp-table-title">子组明细</div>
@@ -834,7 +837,7 @@ body {
   <!-- ===== OVERVIEW TAB ===== -->
   <div class="tab-pane active" id="tab-overview">
 
-    <div id="alertBanner" style="display:none;margin-bottom:20px"></div>
+    <div id="summaryCard" style="display:none;margin-bottom:24px"></div>
     <div class="section-title">🏢 部门满编概况</div>
     <div class="donut-grid" id="donutGrid"></div>
 
@@ -850,7 +853,21 @@ body {
           <span><span class="legend-dot" style="background:#ccc;opacity:0.5"></span>估算</span>
         </div>
       </div>
-      <svg id="bubbleSvg" height="380"></svg>
+      <svg id="bubbleSvg" height="520"></svg>
+    </div>
+
+    <div class="section-title" style="margin-top:28px;">📈 满编率走势（近12个月）</div>
+    <div class="bubble-card" id="hcTrendCard">
+      <div class="bubble-header">
+        <div class="bubble-title">各业务线满编率月度趋势</div>
+        <div class="bubble-legend">
+          <span><span class="legend-dot" style="background:#FF2442"></span>商业化</span>
+          <span><span class="legend-dot" style="background:#1565C0"></span>财务职能+DI</span>
+          <span><span class="legend-dot" style="background:#00C853"></span>交易</span>
+        </div>
+      </div>
+      <svg id="trendSvg" width="100%" height="260"></svg>
+      <div style="font-size:11px;color:#9ca3af;margin-top:8px;">数据来源：eedata.xiaohongshu.com · 仅含权限内部门</div>
     </div>
 
     <div class="section-title" style="margin-top:28px;">🔄 关键人流动（L1/L2）</div>
@@ -860,7 +877,7 @@ body {
 
   <!-- ===== 商业化 TAB ===== -->
   <div class="tab-pane" id="tab-shyl">
-    <div class="section-title">核心 KPI</div>
+    <div class="section-title">📊 指标总览</div>
     <div class="kpi-grid" id="kpi-shyl"></div>
     <div class="section-title" style="margin-top:8px;">满编率排行</div>
     <div class="bar-ranking" id="bar-shyl"><div class="bar-ranking-title">各子部门满编率排行（仅含有真实数据）</div><div id="bars-shyl"></div></div>
@@ -872,7 +889,7 @@ body {
 
   <!-- ===== 财务职能+DI TAB ===== -->
   <div class="tab-pane" id="tab-cw">
-    <div class="section-title">核心 KPI</div>
+    <div class="section-title">📊 指标总览</div>
     <div class="kpi-grid" id="kpi-cw"></div>
     <div class="section-title" style="margin-top:8px;">满编率排行</div>
     <div class="bar-ranking" id="bar-cw"><div class="bar-ranking-title">各子部门满编率排行（仅含有真实数据）</div><div id="bars-cw"></div></div>
@@ -884,7 +901,7 @@ body {
 
   <!-- ===== 交易 TAB ===== -->
   <div class="tab-pane" id="tab-jy">
-    <div class="section-title">核心 KPI</div>
+    <div class="section-title">📊 指标总览</div>
     <div class="kpi-grid" id="kpi-jy"></div>
     <div class="section-title" style="margin-top:8px;">满编率排行</div>
     <div class="bar-ranking" id="bar-jy"><div class="bar-ranking-title">各子部门满编率排行（仅含有真实数据）</div><div id="bars-jy"></div></div>
@@ -906,7 +923,7 @@ const BUDGET_DATA = [
     "l2": "行业一部",
     "budget": 164,
     "actual": 166,
-    "transIn": 4,
+    "transIn": 5,
     "transOut": 3,
     "pending": 0,
     "leaving": 0,
@@ -1210,7 +1227,7 @@ const BUDGET_DATA = [
     "real": false
   },
   {
-    "l1": "财务职能+DI",
+    "l1": "商业化",
     "l2": "内审",
     "budget": 0,
     "actual": 0,
@@ -1284,6 +1301,15 @@ const FLOW_DATA = {
     "dept": "商业化",
     "subDept": "行业五组",
     "date": "2026-04-08",
+    "manager": "",
+    "highlight": false
+  },
+  {
+    "name": "王肖肖",
+    "level": "IC",
+    "dept": "商业化",
+    "subDept": "行业十组",
+    "date": "2026-04-20",
     "manager": "",
     "highlight": false
   },
@@ -1494,33 +1520,68 @@ L1_NAMES.forEach(n => buildDonut(n));
 (function() {
   const svg = document.getElementById('bubbleSvg');
   const tooltip = document.getElementById('bTooltip');
-  const W = 900, H = 360;
-  const PAD = { l: 60, r: 80, t: 30, b: 48 };
+  const W = 960;
+  const data = BUDGET_DATA.filter(d => d.actual > 0);
+  const dataLen = data.length;
+  // 高度足够大，保证所有气泡可见
+  const H = Math.max(520, Math.min(760, 280 + dataLen * 16));
+  const PAD = { l: 60, r: 100, t: 40, b: 52 };
   const cW = W - PAD.l - PAD.r;
   const cH = H - PAD.t - PAD.b;
 
+  svg.setAttribute('height', H);
   svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
 
-  // Filter to rows with actual > 0 only (skip no-permission depts)
-  const data = BUDGET_DATA.filter(d => d.actual > 0);
   const maxBudget = Math.max(...data.map(d => d.budget));
-  const maxActual = Math.max(...data.map(d => d.actual > 0 ? d.actual : d.budget));
+  const maxActual = Math.max(...data.map(d => d.actual));
 
-  // X: 満編率 0~130%, Y: actual (or budget if no actual)
-  function xPos(d) {
-    const p = d.actual > 0 ? d.actual / d.budget : 0.5;
-    const raw = PAD.l + Math.min(p, 1.3) / 1.3 * cW;
-    // 圆心限制在画布内，最多贴到右边距一半处
-    return Math.min(raw, W - PAD.r / 2);
-  }
-  function yPos(d) {
-    const val = d.actual > 0 ? d.actual : d.budget * 0.5;
-    return PAD.t + cH - (val / maxActual) * cH;
-  }
   function bubbleR(d) {
-    const area = (d.budget / maxBudget);
-    return 16 + area * 44;
+    return Math.max(14, 12 + (d.budget / maxBudget) * 38);
   }
+
+  // 理想坐标
+  function idealX(d) {
+    const p = d.actual / d.budget;
+    return PAD.l + Math.min(p, 1.35) / 1.35 * cW;
+  }
+  function idealY(d) {
+    return PAD.t + cH - (d.actual / maxActual) * cH;
+  }
+
+  // Force-separation：迭代推开重叠气泡
+  const nodes = data.map(d => ({
+    d, r: bubbleR(d),
+    x: idealX(d), y: idealY(d),
+    ix: idealX(d), iy: idealY(d),
+  }));
+  for (let iter = 0; iter < 120; iter++) {
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const a = nodes[i], b = nodes[j];
+        const minD = a.r + b.r + 6;
+        const dx = b.x - a.x || 0.01, dy = b.y - a.y || 0.01;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < minD) {
+          const push = (minD - dist) / 2;
+          const nx = dx / dist * push, ny = dy / dist * push;
+          a.x -= nx; a.y -= ny; b.x += nx; b.y += ny;
+        }
+      }
+      // 弹簧力，轻拉回理想位置
+      nodes[i].x += (nodes[i].ix - nodes[i].x) * 0.06;
+      nodes[i].y += (nodes[i].iy - nodes[i].y) * 0.06;
+    }
+  }
+  // 夹回画布边界
+  nodes.forEach(n => {
+    n.x = Math.max(PAD.l + n.r + 2, Math.min(W - PAD.r - n.r - 2, n.x));
+    n.y = Math.max(PAD.t + n.r + 2, Math.min(PAD.t + cH - n.r - 2, n.y));
+  });
+
+  // 用 nodes 中计算好的坐标
+  const nodeMap = new Map(nodes.map(n => [n.d, n]));
+  function xPos(d) { return nodeMap.get(d)?.x ?? idealX(d); }
+  function yPos(d) { return nodeMap.get(d)?.y ?? idealY(d); }
 
   // Grid lines
   const ns = 'http://www.w3.org/2000/svg';
@@ -1704,44 +1765,97 @@ function renderFlowDetail(containerId, l1Filter) {
     </div>`;
 }
 
-// ── 需关注部门 Alert Banner ──
+// ── HRBP Summary Card（按商业化/交易/财务职能+DI 分组展示）──
 (function() {
-  const overBudget = []; // 超编 ≥110%
-  const lowFill   = []; // 满编率 <75%（只含有真实数据的部门）
+  const card = document.getElementById('summaryCard');
+  if (!card) return;
 
+  // 按 L1 分组统计
+  const byL1 = { '商业化': [], '交易': [], '财务职能+DI': [] };
   BUDGET_DATA.forEach(d => {
     if (!d.real || d.actual <= 0 || d.budget <= 0) return;
     const p = Math.round(d.actual / d.budget * 100);
-    if (p >= 110) overBudget.push({ name: d.l2, pct: p, l1: d.l1 });
-    else if (p < 75) lowFill.push({ name: d.l2, pct: p, l1: d.l1 });
+    byL1[d.l1].push({ name: d.l2, pct: p });
   });
 
-  const banner = document.getElementById('alertBanner');
-  if (!banner || (overBudget.length === 0 && lowFill.length === 0)) return;
+  // 流入流出（L1/L2 级别）
+  const l1l2Out = FLOW_DATA.transOut.filter(d => d.level === 'L1' || d.level === 'L2');
+  const l1l2In  = FLOW_DATA.transIn.filter(d => d.level === 'L1' || d.level === 'L2');
 
-  let html = '<div class="alert-banner">';
+  // 每个 L1 生成 items
+  function getL1Items(l1Name, rows) {
+    const items = [];
+    const overHigh = rows.filter(d => d.pct >= 110);
+    const overMild = rows.filter(d => d.pct >= 100 && d.pct < 110);
+    const low      = rows.filter(d => d.pct < 75);
+    const mid      = rows.filter(d => d.pct >= 75 && d.pct < 90);
+    const l1Out    = l1l2Out.filter(d => d.dept === l1Name);
+    const l1In     = l1l2In.filter(d => d.dept === l1Name);
 
-  if (overBudget.length > 0) {
-    html += '<div class="alert-section">';
-    html += '<div class="alert-section-title">🔴 超编部门（≥110%）</div>';
-    overBudget.forEach(d => {
-      html += `<span class="alert-tag alert-tag-over">${d.name} <strong>${d.pct}%</strong></span>`;
-    });
-    html += '</div>';
+    if (overHigh.length) items.push({ icon:'🔴', level:'p00',
+      title: `严重超编(≥110%)：${overHigh.map(d=>`${d.name}(${d.pct}%)`).join('、')}`,
+      desc: '建议立即评估用工合规风险，暂停增编申请，与业务 L1 对齐缩编计划。' });
+    if (overMild.length) items.push({ icon:'🟠', level:'p0',
+      title: `超编(100-110%)：${overMild.map(d=>`${d.name}(${d.pct}%)`).join('、')}`,
+      desc: '尚在可控范围，建议下季度 HC 计划中优先消化，新增流入需额外审批。' });
+    if (l1Out.length) items.push({ icon:'🚨', level:'p00',
+      title: `L1/L2 离职在途：${l1Out.map(d=>d.name).join('、')}`,
+      desc: '关键管理层流失，请确认接班人和业务交接，评估是否需要紧急补位。' });
+    if (l1In.length) items.push({ icon:'🟢', level:'p1',
+      title: `L1/L2 入职在途：${l1In.map(d=>d.name).join('、')}`,
+      desc: '即将到岗，请提前准备 onboarding 和融入计划。' });
+    if (low.length) items.push({ icon:'🟡', level:'p0',
+      title: `低满编率(<75%)：${low.map(d=>`${d.name}(${d.pct}%)`).join('、')}`,
+      desc: '人员缺口大，业务承接能力受限，建议加快招聘或重新评估 HC 计划。' });
+    if (mid.length) items.push({ icon:'⚠️', level:'p1',
+      title: `满编率偏低(75-90%)：${mid.map(d=>d.name).join('、')}`,
+      desc: '存在缺口，需关注招聘进度，避免影响 Q2 目标达成。' });
+    if (!items.length) items.push({ icon:'✅', level:'ok',
+      title: '状态良好', desc: '满编率正常，无超编或严重缺编，保持关注流动动态。' });
+    return items;
   }
 
-  if (lowFill.length > 0) {
-    html += '<div class="alert-section">';
-    html += '<div class="alert-section-title">🟡 满编率偏低部门（&lt;75%）</div>';
-    lowFill.forEach(d => {
-      html += `<span class="alert-tag alert-tag-low">${d.name} <strong>${d.pct}%</strong></span>`;
-    });
-    html += '</div>';
-  }
+  const L1_META = [
+    { name:'商业化',      emoji:'🏢', color:'#FF2442' },
+    { name:'交易',        emoji:'🛒', color:'#00897B' },
+    { name:'财务职能+DI', emoji:'💰', color:'#1565C0' },
+  ];
+  const levelColor = { 'p00':'#DC2626','p0':'#D97706','p1':'#2563EB','ok':'#059669','':`#374151` };
+  const levelBg    = { 'p00':'#FEE2E2','p0':'#FEF3C7','p1':'#EFF6FF','ok':'#ECFDF5','':'#F8F9FA' };
 
-  html += '</div>';
-  banner.innerHTML = html;
-  banner.style.display = 'block';
+  let html = `<div style="background:#fff;border-radius:16px;border:1.5px solid #E4E8EC;box-shadow:0 4px 16px rgba(0,0,0,0.08);overflow:hidden;">
+    <div style="background:linear-gradient(135deg,#1A202C 0%,#2D3748 100%);padding:14px 24px;display:flex;align-items:center;gap:10px;">
+      <div style="font-size:20px;">📋</div>
+      <div style="color:#fff;font-size:15px;font-weight:700;">重点关注事项</div>
+      <div style="margin-left:auto;font-size:11px;color:#9CA3AF;">基于实时数据自动生成</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:none;">`;
+
+  L1_META.forEach(({name, emoji, color}) => {
+    const rows = byL1[name] || [];
+    const items = getL1Items(name, rows);
+    html += `<div style="border-right:1px solid #E4E8EC;padding:16px;min-width:0;">
+      <div style="font-size:13px;font-weight:800;color:${color};margin-bottom:12px;display:flex;align-items:center;gap:6px;border-bottom:2px solid ${color}20;padding-bottom:8px;">
+        <span>${emoji}</span><span>${name}</span>
+      </div>`;
+    items.forEach(item => {
+      const bg = levelBg[item.level] || '#F8F9FA';
+      const fc = levelColor[item.level] || '#374151';
+      html += `<div style="background:${bg};border-radius:8px;padding:10px 12px;margin-bottom:8px;border-left:3px solid ${fc};">
+        <div style="font-size:12px;font-weight:700;color:${fc};margin-bottom:3px;display:flex;align-items:center;gap:5px;">
+          <span>${item.icon}</span>
+          ${item.level && item.level!=='ok' ? `<span style="background:${fc};color:#fff;font-size:9px;padding:1px 5px;border-radius:3px;">${item.level.toUpperCase()}</span>` : ''}
+          <span>${item.title}</span>
+        </div>
+        <div style="font-size:11px;color:#6B7280;line-height:1.5;">${item.desc}</div>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+
+  html += `</div></div>`;
+  card.innerHTML = html;
+  card.style.display = 'block';
 })();
 
 // 渲染各tab流入流出明细
@@ -1749,9 +1863,409 @@ renderFlowDetail('flow-detail-shyl', '商业化');
 renderFlowDetail('flow-detail-cw', '财务职能+DI');
 renderFlowDetail('flow-detail-jy', '交易');
 
+
+
 /* ═══════════════════════════════════════════
    DETAIL TABS - KPI / BAR / TABLE
 ═══════════════════════════════════════════ */
+const EEDATA_DATA = {
+  "l1Trend": {
+    "商业化": [
+      {
+        "month": "2025年05月",
+        "hcPercent": 97.3,
+        "totalHc": 149,
+        "currentHc": 145
+      },
+      {
+        "month": "2025年06月",
+        "hcPercent": 101.3,
+        "totalHc": 149,
+        "currentHc": 151
+      },
+      {
+        "month": "2025年07月",
+        "hcPercent": 95.3,
+        "totalHc": 149,
+        "currentHc": 142
+      },
+      {
+        "month": "2025年08月",
+        "hcPercent": 98.7,
+        "totalHc": 149,
+        "currentHc": 147
+      },
+      {
+        "month": "2025年09月",
+        "hcPercent": 106.7,
+        "totalHc": 149,
+        "currentHc": 159
+      },
+      {
+        "month": "2025年10月",
+        "hcPercent": 107.4,
+        "totalHc": 149,
+        "currentHc": 160
+      },
+      {
+        "month": "2025年11月",
+        "hcPercent": 107.4,
+        "totalHc": 149,
+        "currentHc": 160
+      },
+      {
+        "month": "2025年12月",
+        "hcPercent": 107.4,
+        "totalHc": 149,
+        "currentHc": 160
+      },
+      {
+        "month": "2026年01月",
+        "hcPercent": 97.6,
+        "totalHc": 164,
+        "currentHc": 160
+      },
+      {
+        "month": "2026年02月",
+        "hcPercent": 102.4,
+        "totalHc": 164,
+        "currentHc": 168
+      },
+      {
+        "month": "2026年03月",
+        "hcPercent": 100.6,
+        "totalHc": 164,
+        "currentHc": 165
+      },
+      {
+        "month": "2026年04月",
+        "hcPercent": 101.2,
+        "totalHc": 164,
+        "currentHc": 166
+      }
+    ],
+    "财务职能+DI": [
+      {
+        "month": "2025年05月",
+        "hcPercent": 940.0,
+        "totalHc": 5,
+        "currentHc": 47
+      },
+      {
+        "month": "2025年06月",
+        "hcPercent": 112.8,
+        "totalHc": 47,
+        "currentHc": 53
+      },
+      {
+        "month": "2025年07月",
+        "hcPercent": 104.3,
+        "totalHc": 47,
+        "currentHc": 49
+      },
+      {
+        "month": "2025年08月",
+        "hcPercent": 102.1,
+        "totalHc": 47,
+        "currentHc": 48
+      },
+      {
+        "month": "2025年09月",
+        "hcPercent": 104.3,
+        "totalHc": 47,
+        "currentHc": 49
+      },
+      {
+        "month": "2025年10月",
+        "hcPercent": 108.5,
+        "totalHc": 47,
+        "currentHc": 51
+      },
+      {
+        "month": "2025年11月",
+        "hcPercent": 106.4,
+        "totalHc": 47,
+        "currentHc": 50
+      },
+      {
+        "month": "2025年12月",
+        "hcPercent": 112.8,
+        "totalHc": 47,
+        "currentHc": 53
+      },
+      {
+        "month": "2026年01月",
+        "hcPercent": 96.4,
+        "totalHc": 56,
+        "currentHc": 54
+      },
+      {
+        "month": "2026年02月",
+        "hcPercent": 94.6,
+        "totalHc": 56,
+        "currentHc": 53
+      },
+      {
+        "month": "2026年03月",
+        "hcPercent": 105.4,
+        "totalHc": 56,
+        "currentHc": 59
+      },
+      {
+        "month": "2026年04月",
+        "hcPercent": 105.4,
+        "totalHc": 56,
+        "currentHc": 59
+      }
+    ],
+    "交易": []
+  },
+  "deptTrend": {
+    "行业一部": [
+      {
+        "month": "2025年05月",
+        "hcPercent": 97.3,
+        "totalHc": 149,
+        "currentHc": 145
+      },
+      {
+        "month": "2025年06月",
+        "hcPercent": 101.3,
+        "totalHc": 149,
+        "currentHc": 151
+      },
+      {
+        "month": "2025年07月",
+        "hcPercent": 95.3,
+        "totalHc": 149,
+        "currentHc": 142
+      },
+      {
+        "month": "2025年08月",
+        "hcPercent": 98.7,
+        "totalHc": 149,
+        "currentHc": 147
+      },
+      {
+        "month": "2025年09月",
+        "hcPercent": 106.7,
+        "totalHc": 149,
+        "currentHc": 159
+      },
+      {
+        "month": "2025年10月",
+        "hcPercent": 107.4,
+        "totalHc": 149,
+        "currentHc": 160
+      },
+      {
+        "month": "2025年11月",
+        "hcPercent": 107.4,
+        "totalHc": 149,
+        "currentHc": 160
+      },
+      {
+        "month": "2025年12月",
+        "hcPercent": 107.4,
+        "totalHc": 149,
+        "currentHc": 160
+      },
+      {
+        "month": "2026年01月",
+        "hcPercent": 97.6,
+        "totalHc": 164,
+        "currentHc": 160
+      },
+      {
+        "month": "2026年02月",
+        "hcPercent": 102.4,
+        "totalHc": 164,
+        "currentHc": 168
+      },
+      {
+        "month": "2026年03月",
+        "hcPercent": 100.6,
+        "totalHc": 164,
+        "currentHc": 165
+      },
+      {
+        "month": "2026年04月",
+        "hcPercent": 101.2,
+        "totalHc": 164,
+        "currentHc": 166
+      }
+    ],
+    "财务一组": [
+      {
+        "month": "2025年05月",
+        "hcPercent": 0.0,
+        "totalHc": 0,
+        "currentHc": 42
+      },
+      {
+        "month": "2025年06月",
+        "hcPercent": 114.3,
+        "totalHc": 42,
+        "currentHc": 48
+      },
+      {
+        "month": "2025年07月",
+        "hcPercent": 107.1,
+        "totalHc": 42,
+        "currentHc": 45
+      },
+      {
+        "month": "2025年08月",
+        "hcPercent": 104.8,
+        "totalHc": 42,
+        "currentHc": 44
+      },
+      {
+        "month": "2025年09月",
+        "hcPercent": 107.1,
+        "totalHc": 42,
+        "currentHc": 45
+      },
+      {
+        "month": "2025年10月",
+        "hcPercent": 111.9,
+        "totalHc": 42,
+        "currentHc": 47
+      },
+      {
+        "month": "2025年11月",
+        "hcPercent": 109.5,
+        "totalHc": 42,
+        "currentHc": 46
+      },
+      {
+        "month": "2025年12月",
+        "hcPercent": 114.3,
+        "totalHc": 42,
+        "currentHc": 48
+      },
+      {
+        "month": "2026年01月",
+        "hcPercent": 96.1,
+        "totalHc": 51,
+        "currentHc": 49
+      },
+      {
+        "month": "2026年02月",
+        "hcPercent": 94.1,
+        "totalHc": 51,
+        "currentHc": 48
+      },
+      {
+        "month": "2026年03月",
+        "hcPercent": 105.9,
+        "totalHc": 51,
+        "currentHc": 54
+      },
+      {
+        "month": "2026年04月",
+        "hcPercent": 105.9,
+        "totalHc": 51,
+        "currentHc": 54
+      }
+    ],
+    "资本市场": [
+      {
+        "month": "2025年05月",
+        "hcPercent": 100.0,
+        "totalHc": 5,
+        "currentHc": 5
+      },
+      {
+        "month": "2025年06月",
+        "hcPercent": 100.0,
+        "totalHc": 5,
+        "currentHc": 5
+      },
+      {
+        "month": "2025年07月",
+        "hcPercent": 80.0,
+        "totalHc": 5,
+        "currentHc": 4
+      },
+      {
+        "month": "2025年08月",
+        "hcPercent": 80.0,
+        "totalHc": 5,
+        "currentHc": 4
+      },
+      {
+        "month": "2025年09月",
+        "hcPercent": 80.0,
+        "totalHc": 5,
+        "currentHc": 4
+      },
+      {
+        "month": "2025年10月",
+        "hcPercent": 80.0,
+        "totalHc": 5,
+        "currentHc": 4
+      },
+      {
+        "month": "2025年11月",
+        "hcPercent": 80.0,
+        "totalHc": 5,
+        "currentHc": 4
+      },
+      {
+        "month": "2025年12月",
+        "hcPercent": 100.0,
+        "totalHc": 5,
+        "currentHc": 5
+      },
+      {
+        "month": "2026年01月",
+        "hcPercent": 100.0,
+        "totalHc": 5,
+        "currentHc": 5
+      },
+      {
+        "month": "2026年02月",
+        "hcPercent": 100.0,
+        "totalHc": 5,
+        "currentHc": 5
+      },
+      {
+        "month": "2026年03月",
+        "hcPercent": 100.0,
+        "totalHc": 5,
+        "currentHc": 5
+      },
+      {
+        "month": "2026年04月",
+        "hcPercent": 100.0,
+        "totalHc": 5,
+        "currentHc": 5
+      }
+    ]
+  },
+  "deptCard": {
+    "行业一部": {
+      "monthOnboard": 1,
+      "yearOnboard": 27,
+      "monthDim": 1,
+      "yearDim": 8
+    },
+    "财务一组": {
+      "monthOnboard": 0,
+      "yearOnboard": 10,
+      "monthDim": 0,
+      "yearDim": 4
+    },
+    "资本市场": {
+      "monthOnboard": 0,
+      "yearOnboard": 0,
+      "monthDim": 0,
+      "yearDim": 0
+    }
+  }
+};
+
 const TAB_MAP = {
   'shyl': '商业化',
   'cw': '财务职能+DI',
@@ -1761,28 +2275,39 @@ const TAB_MAP = {
 Object.entries(TAB_MAP).forEach(([tabId, l1]) => {
   const rows = BUDGET_DATA.filter(d => d.l1 === l1);
   const s = l1Summary(l1);
-  const p = pct(s.actual, s.budget);
   const realRows = rows.filter(d => d.real);
+  // 满编率统一用权限内真实数据（real:true）计算，与总览卡片保持一致
+  const realActual = realRows.reduce((a,d)=>a+d.actual,0);
+  const realBudget = realRows.reduce((a,d)=>a+d.budget,0);
+  const p = realBudget > 0 ? pct(realActual, realBudget) : 0;
   const overBudget = rows.filter(d => d.actual > d.budget).length;
   const pending = s.pending;
 
+  // eedata 本年入离职汇总（该 L1 下所有部门）
+  const dc = EEDATA_DATA.deptCard || {};
+  const yearOb = realRows.reduce((a, r) => a + (dc[r.l2]?.yearOnboard || 0), 0);
+  const yearDm = realRows.reduce((a, r) => a + (dc[r.l2]?.yearDim || 0), 0);
+
   // KPI cards
   const kpiDefs = [
-    { label:'编制总数', value: s.budget, color: '#4A5568', suffix:'' },
-    { label:'在职总数', value: s.actual, color: pctColor(p), suffix:'' },
-    { label:'满编率', value: p, color: pctColor(p), suffix:'%' },
-    { label:'缺口', value: Math.max(0, s.budget - s.actual), color: '#FF2442', suffix:'' },
-    { label:'流入在途', value: s.transIn, color: '#00C853', suffix:'' },
-    { label:'流出在途', value: s.transOut, color: '#FF8C00', suffix:'' },
+    { label:'编制总数',  value: realBudget, color: '#4A5568', suffix:'' },
+    { label:'在职总数',  value: realActual, color: pctColor(p), suffix:'' },
+    { label:'满编率',    value: p, color: pctColor(p), suffix:'%' },
+    { label:'缺口',      value: Math.max(0, realBudget - realActual), color: '#FF2442', suffix:'' },
+    { label:'本年入职',  value: yearOb, color: '#00C853', suffix:'人' },
+    { label:'本年离职',  value: yearDm, color: '#FF8C00', suffix:'人' },
+    { label:'流入在途',  value: s.transIn, color: '#2563EB', suffix:'' },
+    { label:'流出在途',  value: s.transOut, color: '#7C3AED', suffix:'' },
   ];
   const kpiGrid = document.getElementById('kpi-' + tabId);
   kpiDefs.forEach((kpi, i) => {
     const card = document.createElement('div');
     card.className = 'kpi-card';
+    card.style.cursor = 'pointer';
     card.innerHTML = `
       <div class="kpi-label">${kpi.label}</div>
       <div class="kpi-value countup" style="color:${kpi.color}" data-val="${kpi.value}" data-suffix="${kpi.suffix}">0${kpi.suffix}</div>
-      <div class="kpi-sub">${kpi.label === '满编率' ? (kpi.value >= 100 ? '🔵超编' : kpi.value >= 90 ? '🟢良好' : kpi.value >= 75 ? '🟠偏低' : '🔴缺编') : '&nbsp;'}</div>
+      <div class="kpi-sub">${kpi.label === '满编率' ? (kpi.value >= 100 ? '🔵超编' : kpi.value >= 90 ? '🟢良好' : kpi.value >= 75 ? '🟠偏低' : '🔴缺编') : '<span style="color:#1565C0;font-size:10px;">点击展示明细 ↗</span>'}</div>
     `;
     card.addEventListener('click', () => openKpiModal(kpi.label, rows, l1));
     kpiGrid.appendChild(card);
@@ -1822,6 +2347,7 @@ Object.entries(TAB_MAP).forEach(([tabId, l1]) => {
       <td>
         <span class="dept-name">${d.l2}</span>
         <span class="${d.real ? 'dept-real-badge' : 'dept-est-badge'}">${d.real ? '实时' : '估算'}</span>
+        ${d.real ? '<span style="color:#1565C0;font-size:10px;margin-left:4px;cursor:pointer;">点击展示详情 ↗</span>' : ''}
       </td>
       <td>${d.budget}</td>
       <td>${d.actual > 0 ? d.actual : '—'}</td>
@@ -1871,6 +2397,30 @@ function openKpiModal(kpiLabel, rows, l1) {
   } else if (kpiLabel === '流出在途') {
     const withOut = rows.filter(d => d.transOut > 0);
     body = withOut.length ? withOut.map(d => `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #F0F2F5;font-size:13px"><span>${d.l2}</span><strong style="color:#FF8C00">-${d.transOut}</strong></div>`).join('') : '<div style="color:#8D9BAB;font-size:13px;padding:12px 0">暂无流出在途</div>';
+  } else if (kpiLabel === '本年入职') {
+    const dc2 = EEDATA_DATA.deptCard || {};
+    const withOb = rows.filter(d => d.real && (dc2[d.l2]?.yearOnboard || 0) > 0)
+      .sort((a,b) => (dc2[b.l2]?.yearOnboard||0) - (dc2[a.l2]?.yearOnboard||0));
+    body = withOb.length
+      ? withOb.map(d => `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #F0F2F5;font-size:13px">
+          <span>${d.l2}</span>
+          <span><strong style="color:#00897B">${dc2[d.l2].yearOnboard}人</strong>
+            <span style="color:#9CA3AF;font-size:11px;margin-left:6px">本月+${dc2[d.l2].monthOnboard||0}</span>
+          </span>
+        </div>`).join('')
+      : '<div style="color:#8D9BAB;font-size:13px;padding:12px 0">暂无本年入职数据（需 eedata 权限）</div>';
+  } else if (kpiLabel === '本年离职') {
+    const dc2 = EEDATA_DATA.deptCard || {};
+    const withDm = rows.filter(d => d.real && (dc2[d.l2]?.yearDim || 0) > 0)
+      .sort((a,b) => (dc2[b.l2]?.yearDim||0) - (dc2[a.l2]?.yearDim||0));
+    body = withDm.length
+      ? withDm.map(d => `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #F0F2F5;font-size:13px">
+          <span>${d.l2}</span>
+          <span><strong style="color:#FF8C00">${dc2[d.l2].yearDim}人</strong>
+            <span style="color:#9CA3AF;font-size:11px;margin-left:6px">本月-${dc2[d.l2].monthDim||0}</span>
+          </span>
+        </div>`).join('')
+      : '<div style="color:#8D9BAB;font-size:13px;padding:12px 0">暂无本年离职数据（需 eedata 权限）</div>';
   } else if (kpiLabel === '招聘中') {
     const withP = rows.filter(d => d.pending > 0);
     body = withP.length ? withP.map(d => `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #F0F2F5;font-size:13px"><span>${d.l2}</span><strong style="color:#1565C0">${d.pending} 人</strong></div>`).join('') : '<div style="color:#8D9BAB;font-size:13px;padding:12px 0">暂无在招岗位</div>';
@@ -1927,7 +2477,7 @@ const DEPT_DETAIL_DB = {
     "leader": "",
     "currentHc": 166,
     "budgetHc": 164,
-    "transIn": 4,
+    "transIn": 5,
     "transOut": 3,
     "subs": [
       {
@@ -2025,9 +2575,9 @@ const DEPT_DETAIL_DB = {
         "leader": "",
         "current": 9,
         "total": 8,
-        "transIn": 0,
+        "transIn": 1,
         "transOut": 0,
-        "predict": 9,
+        "predict": 10,
         "match": "超编"
       },
       {
@@ -2189,7 +2739,85 @@ const DEPT_DETAIL_DB = {
         "date": "2026-04-08"
       }
     ],
-    "leavingL1L2": []
+    "leavingL1L2": [],
+    "yearOnboard": 27,
+    "yearDim": 8,
+    "monthOnboard": 1,
+    "monthDim": 1,
+    "hcTrend": [
+      {
+        "month": "2025年05月",
+        "hcPercent": 97.3,
+        "totalHc": 149,
+        "currentHc": 145
+      },
+      {
+        "month": "2025年06月",
+        "hcPercent": 101.3,
+        "totalHc": 149,
+        "currentHc": 151
+      },
+      {
+        "month": "2025年07月",
+        "hcPercent": 95.3,
+        "totalHc": 149,
+        "currentHc": 142
+      },
+      {
+        "month": "2025年08月",
+        "hcPercent": 98.7,
+        "totalHc": 149,
+        "currentHc": 147
+      },
+      {
+        "month": "2025年09月",
+        "hcPercent": 106.7,
+        "totalHc": 149,
+        "currentHc": 159
+      },
+      {
+        "month": "2025年10月",
+        "hcPercent": 107.4,
+        "totalHc": 149,
+        "currentHc": 160
+      },
+      {
+        "month": "2025年11月",
+        "hcPercent": 107.4,
+        "totalHc": 149,
+        "currentHc": 160
+      },
+      {
+        "month": "2025年12月",
+        "hcPercent": 107.4,
+        "totalHc": 149,
+        "currentHc": 160
+      },
+      {
+        "month": "2026年01月",
+        "hcPercent": 97.6,
+        "totalHc": 164,
+        "currentHc": 160
+      },
+      {
+        "month": "2026年02月",
+        "hcPercent": 102.4,
+        "totalHc": 164,
+        "currentHc": 168
+      },
+      {
+        "month": "2026年03月",
+        "hcPercent": 100.6,
+        "totalHc": 164,
+        "currentHc": 165
+      },
+      {
+        "month": "2026年04月",
+        "hcPercent": 101.2,
+        "totalHc": 164,
+        "currentHc": 166
+      }
+    ]
   },
   "财务一组": {
     "deptName": "财务一组",
@@ -2251,7 +2879,85 @@ const DEPT_DETAIL_DB = {
       }
     ],
     "pendingL1L2": [],
-    "leavingL1L2": []
+    "leavingL1L2": [],
+    "yearOnboard": 10,
+    "yearDim": 4,
+    "monthOnboard": 0,
+    "monthDim": 0,
+    "hcTrend": [
+      {
+        "month": "2025年05月",
+        "hcPercent": 0.0,
+        "totalHc": 0,
+        "currentHc": 42
+      },
+      {
+        "month": "2025年06月",
+        "hcPercent": 114.3,
+        "totalHc": 42,
+        "currentHc": 48
+      },
+      {
+        "month": "2025年07月",
+        "hcPercent": 107.1,
+        "totalHc": 42,
+        "currentHc": 45
+      },
+      {
+        "month": "2025年08月",
+        "hcPercent": 104.8,
+        "totalHc": 42,
+        "currentHc": 44
+      },
+      {
+        "month": "2025年09月",
+        "hcPercent": 107.1,
+        "totalHc": 42,
+        "currentHc": 45
+      },
+      {
+        "month": "2025年10月",
+        "hcPercent": 111.9,
+        "totalHc": 42,
+        "currentHc": 47
+      },
+      {
+        "month": "2025年11月",
+        "hcPercent": 109.5,
+        "totalHc": 42,
+        "currentHc": 46
+      },
+      {
+        "month": "2025年12月",
+        "hcPercent": 114.3,
+        "totalHc": 42,
+        "currentHc": 48
+      },
+      {
+        "month": "2026年01月",
+        "hcPercent": 96.1,
+        "totalHc": 51,
+        "currentHc": 49
+      },
+      {
+        "month": "2026年02月",
+        "hcPercent": 94.1,
+        "totalHc": 51,
+        "currentHc": 48
+      },
+      {
+        "month": "2026年03月",
+        "hcPercent": 105.9,
+        "totalHc": 51,
+        "currentHc": 54
+      },
+      {
+        "month": "2026年04月",
+        "hcPercent": 105.9,
+        "totalHc": 51,
+        "currentHc": 54
+      }
+    ]
   },
   "资本市场": {
     "deptName": "资本市场",
@@ -2262,7 +2968,85 @@ const DEPT_DETAIL_DB = {
     "transOut": 0,
     "subs": [],
     "pendingL1L2": [],
-    "leavingL1L2": []
+    "leavingL1L2": [],
+    "yearOnboard": 0,
+    "yearDim": 0,
+    "monthOnboard": 0,
+    "monthDim": 0,
+    "hcTrend": [
+      {
+        "month": "2025年05月",
+        "hcPercent": 100.0,
+        "totalHc": 5,
+        "currentHc": 5
+      },
+      {
+        "month": "2025年06月",
+        "hcPercent": 100.0,
+        "totalHc": 5,
+        "currentHc": 5
+      },
+      {
+        "month": "2025年07月",
+        "hcPercent": 80.0,
+        "totalHc": 5,
+        "currentHc": 4
+      },
+      {
+        "month": "2025年08月",
+        "hcPercent": 80.0,
+        "totalHc": 5,
+        "currentHc": 4
+      },
+      {
+        "month": "2025年09月",
+        "hcPercent": 80.0,
+        "totalHc": 5,
+        "currentHc": 4
+      },
+      {
+        "month": "2025年10月",
+        "hcPercent": 80.0,
+        "totalHc": 5,
+        "currentHc": 4
+      },
+      {
+        "month": "2025年11月",
+        "hcPercent": 80.0,
+        "totalHc": 5,
+        "currentHc": 4
+      },
+      {
+        "month": "2025年12月",
+        "hcPercent": 100.0,
+        "totalHc": 5,
+        "currentHc": 5
+      },
+      {
+        "month": "2026年01月",
+        "hcPercent": 100.0,
+        "totalHc": 5,
+        "currentHc": 5
+      },
+      {
+        "month": "2026年02月",
+        "hcPercent": 100.0,
+        "totalHc": 5,
+        "currentHc": 5
+      },
+      {
+        "month": "2026年03月",
+        "hcPercent": 100.0,
+        "totalHc": 5,
+        "currentHc": 5
+      },
+      {
+        "month": "2026年04月",
+        "hcPercent": 100.0,
+        "totalHc": 5,
+        "currentHc": 5
+      }
+    ]
   }
 };
 
@@ -2295,16 +3079,24 @@ function openDeptPanel(deptName) {
     '<span style="color:' + (gap > 0 ? '#1565C0' : '#FF2442') + '">' + (gap > 0 ? '超' + gap : '缺' + Math.abs(gap)) + ' Gap</span>' +
     '<span style="color:#00C853">' + fillRate + '%满编率</span>';
 
-  // --- 7 KPI cards ---
+  // --- eedata 数据 ---
+  var eeCard = (EEDATA_DATA.deptCard || {})[deptName] || {};
+  var yearOb2 = eeCard.yearOnboard || 0;
+  var yearDm2 = eeCard.yearDim || 0;
+  var monthOb2 = eeCard.monthOnboard || 0;
+  var monthDm2 = eeCard.monthDim || 0;
+
+  // --- KPI cards (增加本年入离职) ---
   var kpiDefs2 = [
     {label:'在职', value: data.currentHc, color:'#1565C0', prefix:'', suffix:''},
     {label:'Y26规划', value: data.budgetHc, color:'#4A5568', prefix:'', suffix:''},
-    {label:'预计在职', value: predict, color:'#1565C0', prefix:'', suffix:''},
-    {label:'流入在途', value: data.transIn, color:'#00C853', prefix:'+', suffix:''},
-    {label:'流出在途', value: data.transOut, color:'#FF2442', prefix:'-', suffix:''},
+    {label:'满编率', value: fillRate, color: fillRate >= 100 ? '#1565C0' : fillRate >= 90 ? '#00C853' : '#FF8C00', prefix:'', suffix:'%'},
     {label:'HC Gap', value: Math.abs(gap), color: gap >= 0 ? '#FF2442' : '#FF8C00',
       prefix: gap > 0 ? '超' : gap < 0 ? '缺' : '', suffix:''},
-    {label:'满编率', value: fillRate, color: fillRate >= 100 ? '#1565C0' : fillRate >= 90 ? '#00C853' : '#FF8C00', prefix:'', suffix:'%'},
+    {label:'流入在途', value: data.transIn, color:'#00C853', prefix:'+', suffix:''},
+    {label:'流出在途', value: data.transOut, color:'#FF2442', prefix:'-', suffix:''},
+    {label:'本年入职', value: yearOb2, color:'#00897B', prefix:'', suffix:'人'},
+    {label:'本年离职', value: yearDm2, color:'#FF8C00', prefix:'', suffix:'人'},
   ];
   var kpiHtml = '';
   kpiDefs2.forEach(function(k) {
@@ -2317,6 +3109,51 @@ function openDeptPanel(deptName) {
 
   // --- SVG combo chart ---
   buildDpChart(data.subs);
+
+  // --- 满编率迷你折线图（eedata 数据）---
+  var hcTrend = (EEDATA_DATA.deptTrend || {})[deptName] || data.hcTrend || [];
+  var miniChartEl = document.getElementById('dpMiniTrend');
+  if (miniChartEl) {
+    if (hcTrend.length >= 2) {
+      var W2 = 560, H2 = 130;
+      var PAD2 = {l:30, r:20, t:22, b:22};
+      var cW2 = W2 - PAD2.l - PAD2.r, cH2 = H2 - PAD2.t - PAD2.b;
+      // 值域
+      var allV2 = hcTrend.map(d => d.hcPercent);
+      var minV2 = Math.max(0, Math.floor(Math.min(...allV2) / 10) * 10 - 5);
+      var maxV2 = Math.ceil(Math.max(...allV2) / 10) * 10 + 5;
+      var pts = hcTrend.map((d, i) => ({
+        x: PAD2.l + i * cW2 / Math.max(hcTrend.length - 1, 1),
+        y: PAD2.t + cH2 - ((d.hcPercent - minV2) / (maxV2 - minV2)) * cH2,
+        v: d.hcPercent, m: d.month,
+      }));
+      var polyline = pts.map(p => p.x + ',' + p.y).join(' ');
+      var lastV = pts[pts.length-1].v;
+      var lineColor = lastV >= 100 ? '#1565C0' : lastV >= 90 ? '#00C853' : lastV >= 75 ? '#FF8C00' : '#FF2442';
+      // 每个点：圆点 + 数值标签（交替上下）
+      var dots = pts.map((p, i) => {
+        var above = i % 2 === 0;
+        var ty = above ? p.y - 7 : p.y + 15;
+        return '<circle cx="' + p.x + '" cy="' + p.y + '" r="3.5" fill="' + lineColor + '" stroke="white" stroke-width="1"/>'
+          + '<text x="' + p.x + '" y="' + ty + '" text-anchor="middle" font-size="9" font-weight="700" fill="' + lineColor + '">' + p.v + '%</text>';
+      }).join('');
+      // X 轴月份（只首/中/末）
+      var xLabels = [pts[0], pts[Math.floor(pts.length/2)], pts[pts.length-1]].map(p =>
+        '<text x="' + p.x + '" y="' + (H2 - 4) + '" text-anchor="middle" font-size="9" fill="#9CA3AF">'
+        + p.m.replace('年','/').replace('月','') + '</text>'
+      ).join('');
+      miniChartEl.innerHTML = '<div style="font-size:11px;font-weight:700;color:#4A5568;margin-bottom:6px;">📈 满编率走势（'
+        + hcTrend[0].month + ' ~ ' + hcTrend[hcTrend.length-1].month + '）</div>'
+        + '<svg viewBox="0 0 ' + W2 + ' ' + H2 + '" width="100%" height="' + H2 + '" style="display:block;">'
+        + '<line x1="' + PAD2.l + '" y1="' + (PAD2.t+cH2) + '" x2="' + (W2-PAD2.r) + '" y2="' + (PAD2.t+cH2) + '" stroke="#E4E8EC" stroke-width="1"/>'
+        + '<polyline points="' + polyline + '" fill="none" stroke="' + lineColor + '" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>'
+        + dots + xLabels
+        + '</svg>';
+    } else {
+      miniChartEl.innerHTML = '<div style="color:#9CA3AF;font-size:11px;padding:8px 0;">满编率趋势数据加载中...</div>';
+    }
+    miniChartEl.style.display = 'block';
+  }
 
   // --- Key people ---
   var pendingHtml = '';
@@ -2615,6 +3452,208 @@ function animateBars() {
    INITIAL ANIMATIONS
 ═══════════════════════════════════════════ */
 window.addEventListener('load', () => {
+  // ── 满编率折线图（交互版）──
+  (function() {
+    const trendData = EEDATA_DATA.l1Trend || {};
+    const L1_LINES = [
+      { name:'商业化',      color:'#FF2442' },
+      { name:'财务职能+DI', color:'#1565C0' },
+      { name:'交易',        color:'#00C853' },
+    ];
+
+    // 只取6月及以后的数据
+    const monthSet = new Set();
+    L1_LINES.forEach(({name}) => {
+      (trendData[name]||[]).forEach(d => {
+        // 过滤：只保留 2025年06月 以后（含）
+        if (d.month >= '2025年06月') monthSet.add(d.month);
+      });
+    });
+    const months = Array.from(monthSet).sort();
+
+    const svgEl = document.getElementById('trendSvg');
+    if (!svgEl || months.length < 2) {
+      if (svgEl) svgEl.parentElement.insertAdjacentHTML('beforeend',
+        '<div style="color:#9CA3AF;font-size:12px;text-align:center;padding:20px;">满编率趋势数据暂未加载</div>');
+      return;
+    }
+
+    const W = 900, H = 280;
+    const PAD = {l:52, r:60, t:28, b:44};
+    const cW = W - PAD.l - PAD.r;
+    const cH = H - PAD.t - PAD.b;
+
+    svgEl.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    svgEl.setAttribute('height', H);
+    svgEl.style.cursor = 'crosshair';
+
+    // 数值范围（过滤6月后重算）
+    let allVals = [];
+    L1_LINES.forEach(({name}) => {
+      (trendData[name]||[]).filter(d => d.month >= '2025年06月')
+        .forEach(d => allVals.push(d.hcPercent));
+    });
+    if (!allVals.length) return;
+    const minV = Math.max(0, Math.floor(Math.min(...allVals) / 10) * 10 - 5);
+    const maxV = Math.ceil(Math.max(...allVals) / 10) * 10 + 5;
+
+    const xP = i => PAD.l + (months.length === 1 ? cW/2 : i / (months.length - 1) * cW);
+    const yP = v => PAD.t + cH - ((v - minV) / (maxV - minV)) * cH;
+
+    const ns = 'http://www.w3.org/2000/svg';
+    const mk = (tag, attrs) => {
+      const e = document.createElementNS(ns, tag);
+      Object.entries(attrs).forEach(([k,v]) => e.setAttribute(k,v));
+      return e;
+    };
+    svgEl.innerHTML = '';
+
+    // ── 背景格线 ──
+    [minV, Math.round((minV+maxV)/2), maxV, 100].forEach(v => {
+      const y = yP(v);
+      const isRef = v === 100;
+      svgEl.appendChild(mk('line', {x1:PAD.l, y1:y, x2:W-PAD.r, y2:y,
+        stroke: isRef ? '#1565C040' : '#F0F2F5',
+        'stroke-width': isRef ? 1.5 : 1,
+        'stroke-dasharray': isRef ? '5,3' : 'none'}));
+      const t = mk('text', {x:PAD.l-6, y:y+4, 'text-anchor':'end',
+        'font-size':'9', fill: isRef ? '#1565C0' : '#9CA3AF', 'font-weight': isRef ? '700' : '400', 'font-family':'Inter'});
+      t.textContent = v + '%';
+      svgEl.appendChild(t);
+    });
+
+    // X 轴
+    svgEl.appendChild(mk('line', {x1:PAD.l, y1:PAD.t+cH, x2:W-PAD.r, y2:PAD.t+cH,
+      stroke:'#E4E8EC', 'stroke-width':'1'}));
+
+    // X 轴月份标签（全部显示，短格式）
+    months.forEach((m, i) => {
+      const label = m.replace('年','/').replace('月','');
+      const t = mk('text', {x:xP(i), y:PAD.t+cH+16, 'text-anchor':'middle',
+        'font-size':'9', fill:'#9CA3AF', 'font-family':'Inter'});
+      t.textContent = label;
+      svgEl.appendChild(t);
+    });
+
+    // ── 折线 + 数据点 + 标签 ──
+    const allSeriesPts = {};  // 用于 hover
+    L1_LINES.forEach(({name, color}) => {
+      const series = (trendData[name]||[]).filter(d => d.month >= '2025年06月');
+      if (!series.length) return;
+      const monthMap = {};
+      series.forEach(d => monthMap[d.month] = d.hcPercent);
+
+      const pts = months.map((m, i) => ({
+        x: xP(i), y: yP(monthMap[m] != null ? monthMap[m] : null),
+        v: monthMap[m] != null ? monthMap[m] : null, m, i
+      })).filter(p => p.v !== null);
+      allSeriesPts[name] = pts;
+
+      if (pts.length < 1) return;
+
+      // 填充区域（渐变）
+      if (pts.length >= 2) {
+        const areaPoints = pts.map(p=>`${p.x},${p.y}`).join(' ')
+          + ` ${pts[pts.length-1].x},${PAD.t+cH} ${pts[0].x},${PAD.t+cH}`;
+        const poly = mk('polygon', {points: areaPoints, fill: color, opacity:'0.07'});
+        svgEl.appendChild(poly);
+        const line = mk('polyline', {points: pts.map(p=>`${p.x},${p.y}`).join(' '),
+          fill:'none', stroke:color, 'stroke-width':'2.5',
+          'stroke-linejoin':'round', 'stroke-linecap':'round'});
+        svgEl.appendChild(line);
+      }
+
+      // 数据点 + 数值标签（每个点都标）
+      pts.forEach((p, idx) => {
+        // 圆点
+        const c = mk('circle', {cx:p.x, cy:p.y, r:'4', fill:color,
+          'stroke':'white', 'stroke-width':'1.5'});
+        svgEl.appendChild(c);
+
+        // 数值标签（交替上下避免重叠）
+        const above = idx % 2 === 0;
+        const t = mk('text', {x:p.x, y: above ? p.y - 8 : p.y + 16,
+          'text-anchor':'middle', 'font-size':'9', 'font-weight':'700',
+          fill:color, 'font-family':'Inter'});
+        t.textContent = p.v + '%';
+        svgEl.appendChild(t);
+      });
+    });
+
+    // ── 图例（右上角）──
+    L1_LINES.forEach(({name, color}, i) => {
+      const lx = W - PAD.r + 8, ly = PAD.t + i * 22;
+      svgEl.appendChild(mk('line', {x1:lx, y1:ly+5, x2:lx+14, y2:ly+5,
+        stroke:color, 'stroke-width':'2.5'}));
+      svgEl.appendChild(mk('circle', {cx:lx+7, cy:ly+5, r:'3', fill:color}));
+      const lt = mk('text', {x:lx+18, y:ly+9, 'font-size':'10', fill:'#4A5568', 'font-family':'Inter'});
+      lt.textContent = name === '财务职能+DI' ? '财务+DI' : name;
+      svgEl.appendChild(lt);
+    });
+
+    // ── Hover 竖线 + tooltip ──
+    const hoverLine = mk('line', {x1:0, y1:PAD.t, x2:0, y2:PAD.t+cH,
+      stroke:'#4A5568', 'stroke-width':'1', 'stroke-dasharray':'4,3', opacity:'0', 'pointer-events':'none'});
+    svgEl.appendChild(hoverLine);
+
+    // tooltip div
+    const tCard = document.createElement('div');
+    tCard.style.cssText = 'position:absolute;display:none;background:#1A202C;color:#fff;border-radius:10px;padding:10px 14px;font-size:12px;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,0.25);z-index:999;min-width:150px;';
+    svgEl.parentElement.style.position = 'relative';
+    svgEl.parentElement.appendChild(tCard);
+
+    svgEl.addEventListener('mousemove', e => {
+      const rect = svgEl.getBoundingClientRect();
+      const scaleX = W / rect.width;
+      const mx = (e.clientX - rect.left) * scaleX;
+
+      // 找最近的月份索引
+      let bestIdx = 0, bestDist = Infinity;
+      months.forEach((m, i) => {
+        const d = Math.abs(xP(i) - mx);
+        if (d < bestDist) { bestDist = d; bestIdx = i; }
+      });
+      if (bestDist > cW / months.length) {
+        hoverLine.setAttribute('opacity', '0');
+        tCard.style.display = 'none';
+        return;
+      }
+
+      const hx = xP(bestIdx);
+      hoverLine.setAttribute('x1', hx); hoverLine.setAttribute('x2', hx);
+      hoverLine.setAttribute('opacity', '0.6');
+
+      // 高亮当月圆点
+      const curMonth = months[bestIdx];
+      let tipHtml = `<div style="font-weight:700;margin-bottom:6px;color:#E2E8F0">${curMonth.replace('年','/').replace('月','')}</div>`;
+      L1_LINES.forEach(({name, color}) => {
+        const pts = allSeriesPts[name] || [];
+        const pt = pts.find(p => p.m === curMonth);
+        if (pt) {
+          tipHtml += `<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">
+            <span style="width:8px;height:8px;border-radius:50%;background:${color};display:inline-block;flex-shrink:0"></span>
+            <span style="color:#CBD5E0">${name === '财务职能+DI' ? '财务+DI' : name}</span>
+            <span style="margin-left:auto;font-weight:700;color:${color}">${pt.v}%</span>
+          </div>`;
+        }
+      });
+      tCard.innerHTML = tipHtml;
+      tCard.style.display = 'block';
+
+      // 定位 tooltip（跟随鼠标，避免超出右边）
+      const relX = e.clientX - rect.left;
+      const relY = e.clientY - rect.top;
+      const tW = 160;
+      tCard.style.left = (relX + 16 + tW > rect.width ? relX - tW - 8 : relX + 16) + 'px';
+      tCard.style.top = (relY - 20) + 'px';
+    });
+
+    svgEl.addEventListener('mouseleave', () => {
+      hoverLine.setAttribute('opacity', '0');
+      tCard.style.display = 'none';
+    });
+  })();
+
   setTimeout(() => {
     animateBars();
     // Overview countups in flow cards
