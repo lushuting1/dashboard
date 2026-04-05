@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HC Dashboard v3 · 招财出品 · 2026-04-05</title>
+<title>HC Dashboard v3 · 招财出品</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -878,7 +878,7 @@ const BUDGET_DATA = [
   { l1:'交易', l2:'行业运营三部', budget:127, actual:108, transIn:0, transOut:0, pending:0, leaving:3, real:false },
   { l1:'交易', l2:'中小商家', budget:50, actual:38, transIn:0, transOut:0, pending:0, leaving:2, real:false },
   { l1:'交易', l2:'交易产品', budget:146, actual:130, transIn:0, transOut:0, pending:0, leaving:4, real:false },
-  { l1:'商业化', l2:'行业一部', budget:164, actual:166, transIn:4, transOut:3, pending:0, leaving:0, real:true },
+  { l1:'商业化', l2:'行业一部', budget:164, actual:166, transIn:5, transOut:4, pending:0, leaving:0, real:true },
   { l1:'商业化', l2:'行业二部', budget:90, actual:0, transIn:0, transOut:0, pending:0, leaving:0, real:false },
   { l1:'商业化', l2:'行业三部', budget:157, actual:0, transIn:0, transOut:0, pending:0, leaving:0, real:false },
   { l1:'商业化', l2:'行业四部', budget:207, actual:0, transIn:0, transOut:0, pending:0, leaving:0, real:false },
@@ -908,11 +908,12 @@ const BUDGET_DATA = [
   { l1:'财务职能+DI', l2:'DI', budget:107, actual:0, transIn:0, transOut:0, pending:0, leaving:0, real:false },
 ];
 
-// 真实入离职数据（来自 ehr-workbench/hrbp，更新于 2026-04-05，房心4月2日已正式离职）
+// 真实入离职数据（来自 ehr-workbench/hrbp 2026-04-05 自动更新）
 const FLOW_DATA = {
   transIn: [
     { name:'JICHAO SUN', level:'L1', dept:'行业一部', subDept:'行业一部', date:'2026-04-08', manager:'昂扬(李昂)', highlight:true },
     { name:'邓鸿颖', level:'IC', dept:'行业一部', subDept:'行业五组', date:'2026-04-08', manager:'吴邪(吴建成)', highlight:false },
+    { name:'王肖肖', level:'IC', dept:'行业一部', subDept:'行业十组', date:'2026-04-20', manager:'南舟(姚苒)', highlight:false },
     { name:'洪方雯', level:'IC', dept:'行业一部', subDept:'平台专家十一组', date:'2026-04-27', manager:'惊鸿(王晶晶)', highlight:false },
     { name:'陈静仪', level:'IC', dept:'行业一部', subDept:'行业七组', date:'2026-07-01', manager:'昭燃(千艺)', highlight:false },
     { name:'曹腾', level:'IC', dept:'财务职能+DI', subDept:'交易财务分析', date:'2026-04-08', manager:'白真(白乐天)', highlight:false },
@@ -923,6 +924,7 @@ const FLOW_DATA = {
     { name:'六尾(许凌豪)', level:'IC', dept:'行业一部', subDept:'平台专家九组', date:'2026-04-07', type:'主动离职', highlight:false },
     { name:'波雅(李淑华)', level:'IC', dept:'行业一部', subDept:'行业四组', date:'2026-04-13', type:'被动离职', highlight:false },
     { name:'诗源(杨骑宇)', level:'IC', dept:'财务职能+DI', subDept:'财务职能', date:'2026-04-23', type:'被动离职', highlight:false },
+    { name:'夏实(钱依琳)', level:'IC', dept:'行业一部', subDept:'平台专家九组', date:'2026-05-06', type:'主动离职', highlight:false },
   ],
 };
 
@@ -1409,7 +1411,7 @@ const HANGYIBU_SUBS = [
   {name:'行业七组', leader:'昭燃(千艺)', current:12, total:9, transIn:1, transOut:0, predict:13, match:'匹配'},
   {name:'行业八组', leader:'吴邪(吴建成)', current:6, total:7, transIn:0, transOut:0, predict:6, match:'优秀'},
   {name:'行业九组', leader:'白泉(陈可茵)', current:8, total:7, transIn:0, transOut:0, predict:8, match:'优秀'},
-  {name:'行业十组', leader:'昂扬(李昂)', current:9, total:8, transIn:1, transOut:1, predict:9, match:'匹配'},
+  {name:'行业十组', leader:'昂扬(李昂)', current:9, total:8, transIn:2, transOut:1, predict:10, match:'匹配'},
   {name:'行业十一组', leader:'南舟(姚苒)', current:5, total:6, transIn:0, transOut:0, predict:5, match:'匹配'},
   {name:'行业十二组', leader:'希坦(贺琼)', current:4, total:4, transIn:0, transOut:0, predict:4, match:'匹配'},
   {name:'平台专家一组', leader:'古娴(高逸群)', current:6, total:8, transIn:0, transOut:0, predict:6, match:'匹配'},
@@ -1438,8 +1440,8 @@ const DEPT_DETAIL_DB = {
     leader: '昂扬',
     currentHc: 166,
     budgetHc: 164,
-    transIn: 4,
-    transOut: 3,
+    transIn: 5,
+    transOut: 4,
     pendingL1L2: HANGYIBU_PENDING_L1L2,
     leavingL1L2: HANGYIBU_LEAVING_L1L2,
     subs: HANGYIBU_SUBS,
