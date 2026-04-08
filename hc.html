@@ -749,7 +749,7 @@ body {
 }
 .match-green { background: #E8F5E9; color: #2E7D32; }
 .match-blue { background: #E3F2FD; color: var(--blue); }
-.match-orange { background: #FFF3E0; color: #E65100; }
+.match-orange { background: #FFF3E0; color: #FF6900; }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 900px) {
@@ -770,7 +770,7 @@ body {
   </div>
   <div class="topbar-meta">
     <span class="badge-live">LIVE</span>
-    2026 Q2 · 更新于 2026-04-07
+    2026 Q2 · 更新于 2026-04-08
   </div>
 </div>
 
@@ -923,22 +923,26 @@ const BUDGET_DATA = [
     "l2": "行业一部",
     "budget": 164,
     "actual": 166,
-    "transIn": 5,
-    "transOut": 3,
+    "transIn": 3,
+    "transOut": 2,
     "pending": 0,
     "leaving": 0,
-    "real": true
+    "real": true,
+    "leader": "昂扬(李昂)",
+    "matchingDegree": "优秀"
   },
   {
     "l1": "财务职能+DI",
     "l2": "财务一组",
     "budget": 51,
-    "actual": 54,
-    "transIn": 3,
+    "actual": 56,
+    "transIn": 1,
     "transOut": 1,
     "pending": 0,
     "leaving": 0,
-    "real": true
+    "real": true,
+    "leader": "白真(白乐天)",
+    "matchingDegree": "优秀"
   },
   {
     "l1": "财务职能+DI",
@@ -949,7 +953,9 @@ const BUDGET_DATA = [
     "transOut": 0,
     "pending": 0,
     "leaving": 0,
-    "real": true
+    "real": true,
+    "leader": "劳拉(蒋晓雯)",
+    "matchingDegree": "存疑"
   },
   {
     "l1": "交易",
@@ -1287,24 +1293,6 @@ const BUDGET_DATA = [
 const FLOW_DATA = {
   transIn: [
   {
-    "name": "JICHAO SUN",
-    "level": "L1",
-    "dept": "商业化",
-    "subDept": "行业一部",
-    "date": "2026-04-08",
-    "manager": "",
-    "highlight": true
-  },
-  {
-    "name": "霍莉(邓鸿颖)",
-    "level": "IC",
-    "dept": "商业化",
-    "subDept": "行业五组",
-    "date": "2026-04-08",
-    "manager": "",
-    "highlight": false
-  },
-  {
     "name": "王肖肖",
     "level": "IC",
     "dept": "商业化",
@@ -1332,24 +1320,6 @@ const FLOW_DATA = {
     "highlight": false
   },
   {
-    "name": "曹腾",
-    "level": "IC",
-    "dept": "财务职能+DI",
-    "subDept": "交易财务分析",
-    "date": "2026-04-08",
-    "manager": "",
-    "highlight": false
-  },
-  {
-    "name": "鲍天玥",
-    "level": "IC",
-    "dept": "财务职能+DI",
-    "subDept": "资金管理组",
-    "date": "2026-04-13",
-    "manager": "",
-    "highlight": false
-  },
-  {
     "name": "刘潇阳",
     "level": "IC",
     "dept": "财务职能+DI",
@@ -1366,15 +1336,6 @@ const FLOW_DATA = {
     "dept": "商业化",
     "subDept": "平台专家九组",
     "date": "2026-05-06",
-    "type": "主动离职",
-    "highlight": false
-  },
-  {
-    "name": "六尾(许凌豪)",
-    "level": "IC",
-    "dept": "商业化",
-    "subDept": "平台专家九组",
-    "date": "2026-04-07",
     "type": "主动离职",
     "highlight": false
   },
@@ -2013,9 +1974,9 @@ const EEDATA_DATA = {
       },
       {
         "month": "2026年04月",
-        "hcPercent": 105.4,
+        "hcPercent": 107.1,
         "totalHc": 56,
-        "currentHc": 59
+        "currentHc": 60
       }
     ],
     "交易": []
@@ -2164,9 +2125,9 @@ const EEDATA_DATA = {
       },
       {
         "month": "2026年04月",
-        "hcPercent": 105.9,
+        "hcPercent": 107.8,
         "totalHc": 51,
-        "currentHc": 54
+        "currentHc": 55
       }
     ],
     "资本市场": [
@@ -2246,14 +2207,14 @@ const EEDATA_DATA = {
   },
   "deptCard": {
     "行业一部": {
-      "monthOnboard": 1,
-      "yearOnboard": 27,
-      "monthDim": 1,
+      "monthOnboard": 2,
+      "yearOnboard": 28,
+      "monthDim": 2,
       "yearDim": 9
     },
     "财务一组": {
-      "monthOnboard": 0,
-      "yearOnboard": 10,
+      "monthOnboard": 1,
+      "yearOnboard": 11,
       "monthDim": 0,
       "yearDim": 4
     },
@@ -2337,7 +2298,7 @@ Object.entries(TAB_MAP).forEach(([tabId, l1]) => {
   const tableEl = document.getElementById('table-' + tabId);
   let html = `<table>
     <thead><tr>
-      <th>部门</th><th>编制</th><th>在职</th><th>满编率</th><th>缺口</th><th>流入</th><th>流出</th>
+      <th>部门</th><th>负责人</th><th>编制</th><th>在职</th><th>满编率</th><th>缺口</th><th>流入</th><th>流出</th>
     </tr></thead><tbody>`;
   rows.forEach(d => {
     const p2 = d.actual > 0 ? pct(d.actual, d.budget) : 0;
@@ -2349,6 +2310,7 @@ Object.entries(TAB_MAP).forEach(([tabId, l1]) => {
         <span class="${d.real ? 'dept-real-badge' : 'dept-est-badge'}">${d.real ? '实时' : '估算'}</span>
         ${d.real ? '<span style="color:#1565C0;font-size:10px;margin-left:4px;cursor:pointer;">点击展示详情 ↗</span>' : ''}
       </td>
+      <td style="color:#4A5568;font-size:12px">${d.leader || '—'}</td>
       <td>${d.budget}</td>
       <td>${d.actual > 0 ? d.actual : '—'}</td>
       <td>
@@ -2477,12 +2439,13 @@ const DEPT_DETAIL_DB = {
     "leader": "",
     "currentHc": 166,
     "budgetHc": 164,
-    "transIn": 5,
-    "transOut": 3,
+    "transIn": 3,
+    "transOut": 2,
     "subs": [
       {
         "name": "行业一组",
-        "leader": "",
+        "leader": "千月(陈思琪)",
+        "matchingDegree": "优秀",
         "current": 9,
         "total": 8,
         "transIn": 0,
@@ -2492,7 +2455,8 @@ const DEPT_DETAIL_DB = {
       },
       {
         "name": "行业二组",
-        "leader": "",
+        "leader": "吴邪(吴建成)",
+        "matchingDegree": "优秀",
         "current": 9,
         "total": 6,
         "transIn": 0,
@@ -2502,7 +2466,8 @@ const DEPT_DETAIL_DB = {
       },
       {
         "name": "行业三组",
-        "leader": "",
+        "leader": "克斯(陈宇田)",
+        "matchingDegree": "匹配",
         "current": 9,
         "total": 8,
         "transIn": 0,
@@ -2512,7 +2477,8 @@ const DEPT_DETAIL_DB = {
       },
       {
         "name": "行业四组",
-        "leader": "",
+        "leader": "千月(陈思琪)",
+        "matchingDegree": "匹配",
         "current": 5,
         "total": 4,
         "transIn": 0,
@@ -2522,17 +2488,19 @@ const DEPT_DETAIL_DB = {
       },
       {
         "name": "行业五组",
-        "leader": "",
-        "current": 4,
+        "leader": "吴邪(吴建成)",
+        "matchingDegree": "匹配",
+        "current": 5,
         "total": 5,
-        "transIn": 1,
+        "transIn": 0,
         "transOut": 0,
         "predict": 5,
         "match": "达标"
       },
       {
         "name": "行业六组",
-        "leader": "",
+        "leader": "嘉莉(惠江雯)",
+        "matchingDegree": "匹配",
         "current": 11,
         "total": 5,
         "transIn": 0,
@@ -2542,7 +2510,8 @@ const DEPT_DETAIL_DB = {
       },
       {
         "name": "行业七组",
-        "leader": "",
+        "leader": "昭燃(千艺)",
+        "matchingDegree": "匹配",
         "current": 12,
         "total": 9,
         "transIn": 1,
@@ -2552,7 +2521,8 @@ const DEPT_DETAIL_DB = {
       },
       {
         "name": "行业八组",
-        "leader": "",
+        "leader": "吴邪(吴建成)",
+        "matchingDegree": "优秀",
         "current": 6,
         "total": 7,
         "transIn": 0,
@@ -2562,7 +2532,8 @@ const DEPT_DETAIL_DB = {
       },
       {
         "name": "行业九组",
-        "leader": "",
+        "leader": "白泉(陈可茵)",
+        "matchingDegree": "优秀",
         "current": 8,
         "total": 7,
         "transIn": 0,
@@ -2572,7 +2543,8 @@ const DEPT_DETAIL_DB = {
       },
       {
         "name": "行业十组",
-        "leader": "",
+        "leader": "昂扬(李昂)",
+        "matchingDegree": "匹配",
         "current": 9,
         "total": 8,
         "transIn": 1,
@@ -2582,7 +2554,8 @@ const DEPT_DETAIL_DB = {
       },
       {
         "name": "行业十一组",
-        "leader": "",
+        "leader": "南舟(姚苒)",
+        "matchingDegree": "匹配",
         "current": 5,
         "total": 6,
         "transIn": 0,
@@ -2592,7 +2565,8 @@ const DEPT_DETAIL_DB = {
       },
       {
         "name": "行业十二组",
-        "leader": "",
+        "leader": "希坦(贺琼)",
+        "matchingDegree": "匹配",
         "current": 4,
         "total": 4,
         "transIn": 0,
@@ -2602,7 +2576,8 @@ const DEPT_DETAIL_DB = {
       },
       {
         "name": "平台专家一组",
-        "leader": "",
+        "leader": "古娴(高逸群)",
+        "matchingDegree": "匹配",
         "current": 6,
         "total": 8,
         "transIn": 0,
@@ -2612,7 +2587,8 @@ const DEPT_DETAIL_DB = {
       },
       {
         "name": "平台专家二组",
-        "leader": "",
+        "leader": "菀得(杨森)",
+        "matchingDegree": "优秀",
         "current": 9,
         "total": 5,
         "transIn": 0,
@@ -2622,7 +2598,8 @@ const DEPT_DETAIL_DB = {
       },
       {
         "name": "平台专家三组",
-        "leader": "",
+        "leader": "若琳(陈若琳)",
+        "matchingDegree": "优秀",
         "current": 7,
         "total": 6,
         "transIn": 0,
@@ -2632,7 +2609,8 @@ const DEPT_DETAIL_DB = {
       },
       {
         "name": "平台专家四组",
-        "leader": "",
+        "leader": "古娴(高逸群)",
+        "matchingDegree": "优秀",
         "current": 4,
         "total": 3,
         "transIn": 0,
@@ -2642,7 +2620,8 @@ const DEPT_DETAIL_DB = {
       },
       {
         "name": "平台专家五组",
-        "leader": "",
+        "leader": "菀得(杨森)",
+        "matchingDegree": "优秀",
         "current": 5,
         "total": 5,
         "transIn": 0,
@@ -2652,7 +2631,8 @@ const DEPT_DETAIL_DB = {
       },
       {
         "name": "平台专家六组",
-        "leader": "",
+        "leader": "希莫(焦潞林)",
+        "matchingDegree": "匹配",
         "current": 5,
         "total": 4,
         "transIn": 0,
@@ -2662,7 +2642,8 @@ const DEPT_DETAIL_DB = {
       },
       {
         "name": "平台专家七组",
-        "leader": "",
+        "leader": "希莫(焦潞林)",
+        "matchingDegree": "匹配",
         "current": 9,
         "total": 8,
         "transIn": 0,
@@ -2672,7 +2653,8 @@ const DEPT_DETAIL_DB = {
       },
       {
         "name": "平台专家八组",
-        "leader": "",
+        "leader": "菀得(杨森)",
+        "matchingDegree": "匹配",
         "current": 5,
         "total": 6,
         "transIn": 0,
@@ -2682,17 +2664,19 @@ const DEPT_DETAIL_DB = {
       },
       {
         "name": "平台专家九组",
-        "leader": "",
-        "current": 8,
+        "leader": "清也(刘月)",
+        "matchingDegree": "匹配",
+        "current": 7,
         "total": 6,
         "transIn": 0,
-        "transOut": 2,
+        "transOut": 1,
         "predict": 6,
         "match": "超编"
       },
       {
         "name": "平台专家十组",
-        "leader": "",
+        "leader": "珠珠(朱梦倩)",
+        "matchingDegree": "匹配",
         "current": 6,
         "total": 6,
         "transIn": 0,
@@ -2702,7 +2686,8 @@ const DEPT_DETAIL_DB = {
       },
       {
         "name": "平台专家十一组",
-        "leader": "",
+        "leader": "惊鸿(王晶晶)",
+        "matchingDegree": "",
         "current": 4,
         "total": 5,
         "transIn": 1,
@@ -2712,7 +2697,8 @@ const DEPT_DETAIL_DB = {
       },
       {
         "name": "平台专家十二组",
-        "leader": "",
+        "leader": "惊鸿(王晶晶)",
+        "matchingDegree": "匹配",
         "current": 5,
         "total": 3,
         "transIn": 0,
@@ -2722,7 +2708,8 @@ const DEPT_DETAIL_DB = {
       },
       {
         "name": "行业策略组",
-        "leader": "",
+        "leader": "飞云(张一鸣)",
+        "matchingDegree": "匹配",
         "current": 2,
         "total": 3,
         "transIn": 0,
@@ -2731,19 +2718,12 @@ const DEPT_DETAIL_DB = {
         "match": "达标"
       }
     ],
-    "pendingL1L2": [
-      {
-        "name": "JICHAO SUN",
-        "level": "L1",
-        "dept": "行业一部",
-        "date": "2026-04-08"
-      }
-    ],
+    "pendingL1L2": [],
     "leavingL1L2": [],
-    "yearOnboard": 27,
+    "yearOnboard": 28,
     "yearDim": 9,
-    "monthOnboard": 1,
-    "monthDim": 1,
+    "monthOnboard": 2,
+    "monthDim": 2,
     "hcTrend": [
       {
         "month": "2025年05月",
@@ -2822,14 +2802,15 @@ const DEPT_DETAIL_DB = {
   "财务一组": {
     "deptName": "财务一组",
     "leader": "",
-    "currentHc": 54,
+    "currentHc": 56,
     "budgetHc": 51,
-    "transIn": 3,
+    "transIn": 1,
     "transOut": 1,
     "subs": [
       {
         "name": "技术财务分析",
-        "leader": "",
+        "leader": "艾妲(谭婧)",
+        "matchingDegree": "匹配",
         "current": 7,
         "total": 6,
         "transIn": 0,
@@ -2839,17 +2820,19 @@ const DEPT_DETAIL_DB = {
       },
       {
         "name": "交易财务分析",
-        "leader": "",
-        "current": 10,
+        "leader": "知易(邹知艺)",
+        "matchingDegree": "匹配",
+        "current": 11,
         "total": 7,
-        "transIn": 1,
+        "transIn": 0,
         "transOut": 0,
         "predict": 11,
         "match": "超编"
       },
       {
         "name": "商业财务分析",
-        "leader": "",
+        "leader": "花且(王玮)",
+        "matchingDegree": "优秀",
         "current": 8,
         "total": 10,
         "transIn": 0,
@@ -2859,7 +2842,8 @@ const DEPT_DETAIL_DB = {
       },
       {
         "name": "财务职能",
-        "leader": "",
+        "leader": "花且(王玮)",
+        "matchingDegree": "",
         "current": 20,
         "total": 20,
         "transIn": 0,
@@ -2869,20 +2853,21 @@ const DEPT_DETAIL_DB = {
       },
       {
         "name": "资金管理组",
-        "leader": "",
-        "current": 8,
+        "leader": "绫波(李静)",
+        "matchingDegree": "优秀",
+        "current": 9,
         "total": 8,
-        "transIn": 2,
+        "transIn": 1,
         "transOut": 0,
         "predict": 10,
-        "match": "达标"
+        "match": "超编"
       }
     ],
     "pendingL1L2": [],
     "leavingL1L2": [],
-    "yearOnboard": 10,
+    "yearOnboard": 11,
     "yearDim": 4,
-    "monthOnboard": 0,
+    "monthOnboard": 1,
     "monthDim": 0,
     "hcTrend": [
       {
@@ -2953,9 +2938,9 @@ const DEPT_DETAIL_DB = {
       },
       {
         "month": "2026年04月",
-        "hcPercent": 105.9,
+        "hcPercent": 107.8,
         "totalHc": 51,
-        "currentHc": 54
+        "currentHc": 55
       }
     ]
   },
@@ -3215,9 +3200,10 @@ function openDeptPanel(deptName) {
       : '<span style="color:#8D9BAB">达标</span>';
     var rateColor = subRate >= 100 ? '#1565C0' : subRate >= 90 ? '#00C853' : subRate >= 75 ? '#FF8C00' : '#FF2442';
     var matchHtml = '';
-    if (sub.match === '优秀') matchHtml = '<span class="match-badge match-green">优秀</span>';
-    else if (sub.match === '匹配') matchHtml = '<span class="match-badge match-blue">匹配</span>';
-    else if (sub.match === '存疑') matchHtml = '<span class="match-badge match-orange">存疑</span>';
+    var matchDeg = sub.matchingDegree || sub.match || '';
+    if (matchDeg === '优秀') matchHtml = '<span class="match-badge match-green">优秀</span>';
+    else if (matchDeg === '匹配') matchHtml = '<span class="match-badge match-blue">匹配</span>';
+    else if (matchDeg === '存疑') matchHtml = '<span class="match-badge match-orange">存疑</span>';
     else matchHtml = '<span style="color:#CBD5E0">—</span>';
 
     tableHtml += '<tr>' +
