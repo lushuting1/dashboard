@@ -941,17 +941,7 @@ body {
   </div>
 
   <!-- ===== 组织架构 TAB ===== -->
-  <div class="tab-pane" id="tab-org">
-    <div class="section-title">🌳 组织架构图</div>
-    <div style="margin-bottom:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-      <label style="font-size:13px;color:#6b7280;">选择部门：</label>
-      <select id="orgDeptSelect" style="padding:6px 12px;border:1px solid #e5e7eb;border-radius:8px;font-size:13px;outline:none;" onchange="renderOrgTree()">
-        <option value="">全部（按业务线）</option>
-      </select>
-      <span style="font-size:12px;color:#9ca3af;">数据来源：hr.xiaohongshu.com · 权限内部门</span>
-    </div>
-    <div id="orgTreeWrap" style="overflow:auto;"></div>
-  </div>
+  <div class="tab-pane" id="tab-org"></div>
 
 
 <script>
@@ -2906,6 +2896,75 @@ function renderByL2Summary() {
 // ============================================================
 const ORG_DATA = {};  // 由 generate_v3.py 注入
 
+function renderOrgTab(){
+  var el=document.getElementById('tab-org');
+  if(!el||el.dataset.orgRendered==='1')return;
+  el.dataset.orgRendered='1';
+  var L1_CFG=[
+    {name:'行业一部',l1:'商业化',     color:'#FF2442',bg:'#fff5f5',icon:'🏢'},
+    {name:'财务一组',l1:'财务职能+DI',color:'#1565C0',bg:'#eff6ff',icon:'💰'},
+    {name:'资本市场',l1:'财务职能+DI',color:'#0284C7',bg:'#f0f9ff',icon:'📈'},
+    {name:'平台部',  l1:'平台部',     color:'#7C3AED',bg:'#f5f3ff',icon:'📡'},
+  ];
+  var h='<div style="padding:8px 0"><div style="font-size:13px;color:#6B7280;margin-bottom:20px">点击卡片展开子部门详情</div><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px">';
+  L1_CFG.forEach(function(cfg){
+    var dept=DEPT_DETAIL_DB[cfg.name];if(!dept)return;
+    var act=dept.currentHc||0,bgt=dept.budgetHc||0,intern=dept.internHc||0;
+    var total=act+intern,ir=total>0?(intern/total*100).toFixed(1):0;
+    var pct=bgt>0?Math.round(act/bgt*100):0;
+    var subs=(dept.subs||[]).filter(function(s){return s.match!=='预估';});
+    var isRef=cfg.name==='平台部';
+    var pc=pct>=100?'#059669':pct>=90?'#111827':pct>=75?'#D97706':'#DC2626';
+    h+='<div style="background:white;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.08);overflow:hidden">';
+    h+='<div style="background:'+cfg.bg+';border-bottom:3px solid '+cfg.color+';padding:20px 24px;cursor:pointer" data-org-toggle="org-d-'+cfg.name+'">';
+    h+='<div style="display:flex;align-items:center;gap:12px">';
+    h+='<div style="width:44px;height:44px;border-radius:12px;background:'+cfg.color+';display:flex;align-items:center;justify-content:center;font-size:22px">'+cfg.icon+'</div>';
+    h+='<div><div style="font-size:16px;font-weight:800;color:#111827">'+cfg.name+'</div>';
+    h+='<div style="font-size:11px;color:#6B7280">'+cfg.l1+(isRef?' · 参考 12/31':'')+'</div></div>';
+    h+='<div style="margin-left:auto;text-align:right"><div style="font-size:22px;font-weight:800;color:'+pc+'">'+pct+'%</div>';
+    h+='<div style="font-size:11px;color:#6B7280">满编率</div></div></div>';
+    h+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px">';
+    h+='<div style="text-align:center"><div style="font-size:18px;font-weight:800;color:#1E40AF">'+act+'</div><div style="font-size:10px;color:#6B7280">在职</div></div>';
+    h+='<div style="text-align:center"><div style="font-size:18px;font-weight:800;color:#6B7280">'+bgt+'</div><div style="font-size:10px;color:#6B7280">编制</div></div>';
+    h+='<div style="text-align:center"><div style="font-size:18px;font-weight:800;color:'+(parseFloat(ir)>25?'#DC2626':'#059669')+'">'+ir+'%</div><div style="font-size:10px;color:#6B7280">实习占比</div></div>';
+    h+='<div style="text-align:center"><div style="font-size:18px;font-weight:800;color:#374151">'+subs.length+'</div><div style="font-size:10px;color:#6B7280">子部门</div></div>';
+    h+='</div><div id="arr-'+cfg.name+'" style="text-align:center;margin-top:12px;color:'+cfg.color+';font-size:12px;font-weight:600">▼ 展开子部门</div></div>';
+    h+='<div id="org-d-'+cfg.name+'" style="display:none;padding:0 24px 16px">';
+    h+='<table style="width:100%;border-collapse:collapse;margin-top:12px;font-size:12px">';
+    h+='<thead><tr style="border-bottom:2px solid #F3F4F6">';
+    ['子部门','负责人','在职','实习','实习占比','编制','状态'].forEach(function(th){h+='<th style="padding:8px 4px;color:#6B7280;font-weight:600">'+th+'</th>';});
+    h+='</tr></thead><tbody>';
+    subs.forEach(function(sub,i){
+      var bg=i%2===0?'#FAFAFA':'white';
+      var ir2=sub.internRatio!=null?sub.internRatio.toFixed(1):(sub.current>0?((sub.internHc||0)/sub.current*100).toFixed(1):0);
+      var mc=sub.match==='超编'?'#059669':sub.match==='达标'?'#1565C0':sub.match==='参考'?'#7C3AED':'#D97706';
+      var mb=sub.match==='超编'?'#ECFDF5':sub.match==='达标'?'#EFF6FF':sub.match==='参考'?'#F5F3FF':'#FFFBEB';
+      h+='<tr style="background:'+bg+';border-bottom:1px solid #F3F4F6">';
+      h+='<td style="padding:8px 4px;font-weight:600">'+sub.name+'</td>';
+      h+='<td style="padding:8px 4px">'+(sub.leader||'—')+'</td>';
+      h+='<td style="padding:8px 4px;text-align:center;font-weight:700;color:#1E40AF">'+sub.current+'</td>';
+      h+='<td style="padding:8px 4px;text-align:center">'+(sub.internHc||0)+'</td>';
+      h+='<td style="padding:8px 4px;text-align:center;font-weight:700;color:'+(parseFloat(ir2)>25?'#DC2626':'#059669')+'">'+ir2+'%</td>';
+      h+='<td style="padding:8px 4px;text-align:center;color:#6B7280">'+(sub.total||'—')+'</td>';
+      h+='<td style="padding:8px 4px;text-align:center"><span style="background:'+mb+';color:'+mc+';padding:2px 8px;border-radius:8px;font-size:11px;font-weight:600">'+(sub.match||'—')+'</span></td>';
+      h+='</tr>';
+    });
+    h+='</tbody></table></div></div>';
+  });
+  h+='</div></div>';
+  el.innerHTML=h;
+  el.querySelectorAll('[data-org-toggle]').forEach(function(hdr){
+    hdr.addEventListener('click',function(){
+      var tid=hdr.getAttribute('data-org-toggle');
+      var det=document.getElementById(tid);
+      if(!det)return;
+      var show=det.style.display==='none';
+      det.style.display=show?'block':'none';
+      var arr=document.getElementById('arr-'+tid.replace('org-d-',''));
+      if(arr)arr.textContent=show?'▲ 收起':'▼ 展开子部门';
+    });
+  });
+}
 
 function renderOrgTree() {
   const selected = document.getElementById('orgDeptSelect').value;
@@ -3171,7 +3230,7 @@ function renderOrgTab(){
     var isRef=cfg.name==='平台部';
     // 卡片头
     h+='<div style="background:white;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.08);overflow:hidden">';
-    h+='<div style="background:'+cfg.bg+';border-bottom:3px solid '+cfg.color+';padding:20px 24px;cursor:pointer" data-did-toggle="1">';
+    h+='<div style="background:'+cfg.bg+';border-bottom:3px solid '+cfg.color+';padding:20px 24px;cursor:pointer" data-org-toggle="1">';
     h+='<div style="display:flex;align-items:center;gap:12px">';
     h+='<div style="width:44px;height:44px;border-radius:12px;background:'+cfg.color+';display:flex;align-items:center;justify-content:center;font-size:22px">'+cfg.icon+'</div>';
     h+='<div><div style="font-size:16px;font-weight:800;color:#111827">'+cfg.name+'</div>';
@@ -3220,13 +3279,6 @@ function renderOrgTab(){
   });
   h+='</div></div>';
   el.innerHTML=h;
-  el.querySelectorAll('[data-did-toggle]').forEach(function(hdr){
-    hdr.addEventListener('click', function(){
-      var detailDiv = hdr.parentElement.querySelector('[id^="org-d-"]');
-      if(!detailDiv) return;
-      toggleOrgDetail(detailDiv.id);
-    });
-  });
 }
 
 function toggleOrgDetail(id){
