@@ -1494,12 +1494,6 @@ function renderFlowDetail(containerId, l1Filter) {
 renderFlowDetail('flow-detail-shyl', '商业化');
 renderFlowDetail('flow-detail-cw', '财务职能+DI');
 renderFlowDetail('flow-detail-jy', '交易');
-  renderFocusCard();
-  renderL1KpiGrid();
-  renderInternBanner('商业化','intern-banner-tab-shyl');
-  renderInternBanner('交易','intern-banner-tab-jy');
-  renderInternBanner('财务职能+DI','intern-banner-tab-cw');
-  renderInternBanner('平台部','intern-banner-tab-pt');
 
 
 
@@ -2505,9 +2499,6 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     target.classList.add('active');
     // Trigger bar animations on tab open
     setTimeout(() => animateBars(), 100);
-    if(btn.dataset.tab==='org'){renderOrgTab();}
-    var bm={'shyl':'商业化','jy':'交易','cw':'财务职能+DI','pt':'平台部'};
-    if(bm[btn.dataset.tab]){renderInternBanner(bm[btn.dataset.tab],'intern-banner-tab-'+btn.dataset.tab);}
     // Trigger KPI countups
     setTimeout(() => {
       target.querySelectorAll('.kpi-value[data-val]').forEach(el => {
@@ -2915,83 +2906,13 @@ function renderByL2Summary() {
 // ============================================================
 const ORG_DATA = {};  // 由 generate_v3.py 注入
 
-function renderOrgTab(){
-  var el=document.getElementById('tab-org');
-  if(!el||el.dataset.orgRendered==='1')return;
-  el.dataset.orgRendered='1';
-  var L1_CFG=[
-    {name:'行业一部',l1:'商业化',     color:'#FF2442',bg:'#fff5f5',icon:'🏢'},
-    {name:'财务一组',l1:'财务职能+DI',color:'#1565C0',bg:'#eff6ff',icon:'💰'},
-    {name:'资本市场',l1:'财务职能+DI',color:'#0284C7',bg:'#f0f9ff',icon:'📈'},
-    {name:'平台部',  l1:'平台部',     color:'#7C3AED',bg:'#f5f3ff',icon:'📡'},
-  ];
-  var h='<div style="padding:8px 0"><div style="font-size:13px;color:#6B7280;margin-bottom:20px">点击卡片展开子部门详情</div>'
-    +'<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px">';
-  L1_CFG.forEach(function(cfg){
-    var dept=DEPT_DETAIL_DB[cfg.name];if(!dept)return;
-    var act=dept.currentHc||0,bgt=dept.budgetHc||0,intern=dept.internHc||0;
-    var total=act+intern,ir=total>0?(intern/total*100).toFixed(1):0;
-    var pct=bgt>0?Math.round(act/bgt*100):0;
-    var subs=(dept.subs||[]).filter(function(s){return s.match!=='预估';});
-    var isRef=cfg.name==='平台部';
-    var pc=pct>=100?'#059669':pct>=90?'#111827':pct>=75?'#D97706':'#DC2626';
-    h+='<div style="background:white;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.08);overflow:hidden">';
-    h+='<div style="background:'+cfg.bg+';border-bottom:3px solid '+cfg.color+';padding:20px 24px;cursor:pointer" data-did-toggle="1">';
-    h+='<div style="display:flex;align-items:center;gap:12px">';
-    h+='<div style="width:44px;height:44px;border-radius:12px;background:'+cfg.color+';display:flex;align-items:center;justify-content:center;font-size:22px">'+cfg.icon+'</div>';
-    h+='<div><div style="font-size:16px;font-weight:800;color:#111827">'+cfg.name+'</div>';
-    h+='<div style="font-size:11px;color:#6B7280">'+cfg.l1+(isRef?' · 参考 12/31':'')+'</div></div>';
-    h+='<div style="margin-left:auto;text-align:right"><div style="font-size:22px;font-weight:800;color:'+pc+'">'+pct+'%</div>';
-    h+='<div style="font-size:11px;color:#6B7280">满编率</div></div></div>';
-    h+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px">';
-    h+='<div style="text-align:center"><div style="font-size:18px;font-weight:800;color:#1E40AF">'+act+'</div><div style="font-size:10px;color:#6B7280">在职</div></div>';
-    h+='<div style="text-align:center"><div style="font-size:18px;font-weight:800;color:#6B7280">'+bgt+'</div><div style="font-size:10px;color:#6B7280">编制</div></div>';
-    h+='<div style="text-align:center"><div style="font-size:18px;font-weight:800;color:'+(parseFloat(ir)>25?'#DC2626':'#059669')+'">'+ir+'%</div><div style="font-size:10px;color:#6B7280">实习占比</div></div>';
-    h+='<div style="text-align:center"><div style="font-size:18px;font-weight:800;color:#374151">'+subs.length+'</div><div style="font-size:10px;color:#6B7280">子部门</div></div>';
-    h+='</div><div id="arr-'+cfg.name+'" style="text-align:center;margin-top:12px;color:'+cfg.color+';font-size:12px;font-weight:600">▼ 展开子部门</div></div>';
-    h+='<div id="org-d-'+cfg.name+'" style="display:none;padding:0 24px 16px">';
-    h+='<table style="width:100%;border-collapse:collapse;margin-top:12px;font-size:12px">';
-    h+='<thead><tr style="border-bottom:2px solid #F3F4F6">';
-    ['子部门','负责人','在职','实习','实习占比','编制','状态'].forEach(function(th,i){
-      h+='<th style="text-align:'+(i<2?'left':'center')+';padding:8px 4px;color:#6B7280;font-weight:600">'+th+'</th>';
-    });
-    h+='</tr></thead><tbody>';
-    subs.forEach(function(sub,i){
-      var bg=i%2===0?'#FAFAFA':'white';
-      var ir2=sub.internRatio!=null?sub.internRatio.toFixed(1):(sub.current>0?((sub.internHc||0)/sub.current*100).toFixed(1):0);
-      var irW=parseFloat(ir2)>25;
-      var mc=sub.match==='超编'?'#059669':sub.match==='达标'?'#1565C0':sub.match==='参考'?'#7C3AED':'#D97706';
-      var mb=sub.match==='超编'?'#ECFDF5':sub.match==='达标'?'#EFF6FF':sub.match==='参考'?'#F5F3FF':'#FFFBEB';
-      h+='<tr style="background:'+bg+';border-bottom:1px solid #F3F4F6">';
-      h+='<td style="padding:8px 4px;font-weight:600;color:#111827">'+sub.name+'</td>';
-      h+='<td style="padding:8px 4px;color:#374151">'+(sub.leader||'—')+'</td>';
-      h+='<td style="padding:8px 4px;text-align:center;font-weight:700;color:#1E40AF">'+sub.current+'</td>';
-      h+='<td style="padding:8px 4px;text-align:center">'+(sub.internHc||0)+'</td>';
-      h+='<td style="padding:8px 4px;text-align:center;font-weight:700;color:'+(irW?'#DC2626':'#059669')+'">'+ir2+'%</td>';
-      h+='<td style="padding:8px 4px;text-align:center;color:#6B7280">'+(sub.total||'—')+'</td>';
-      h+='<td style="padding:8px 4px;text-align:center"><span style="background:'+mb+';color:'+mc+';padding:2px 8px;border-radius:8px;font-size:11px;font-weight:600">'+(sub.match||'—')+'</span></td>';
-      h+='</tr>';
-    });
-    h+='</tbody></table></div></div>';
-  });
-  h+='</div></div>';
-  el.innerHTML=h;
-  el.querySelectorAll('[data-did-toggle]').forEach(function(hdr){
-    hdr.addEventListener('click', function(){
-      // 找到紧跟的 org-d- div（下一个兄弟）
-      var detailDiv = hdr.parentElement.querySelector('[id^="org-d-"]');
-      if(!detailDiv) return;
-      var id = detailDiv.id;
-      toggleOrgDetail(id);
-    });
-  });
-}
-function toggleOrgDetail(id){
-  var el=document.getElementById(id);if(!el)return;
-  var show=el.style.display==='none';
-  el.style.display=show?'block':'none';
-  var arr=document.getElementById('arr-'+id.replace('org-d-',''));
-  if(arr)arr.textContent=show?'▲ 收起':'▼ 展开子部门';
+function renderOrgTab() {
+  // 填充部门选择下拉
+  const select = document.getElementById('orgDeptSelect');
+  const deptNames = Object.keys(DEPT_DETAIL_DB);
+  select.innerHTML = '<option value="">全部（按业务线）</option>' +
+    deptNames.map(n => `<option value="${n}">${n}</option>`).join('');
+  renderOrgTree();
 }
 
 function renderOrgTree() {
@@ -3145,48 +3066,197 @@ function renderInternTab() {
 }
 
 
-function hcColor(p){return p>=100?'#059669':p>=90?'#111827':p>=75?'#D97706':'#DC2626';}
-function hcBg(p){return p>=100?'#ECFDF5':p>=90?'#F3F4F6':p>=75?'#FFFBEB':'#FEF2F2';}
+// ── 满编率颜色工具 ─────────────────────────────────────────
+function hcColor(pct){
+  if(pct>=100)return '#059669';
+  if(pct>=90) return '#111827';
+  if(pct>=75) return '#D97706';
+  return '#DC2626';
+}
+function hcBg(pct){
+  if(pct>=100)return '#ECFDF5';
+  if(pct>=90) return '#F3F4F6';
+  if(pct>=75) return '#FFFBEB';
+  return '#FEF2F2';
+}
 
+// ── 重点关注事项（自动判断）──────────────────────────────────
 function renderFocusCard(){
-  var el=document.getElementById('focusCard');if(!el)return;
-  var L1=[{name:'商业化',tab:'shyl',c:'#FF2442'},{name:'交易',tab:'jy',c:'#00897B'},{name:'财务职能+DI',tab:'cw',c:'#1565C0'},{name:'平台部',tab:'pt',c:'#7C3AED'}];
-  var DOT={red:'#DC2626',orange:'#F59E0B',green:'#10B981',black:'#374151',gray:'#9CA3AF'};
-  var cols=L1.map(function(cfg){
+  var el=document.getElementById('focusCard');
+  if(!el)return;
+  var L1_CFG=[
+    {name:'商业化',      tab:'shyl',color:'#FF2442'},
+    {name:'交易',        tab:'jy',  color:'#00897B'},
+    {name:'财务职能+DI', tab:'cw',  color:'#1565C0'},
+    {name:'平台部',      tab:'pt',  color:'#7C3AED'},
+  ];
+  var LEVEL_DOT={red:'#DC2626',orange:'#F59E0B',green:'#10B981',black:'#374151',gray:'#9CA3AF'};
+  var cols=L1_CFG.map(function(cfg){
     var rows=BUDGET_DATA.filter(function(d){return d.l1===cfg.name;});
-    var act=rows.reduce(function(a,d){return a+(d.actual||0);},0);
-    var bgt=rows.reduce(function(a,d){return a+(d.budget||0);},0);
-    var inF=rows.reduce(function(a,d){return a+(d.transIn||0);},0);
+    var act =rows.reduce(function(a,d){return a+(d.actual||0);},0);
+    var bgt =rows.reduce(function(a,d){return a+(d.budget||0);},0);
+    var inF =rows.reduce(function(a,d){return a+(d.transIn||0);},0);
     var outF=rows.reduce(function(a,d){return a+(d.transOut||0);},0);
     var isReal=rows.some(function(d){return d.real!==false;});
     var pct=bgt>0?Math.round(act/bgt*100):0;
-    var al=[];
-    if(pct<75)al.push({l:'red',t:'满编率仅'+pct+'%，严重缺编'});
-    else if(pct<90)al.push({l:'orange',t:'满编率'+pct+'%，缺口'+(bgt-act)+'人'});
-    if(outF>0)al.push({l:'red',t:'有'+outF+'人流出在途，关注保留风险'});
-    if(inF>0)al.push({l:'green',t:'有'+inF+'人流入在途，补充中'});
-    if(!isReal)al.push({l:'gray',t:'数据来源：PPT 2025/12/31（参考值）'});
-    if(!al.length&&pct>=100)al.push({l:'green',t:'满编率'+pct+'%，HC健康'});
-    if(!al.length&&pct>=90)al.push({l:'black',t:'满编率'+pct+'%，正常水位'});
-    var dots=al.map(function(a){return '<div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:6px"><span style="width:6px;height:6px;border-radius:50%;background:'+DOT[a.l]+';margin-top:4px;flex-shrink:0"></span><span style="color:#E5E7EB;font-size:11px;line-height:1.5">'+a.t+'</span></div>';}).join('');
-    return '<div style="background:#1F2937;border-radius:12px;padding:16px;border-top:3px solid '+cfg.c+'"><div style="color:'+cfg.c+';font-weight:800;font-size:13px;margin-bottom:4px">'+cfg.name+'</div><div style="color:#9CA3AF;font-size:11px;margin-bottom:12px">满编率 <span style="color:'+hcColor(pct)+';font-weight:700">'+pct+'%</span> ('+act+'/'+bgt+')</div>'+dots+'</div>';
+    var alerts=[];
+    if(pct<75)       alerts.push({level:'red',   text:'满编率仅'+pct+'%，严重缺编，需加速补招'});
+    else if(pct<90)  alerts.push({level:'orange', text:'满编率'+pct+'%，仍有'+(bgt-act)+'人缺口'});
+    if(outF>0)       alerts.push({level:'red',    text:'有'+outF+'人流出在途，关注HC保留风险'});
+    if(inF>0)        alerts.push({level:'green',  text:'有'+inF+'人流入在途，补充中'});
+    if(!isReal)      alerts.push({level:'gray',   text:'数据来源：PPT 2025/12/31（参考值）'});
+    if(alerts.length===0&&pct>=100) alerts.push({level:'green', text:'满编率'+pct+'%，HC健康'});
+    if(alerts.length===0&&pct>=90)  alerts.push({level:'black', text:'满编率'+pct+'%，正常水位'});
+    var dotHtml=alerts.map(function(a){
+      return '<div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:6px">'
+        +'<span style="width:6px;height:6px;border-radius:50%;background:'+LEVEL_DOT[a.level]+';margin-top:4px;flex-shrink:0"></span>'
+        +'<span style="color:#E5E7EB;font-size:11px;line-height:1.5">'+a.text+'</span>'
+        +'</div>';
+    }).join('');
+    return '<div style="background:#1F2937;border-radius:12px;padding:16px;border-top:3px solid '+cfg.color+'">'
+      +'<div style="color:'+cfg.color+';font-weight:800;font-size:13px;margin-bottom:4px">'+cfg.name+'</div>'
+      +'<div style="color:#9CA3AF;font-size:11px;margin-bottom:12px">满编率 '
+        +'<span style="color:'+hcColor(pct)+';font-weight:700">'+pct+'%</span>'
+        +' ('+act+'/'+bgt+')</div>'
+      +dotHtml+'</div>';
   }).join('');
-  el.innerHTML='<div style="background:#111827;border-radius:16px;padding:24px 28px;margin-bottom:24px"><div style="color:#F9FAFB;font-size:16px;font-weight:800;margin-bottom:20px;display:flex;align-items:center;gap:8px"><span style="background:#374151;padding:4px 10px;border-radius:8px;font-size:12px;color:#9CA3AF">AUTO</span>重点关注事项</div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px">'+cols+'</div></div>';
+  el.innerHTML='<div style="background:#111827;border-radius:16px;padding:24px 28px;margin-bottom:24px">'
+    +'<div style="color:#F9FAFB;font-size:16px;font-weight:800;margin-bottom:20px;display:flex;align-items:center;gap:8px">'
+    +'<span style="background:#374151;padding:4px 10px;border-radius:8px;font-size:12px;color:#9CA3AF">AUTO</span>'
+    +'重点关注事项</div>'
+    +'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px">'+cols+'</div></div>';
 }
 
-function renderInternBanner(l1Name,cid){
-  var el=document.getElementById(cid);if(!el)return;
+// ── 各 Tab 实习生比例 banner ─────────────────────────────────
+function renderInternBanner(l1Name,containerId){
+  var el=document.getElementById(containerId);
+  if(!el)return;
   var rows=BUDGET_DATA.filter(function(d){return d.l1===l1Name;});
   var act=rows.reduce(function(a,d){return a+(d.actual||0);},0);
   var intern=rows.reduce(function(a,d){return a+(d.internHc||0);},0);
-  var total=act+intern,ratio=total>0?(intern/total*100).toFixed(1):0;
-  var warn=parseFloat(ratio)>25,color=warn?'#DC2626':'#059669',bg=warn?'#FEF2F2':'#ECFDF5';
-  el.innerHTML='<div style="background:'+bg+';border:1.5px solid '+color+'33;border-radius:12px;padding:12px 20px;margin-bottom:20px;display:flex;align-items:center;gap:16px"><div style="font-size:22px">🎓</div><div><div style="font-size:13px;font-weight:800;color:'+color+'">实习生占比 '+ratio+'%'+(warn?' ⚠️ 超过25%预警':' ✅ 正常')+'</div><div style="font-size:11px;color:#6B7280;margin-top:2px">在职（含实习）'+total+' 人 | 实习 '+intern+' 人 | 正式 '+(total-intern)+' 人</div></div><div style="margin-left:auto;background:'+color+';color:white;padding:6px 16px;border-radius:20px;font-size:16px;font-weight:800">'+ratio+'%</div></div>';
+  var total=act+intern;
+  var ratio=total>0?(intern/total*100).toFixed(1):0;
+  var warn=parseFloat(ratio)>25;
+  var color=warn?'#DC2626':'#059669';
+  var bg=warn?'#FEF2F2':'#ECFDF5';
+  el.innerHTML='<div style="background:'+bg+';border:1.5px solid '+color+'33;border-radius:12px;'
+    +'padding:12px 20px;margin-bottom:20px;display:flex;align-items:center;gap:16px">'
+    +'<div style="font-size:22px">🎓</div>'
+    +'<div><div style="font-size:13px;font-weight:800;color:'+color+'">实习生占比 '+ratio+'%'
+      +(warn?' ⚠️ 超过25%预警':' ✅ 正常')+'</div>'
+      +'<div style="font-size:11px;color:#6B7280;margin-top:2px">'
+        +'在职（含实习）'+total+' 人 | 实习 '+intern+' 人 | 正式 '+(total-intern)+' 人'
+      +'</div></div>'
+    +'<div style="margin-left:auto;background:'+color+';color:white;padding:6px 16px;'
+      +'border-radius:20px;font-size:16px;font-weight:800">'+ratio+'%</div>'
+    +'</div>';
 }
 
+// ── Org Tab：4业务线卡片 + 点开展示子部门 ───────────────────
+function renderOrgTab(){
+  var el=document.getElementById('tab-org');
+  if(!el||el.dataset.orgRendered==='1')return;
+  el.dataset.orgRendered='1';
+  var L1_CFG=[
+    {name:'行业一部',  l1:'商业化',      color:'#FF2442',bg:'#fff5f5',icon:'🏢'},
+    {name:'财务一组',  l1:'财务职能+DI', color:'#1565C0',bg:'#eff6ff',icon:'💰'},
+    {name:'资本市场',  l1:'财务职能+DI', color:'#0284C7',bg:'#f0f9ff',icon:'📈'},
+    {name:'平台部',    l1:'平台部',      color:'#7C3AED',bg:'#f5f3ff',icon:'📡'},
+  ];
+  var h='<div style="padding:8px 0">'
+    +'<div style="font-size:13px;color:#6B7280;margin-bottom:20px">点击卡片标题展开子部门详情</div>'
+    +'<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px">';
+  L1_CFG.forEach(function(cfg){
+    var dept=DEPT_DETAIL_DB[cfg.name];
+    if(!dept)return;
+    var act=dept.currentHc||0;
+    var bgt=dept.budgetHc||0;
+    var intern=dept.internHc||0;
+    var total=act+intern;
+    var ir=total>0?(intern/total*100).toFixed(1):0;
+    var pct=bgt>0?Math.round(act/bgt*100):0;
+    var subs=(dept.subs||[]).filter(function(s){return s.match!=='预估';});
+    var isRef=cfg.name==='平台部';
+    // 卡片头
+    h+='<div style="background:white;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.08);overflow:hidden">';
+    h+='<div style="background:'+cfg.bg+';border-bottom:3px solid '+cfg.color+';padding:20px 24px;cursor:pointer" data-did-toggle="1">';
+    h+='<div style="display:flex;align-items:center;gap:12px">';
+    h+='<div style="width:44px;height:44px;border-radius:12px;background:'+cfg.color+';display:flex;align-items:center;justify-content:center;font-size:22px">'+cfg.icon+'</div>';
+    h+='<div><div style="font-size:16px;font-weight:800;color:#111827">'+cfg.name+'</div>';
+    h+='<div style="font-size:11px;color:#6B7280">'+cfg.l1+(isRef?' · 参考数据 12/31':'')+'</div></div>';
+    h+='<div style="margin-left:auto;text-align:right">';
+    h+='<div style="font-size:22px;font-weight:800;color:'+hcColor(pct)+'">'+pct+'%</div>';
+    h+='<div style="font-size:11px;color:#6B7280">满编率</div></div></div>';
+    // 指标行
+    h+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px">';
+    h+='<div style="text-align:center"><div style="font-size:18px;font-weight:800;color:#1E40AF">'+act+'</div><div style="font-size:10px;color:#6B7280">在职</div></div>';
+    h+='<div style="text-align:center"><div style="font-size:18px;font-weight:800;color:#6B7280">'+bgt+'</div><div style="font-size:10px;color:#6B7280">编制</div></div>';
+    h+='<div style="text-align:center"><div style="font-size:18px;font-weight:800;color:'+(parseFloat(ir)>25?'#DC2626':'#059669')+'">'+ir+'%</div><div style="font-size:10px;color:#6B7280">实习占比</div></div>';
+    h+='<div style="text-align:center"><div style="font-size:18px;font-weight:800;color:#374151">'+subs.length+'</div><div style="font-size:10px;color:#6B7280">子部门</div></div>';
+    h+='</div>';
+    h+='<div style="text-align:center;margin-top:12px;color:'+cfg.color+';font-size:12px;font-weight:600" id="arr-'+cfg.name+'">▼ 展开子部门</div>';
+    h+='</div>';
+    // 子部门详情（默认折叠）
+    h+='<div id="org-d-'+cfg.name+'" style="display:none;padding:0 24px 16px">';
+    h+='<table style="width:100%;border-collapse:collapse;margin-top:12px;font-size:12px">';
+    h+='<thead><tr style="border-bottom:2px solid #F3F4F6">';
+    h+='<th style="text-align:left;padding:8px 4px;color:#6B7280;font-weight:600">子部门</th>';
+    h+='<th style="text-align:left;padding:8px 4px;color:#6B7280;font-weight:600">负责人</th>';
+    h+='<th style="text-align:center;padding:8px 4px;color:#6B7280;font-weight:600">在职</th>';
+    h+='<th style="text-align:center;padding:8px 4px;color:#6B7280;font-weight:600">实习</th>';
+    h+='<th style="text-align:center;padding:8px 4px;color:#6B7280;font-weight:600">实习占比</th>';
+    h+='<th style="text-align:center;padding:8px 4px;color:#6B7280;font-weight:600">编制</th>';
+    h+='<th style="text-align:center;padding:8px 4px;color:#6B7280;font-weight:600">状态</th>';
+    h+='</tr></thead><tbody>';
+    subs.forEach(function(sub,idx){
+      var bg=idx%2===0?'#FAFAFA':'white';
+      var ir2=sub.internRatio!=null?sub.internRatio.toFixed(1):(sub.current>0?(sub.internHc/sub.current*100).toFixed(1):0);
+      var irWarn=parseFloat(ir2)>25;
+      var mc=sub.match==='超编'?'#059669':sub.match==='达标'?'#1565C0':sub.match==='参考'?'#7C3AED':'#D97706';
+      var mb=sub.match==='超编'?'#ECFDF5':sub.match==='达标'?'#EFF6FF':sub.match==='参考'?'#F5F3FF':'#FFFBEB';
+      h+='<tr style="background:'+bg+';border-bottom:1px solid #F3F4F6">';
+      h+='<td style="padding:8px 4px;font-weight:600;color:#111827">'+sub.name+'</td>';
+      h+='<td style="padding:8px 4px;color:#374151">'+(sub.leader||'—')+'</td>';
+      h+='<td style="padding:8px 4px;text-align:center;font-weight:700;color:#1E40AF">'+sub.current+'</td>';
+      h+='<td style="padding:8px 4px;text-align:center">'+(sub.internHc||0)+'</td>';
+      h+='<td style="padding:8px 4px;text-align:center;font-weight:700;color:'+(irWarn?'#DC2626':'#059669')+'">'+ir2+'%</td>';
+      h+='<td style="padding:8px 4px;text-align:center;color:#6B7280">'+(sub.total||'—')+'</td>';
+      h+='<td style="padding:8px 4px;text-align:center"><span style="background:'+mb+';color:'+mc+';padding:2px 8px;border-radius:8px;font-size:11px;font-weight:600">'+(sub.match||'—')+'</span></td>';
+      h+='</tr>';
+    });
+    h+='</tbody></table></div></div>';
+  });
+  h+='</div></div>';
+  el.innerHTML=h;
+  el.querySelectorAll('[data-did-toggle]').forEach(function(hdr){
+    hdr.addEventListener('click', function(){
+      var detailDiv = hdr.parentElement.querySelector('[id^="org-d-"]');
+      if(!detailDiv) return;
+      toggleOrgDetail(detailDiv.id);
+    });
+  });
+}
+
+function toggleOrgDetail(id){
+  var el=document.getElementById(id);
+  if(!el)return;
+  var show=el.style.display==='none';
+  el.style.display=show?'block':'none';
+  var name=id.replace('org-d-','');
+  var arr=document.getElementById('arr-'+name);
+  if(arr)arr.textContent=show?'▲ 收起':'▼ 展开子部门';
+}
+
+// ── KPI 汇总卡（总览）─────────────────────────────────────────
 function renderL1KpiGrid(){
-  var el=document.getElementById('l1KpiGrid');if(!el)return;
-  var CFG=[{name:'商业化',color:'#FF2442',bg:'#fff5f5',tab:'shyl',bgt:2499,ico:'🏢'},{name:'交易',color:'#00897B',bg:'#f0fdf9',tab:'jy',bgt:426,ico:'🛒'},{name:'财务职能+DI',color:'#1565C0',bg:'#eff6ff',tab:'cw',bgt:272,ico:'💰'},{name:'平台部',color:'#7C3AED',bg:'#f5f3ff',tab:'pt',bgt:171,ico:'📡'}];
+  var el=document.getElementById('l1KpiGrid');
+  if(!el)return;
+  var CFG=[
+    {name:'商业化',      color:'#FF2442',bg:'#fff5f5',tab:'shyl',bgt:2499,ico:'🏢'},
+    {name:'交易',        color:'#00897B',bg:'#f0fdf9',tab:'jy',  bgt:426, ico:'🛒'},
+    {name:'财务职能+DI', color:'#1565C0',bg:'#eff6ff',tab:'cw',  bgt:272, ico:'💰'},
+    {name:'平台部',      color:'#7C3AED',bg:'#f5f3ff',tab:'pt',  bgt:171, ico:'📡'},
+  ];
   el.innerHTML=CFG.map(function(c){
     var rows=BUDGET_DATA.filter(function(d){return d.l1===c.name;});
     var act=rows.reduce(function(a,d){return a+(d.actual||0);},0);
@@ -3195,15 +3265,40 @@ function renderL1KpiGrid(){
     var outF=rows.reduce(function(a,d){return a+(d.transOut||0);},0);
     var isReal=rows.some(function(d){return d.real!==false;});
     var p=c.bgt>0?Math.round(act/c.bgt*100):0;
-    var pc=hcColor(p),pb=hcBg(p),gap=c.bgt>act?c.bgt-act:0;
-    var th=act+intern,ir=th>0?(intern/th*100).toFixed(1):0;
-    var flow=isReal&&(inF||outF)?'<div style="display:flex;gap:6px;margin-top:8px">'+(inF?'<span style="background:#ECFDF5;color:#166534;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700">+'+inF+' 流入</span>':'')+(outF?'<span style="background:#FEE2E2;color:#991b1b;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700">-'+outF+' 流出</span>':'')+'</div>':'';
-    return '<div data-kpi-tab="'+c.tab+'" style="background:'+c.bg+';border-radius:16px;padding:18px;border:1.5px solid '+c.color+'33;cursor:pointer;transition:box-shadow .2s"><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><div style="width:38px;height:38px;border-radius:10px;background:'+c.color+';display:flex;align-items:center;justify-content:center;font-size:18px">'+c.ico+'</div><div><div style="font-size:14px;font-weight:800;color:#111827">'+c.name+'</div><div style="font-size:10px;color:#6b7280">编制'+c.bgt+' · '+(isReal?'实时':'参考12/31')+'</div></div><div style="margin-left:auto;background:'+pb+';border-radius:16px;padding:3px 10px;font-size:13px;font-weight:800;color:'+pc+'">'+p+'%</div></div><div style="height:5px;background:#e5e7eb;border-radius:3px;margin-bottom:10px;overflow:hidden"><div style="height:5px;width:'+Math.min(p,100)+'%;background:'+pc+';border-radius:3px"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div style="background:rgba(255,255,255,.7);border-radius:8px;padding:7px;text-align:center"><div style="font-size:18px;font-weight:800;color:#1e40af">'+(isReal?act:'—')+'</div><div style="font-size:10px;color:#6b7280">在职人数</div></div><div style="background:rgba(255,255,255,.7);border-radius:8px;padding:7px;text-align:center"><div style="font-size:18px;font-weight:800;color:'+pc+'">'+p+'%</div><div style="font-size:10px;color:#6b7280">满编率</div></div><div style="background:rgba(255,255,255,.7);border-radius:8px;padding:7px;text-align:center"><div style="font-size:15px;font-weight:700;color:#DC2626">'+(gap>0?'-'+gap:gap===0?'✅':'超编')+'</div><div style="font-size:10px;color:#6b7280">HC缺口</div></div><div style="background:rgba(255,255,255,.7);border-radius:8px;padding:7px;text-align:center"><div style="font-size:15px;font-weight:700;color:'+(parseFloat(ir)>25?'#DC2626':'#059669')+'">'+(isReal?ir+'%':'—')+'</div><div style="font-size:10px;color:#6b7280">实习占比</div></div></div>'+flow+'</div>';
+    var pc=hcColor(p);var pb=hcBg(p);
+    var gap=c.bgt>act?c.bgt-act:0;
+    var th=act+intern;var ir=th>0?(intern/th*100).toFixed(1):0;
+    var flow='';
+    if(isReal&&(inF||outF)){
+      flow='<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">'
+        +(inF?'<span style="background:#ECFDF5;color:#166534;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700">+'+inF+' 流入</span>':'')
+        +(outF?'<span style="background:#FEE2E2;color:#991b1b;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700">-'+outF+' 流出</span>':'')
+        +'</div>';
+    }
+    return '<div data-kpi-tab="'+c.tab+'" style="background:'+c.bg+';border-radius:16px;padding:18px;border:1.5px solid '+c.color+'33;cursor:pointer;transition:box-shadow .2s">'
+      +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">'
+        +'<div style="width:38px;height:38px;border-radius:10px;background:'+c.color+';display:flex;align-items:center;justify-content:center;font-size:18px">'+c.ico+'</div>'
+        +'<div><div style="font-size:14px;font-weight:800;color:#111827">'+c.name+'</div>'
+          +'<div style="font-size:10px;color:#6b7280">编制'+c.bgt+' · '+(isReal?'实时':'参考12/31')+'</div></div>'
+        +'<div style="margin-left:auto;background:'+pb+';border-radius:16px;padding:3px 10px;font-size:13px;font-weight:800;color:'+pc+'">'+p+'%</div>'
+      +'</div>'
+      +'<div style="height:5px;background:#e5e7eb;border-radius:3px;margin-bottom:10px;overflow:hidden">'
+        +'<div style="height:5px;width:'+Math.min(p,100)+'%;background:'+pc+';border-radius:3px"></div>'
+      +'</div>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">'
+        +'<div style="background:rgba(255,255,255,.7);border-radius:8px;padding:7px;text-align:center"><div style="font-size:18px;font-weight:800;color:#1e40af">'+(isReal?act:'—')+'</div><div style="font-size:10px;color:#6b7280">在职人数</div></div>'
+        +'<div style="background:rgba(255,255,255,.7);border-radius:8px;padding:7px;text-align:center"><div style="font-size:18px;font-weight:800;color:'+pc+'">'+p+'%</div><div style="font-size:10px;color:#6b7280">满编率</div></div>'
+        +'<div style="background:rgba(255,255,255,.7);border-radius:8px;padding:7px;text-align:center"><div style="font-size:15px;font-weight:700;color:#DC2626">'+(gap>0?'-'+gap:gap===0?'✅':'超编')+'</div><div style="font-size:10px;color:#6b7280">HC缺口</div></div>'
+        +'<div style="background:rgba(255,255,255,.7);border-radius:8px;padding:7px;text-align:center"><div style="font-size:15px;font-weight:700;color:'+(parseFloat(ir)>25?'#DC2626':'#059669')+'">'+(isReal?ir+'%':'—')+'</div><div style="font-size:10px;color:#6b7280">实习占比</div></div>'
+      +'</div>'+flow+'</div>';
   }).join('');
   el.querySelectorAll('[data-kpi-tab]').forEach(function(card){
     card.addEventListener('mouseover',function(){this.style.boxShadow='0 8px 24px rgba(0,0,0,.12)';});
     card.addEventListener('mouseout',function(){this.style.boxShadow='';});
-    card.addEventListener('click',function(){var btn=document.querySelector('[data-tab="'+this.getAttribute('data-kpi-tab')+'"]');if(btn)btn.click();});
+    card.addEventListener('click',function(){
+      var btn=document.querySelector('[data-tab="'+this.getAttribute('data-kpi-tab')+'"]');
+      if(btn)btn.click();
+    });
   });
 }
 
