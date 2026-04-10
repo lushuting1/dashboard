@@ -770,16 +770,19 @@ body {
   </div>
   <div class="topbar-meta">
     <span class="badge-live">LIVE</span>
-    2026 Q2 · 更新于 2026-04-08
+    2026 Q2 · 更新于 2026-04-10
   </div>
 </div>
 
 <!-- TAB BAR -->
 <div class="tab-bar">
   <button class="tab-btn active" data-tab="overview">📊 总览</button>
+  <button class="tab-btn" data-tab="shyl">🏢 商业化</button>
   <button class="tab-btn" data-tab="jy">🛒 交易</button>
-  <button class="tab-btn" data-tab="shyl">🏢 商业</button>
-  <button class="tab-btn" data-tab="cw">💰 财务</button>
+  <button class="tab-btn" data-tab="pt">🖥️ 平台部</button>
+  <button class="tab-btn" data-tab="cw">💰 财务职能</button>
+  <button class="tab-btn" data-tab="org">🌳 组织架构</button>
+  
 </div>
 
 <!-- TOOLTIP -->
@@ -836,6 +839,7 @@ body {
 
   <!-- ===== OVERVIEW TAB ===== -->
   <div class="tab-pane active" id="tab-overview">
+    <div id="l1KpiGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px"></div>
 
     <div id="summaryCard" style="display:none;margin-bottom:24px"></div>
     <div class="section-title">🏢 部门满编概况</div>
@@ -872,6 +876,12 @@ body {
 
     <div class="section-title" style="margin-top:28px;">🔄 关键人流动（L1/L2）</div>
     <div class="flow-grid" id="flowGrid"></div>
+
+    <div class="section-title" style="margin-top:28px;">⚠️ 需关注 L1/L2（满编率过低或流动异常）</div>
+    <div id="alertL1L2Grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px;margin-top:12px;"></div>
+
+    <div class="section-title" style="margin-top:28px;">📋 by L2 进出汇总</div>
+    <div id="byL2SummaryTable" style="margin-top:8px;"></div>
 
   </div>
 
@@ -913,381 +923,37 @@ body {
 
 </div><!-- /main -->
 
+  <!-- ===== 平台部 TAB ===== -->
+  <div class="tab-pane" id="tab-pt">
+    <div class="section-title">📊 指标总览</div>
+    <div class="kpi-grid" id="kpi-pt"></div>
+    <div class="section-title" style="margin-top:8px;">满编率排行</div>
+    <div class="bar-ranking" id="bar-pt"><div class="bar-ranking-title">各子部门满编率排行</div><div id="bars-pt"></div></div>
+    <div class="section-title">部门明细</div>
+    <div class="dept-table-card" id="table-pt"></div>
+    <div class="section-title" style="margin-top:28px;">🔄 流入流出明细</div>
+    <div id="flow-detail-pt"></div>
+  </div>
+
+  <!-- ===== 组织架构 TAB ===== -->
+  <div class="tab-pane" id="tab-org">
+    <div class="section-title">🌳 组织架构图</div>
+    <div style="margin-bottom:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+      <label style="font-size:13px;color:#6b7280;">选择部门：</label>
+      <select id="orgDeptSelect" style="padding:6px 12px;border:1px solid #e5e7eb;border-radius:8px;font-size:13px;outline:none;" onchange="renderOrgTree()">
+        <option value="">全部（按业务线）</option>
+      </select>
+      <span style="font-size:12px;color:#9ca3af;">数据来源：hr.xiaohongshu.com · 权限内部门</span>
+    </div>
+    <div id="orgTreeWrap" style="overflow:auto;"></div>
+  </div>
+
+
 <script>
 /* ═══════════════════════════════════════════
    DATA
 ═══════════════════════════════════════════ */
-const BUDGET_DATA = [
-  {
-    "l1": "商业化",
-    "l2": "行业一部",
-    "budget": 164,
-    "actual": 166,
-    "transIn": 3,
-    "transOut": 2,
-    "pending": 0,
-    "leaving": 0,
-    "real": true,
-    "leader": "昂扬(李昂)",
-    "matchingDegree": "优秀"
-  },
-  {
-    "l1": "财务职能+DI",
-    "l2": "财务一组",
-    "budget": 51,
-    "actual": 56,
-    "transIn": 1,
-    "transOut": 1,
-    "pending": 0,
-    "leaving": 0,
-    "real": true,
-    "leader": "白真(白乐天)",
-    "matchingDegree": "优秀"
-  },
-  {
-    "l1": "财务职能+DI",
-    "l2": "资本市场",
-    "budget": 5,
-    "actual": 5,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": true,
-    "leader": "劳拉(蒋晓雯)",
-    "matchingDegree": "存疑"
-  },
-  {
-    "l1": "交易",
-    "l2": "行业运营一部",
-    "budget": 0,
-    "actual": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": false
-  },
-  {
-    "l1": "交易",
-    "l2": "行业运营二部",
-    "budget": 0,
-    "actual": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": false
-  },
-  {
-    "l1": "交易",
-    "l2": "行业运营三部",
-    "budget": 0,
-    "actual": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": false
-  },
-  {
-    "l1": "交易",
-    "l2": "中小商家",
-    "budget": 0,
-    "actual": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": false
-  },
-  {
-    "l1": "交易",
-    "l2": "交易产品",
-    "budget": 0,
-    "actual": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": false
-  },
-  {
-    "l1": "商业化",
-    "l2": "行业二部",
-    "budget": 0,
-    "actual": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": false
-  },
-  {
-    "l1": "商业化",
-    "l2": "行业三部",
-    "budget": 0,
-    "actual": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": false
-  },
-  {
-    "l1": "商业化",
-    "l2": "行业四部",
-    "budget": 0,
-    "actual": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": false
-  },
-  {
-    "l1": "商业化",
-    "l2": "行业五部",
-    "budget": 0,
-    "actual": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": false
-  },
-  {
-    "l1": "商业化",
-    "l2": "行业六部",
-    "budget": 0,
-    "actual": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": false
-  },
-  {
-    "l1": "商业化",
-    "l2": "行业七部",
-    "budget": 0,
-    "actual": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": false
-  },
-  {
-    "l1": "商业化",
-    "l2": "行业八部",
-    "budget": 0,
-    "actual": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": false
-  },
-  {
-    "l1": "商业化",
-    "l2": "行业九部",
-    "budget": 0,
-    "actual": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": false
-  },
-  {
-    "l1": "商业化",
-    "l2": "渠道业务",
-    "budget": 0,
-    "actual": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": false
-  },
-  {
-    "l1": "商业化",
-    "l2": "创作者营销与商业服务",
-    "budget": 0,
-    "actual": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": false
-  },
-  {
-    "l1": "商业化",
-    "l2": "策略中台",
-    "budget": 0,
-    "actual": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": false
-  },
-  {
-    "l1": "商业化",
-    "l2": "生态一部",
-    "budget": 0,
-    "actual": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": false
-  },
-  {
-    "l1": "商业化",
-    "l2": "生态二部",
-    "budget": 0,
-    "actual": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": false
-  },
-  {
-    "l1": "商业化",
-    "l2": "市场营销中台",
-    "budget": 0,
-    "actual": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": false
-  },
-  {
-    "l1": "商业化",
-    "l2": "营销实验室",
-    "budget": 0,
-    "actual": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": false
-  },
-  {
-    "l1": "商业化",
-    "l2": "商业产品",
-    "budget": 0,
-    "actual": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": false
-  },
-  {
-    "l1": "财务职能+DI",
-    "l2": "财务二组",
-    "budget": 0,
-    "actual": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": false
-  },
-  {
-    "l1": "财务职能+DI",
-    "l2": "税务",
-    "budget": 0,
-    "actual": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": false
-  },
-  {
-    "l1": "财务职能+DI",
-    "l2": "内控内审",
-    "budget": 0,
-    "actual": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": false
-  },
-  {
-    "l1": "财务职能+DI",
-    "l2": "采购",
-    "budget": 0,
-    "actual": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": false
-  },
-  {
-    "l1": "商业化",
-    "l2": "内审",
-    "budget": 0,
-    "actual": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": false
-  },
-  {
-    "l1": "财务职能+DI",
-    "l2": "投资部",
-    "budget": 0,
-    "actual": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": false
-  },
-  {
-    "l1": "财务职能+DI",
-    "l2": "科技投资",
-    "budget": 0,
-    "actual": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": false
-  },
-  {
-    "l1": "财务职能+DI",
-    "l2": "法务部",
-    "budget": 0,
-    "actual": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": false
-  },
-  {
-    "l1": "财务职能+DI",
-    "l2": "DI",
-    "budget": 0,
-    "actual": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": false
-  }
-];
+const BUDGET_DATA = [{"l1": "商业化", "l2": "行业一部", "budget": 164, "actual": 166, "internHc": 41, "outsourceHc": 0, "transIn": 3, "transOut": 2, "pending": 0, "leaving": 0, "real": true, "leader": "昂扬(李昂)", "matchingDegree": "优秀"}, {"l1": "财务职能+DI", "l2": "财务一组", "budget": 51, "actual": 56, "internHc": 8, "outsourceHc": 10, "transIn": 1, "transOut": 1, "pending": 0, "leaving": 0, "real": true, "leader": "白真(白乐天)", "matchingDegree": "优秀"}, {"l1": "财务职能+DI", "l2": "资本市场", "budget": 5, "actual": 5, "internHc": 0, "outsourceHc": 0, "transIn": 0, "transOut": 0, "pending": 0, "leaving": 0, "real": true, "leader": "劳拉(蒋晓雯)", "matchingDegree": "存疑"}, {"l1": "平台部", "l2": "平台部", "actual": 109, "budget": 171, "internHc": 10, "outsourceHc": 0, "transIn": 0, "transOut": 0, "pending": 0, "leaving": 0, "real": false, "leader": "木兰", "matchingDegree": "", "dataNote": "PPT 2025/12/31"}];
 
 // 真实入离职数据（来自 ehr-workbench/hrbp 2026-04-02）
 const FLOW_DATA = {
@@ -2298,17 +1964,22 @@ Object.entries(TAB_MAP).forEach(([tabId, l1]) => {
   const tableEl = document.getElementById('table-' + tabId);
   let html = `<table>
     <thead><tr>
-      <th>部门</th><th>负责人</th><th>编制</th><th>在职</th><th>满编率</th><th>缺口</th><th>流入</th><th>流出</th>
+      <th>部门</th><th>负责人</th><th>编制</th><th>在职</th><th>满编率</th><th>缺口</th>
+      <th>实习生</th><th>实习占比</th><th>流入</th><th>流出</th>
     </tr></thead><tbody>`;
   rows.forEach(d => {
     const p2 = d.actual > 0 ? pct(d.actual, d.budget) : 0;
     const color = d.actual > 0 ? pctColor(p2) : '#CBD5E0';
-    const [tagClass] = pctTag(p2);
+    const internNum = d.internHc || 0;
+    const totalHead = (d.actual || 0) + internNum;
+    const internRatio = totalHead > 0 ? (internNum/totalHead*100).toFixed(1) : 0;
+    const internColor = parseFloat(internRatio) > 25 ? '#DC2626' : parseFloat(internRatio) > 20 ? '#D97706' : '#059669';
+    const internBg = parseFloat(internRatio) > 25 ? '#FEE2E2' : parseFloat(internRatio) > 20 ? '#FEF3C7' : '#ECFDF5';
     html += `<tr>
       <td>
         <span class="dept-name">${d.l2}</span>
         <span class="${d.real ? 'dept-real-badge' : 'dept-est-badge'}">${d.real ? '实时' : '估算'}</span>
-        ${d.real ? '<span style="color:#1565C0;font-size:10px;margin-left:4px;cursor:pointer;">点击展示详情 ↗</span>' : ''}
+        ${d.real ? `<span style="color:#1565C0;font-size:10px;margin-left:4px;cursor:pointer;" onclick="openDeptPanel(this.getAttribute('data-n'))" data-n="${d.l2}">详情 ↗</span>` : ''}
       </td>
       <td style="color:#4A5568;font-size:12px">${d.leader || '—'}</td>
       <td>${d.budget}</td>
@@ -2320,6 +1991,8 @@ Object.entries(TAB_MAP).forEach(([tabId, l1]) => {
         </div>` : '<span style="color:#CBD5E0">—</span>'}
       </td>
       <td style="color:#FF2442;font-weight:600">${d.actual > 0 && d.budget > d.actual ? d.budget - d.actual : d.actual > d.budget ? '超编' : '—'}</td>
+      <td style="text-align:center">${internNum > 0 ? internNum : '—'}</td>
+      <td style="text-align:center">${internNum > 0 ? `<span style="background:${internBg};color:${internColor};padding:2px 7px;border-radius:10px;font-size:11px;font-weight:700;">${internRatio}%${parseFloat(internRatio)>25?' ⚠️':''}</span>` : '—'}</td>
       <td style="color:#00C853;font-weight:600">${d.transIn > 0 ? '+'+d.transIn : '—'}</td>
       <td style="color:#FF8C00;font-weight:600">${d.transOut > 0 ? '-'+d.transOut : '—'}</td>
     </tr>`;
@@ -2433,607 +2106,7 @@ const HANGYIBU_PENDING_L1L2 = [
 ];
 const HANGYIBU_LEAVING_L1L2 = [];
 
-const DEPT_DETAIL_DB = {
-  "行业一部": {
-    "deptName": "行业一部",
-    "leader": "",
-    "currentHc": 166,
-    "budgetHc": 164,
-    "transIn": 3,
-    "transOut": 2,
-    "subs": [
-      {
-        "name": "行业一组",
-        "leader": "千月(陈思琪)",
-        "matchingDegree": "优秀",
-        "current": 9,
-        "total": 8,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 9,
-        "match": "超编"
-      },
-      {
-        "name": "行业二组",
-        "leader": "吴邪(吴建成)",
-        "matchingDegree": "优秀",
-        "current": 9,
-        "total": 6,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 9,
-        "match": "超编"
-      },
-      {
-        "name": "行业三组",
-        "leader": "克斯(陈宇田)",
-        "matchingDegree": "匹配",
-        "current": 9,
-        "total": 8,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 9,
-        "match": "超编"
-      },
-      {
-        "name": "行业四组",
-        "leader": "千月(陈思琪)",
-        "matchingDegree": "匹配",
-        "current": 5,
-        "total": 4,
-        "transIn": 0,
-        "transOut": 1,
-        "predict": 4,
-        "match": "超编"
-      },
-      {
-        "name": "行业五组",
-        "leader": "吴邪(吴建成)",
-        "matchingDegree": "匹配",
-        "current": 5,
-        "total": 5,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 5,
-        "match": "达标"
-      },
-      {
-        "name": "行业六组",
-        "leader": "嘉莉(惠江雯)",
-        "matchingDegree": "匹配",
-        "current": 11,
-        "total": 5,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 11,
-        "match": "超编"
-      },
-      {
-        "name": "行业七组",
-        "leader": "昭燃(千艺)",
-        "matchingDegree": "匹配",
-        "current": 12,
-        "total": 9,
-        "transIn": 1,
-        "transOut": 0,
-        "predict": 13,
-        "match": "超编"
-      },
-      {
-        "name": "行业八组",
-        "leader": "吴邪(吴建成)",
-        "matchingDegree": "优秀",
-        "current": 6,
-        "total": 7,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 6,
-        "match": "达标"
-      },
-      {
-        "name": "行业九组",
-        "leader": "白泉(陈可茵)",
-        "matchingDegree": "优秀",
-        "current": 8,
-        "total": 7,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 8,
-        "match": "超编"
-      },
-      {
-        "name": "行业十组",
-        "leader": "昂扬(李昂)",
-        "matchingDegree": "匹配",
-        "current": 9,
-        "total": 8,
-        "transIn": 1,
-        "transOut": 0,
-        "predict": 10,
-        "match": "超编"
-      },
-      {
-        "name": "行业十一组",
-        "leader": "南舟(姚苒)",
-        "matchingDegree": "匹配",
-        "current": 5,
-        "total": 6,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 5,
-        "match": "达标"
-      },
-      {
-        "name": "行业十二组",
-        "leader": "希坦(贺琼)",
-        "matchingDegree": "匹配",
-        "current": 4,
-        "total": 4,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 4,
-        "match": "达标"
-      },
-      {
-        "name": "平台专家一组",
-        "leader": "古娴(高逸群)",
-        "matchingDegree": "匹配",
-        "current": 6,
-        "total": 8,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 6,
-        "match": "达标"
-      },
-      {
-        "name": "平台专家二组",
-        "leader": "菀得(杨森)",
-        "matchingDegree": "优秀",
-        "current": 9,
-        "total": 5,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 9,
-        "match": "超编"
-      },
-      {
-        "name": "平台专家三组",
-        "leader": "若琳(陈若琳)",
-        "matchingDegree": "优秀",
-        "current": 7,
-        "total": 6,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 7,
-        "match": "超编"
-      },
-      {
-        "name": "平台专家四组",
-        "leader": "古娴(高逸群)",
-        "matchingDegree": "优秀",
-        "current": 4,
-        "total": 3,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 4,
-        "match": "超编"
-      },
-      {
-        "name": "平台专家五组",
-        "leader": "菀得(杨森)",
-        "matchingDegree": "优秀",
-        "current": 5,
-        "total": 5,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 5,
-        "match": "达标"
-      },
-      {
-        "name": "平台专家六组",
-        "leader": "希莫(焦潞林)",
-        "matchingDegree": "匹配",
-        "current": 5,
-        "total": 4,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 5,
-        "match": "超编"
-      },
-      {
-        "name": "平台专家七组",
-        "leader": "希莫(焦潞林)",
-        "matchingDegree": "匹配",
-        "current": 9,
-        "total": 8,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 9,
-        "match": "超编"
-      },
-      {
-        "name": "平台专家八组",
-        "leader": "菀得(杨森)",
-        "matchingDegree": "匹配",
-        "current": 5,
-        "total": 6,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 5,
-        "match": "达标"
-      },
-      {
-        "name": "平台专家九组",
-        "leader": "清也(刘月)",
-        "matchingDegree": "匹配",
-        "current": 7,
-        "total": 6,
-        "transIn": 0,
-        "transOut": 1,
-        "predict": 6,
-        "match": "超编"
-      },
-      {
-        "name": "平台专家十组",
-        "leader": "珠珠(朱梦倩)",
-        "matchingDegree": "匹配",
-        "current": 6,
-        "total": 6,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 6,
-        "match": "达标"
-      },
-      {
-        "name": "平台专家十一组",
-        "leader": "惊鸿(王晶晶)",
-        "matchingDegree": "",
-        "current": 4,
-        "total": 5,
-        "transIn": 1,
-        "transOut": 0,
-        "predict": 5,
-        "match": "达标"
-      },
-      {
-        "name": "平台专家十二组",
-        "leader": "惊鸿(王晶晶)",
-        "matchingDegree": "匹配",
-        "current": 5,
-        "total": 3,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 5,
-        "match": "超编"
-      },
-      {
-        "name": "行业策略组",
-        "leader": "飞云(张一鸣)",
-        "matchingDegree": "匹配",
-        "current": 2,
-        "total": 3,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 2,
-        "match": "达标"
-      }
-    ],
-    "pendingL1L2": [],
-    "leavingL1L2": [],
-    "yearOnboard": 28,
-    "yearDim": 9,
-    "monthOnboard": 2,
-    "monthDim": 2,
-    "hcTrend": [
-      {
-        "month": "2025年05月",
-        "hcPercent": 97.3,
-        "totalHc": 149,
-        "currentHc": 145
-      },
-      {
-        "month": "2025年06月",
-        "hcPercent": 101.3,
-        "totalHc": 149,
-        "currentHc": 151
-      },
-      {
-        "month": "2025年07月",
-        "hcPercent": 95.3,
-        "totalHc": 149,
-        "currentHc": 142
-      },
-      {
-        "month": "2025年08月",
-        "hcPercent": 98.7,
-        "totalHc": 149,
-        "currentHc": 147
-      },
-      {
-        "month": "2025年09月",
-        "hcPercent": 106.7,
-        "totalHc": 149,
-        "currentHc": 159
-      },
-      {
-        "month": "2025年10月",
-        "hcPercent": 107.4,
-        "totalHc": 149,
-        "currentHc": 160
-      },
-      {
-        "month": "2025年11月",
-        "hcPercent": 107.4,
-        "totalHc": 149,
-        "currentHc": 160
-      },
-      {
-        "month": "2025年12月",
-        "hcPercent": 107.4,
-        "totalHc": 149,
-        "currentHc": 160
-      },
-      {
-        "month": "2026年01月",
-        "hcPercent": 97.6,
-        "totalHc": 164,
-        "currentHc": 160
-      },
-      {
-        "month": "2026年02月",
-        "hcPercent": 102.4,
-        "totalHc": 164,
-        "currentHc": 168
-      },
-      {
-        "month": "2026年03月",
-        "hcPercent": 100.6,
-        "totalHc": 164,
-        "currentHc": 165
-      },
-      {
-        "month": "2026年04月",
-        "hcPercent": 101.2,
-        "totalHc": 164,
-        "currentHc": 166
-      }
-    ]
-  },
-  "财务一组": {
-    "deptName": "财务一组",
-    "leader": "",
-    "currentHc": 56,
-    "budgetHc": 51,
-    "transIn": 1,
-    "transOut": 1,
-    "subs": [
-      {
-        "name": "技术财务分析",
-        "leader": "艾妲(谭婧)",
-        "matchingDegree": "匹配",
-        "current": 7,
-        "total": 6,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 7,
-        "match": "超编"
-      },
-      {
-        "name": "交易财务分析",
-        "leader": "知易(邹知艺)",
-        "matchingDegree": "匹配",
-        "current": 11,
-        "total": 7,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 11,
-        "match": "超编"
-      },
-      {
-        "name": "商业财务分析",
-        "leader": "花且(王玮)",
-        "matchingDegree": "优秀",
-        "current": 8,
-        "total": 10,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 8,
-        "match": "达标"
-      },
-      {
-        "name": "财务职能",
-        "leader": "花且(王玮)",
-        "matchingDegree": "",
-        "current": 20,
-        "total": 20,
-        "transIn": 0,
-        "transOut": 1,
-        "predict": 19,
-        "match": "达标"
-      },
-      {
-        "name": "资金管理组",
-        "leader": "绫波(李静)",
-        "matchingDegree": "优秀",
-        "current": 9,
-        "total": 8,
-        "transIn": 1,
-        "transOut": 0,
-        "predict": 10,
-        "match": "超编"
-      }
-    ],
-    "pendingL1L2": [],
-    "leavingL1L2": [],
-    "yearOnboard": 11,
-    "yearDim": 4,
-    "monthOnboard": 1,
-    "monthDim": 0,
-    "hcTrend": [
-      {
-        "month": "2025年05月",
-        "hcPercent": 0.0,
-        "totalHc": 0,
-        "currentHc": 42
-      },
-      {
-        "month": "2025年06月",
-        "hcPercent": 114.3,
-        "totalHc": 42,
-        "currentHc": 48
-      },
-      {
-        "month": "2025年07月",
-        "hcPercent": 107.1,
-        "totalHc": 42,
-        "currentHc": 45
-      },
-      {
-        "month": "2025年08月",
-        "hcPercent": 104.8,
-        "totalHc": 42,
-        "currentHc": 44
-      },
-      {
-        "month": "2025年09月",
-        "hcPercent": 107.1,
-        "totalHc": 42,
-        "currentHc": 45
-      },
-      {
-        "month": "2025年10月",
-        "hcPercent": 111.9,
-        "totalHc": 42,
-        "currentHc": 47
-      },
-      {
-        "month": "2025年11月",
-        "hcPercent": 109.5,
-        "totalHc": 42,
-        "currentHc": 46
-      },
-      {
-        "month": "2025年12月",
-        "hcPercent": 114.3,
-        "totalHc": 42,
-        "currentHc": 48
-      },
-      {
-        "month": "2026年01月",
-        "hcPercent": 96.1,
-        "totalHc": 51,
-        "currentHc": 49
-      },
-      {
-        "month": "2026年02月",
-        "hcPercent": 94.1,
-        "totalHc": 51,
-        "currentHc": 48
-      },
-      {
-        "month": "2026年03月",
-        "hcPercent": 105.9,
-        "totalHc": 51,
-        "currentHc": 54
-      },
-      {
-        "month": "2026年04月",
-        "hcPercent": 107.8,
-        "totalHc": 51,
-        "currentHc": 55
-      }
-    ]
-  },
-  "资本市场": {
-    "deptName": "资本市场",
-    "leader": "",
-    "currentHc": 5,
-    "budgetHc": 5,
-    "transIn": 0,
-    "transOut": 0,
-    "subs": [],
-    "pendingL1L2": [],
-    "leavingL1L2": [],
-    "yearOnboard": 0,
-    "yearDim": 0,
-    "monthOnboard": 0,
-    "monthDim": 0,
-    "hcTrend": [
-      {
-        "month": "2025年05月",
-        "hcPercent": 100.0,
-        "totalHc": 5,
-        "currentHc": 5
-      },
-      {
-        "month": "2025年06月",
-        "hcPercent": 100.0,
-        "totalHc": 5,
-        "currentHc": 5
-      },
-      {
-        "month": "2025年07月",
-        "hcPercent": 80.0,
-        "totalHc": 5,
-        "currentHc": 4
-      },
-      {
-        "month": "2025年08月",
-        "hcPercent": 80.0,
-        "totalHc": 5,
-        "currentHc": 4
-      },
-      {
-        "month": "2025年09月",
-        "hcPercent": 80.0,
-        "totalHc": 5,
-        "currentHc": 4
-      },
-      {
-        "month": "2025年10月",
-        "hcPercent": 80.0,
-        "totalHc": 5,
-        "currentHc": 4
-      },
-      {
-        "month": "2025年11月",
-        "hcPercent": 80.0,
-        "totalHc": 5,
-        "currentHc": 4
-      },
-      {
-        "month": "2025年12月",
-        "hcPercent": 100.0,
-        "totalHc": 5,
-        "currentHc": 5
-      },
-      {
-        "month": "2026年01月",
-        "hcPercent": 100.0,
-        "totalHc": 5,
-        "currentHc": 5
-      },
-      {
-        "month": "2026年02月",
-        "hcPercent": 100.0,
-        "totalHc": 5,
-        "currentHc": 5
-      },
-      {
-        "month": "2026年03月",
-        "hcPercent": 100.0,
-        "totalHc": 5,
-        "currentHc": 5
-      },
-      {
-        "month": "2026年04月",
-        "hcPercent": 100.0,
-        "totalHc": 5,
-        "currentHc": 5
-      }
-    ]
-  }
-};
+const DEPT_DETAIL_DB = {"行业一部": {"deptName": "行业一部", "leader": "昂扬(李昂)", "matchingDegree": "优秀", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 8.4, "valueText": "8.4"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.1, "valueText": "9.1"}, {"month": "2026-04", "tag": "NORMAL", "value": 9.3, "valueText": "9.3"}], "currentHc": 166, "internHc": 41, "outsourceHc": 0, "internRatio": 19.8, "budgetHc": 164, "transIn": 3, "transOut": 2, "subs": [{"name": "行业一组", "leader": "千月(陈思琪)", "matchingDegree": "优秀", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 7.0, "valueText": "7.0"}, {"month": "2026-03", "tag": "NORMAL", "value": 7.7, "valueText": "7.7"}, {"month": "2026-04", "tag": "NORMAL", "value": 7.4, "valueText": "7.4"}], "current": 9, "internHc": 3, "outsourceHc": 0, "internRatio": 25.0, "total": 8, "transIn": 0, "transOut": 0, "predict": 9, "match": "超编"}, {"name": "行业二组", "leader": "吴邪(吴建成)", "matchingDegree": "优秀", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 7.1, "valueText": "7.1"}, {"month": "2026-03", "tag": "NORMAL", "value": 7.5, "valueText": "7.5"}, {"month": "2026-04", "tag": "NORMAL", "value": 8.0, "valueText": "8.0"}], "current": 9, "internHc": 3, "outsourceHc": 0, "internRatio": 25.0, "total": 6, "transIn": 0, "transOut": 0, "predict": 9, "match": "超编"}, {"name": "行业三组", "leader": "克斯(陈宇田)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 7.5, "valueText": "7.5"}, {"month": "2026-03", "tag": "NORMAL", "value": 7.6, "valueText": "7.6"}, {"month": "2026-04", "tag": "NORMAL", "value": 8.1, "valueText": "8.1"}], "current": 9, "internHc": 1, "outsourceHc": 0, "internRatio": 10.0, "total": 8, "transIn": 0, "transOut": 0, "predict": 9, "match": "超编"}, {"name": "行业四组", "leader": "千月(陈思琪)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 8.5, "valueText": "8.5"}, {"month": "2026-03", "tag": "NORMAL", "value": 8.7, "valueText": "8.7"}, {"month": "2026-04", "tag": "NORMAL", "value": 8.8, "valueText": "8.8"}], "current": 5, "internHc": 1, "outsourceHc": 0, "internRatio": 16.7, "total": 4, "transIn": 0, "transOut": 1, "predict": 4, "match": "超编"}, {"name": "行业五组", "leader": "吴邪(吴建成)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 7.3, "valueText": "7.3"}, {"month": "2026-03", "tag": "NORMAL", "value": 7.8, "valueText": "7.8"}, {"month": "2026-04", "tag": "NORMAL", "value": 8.5, "valueText": "8.5"}], "current": 5, "internHc": 1, "outsourceHc": 0, "internRatio": 16.7, "total": 5, "transIn": 0, "transOut": 0, "predict": 5, "match": "达标"}, {"name": "行业六组", "leader": "嘉莉(惠江雯)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 7.4, "valueText": "7.4"}, {"month": "2026-03", "tag": "NORMAL", "value": 7.9, "valueText": "7.9"}, {"month": "2026-04", "tag": "NORMAL", "value": 7.2, "valueText": "7.2"}], "current": 11, "internHc": 2, "outsourceHc": 0, "internRatio": 15.4, "total": 5, "transIn": 0, "transOut": 0, "predict": 11, "match": "超编"}, {"name": "行业七组", "leader": "昭燃(千艺)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 7.8, "valueText": "7.8"}, {"month": "2026-03", "tag": "NORMAL", "value": 8.6, "valueText": "8.6"}, {"month": "2026-04", "tag": "NORMAL", "value": 8.0, "valueText": "8.0"}], "current": 12, "internHc": 3, "outsourceHc": 0, "internRatio": 20.0, "total": 9, "transIn": 1, "transOut": 0, "predict": 13, "match": "超编"}, {"name": "行业八组", "leader": "吴邪(吴建成)", "matchingDegree": "优秀", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 7.7, "valueText": "7.7"}, {"month": "2026-03", "tag": "NORMAL", "value": 8.7, "valueText": "8.7"}, {"month": "2026-04", "tag": "NORMAL", "value": 8.8, "valueText": "8.8"}], "current": 6, "internHc": 1, "outsourceHc": 0, "internRatio": 14.3, "total": 7, "transIn": 0, "transOut": 0, "predict": 6, "match": "达标"}, {"name": "行业九组", "leader": "白泉(陈可茵)", "matchingDegree": "优秀", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 6.8, "valueText": "6.8"}, {"month": "2026-03", "tag": "NORMAL", "value": 7.6, "valueText": "7.6"}, {"month": "2026-04", "tag": "NORMAL", "value": 8.1, "valueText": "8.1"}], "current": 8, "internHc": 1, "outsourceHc": 0, "internRatio": 11.1, "total": 7, "transIn": 0, "transOut": 0, "predict": 8, "match": "超编"}, {"name": "行业十组", "leader": "昂扬(李昂)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 8.2, "valueText": "8.2"}, {"month": "2026-03", "tag": "NORMAL", "value": 8.8, "valueText": "8.8"}, {"month": "2026-04", "tag": "NORMAL", "value": 8.3, "valueText": "8.3"}], "current": 9, "internHc": 2, "outsourceHc": 0, "internRatio": 18.2, "total": 8, "transIn": 1, "transOut": 0, "predict": 10, "match": "超编"}, {"name": "行业十一组", "leader": "南舟(姚苒)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 8.4, "valueText": "8.4"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.3, "valueText": "9.3"}, {"month": "2026-04", "tag": "NORMAL", "value": 7.9, "valueText": "7.9"}], "current": 5, "internHc": 1, "outsourceHc": 0, "internRatio": 16.7, "total": 6, "transIn": 0, "transOut": 0, "predict": 5, "match": "达标"}, {"name": "行业十二组", "leader": "希坦(贺琼)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 8.3, "valueText": "8.3"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.2, "valueText": "9.2"}, {"month": "2026-04", "tag": "NORMAL", "value": 9.9, "valueText": "9.9"}], "current": 4, "internHc": 3, "outsourceHc": 0, "internRatio": 42.9, "total": 4, "transIn": 0, "transOut": 0, "predict": 4, "match": "达标"}, {"name": "平台专家一组", "leader": "古娴(高逸群)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 8.4, "valueText": "8.4"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.7, "valueText": "9.7"}, {"month": "2026-04", "tag": "NORMAL", "value": 9.9, "valueText": "9.9"}], "current": 6, "internHc": 2, "outsourceHc": 0, "internRatio": 25.0, "total": 8, "transIn": 0, "transOut": 0, "predict": 6, "match": "达标"}, {"name": "平台专家二组", "leader": "菀得(杨森)", "matchingDegree": "优秀", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 9.8, "valueText": "9.8"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.8, "valueText": "9.8"}, {"month": "2026-04", "tag": "NORMAL", "value": 10.8, "valueText": "10.8"}], "current": 9, "internHc": 1, "outsourceHc": 0, "internRatio": 10.0, "total": 5, "transIn": 0, "transOut": 0, "predict": 9, "match": "超编"}, {"name": "平台专家三组", "leader": "若琳(陈若琳)", "matchingDegree": "优秀", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 9.9, "valueText": "9.9"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.7, "valueText": "10.7"}, {"month": "2026-04", "tag": "NORMAL", "value": 11.8, "valueText": "11.8"}], "current": 7, "internHc": 1, "outsourceHc": 0, "internRatio": 12.5, "total": 6, "transIn": 0, "transOut": 0, "predict": 7, "match": "超编"}, {"name": "平台专家四组", "leader": "古娴(高逸群)", "matchingDegree": "优秀", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 9.1, "valueText": "9.1"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.0, "valueText": "10.0"}, {"month": "2026-04", "tag": "NORMAL", "value": 11.2, "valueText": "11.2"}], "current": 4, "internHc": 1, "outsourceHc": 0, "internRatio": 20.0, "total": 3, "transIn": 0, "transOut": 0, "predict": 4, "match": "超编"}, {"name": "平台专家五组", "leader": "菀得(杨森)", "matchingDegree": "优秀", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 9.2, "valueText": "9.2"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.0, "valueText": "10.0"}, {"month": "2026-04", "tag": "NORMAL", "value": 10.6, "valueText": "10.6"}], "current": 5, "internHc": 0, "outsourceHc": 0, "internRatio": 0.0, "total": 5, "transIn": 0, "transOut": 0, "predict": 5, "match": "达标"}, {"name": "平台专家六组", "leader": "希莫(焦潞林)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 9.8, "valueText": "9.8"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.4, "valueText": "10.4"}, {"month": "2026-04", "tag": "NORMAL", "value": 10.5, "valueText": "10.5"}], "current": 5, "internHc": 2, "outsourceHc": 0, "internRatio": 28.6, "total": 4, "transIn": 0, "transOut": 0, "predict": 5, "match": "超编"}, {"name": "平台专家七组", "leader": "希莫(焦潞林)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 8.2, "valueText": "8.2"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.8, "valueText": "9.8"}, {"month": "2026-04", "tag": "NORMAL", "value": 10.1, "valueText": "10.1"}], "current": 9, "internHc": 4, "outsourceHc": 0, "internRatio": 30.8, "total": 8, "transIn": 0, "transOut": 0, "predict": 9, "match": "超编"}, {"name": "平台专家八组", "leader": "菀得(杨森)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 8.9, "valueText": "8.9"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.6, "valueText": "9.6"}, {"month": "2026-04", "tag": "NORMAL", "value": 10.9, "valueText": "10.9"}], "current": 5, "internHc": 1, "outsourceHc": 0, "internRatio": 16.7, "total": 6, "transIn": 0, "transOut": 0, "predict": 5, "match": "达标"}, {"name": "平台专家九组", "leader": "清也(刘月)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 10.0, "valueText": "10.0"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.2, "valueText": "10.2"}, {"month": "2026-04", "tag": "NORMAL", "value": 10.1, "valueText": "10.1"}], "current": 7, "internHc": 2, "outsourceHc": 0, "internRatio": 22.2, "total": 6, "transIn": 0, "transOut": 1, "predict": 6, "match": "超编"}, {"name": "平台专家十组", "leader": "珠珠(朱梦倩)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 9.5, "valueText": "9.5"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.5, "valueText": "10.5"}, {"month": "2026-04", "tag": "NORMAL", "value": 10.2, "valueText": "10.2"}], "current": 6, "internHc": 2, "outsourceHc": 0, "internRatio": 25.0, "total": 6, "transIn": 0, "transOut": 0, "predict": 6, "match": "达标"}, {"name": "平台专家十一组", "leader": "惊鸿(王晶晶)", "matchingDegree": "", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 10.5, "valueText": "10.5"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.8, "valueText": "10.8"}, {"month": "2026-04", "tag": "NORMAL", "value": 11.0, "valueText": "11.0"}], "current": 4, "internHc": 0, "outsourceHc": 0, "internRatio": 0.0, "total": 5, "transIn": 1, "transOut": 0, "predict": 5, "match": "达标"}, {"name": "平台专家十二组", "leader": "惊鸿(王晶晶)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 10.2, "valueText": "10.2"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.6, "valueText": "10.6"}, {"month": "2026-04", "tag": "NORMAL", "value": 11.1, "valueText": "11.1"}], "current": 5, "internHc": 2, "outsourceHc": 0, "internRatio": 28.6, "total": 3, "transIn": 0, "transOut": 0, "predict": 5, "match": "超编"}, {"name": "行业策略组", "leader": "飞云(张一鸣)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 9.0, "valueText": "9.0"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.1, "valueText": "10.1"}, {"month": "2026-04", "tag": "NORMAL", "value": 10.0, "valueText": "10.0"}], "current": 2, "internHc": 1, "outsourceHc": 0, "internRatio": 33.3, "total": 3, "transIn": 0, "transOut": 0, "predict": 2, "match": "达标"}], "pendingL1L2": [], "leavingL1L2": [], "yearOnboard": 28, "yearDim": 9, "monthOnboard": 2, "monthDim": 2, "hcTrend": [{"month": "2025年05月", "hcPercent": 97.3, "totalHc": 149, "currentHc": 145}, {"month": "2025年06月", "hcPercent": 101.3, "totalHc": 149, "currentHc": 151}, {"month": "2025年07月", "hcPercent": 95.3, "totalHc": 149, "currentHc": 142}, {"month": "2025年08月", "hcPercent": 98.7, "totalHc": 149, "currentHc": 147}, {"month": "2025年09月", "hcPercent": 106.7, "totalHc": 149, "currentHc": 159}, {"month": "2025年10月", "hcPercent": 107.4, "totalHc": 149, "currentHc": 160}, {"month": "2025年11月", "hcPercent": 107.4, "totalHc": 149, "currentHc": 160}, {"month": "2025年12月", "hcPercent": 107.4, "totalHc": 149, "currentHc": 160}, {"month": "2026年01月", "hcPercent": 97.6, "totalHc": 164, "currentHc": 160}, {"month": "2026年02月", "hcPercent": 102.4, "totalHc": 164, "currentHc": 168}, {"month": "2026年03月", "hcPercent": 100.6, "totalHc": 164, "currentHc": 165}, {"month": "2026年04月", "hcPercent": 101.2, "totalHc": 164, "currentHc": 166}]}, "财务一组": {"deptName": "财务一组", "leader": "白真(白乐天)", "matchingDegree": "优秀", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 10.2, "valueText": "10.2"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.3, "valueText": "10.3"}, {"month": "2026-04", "tag": "NORMAL", "value": 11.2, "valueText": "11.2"}], "currentHc": 56, "internHc": 8, "outsourceHc": 10, "internRatio": 12.5, "budgetHc": 51, "transIn": 1, "transOut": 1, "subs": [{"name": "技术财务分析", "leader": "艾妲(谭婧)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 9.8, "valueText": "9.8"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.4, "valueText": "10.4"}, {"month": "2026-04", "tag": "NORMAL", "value": 10.0, "valueText": "10.0"}], "current": 7, "internHc": 2, "outsourceHc": 0, "internRatio": 22.2, "total": 6, "transIn": 0, "transOut": 0, "predict": 7, "match": "超编"}, {"name": "交易财务分析", "leader": "知易(邹知艺)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 10.3, "valueText": "10.3"}, {"month": "2026-03", "tag": "NORMAL", "value": 11.1, "valueText": "11.1"}, {"month": "2026-04", "tag": "NORMAL", "value": 12.2, "valueText": "12.2"}], "current": 11, "internHc": 2, "outsourceHc": 0, "internRatio": 15.4, "total": 7, "transIn": 0, "transOut": 0, "predict": 11, "match": "超编"}, {"name": "商业财务分析", "leader": "花且(王玮)", "matchingDegree": "优秀", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 10.1, "valueText": "10.1"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.0, "valueText": "10.0"}, {"month": "2026-04", "tag": "NORMAL", "value": 10.7, "valueText": "10.7"}], "current": 8, "internHc": 2, "outsourceHc": 0, "internRatio": 20.0, "total": 10, "transIn": 0, "transOut": 0, "predict": 8, "match": "达标"}, {"name": "财务职能", "leader": "花且(王玮)", "matchingDegree": "", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 10.6, "valueText": "10.6"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.5, "valueText": "10.5"}, {"month": "2026-04", "tag": "NORMAL", "value": 12.1, "valueText": "12.1"}], "current": 20, "internHc": 0, "outsourceHc": 7, "internRatio": 0.0, "total": 20, "transIn": 0, "transOut": 1, "predict": 19, "match": "达标"}, {"name": "资金管理组", "leader": "绫波(李静)", "matchingDegree": "优秀", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 9.5, "valueText": "9.5"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.4, "valueText": "9.4"}, {"month": "2026-04", "tag": "NORMAL", "value": 9.4, "valueText": "9.4"}], "current": 9, "internHc": 2, "outsourceHc": 3, "internRatio": 18.2, "total": 8, "transIn": 1, "transOut": 0, "predict": 10, "match": "超编"}], "pendingL1L2": [], "leavingL1L2": [], "yearOnboard": 11, "yearDim": 4, "monthOnboard": 1, "monthDim": 0, "hcTrend": [{"month": "2025年05月", "hcPercent": 0.0, "totalHc": 0, "currentHc": 42}, {"month": "2025年06月", "hcPercent": 114.3, "totalHc": 42, "currentHc": 48}, {"month": "2025年07月", "hcPercent": 107.1, "totalHc": 42, "currentHc": 45}, {"month": "2025年08月", "hcPercent": 104.8, "totalHc": 42, "currentHc": 44}, {"month": "2025年09月", "hcPercent": 107.1, "totalHc": 42, "currentHc": 45}, {"month": "2025年10月", "hcPercent": 111.9, "totalHc": 42, "currentHc": 47}, {"month": "2025年11月", "hcPercent": 109.5, "totalHc": 42, "currentHc": 46}, {"month": "2025年12月", "hcPercent": 114.3, "totalHc": 42, "currentHc": 48}, {"month": "2026年01月", "hcPercent": 96.1, "totalHc": 51, "currentHc": 49}, {"month": "2026年02月", "hcPercent": 94.1, "totalHc": 51, "currentHc": 48}, {"month": "2026年03月", "hcPercent": 105.9, "totalHc": 51, "currentHc": 54}, {"month": "2026年04月", "hcPercent": 107.8, "totalHc": 51, "currentHc": 55}]}, "资本市场": {"deptName": "资本市场", "leader": "劳拉(蒋晓雯)", "matchingDegree": "存疑", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 8.3, "valueText": "8.3"}, {"month": "2026-03", "tag": "NORMAL", "value": 8.5, "valueText": "8.5"}, {"month": "2026-04", "tag": "NORMAL", "value": 9.0, "valueText": "9.0"}], "currentHc": 5, "internHc": 0, "outsourceHc": 0, "internRatio": 0.0, "budgetHc": 5, "transIn": 0, "transOut": 0, "subs": [], "pendingL1L2": [], "leavingL1L2": [], "yearOnboard": 0, "yearDim": 0, "monthOnboard": 0, "monthDim": 0, "hcTrend": [{"month": "2025年05月", "hcPercent": 100.0, "totalHc": 5, "currentHc": 5}, {"month": "2025年06月", "hcPercent": 100.0, "totalHc": 5, "currentHc": 5}, {"month": "2025年07月", "hcPercent": 80.0, "totalHc": 5, "currentHc": 4}, {"month": "2025年08月", "hcPercent": 80.0, "totalHc": 5, "currentHc": 4}, {"month": "2025年09月", "hcPercent": 80.0, "totalHc": 5, "currentHc": 4}, {"month": "2025年10月", "hcPercent": 80.0, "totalHc": 5, "currentHc": 4}, {"month": "2025年11月", "hcPercent": 80.0, "totalHc": 5, "currentHc": 4}, {"month": "2025年12月", "hcPercent": 100.0, "totalHc": 5, "currentHc": 5}, {"month": "2026年01月", "hcPercent": 100.0, "totalHc": 5, "currentHc": 5}, {"month": "2026年02月", "hcPercent": 100.0, "totalHc": 5, "currentHc": 5}, {"month": "2026年03月", "hcPercent": 100.0, "totalHc": 5, "currentHc": 5}, {"month": "2026年04月", "hcPercent": 100.0, "totalHc": 5, "currentHc": 5}]}, "平台部": {"deptName": "平台部", "leader": "木兰", "matchingDegree": "", "currentHc": 109, "internHc": 10, "budgetHc": 171, "transIn": 0, "transOut": 0, "hcTrend": [], "pendingL1L2": [], "leavingL1L2": [], "subs": [{"name": "公共事务一部", "leader": "—", "current": 39, "internHc": 4, "total": 0, "transIn": 0, "transOut": 0, "matchingDegree": ""}, {"name": "公共事务二部", "leader": "—", "current": 14, "internHc": 2, "total": 0, "transIn": 0, "transOut": 0, "matchingDegree": ""}, {"name": "公共事务三部", "leader": "—", "current": 5, "internHc": 0, "total": 0, "transIn": 0, "transOut": 0, "matchingDegree": ""}, {"name": "公共事务四部", "leader": "—", "current": 23, "internHc": 1, "total": 0, "transIn": 0, "transOut": 0, "matchingDegree": ""}, {"name": "公关部", "leader": "—", "current": 37, "internHc": 2, "total": 0, "transIn": 0, "transOut": 0, "matchingDegree": ""}, {"name": "决策支持", "leader": "—", "current": 3, "internHc": 1, "total": 0, "transIn": 0, "transOut": 0, "matchingDegree": ""}, {"name": "项目部", "leader": "—", "current": 1, "internHc": 0, "total": 0, "transIn": 0, "transOut": 0, "matchingDegree": ""}, {"name": "企业发展", "leader": "—", "current": 2, "internHc": 0, "total": 0, "transIn": 0, "transOut": 0, "matchingDegree": ""}]}};
 
 /* ═══════════════════════════════════════════
    DEPT DETAIL PANEL LOGIC
@@ -3187,36 +2260,43 @@ function openDeptPanel(deptName) {
 
   // --- Detail table ---
   var tableHtml = '<table><thead><tr>' +
-    '<th>子组</th><th>负责人</th><th>在职</th><th>目标</th>' +
-    '<th>流入</th><th>流出</th><th>预计</th><th>HC Gap</th><th>满编率</th><th>人岗匹配</th>' +
+    '<th>子组</th><th>负责人</th><th>评级</th><th>在职</th><th>实习生</th><th>实习占比</th><th>目标编制</th>' +
+    '<th>满编率</th><th>缺口</th><th>流入</th><th>流出</th><th>预计</th>' +
     '</tr></thead><tbody>';
-  data.subs.forEach(function(sub, idx) {
-    var subRate = Math.round(sub.current / sub.total * 100);
-    var subGap = sub.current - sub.total;
-    var gapHtml = subGap > 0
-      ? '<span style="color:#FF2442;font-weight:700">超' + subGap + '</span>'
-      : subGap < 0
-      ? '<span style="color:#FF8C00;font-weight:600">' + subGap + '</span>'
-      : '<span style="color:#8D9BAB">达标</span>';
+  subs.forEach(function(sub) {
+    var subRate = sub.total > 0 ? Math.round(sub.current / sub.total * 100) : 0;
     var rateColor = subRate >= 100 ? '#1565C0' : subRate >= 90 ? '#00C853' : subRate >= 75 ? '#FF8C00' : '#FF2442';
-    var matchHtml = '';
-    var matchDeg = sub.matchingDegree || sub.match || '';
-    if (matchDeg === '优秀') matchHtml = '<span class="match-badge match-green">优秀</span>';
-    else if (matchDeg === '匹配') matchHtml = '<span class="match-badge match-blue">匹配</span>';
-    else if (matchDeg === '存疑') matchHtml = '<span class="match-badge match-orange">存疑</span>';
-    else matchHtml = '<span style="color:#CBD5E0">—</span>';
-
-    tableHtml += '<tr>' +
-      '<td>' + sub.name + '</td>' +
-      '<td style="color:#4A5568">' + sub.leader + '</td>' +
-      '<td style="font-weight:700;color:#1565C0">' + sub.current + '</td>' +
-      '<td>' + sub.total + '</td>' +
-      '<td style="color:#00C853">' + (sub.transIn > 0 ? '+' + sub.transIn : '—') + '</td>' +
-      '<td style="color:#FF2442">' + (sub.transOut > 0 ? '-' + sub.transOut : '—') + '</td>' +
-      '<td style="font-weight:600">' + sub.predict + '</td>' +
-      '<td>' + gapHtml + '</td>' +
-      '<td style="color:' + rateColor + ';font-weight:700">' + subRate + '%</td>' +
+    var rateBg = subRate >= 100 ? '#EBF5FB' : subRate >= 90 ? '#E8F5E9' : subRate >= 75 ? '#FFFBF0' : '#FFF5F5';
+    var gap = sub.total > sub.current ? sub.total - sub.current : 0;
+    var gapHtml = gap > 0 ? '<span style="color:#FF2442;font-weight:700">-' + gap + '</span>' :
+                  sub.current > sub.total ? '<span style="color:#1565C0;font-weight:700">超编</span>' : '✅';
+    var matchColor = sub.matchingDegree === '优秀' ? '#059669' : sub.matchingDegree === '良好' ? '#0284C7' :
+                     sub.matchingDegree === '待提升' ? '#D97706' : '#6B7280';
+    var matchBg = sub.matchingDegree === '优秀' ? '#ECFDF5' : sub.matchingDegree === '良好' ? '#E0F2FE' :
+                  sub.matchingDegree === '待提升' ? '#FEF3C7' : '#F3F4F6';
+    var matchHtml = sub.matchingDegree ?
+      '<span style="background:' + matchBg + ';color:' + matchColor + ';padding:2px 7px;border-radius:10px;font-size:11px;font-weight:700">' + sub.matchingDegree + '</span>' : '—';
+    var internNum = sub.internHc || 0;
+    var totalHead = (sub.current || 0) + internNum;
+    var internRatio = totalHead > 0 ? (internNum / totalHead * 100).toFixed(1) : 0;
+    var internColor = parseFloat(internRatio) > 25 ? '#DC2626' : parseFloat(internRatio) > 20 ? '#D97706' : '#059669';
+    var internBg = parseFloat(internRatio) > 25 ? '#FEE2E2' : parseFloat(internRatio) > 20 ? '#FEF3C7' : '#ECFDF5';
+    var internHtml = internNum > 0
+      ? '<span style="background:' + internBg + ';color:' + internColor + ';padding:2px 7px;border-radius:10px;font-size:11px;font-weight:700">' + internRatio + '%' + (parseFloat(internRatio) > 25 ? ' ⚠️' : '') + '</span>'
+      : '<span style="color:#CBD5E0">—</span>';
+    tableHtml += '<tr style="border-bottom:1px solid #F3F4F6;">' +
+      '<td style="font-weight:600">' + sub.name + '</td>' +
+      '<td style="color:#4A5568;font-size:12px">' + (sub.leader || '—') + '</td>' +
       '<td>' + matchHtml + '</td>' +
+      '<td style="font-weight:700;color:#1565C0">' + sub.current + '</td>' +
+      '<td style="text-align:center">' + (internNum > 0 ? internNum : '—') + '</td>' +
+      '<td style="text-align:center">' + internHtml + '</td>' +
+      '<td>' + sub.total + '</td>' +
+      '<td><span style="background:' + rateBg + ';color:' + rateColor + ';padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700">' + subRate + '%</span></td>' +
+      '<td>' + gapHtml + '</td>' +
+      '<td style="color:#00C853;font-weight:600">' + (sub.transIn > 0 ? '+' + sub.transIn : '—') + '</td>' +
+      '<td style="color:#FF8C00;font-weight:600">' + (sub.transOut > 0 ? '-' + sub.transOut : '—') + '</td>' +
+      '<td style="font-weight:600;color:#374151">' + sub.predict + '</td>' +
       '</tr>';
   });
   tableHtml += '</tbody></table>';
@@ -3648,6 +2728,410 @@ window.addEventListener('load', () => {
     });
   }, 300);
 });
+
+// ============================================================
+// 平台部 Tab 渲染
+// ============================================================
+function renderPlatformTab() {
+  const key = 'pt';
+  const ptRows = BUDGET_DATA.filter(r => r.l1 === '平台部');
+  if (!ptRows.length) {
+    document.getElementById('kpi-pt').innerHTML = '<div style="padding:20px;color:#9ca3af;text-align:center;">暂无平台部数据权限</div>';
+    return;
+  }
+  const act = ptRows.reduce((s,r)=>s+r.actual,0);
+  const bud = ptRows.reduce((s,r)=>s+r.budget,0);
+  const tin = ptRows.reduce((s,r)=>s+r.transIn,0);
+  const tout = ptRows.reduce((s,r)=>s+r.transOut,0);
+  const rate = bud ? (act/bud*100).toFixed(1) : 0;
+  const rateColor = rate >= 90 ? '#00C853' : rate >= 75 ? '#FF8C00' : '#FF2442';
+
+  document.getElementById('kpi-pt').innerHTML = `
+    <div class="kpi-card"><div class="kpi-label">规划编制</div><div class="kpi-value" data-val="${bud}">${bud}</div></div>
+    <div class="kpi-card"><div class="kpi-label">当前在职</div><div class="kpi-value" data-val="${act}">${act}</div></div>
+    <div class="kpi-card"><div class="kpi-label">满编率</div><div class="kpi-value" style="color:${rateColor}">${rate}%</div></div>
+    <div class="kpi-card"><div class="kpi-label">缺口</div><div class="kpi-value" style="color:#FF2442">${Math.max(0,bud-act)}</div></div>
+    <div class="kpi-card"><div class="kpi-label">待入职</div><div class="kpi-value" style="color:#00C853">${tin}</div></div>
+    <div class="kpi-card"><div class="kpi-label">待离职</div><div class="kpi-value" style="color:#FF8C00">${tout}</div></div>
+  `;
+
+  // 满编率排行
+  const sorted = [...ptRows].filter(r=>r.real).sort((a,b)=>{
+    const ra = a.budget ? a.actual/a.budget : 0;
+    const rb = b.budget ? b.actual/b.budget : 0;
+    return ra - rb;
+  });
+  document.getElementById('bars-pt').innerHTML = sorted.map(r => {
+    const p = r.budget ? Math.min(100, (r.actual/r.budget*100)) : 0;
+    const c = pctColor(p);
+    return `<div class="bar-row">
+      <div class="bar-label" title="${r.l2}">${r.l2.length>8?r.l2.slice(0,8)+'…':r.l2}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${p}%;background:${c}"></div></div>
+      <div class="bar-pct" style="color:${c}">${p.toFixed(0)}%</div>
+      <div class="bar-nums">${r.actual}/${r.budget}</div>
+    </div>`;
+  }).join('');
+
+  // 部门明细表
+  buildTable('table-pt', ptRows, 'pt');
+  renderFlowDetail('flow-detail-pt', '平台部');
+}
+
+// ============================================================
+// 总览：L1/L2 预警 + by L2 汇总
+// ============================================================
+function renderAlertL1L2() {
+  const allIn  = FLOW_DATA.transIn  || [];
+  const allOut = FLOW_DATA.transOut || [];
+  const highlights = [];
+
+  // 汇聚 L1/L2 的流动
+  const l1l2In  = allIn.filter(p => p.level === 'L1' || p.level === 'L2');
+  const l1l2Out = allOut.filter(p => p.level === 'L1' || p.level === 'L2');
+
+  // 按子部门找满编率低于75%的
+  const lowRate = BUDGET_DATA.filter(r => r.real && r.budget > 0 && (r.actual/r.budget) < 0.75);
+
+  const cards = [];
+
+  // 低满编率预警
+  lowRate.forEach(r => {
+    const rate = r.budget ? (r.actual/r.budget*100).toFixed(0) : 0;
+    cards.push(`<div class="alert-card alert-warn">
+      <div class="alert-icon">⚠️</div>
+      <div class="alert-content">
+        <div class="alert-title">${r.l2}</div>
+        <div class="alert-sub">满编率 ${rate}%（在职${r.actual}/编制${r.budget}），缺口 ${r.budget-r.actual} 人</div>
+      </div>
+    </div>`);
+  });
+
+  // L1/L2 待离职预警
+  l1l2Out.forEach(p => {
+    const typeColor = p.type === '主动离职' ? '#FF2442' : p.type === '被动离职' ? '#FF8C00' : '#6b7280';
+    cards.push(`<div class="alert-card alert-exit">
+      <div class="alert-icon">🚨</div>
+      <div class="alert-content">
+        <div class="alert-title"><span class="level-badge level-${p.level.toLowerCase()}">${p.level}</span> ${p.name}</div>
+        <div class="alert-sub">${p.subDept} · <span style="color:${typeColor}">${p.type}</span>${p.date ? ' · 最后工作日 '+p.date : ''}</div>
+      </div>
+    </div>`);
+  });
+
+  // L1/L2 待入职提示
+  l1l2In.forEach(p => {
+    cards.push(`<div class="alert-card alert-join">
+      <div class="alert-icon">🎉</div>
+      <div class="alert-content">
+        <div class="alert-title"><span class="level-badge level-${p.level.toLowerCase()}">${p.level}</span> ${p.name}</div>
+        <div class="alert-sub">${p.subDept}${p.date ? ' · 入职日期 '+p.date : ''}</div>
+      </div>
+    </div>`);
+  });
+
+  const wrap = document.getElementById('alertL1L2Grid');
+  if (wrap) wrap.innerHTML = cards.length ? cards.join('') : '<div style="color:#9ca3af;font-size:13px;padding:12px;">暂无需特别关注的 L1/L2 异常</div>';
+}
+
+function renderByL2Summary() {
+  const rows = BUDGET_DATA.filter(r => r.real);
+  if (!rows.length) return;
+  const tableWrap = document.getElementById('byL2SummaryTable');
+  if (!tableWrap) return;
+
+  // 按 L1 分组
+  const groups = {};
+  rows.forEach(r => {
+    if (!groups[r.l1]) groups[r.l1] = [];
+    groups[r.l1].push(r);
+  });
+
+  let html = `<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:13px;">
+    <thead><tr style="background:#f9fafb;border-bottom:2px solid #e5e7eb;">
+      <th style="padding:10px 12px;text-align:left;color:#6b7280;font-weight:600;">业务线</th>
+      <th style="padding:10px 12px;text-align:left;color:#6b7280;font-weight:600;">部门</th>
+      <th style="padding:10px 12px;text-align:right;color:#6b7280;font-weight:600;">规划</th>
+      <th style="padding:10px 12px;text-align:right;color:#6b7280;font-weight:600;">在职</th>
+      <th style="padding:10px 12px;text-align:right;color:#6b7280;font-weight:600;">满编率</th>
+      <th style="padding:10px 12px;text-align:right;color:#6b7280;font-weight:600;">待入职</th>
+      <th style="padding:10px 12px;text-align:right;color:#6b7280;font-weight:600;">待离职</th>
+      <th style="padding:10px 12px;text-align:left;color:#6b7280;font-weight:600;">状态</th>
+    </tr></thead><tbody>`;
+
+  Object.entries(groups).forEach(([l1, depts]) => {
+    const l1Act = depts.reduce((s,r)=>s+r.actual,0);
+    const l1Bud = depts.reduce((s,r)=>s+r.budget,0);
+    const l1Rate = l1Bud ? (l1Act/l1Bud*100).toFixed(1) : 0;
+    const l1Color = l1Rate >= 90 ? '#00C853' : l1Rate >= 75 ? '#FF8C00' : '#FF2442';
+
+    html += `<tr style="background:#fff7f7;font-weight:700;border-top:2px solid #fecaca;">
+      <td style="padding:10px 12px;color:#FF2442;">${l1}</td>
+      <td style="padding:10px 12px;color:#374151;">合计</td>
+      <td style="padding:10px 12px;text-align:right;">${l1Bud}</td>
+      <td style="padding:10px 12px;text-align:right;">${l1Act}</td>
+      <td style="padding:10px 12px;text-align:right;color:${l1Color};">${l1Rate}%</td>
+      <td style="padding:10px 12px;text-align:right;">${depts.reduce((s,r)=>s+r.transIn,0)}</td>
+      <td style="padding:10px 12px;text-align:right;">${depts.reduce((s,r)=>s+r.transOut,0)}</td>
+      <td style="padding:10px 12px;"></td>
+    </tr>`;
+
+    depts.forEach(r => {
+      const rate = r.budget ? (r.actual/r.budget*100).toFixed(1) : 0;
+      const color = pctColor(parseFloat(rate));
+      const status = parseFloat(rate) >= 90 ? '✅ 正常' : parseFloat(rate) >= 75 ? '⚠️ 偏低' : '🔴 紧缺';
+      html += `<tr style="border-bottom:1px solid #f3f4f6;" onclick="openDeptPanel('${r.l2}')" style="cursor:pointer;">
+        <td style="padding:8px 12px;color:#9ca3af;font-size:12px;">${l1}</td>
+        <td style="padding:8px 12px;font-weight:500;cursor:pointer;color:#1e40af;" onclick="openDeptPanel('${r.l2}')">${r.l2}</td>
+        <td style="padding:8px 12px;text-align:right;">${r.budget}</td>
+        <td style="padding:8px 12px;text-align:right;">${r.actual}</td>
+        <td style="padding:8px 12px;text-align:right;color:${color};font-weight:600;">${rate}%</td>
+        <td style="padding:8px 12px;text-align:right;color:#00C853;">${r.transIn || 0}</td>
+        <td style="padding:8px 12px;text-align:right;color:#FF8C00;">${r.transOut || 0}</td>
+        <td style="padding:8px 12px;">${status}</td>
+      </tr>`;
+    });
+  });
+
+  html += '</tbody></table></div>';
+  tableWrap.innerHTML = html;
+}
+
+// ============================================================
+// 组织架构 Tab
+// ============================================================
+const ORG_DATA = {};  // 由 generate_v3.py 注入
+
+function renderOrgTab() {
+  // 填充部门选择下拉
+  const select = document.getElementById('orgDeptSelect');
+  const deptNames = Object.keys(DEPT_DETAIL_DB);
+  select.innerHTML = '<option value="">全部（按业务线）</option>' +
+    deptNames.map(n => `<option value="${n}">${n}</option>`).join('');
+  renderOrgTree();
+}
+
+function renderOrgTree() {
+  const selected = document.getElementById('orgDeptSelect').value;
+  const wrap = document.getElementById('orgTreeWrap');
+  const deptNames = selected ? [selected] : Object.keys(DEPT_DETAIL_DB);
+
+  if (!deptNames.length) {
+    wrap.innerHTML = '<div style="color:#9ca3af;padding:40px;text-align:center;">暂无组织架构数据（权限内部门为空）</div>';
+    return;
+  }
+
+  let out = '';
+  deptNames.forEach(deptName => {
+    const detail = DEPT_DETAIL_DB[deptName];
+    if (!detail) return;
+    const subs = detail.subs || [];
+    const budgetHc = detail.budgetHc || 0;
+    const currentHc = detail.currentHc || 0;
+    const internHc = detail.internHc || 0;
+    const totalHead = currentHc + internHc;
+    const internRatio = totalHead > 0 ? (internHc / totalHead * 100).toFixed(1) : 0;
+    const rate = budgetHc ? (currentHc / budgetHc * 100).toFixed(0) : '--';
+    const rateColor = parseFloat(rate) >= 100 ? '#1565C0' : parseFloat(rate) >= 90 ? '#059669' : parseFloat(rate) >= 75 ? '#D97706' : '#DC2626';
+    const matchColor = detail.matchingDegree === '优秀' ? '#059669' : detail.matchingDegree === '良好' ? '#0284C7' : '#6B7280';
+
+    const subCards = subs.map(sub => {
+      const subRate = sub.total ? (sub.current / sub.total * 100).toFixed(0) : '--';
+      const subColor = parseFloat(subRate) >= 100 ? '#1565C0' : parseFloat(subRate) >= 90 ? '#059669' : parseFloat(subRate) >= 75 ? '#D97706' : '#DC2626';
+      const subBg = parseFloat(subRate) >= 100 ? '#EBF5FB' : parseFloat(subRate) >= 90 ? '#F0FDF4' : parseFloat(subRate) >= 75 ? '#FFFBEB' : '#FEF2F2';
+      const subIntern = sub.internHc || 0;
+      const subTotalH = (sub.current || 0) + subIntern;
+      const subInternR = subTotalH > 0 ? (subIntern / subTotalH * 100).toFixed(1) : 0;
+      const subInternColor = parseFloat(subInternR) > 25 ? '#DC2626' : '#059669';
+      const matchC2 = sub.matchingDegree === '优秀' ? '#059669' : sub.matchingDegree === '良好' ? '#0284C7' : sub.matchingDegree === '待提升' ? '#D97706' : '#6B7280';
+      const matchBg2 = sub.matchingDegree === '优秀' ? '#ECFDF5' : sub.matchingDegree === '良好' ? '#E0F2FE' : '#FEF3C7';
+      return `<div style="background:${subBg};border-radius:10px;padding:13px;border:1px solid ${subColor}33">
+        <div style="font-size:13px;font-weight:700;color:#1e293b;margin-bottom:4px">${sub.name}</div>
+        <div style="font-size:11px;color:#6b7280;margin-bottom:7px;display:flex;align-items:center;gap:5px">
+          👤 ${sub.leader || '暂无'}
+          ${sub.matchingDegree ? '<span style="background:' + matchBg2 + ';color:' + matchC2 + ';padding:1px 5px;border-radius:6px;font-size:10px;font-weight:700">' + sub.matchingDegree + '</span>' : ''}
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">
+          <div style="flex:1;height:5px;background:#e5e7eb;border-radius:3px;overflow:hidden">
+            <div style="height:5px;width:${Math.min(100,parseFloat(subRate)||0)}%;background:${subColor};border-radius:3px"></div>
+          </div>
+          <span style="font-size:12px;font-weight:800;color:${subColor};min-width:36px;text-align:right">${subRate}%</span>
+        </div>
+        <div style="font-size:11px;color:#9ca3af;display:flex;gap:8px;flex-wrap:wrap">
+          <span>在职 <b style="color:#374151">${sub.current}</b>/${sub.total}</span>
+          ${subIntern > 0 ? '<span style="color:' + subInternColor + '">实习 ' + subIntern + '人(' + subInternR + '%' + (parseFloat(subInternR) > 25 ? ' ⚠️' : '') + ')</span>' : ''}
+          ${sub.transIn ? '<span style="color:#059669">+' + sub.transIn + ' 入</span>' : ''}
+          ${sub.transOut ? '<span style="color:#DC2626">-' + sub.transOut + ' 出</span>' : ''}
+        </div>
+      </div>`;
+    }).join('');
+
+    out += `<div style="background:white;border-radius:14px;padding:20px;margin-bottom:20px;box-shadow:0 2px 12px rgba(0,0,0,.08);border:1px solid #f0f0f0">
+      <div style="display:flex;align-items:center;gap:14px;padding-bottom:14px;border-bottom:2px solid #fee2e2;margin-bottom:16px">
+        <div style="width:48px;height:48px;background:linear-gradient(135deg,#FF2442,#ff6b6b);border-radius:12px;display:flex;align-items:center;justify-content:center;color:white;font-size:22px;flex-shrink:0">🏢</div>
+        <div style="flex:1">
+          <div style="font-size:17px;font-weight:800;color:#111827">${deptName}</div>
+          <div style="font-size:12px;color:#6b7280;margin-top:3px">
+            负责人：<b style="color:#374151">${detail.leader || '—'}</b>
+            ${detail.matchingDegree ? '<span style="margin-left:8px;background:#ECFDF5;color:' + matchColor + ';padding:1px 7px;border-radius:10px;font-size:11px;font-weight:700">' + detail.matchingDegree + '</span>' : ''}
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <div style="text-align:center;background:#F8FAFC;border-radius:10px;padding:8px 14px">
+            <div style="font-size:20px;font-weight:800;color:#1e40af">${currentHc}</div>
+            <div style="font-size:11px;color:#6b7280">在职</div>
+          </div>
+          <div style="text-align:center;background:#F8FAFC;border-radius:10px;padding:8px 14px">
+            <div style="font-size:20px;font-weight:800;color:#6b7280">${budgetHc}</div>
+            <div style="font-size:11px;color:#6b7280">编制</div>
+          </div>
+          <div style="text-align:center;background:#F8FAFC;border-radius:10px;padding:8px 14px">
+            <div style="font-size:20px;font-weight:800;color:${rateColor}">${rate}%</div>
+            <div style="font-size:11px;color:#6b7280">满编率</div>
+          </div>
+          ${internHc > 0 ? '<div style="text-align:center;background:' + (parseFloat(internRatio) > 25 ? '#FEE2E2' : '#ECFDF5') + ';border-radius:10px;padding:8px 14px"><div style="font-size:20px;font-weight:800;color:' + (parseFloat(internRatio) > 25 ? '#DC2626' : '#059669') + '">' + internRatio + '%</div><div style="font-size:11px;color:#6b7280">实习占比</div></div>' : ''}
+          ${detail.transIn ? '<span style="background:#ECFDF5;color:#166534;padding:4px 10px;border-radius:16px;font-size:12px;font-weight:700">+' + detail.transIn + ' 入职中</span>' : ''}
+          ${detail.transOut ? '<span style="background:#FEE2E2;color:#991b1b;padding:4px 10px;border-radius:16px;font-size:12px;font-weight:700">-' + detail.transOut + ' 离职中</span>' : ''}
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px">
+        ${subs.length === 0 ? '<div style="color:#9ca3af;font-size:13px;padding:20px;text-align:center;grid-column:1/-1">暂无子部门数据</div>' : subCards}
+      </div>
+    </div>`;
+  });
+
+  wrap.innerHTML = out || '<div style="color:#9ca3af;padding:40px;text-align:center">暂无组织架构数据</div>';
+}
+
+
+function renderInternTab() {
+  const wrap = document.getElementById('internTableWrap');
+  const kpiEl = document.getElementById('kpi-intern');
+
+  // 用 INTERN_DATA，fallback 到 EEDATA_DATA.deptCard
+  const source = (Object.keys(INTERN_DATA).length > 0) ? INTERN_DATA : null;
+
+  if (!source) {
+    // fallback：用 EEDATA 里的满编率数据做说明
+    kpiEl.innerHTML = '<div style="color:#9ca3af;grid-column:1/-1;text-align:center;padding:20px;">实习生占比数据需开通 eedata 权限，敬请期待</div>';
+    wrap.innerHTML = '';
+    return;
+  }
+
+  let totalFormal = 0, totalIntern = 0;
+  const rows = Object.entries(source).map(([dept, d]) => {
+    totalFormal += (d.formal || 0);
+    totalIntern += (d.intern || 0);
+    const ratio = (d.formal + d.intern) > 0 ? (d.intern / (d.formal + d.intern) * 100).toFixed(1) : 0;
+    return { dept, formal: d.formal||0, intern: d.intern||0, ratio: parseFloat(ratio) };
+  });
+
+  const totalRatio = (totalFormal + totalIntern) > 0 ? (totalIntern/(totalFormal+totalIntern)*100).toFixed(1) : 0;
+  const totalColor = parseFloat(totalRatio) > 25 ? '#FF2442' : '#00C853';
+
+  kpiEl.innerHTML = `
+    <div class="kpi-card"><div class="kpi-label">正式员工总数</div><div class="kpi-value">${totalFormal}</div></div>
+    <div class="kpi-card"><div class="kpi-label">实习生总数</div><div class="kpi-value">${totalIntern}</div></div>
+    <div class="kpi-card"><div class="kpi-label">整体实习占比</div><div class="kpi-value" style="color:${totalColor}">${totalRatio}%</div></div>
+    <div class="kpi-card"><div class="kpi-label">基准线</div><div class="kpi-value" style="color:#6b7280;font-size:18px;">≤25%</div></div>
+  `;
+
+  const tableHtml = `<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:13px;">
+    <thead><tr style="background:#f9fafb;border-bottom:2px solid #e5e7eb;">
+      <th style="padding:10px 12px;text-align:left;color:#6b7280;font-weight:600;">部门</th>
+      <th style="padding:10px 12px;text-align:right;color:#6b7280;font-weight:600;">正式员工</th>
+      <th style="padding:10px 12px;text-align:right;color:#6b7280;font-weight:600;">实习生</th>
+      <th style="padding:10px 12px;text-align:right;color:#6b7280;font-weight:600;">实习占比</th>
+      <th style="padding:10px 12px;text-align:left;color:#6b7280;font-weight:600;">状态</th>
+    </tr></thead><tbody>
+    ${rows.sort((a,b)=>b.ratio-a.ratio).map(r => {
+      const color = r.ratio > 25 ? '#FF2442' : r.ratio > 20 ? '#FF8C00' : '#00C853';
+      const status = r.ratio > 25 ? '⚠️ 超标' : r.ratio > 20 ? '🟡 接近上限' : '✅ 正常';
+      const bgColor = r.ratio > 25 ? '#fff5f5' : r.ratio > 20 ? '#fffbeb' : '#f0fdf4';
+      return `<tr style="background:${bgColor};border-bottom:1px solid #f3f4f6;">
+        <td style="padding:10px 12px;font-weight:600;">${r.dept}</td>
+        <td style="padding:10px 12px;text-align:right;">${r.formal}</td>
+        <td style="padding:10px 12px;text-align:right;">${r.intern}</td>
+        <td style="padding:10px 12px;text-align:right;font-weight:700;color:${color};">${r.ratio}%</td>
+        <td style="padding:10px 12px;">${status}</td>
+      </tr>`;
+    }).join('')}
+    </tbody></table></div>`;
+
+  wrap.innerHTML = tableHtml;
+}
+
+
+function renderL1KpiGrid(){
+  var el=document.getElementById('l1KpiGrid');
+  if(!el)return;
+  var CFG=[
+    {name:'\u5546\u4e1a\u5316',      emoji:'\ud83c\udfe2',color:'#FF2442',bg:'#fff5f5',tab:'shyl',bgt:2499},
+    {name:'\u4ea4\u6613',        emoji:'\ud83d\uded2',color:'#00897B',bg:'#f0fdf9',tab:'jy',  bgt:426},
+    {name:'\u8d22\u52a1\u804c\u80fd+DI', emoji:'\ud83d\udcb0',color:'#1565C0',bg:'#eff6ff',tab:'cw',  bgt:272},
+    {name:'\u5e73\u53f0\u90e8',      emoji:'\ud83d\udce1',color:'#7C3AED',bg:'#f5f3ff',tab:'pt',  bgt:171},
+  ];
+  el.innerHTML=CFG.map(function(c){
+    var rows=BUDGET_DATA.filter(function(d){return d.l1===c.name;});
+    var real=rows.filter(function(d){return d.actual>0;});
+    var act=real.reduce(function(a,d){return a+(d.actual||0);},0);
+    var intern=real.reduce(function(a,d){return a+(d.internHc||0);},0);
+    var inF=rows.reduce(function(a,d){return a+(d.transIn||0);},0);
+    var outF=rows.reduce(function(a,d){return a+(d.transOut||0);},0);
+    var p=c.bgt>0?Math.round(act/c.bgt*100):0;
+    var pc=p>=100?'#1565C0':p>=90?'#059669':p>=75?'#D97706':'#DC2626';
+    var pb=p>=100?'#EBF5FB':p>=90?'#ECFDF5':p>=75?'#FFFBEB':'#FEF2F2';
+    var gap=c.bgt>act?c.bgt-act:0;
+    var th=act+intern; var ir=th>0?(intern/th*100).toFixed(1):0;
+    var hasR=real.length>0;
+    var flow='';
+    if(hasR&&(inF||outF)){
+      flow='<div style="display:flex;gap:8px;margin-top:10px">'
+        +(inF?'<span style="background:#ECFDF5;color:#166534;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700">+'+inF+' \u6d41\u5165\u4e2d</span>':'')
+        +(outF?'<span style="background:#FEE2E2;color:#991b1b;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700">-'+outF+' \u6d41\u51fa\u4e2d</span>':'')
+        +'</div>';
+    }
+    var h='<div data-kpi-tab="'+c.tab+'" style="background:'+c.bg+';border-radius:16px;padding:20px;border:1.5px solid '+c.color+'33;cursor:pointer;transition:box-shadow .2s">'
+      +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">'
+        +'<div style="width:40px;height:40px;border-radius:10px;background:'+c.color+';display:flex;align-items:center;justify-content:center;font-size:20px">'+c.emoji+'</div>'
+        +'<div>'
+          +'<div style="font-size:15px;font-weight:800;color:#111827">'+c.name+'</div>'
+          +'<div style="font-size:11px;color:#6b7280">\u7f16\u5236 '+c.bgt+' \xb7 '+(hasR?'\u5b9e\u65f6':'\u53c2\u8003 12/31')+'</div>'
+        +'</div>'
+        +'<div style="margin-left:auto;background:'+pb+';border-radius:20px;padding:4px 12px;font-size:14px;font-weight:800;color:'+pc+'">'+p+'%</div>'
+      +'</div>'
+      +'<div style="height:6px;background:#e5e7eb;border-radius:3px;margin-bottom:12px;overflow:hidden">'
+        +'<div style="height:6px;width:'+Math.min(p,100)+'%;background:'+pc+';border-radius:3px"></div>'
+      +'</div>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
+        +'<div style="background:rgba(255,255,255,.7);border-radius:8px;padding:8px;text-align:center">'
+          +'<div style="font-size:20px;font-weight:800;color:#1e40af">'+(hasR?act:'\u2014')+'</div>'
+          +'<div style="font-size:10px;color:#6b7280">\u5728\u804c\u4eba\u6570</div>'
+        +'</div>'
+        +'<div style="background:rgba(255,255,255,.7);border-radius:8px;padding:8px;text-align:center">'
+          +'<div style="font-size:20px;font-weight:800;color:'+pc+'">'+p+'%</div>'
+          +'<div style="font-size:10px;color:#6b7280">\u6ee1\u7f16\u7387</div>'
+        +'</div>'
+        +'<div style="background:rgba(255,255,255,.7);border-radius:8px;padding:8px;text-align:center">'
+          +'<div style="font-size:16px;font-weight:700;color:#DC2626">'+(gap>0?'-'+gap:gap===0?'\u2705':'\u8d85\u7f16')+'</div>'
+          +'<div style="font-size:10px;color:#6b7280">HC\u7f3a\u53e3</div>'
+        +'</div>'
+        +'<div style="background:rgba(255,255,255,.7);border-radius:8px;padding:8px;text-align:center">'
+          +'<div style="font-size:16px;font-weight:700;color:'+(parseFloat(ir)>25?'#DC2626':'#059669')+'">'+(hasR?ir+'%':'\u2014')+'</div>'
+          +'<div style="font-size:10px;color:#6b7280">\u5b9e\u4e60\u5360\u6bd4</div>'
+        +'</div>'
+      +'</div>'+flow+'</div>';
+    return h;
+  }).join('');
+  el.querySelectorAll('[data-kpi-tab]').forEach(function(card){
+    card.addEventListener('mouseover',function(){this.style.boxShadow='0 8px 24px rgba(0,0,0,.12)';});
+    card.addEventListener('mouseout', function(){this.style.boxShadow='';});
+    card.addEventListener('click',    function(){
+      var btn=document.querySelector('[data-tab="'+this.getAttribute('data-kpi-tab')+'"]');
+      if(btn)btn.click();
+    });
+  });
+}
+
 </script>
 <!-- Omni Branding Badge -->
 <style>
@@ -3660,6 +3144,22 @@ window.addEventListener('load', () => {
 .omni-badge:hover .omni-badge-text{left:32px!important;opacity:1!important}
 .omni-badge .omni-badge-label{font-size:0.75rem!important;font-weight:500!important;color:#6b6b68!important;font-family:system-ui,-apple-system,sans-serif!important}
 .omni-badge .omni-badge-brand{font-size:0.875rem!important;font-weight:700!important;color:#37352f!important;letter-spacing:-0.01em!important;font-family:system-ui,-apple-system,sans-serif!important}
+
+/* ===== 新增：预警卡片 ===== */
+.alert-card {
+  display:flex;align-items:flex-start;gap:12px;
+  padding:12px 16px;border-radius:10px;border:1px solid;
+}
+.alert-warn  { background:#fffbeb;border-color:#fcd34d; }
+.alert-exit  { background:#fff5f5;border-color:#fca5a5; }
+.alert-join  { background:#f0fdf4;border-color:#86efac; }
+.alert-icon  { font-size:20px;flex-shrink:0; }
+.alert-content .alert-title { font-size:13px;font-weight:700;color:#111827; }
+.alert-content .alert-sub   { font-size:12px;color:#6b7280;margin-top:3px; }
+.level-badge { display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700;margin-right:4px; }
+.level-l1    { background:#fee2e2;color:#991b1b; }
+.level-l2    { background:#fef3c7;color:#92400e; }
+
 </style>
 <a href="/" class="omni-badge" title="Built with Omni">
 <svg width="22" height="22" viewBox="0 0 32 32" fill="none"><defs><clipPath id="omni-clip"><rect x="16" y="0" width="16" height="16"/></clipPath></defs><circle cx="12" cy="19" r="7" stroke="#5ec5e8" stroke-width="2.5" fill="none"/><circle cx="20" cy="13" r="7" stroke="#7dcbb8" stroke-width="2.5" fill="none"/><circle cx="12" cy="19" r="7" stroke="#5ec5e8" stroke-width="2.5" fill="none" clip-path="url(#omni-clip)"/></svg>
