@@ -839,6 +839,8 @@ body {
 
   <!-- ===== OVERVIEW TAB ===== -->
   <div class="tab-pane active" id="tab-overview">
+  <div id="focusCard"></div>
+  <div id="l1KpiGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px"></div>
 
     <div id="summaryCard" style="display:none;margin-bottom:24px"></div>
     <div class="section-title">🏢 部门满编概况</div>
@@ -886,6 +888,7 @@ body {
 
   <!-- ===== 商业化 TAB ===== -->
   <div class="tab-pane" id="tab-shyl">
+  <div id="intern-banner-tab-shyl"></div>
     <div class="section-title">📊 指标总览</div>
     <div class="kpi-grid" id="kpi-shyl"></div>
     <div class="section-title" style="margin-top:8px;">满编率排行</div>
@@ -898,6 +901,7 @@ body {
 
   <!-- ===== 财务职能+DI TAB ===== -->
   <div class="tab-pane" id="tab-cw">
+  <div id="intern-banner-tab-cw"></div>
     <div class="section-title">📊 指标总览</div>
     <div class="kpi-grid" id="kpi-cw"></div>
     <div class="section-title" style="margin-top:8px;">满编率排行</div>
@@ -910,6 +914,7 @@ body {
 
   <!-- ===== 交易 TAB ===== -->
   <div class="tab-pane" id="tab-jy">
+  <div id="intern-banner-tab-jy"></div>
     <div class="section-title">📊 指标总览</div>
     <div class="kpi-grid" id="kpi-jy"></div>
     <div class="section-title" style="margin-top:8px;">满编率排行</div>
@@ -924,6 +929,7 @@ body {
 
   <!-- ===== 平台部 TAB ===== -->
   <div class="tab-pane" id="tab-pt">
+  <div id="intern-banner-tab-pt"></div>
     <div class="section-title">📊 指标总览</div>
     <div class="kpi-grid" id="kpi-pt"></div>
     <div class="section-title" style="margin-top:8px;">满编率排行</div>
@@ -952,53 +958,7 @@ body {
 /* ═══════════════════════════════════════════
    DATA
 ═══════════════════════════════════════════ */
-const BUDGET_DATA = [
-  {
-    "l1": "商业化",
-    "l2": "行业一部",
-    "budget": 164,
-    "actual": 166,
-    "internHc": 41,
-    "outsourceHc": 0,
-    "transIn": 3,
-    "transOut": 2,
-    "pending": 0,
-    "leaving": 0,
-    "real": true,
-    "leader": "昂扬(李昂)",
-    "matchingDegree": "优秀"
-  },
-  {
-    "l1": "财务职能+DI",
-    "l2": "财务一组",
-    "budget": 51,
-    "actual": 56,
-    "internHc": 8,
-    "outsourceHc": 10,
-    "transIn": 1,
-    "transOut": 1,
-    "pending": 0,
-    "leaving": 0,
-    "real": true,
-    "leader": "白真(白乐天)",
-    "matchingDegree": "优秀"
-  },
-  {
-    "l1": "财务职能+DI",
-    "l2": "资本市场",
-    "budget": 5,
-    "actual": 5,
-    "internHc": 0,
-    "outsourceHc": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": true,
-    "leader": "劳拉(蒋晓雯)",
-    "matchingDegree": "存疑"
-  }
-];
+const BUDGET_DATA = [{"l1": "商业化", "l2": "行业一部", "budget": 164, "actual": 166, "internHc": 41, "outsourceHc": 0, "transIn": 3, "transOut": 2, "pending": 0, "leaving": 0, "real": true, "leader": "昂扬(李昂)", "matchingDegree": "优秀"}, {"l1": "财务职能+DI", "l2": "财务一组", "budget": 51, "actual": 56, "internHc": 8, "outsourceHc": 10, "transIn": 1, "transOut": 1, "pending": 0, "leaving": 0, "real": true, "leader": "白真(白乐天)", "matchingDegree": "优秀"}, {"l1": "财务职能+DI", "l2": "资本市场", "budget": 5, "actual": 5, "internHc": 0, "outsourceHc": 0, "transIn": 0, "transOut": 0, "pending": 0, "leaving": 0, "real": true, "leader": "劳拉(蒋晓雯)", "matchingDegree": "存疑"}, {"l1": "平台部", "l2": "平台部", "actual": 109, "budget": 171, "internHc": 10, "outsourceHc": 0, "transIn": 0, "transOut": 0, "pending": 0, "leaving": 0, "real": false, "leader": "木兰", "matchingDegree": "", "dataNote": "PPT 2025/12/31"}];
 
 // 真实入离职数据（来自 ehr-workbench/hrbp 2026-04-02）
 const FLOW_DATA = {
@@ -1193,7 +1153,7 @@ L1_NAMES.forEach(n => buildDonut(n));
   const svg = document.getElementById('bubbleSvg');
   const tooltip = document.getElementById('bTooltip');
   const W = 960;
-  const data = BUDGET_DATA.filter(d => d.actual > 0);
+  const data = BUDGET_DATA.filter(d => d.actual > 0 && d.real !== false);
   const dataLen = data.length;
   // 高度足够大，保证所有气泡可见
   const H = Math.max(520, Math.min(760, 280 + dataLen * 16));
@@ -1534,6 +1494,12 @@ function renderFlowDetail(containerId, l1Filter) {
 renderFlowDetail('flow-detail-shyl', '商业化');
 renderFlowDetail('flow-detail-cw', '财务职能+DI');
 renderFlowDetail('flow-detail-jy', '交易');
+  renderFocusCard();
+  renderL1KpiGrid();
+  renderInternBanner('商业化','intern-banner-tab-shyl');
+  renderInternBanner('交易','intern-banner-tab-jy');
+  renderInternBanner('财务职能+DI','intern-banner-tab-cw');
+  renderInternBanner('平台部','intern-banner-tab-pt');
 
 
 
@@ -2151,1369 +2117,7 @@ const HANGYIBU_PENDING_L1L2 = [
 ];
 const HANGYIBU_LEAVING_L1L2 = [];
 
-const DEPT_DETAIL_DB = {
-  "行业一部": {
-    "deptName": "行业一部",
-    "leader": "昂扬(李昂)",
-    "matchingDegree": "优秀",
-    "engagementInfo": [
-      {
-        "month": "2026-02",
-        "tag": "NORMAL",
-        "value": 8.4,
-        "valueText": "8.4"
-      },
-      {
-        "month": "2026-03",
-        "tag": "NORMAL",
-        "value": 9.1,
-        "valueText": "9.1"
-      },
-      {
-        "month": "2026-04",
-        "tag": "NORMAL",
-        "value": 9.3,
-        "valueText": "9.3"
-      }
-    ],
-    "currentHc": 166,
-    "internHc": 41,
-    "outsourceHc": 0,
-    "internRatio": 19.8,
-    "budgetHc": 164,
-    "transIn": 3,
-    "transOut": 2,
-    "subs": [
-      {
-        "name": "行业一组",
-        "leader": "千月(陈思琪)",
-        "matchingDegree": "优秀",
-        "engagementInfo": [
-          {
-            "month": "2026-02",
-            "tag": "NORMAL",
-            "value": 7.0,
-            "valueText": "7.0"
-          },
-          {
-            "month": "2026-03",
-            "tag": "NORMAL",
-            "value": 7.7,
-            "valueText": "7.7"
-          },
-          {
-            "month": "2026-04",
-            "tag": "NORMAL",
-            "value": 7.4,
-            "valueText": "7.4"
-          }
-        ],
-        "current": 9,
-        "internHc": 3,
-        "outsourceHc": 0,
-        "internRatio": 25.0,
-        "total": 8,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 9,
-        "match": "超编"
-      },
-      {
-        "name": "行业二组",
-        "leader": "吴邪(吴建成)",
-        "matchingDegree": "优秀",
-        "engagementInfo": [
-          {
-            "month": "2026-02",
-            "tag": "NORMAL",
-            "value": 7.1,
-            "valueText": "7.1"
-          },
-          {
-            "month": "2026-03",
-            "tag": "NORMAL",
-            "value": 7.5,
-            "valueText": "7.5"
-          },
-          {
-            "month": "2026-04",
-            "tag": "NORMAL",
-            "value": 8.0,
-            "valueText": "8.0"
-          }
-        ],
-        "current": 9,
-        "internHc": 3,
-        "outsourceHc": 0,
-        "internRatio": 25.0,
-        "total": 6,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 9,
-        "match": "超编"
-      },
-      {
-        "name": "行业三组",
-        "leader": "克斯(陈宇田)",
-        "matchingDegree": "匹配",
-        "engagementInfo": [
-          {
-            "month": "2026-02",
-            "tag": "NORMAL",
-            "value": 7.5,
-            "valueText": "7.5"
-          },
-          {
-            "month": "2026-03",
-            "tag": "NORMAL",
-            "value": 7.6,
-            "valueText": "7.6"
-          },
-          {
-            "month": "2026-04",
-            "tag": "NORMAL",
-            "value": 8.1,
-            "valueText": "8.1"
-          }
-        ],
-        "current": 9,
-        "internHc": 1,
-        "outsourceHc": 0,
-        "internRatio": 10.0,
-        "total": 8,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 9,
-        "match": "超编"
-      },
-      {
-        "name": "行业四组",
-        "leader": "千月(陈思琪)",
-        "matchingDegree": "匹配",
-        "engagementInfo": [
-          {
-            "month": "2026-02",
-            "tag": "NORMAL",
-            "value": 8.5,
-            "valueText": "8.5"
-          },
-          {
-            "month": "2026-03",
-            "tag": "NORMAL",
-            "value": 8.7,
-            "valueText": "8.7"
-          },
-          {
-            "month": "2026-04",
-            "tag": "NORMAL",
-            "value": 8.8,
-            "valueText": "8.8"
-          }
-        ],
-        "current": 5,
-        "internHc": 1,
-        "outsourceHc": 0,
-        "internRatio": 16.7,
-        "total": 4,
-        "transIn": 0,
-        "transOut": 1,
-        "predict": 4,
-        "match": "超编"
-      },
-      {
-        "name": "行业五组",
-        "leader": "吴邪(吴建成)",
-        "matchingDegree": "匹配",
-        "engagementInfo": [
-          {
-            "month": "2026-02",
-            "tag": "NORMAL",
-            "value": 7.3,
-            "valueText": "7.3"
-          },
-          {
-            "month": "2026-03",
-            "tag": "NORMAL",
-            "value": 7.8,
-            "valueText": "7.8"
-          },
-          {
-            "month": "2026-04",
-            "tag": "NORMAL",
-            "value": 8.5,
-            "valueText": "8.5"
-          }
-        ],
-        "current": 5,
-        "internHc": 1,
-        "outsourceHc": 0,
-        "internRatio": 16.7,
-        "total": 5,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 5,
-        "match": "达标"
-      },
-      {
-        "name": "行业六组",
-        "leader": "嘉莉(惠江雯)",
-        "matchingDegree": "匹配",
-        "engagementInfo": [
-          {
-            "month": "2026-02",
-            "tag": "NORMAL",
-            "value": 7.4,
-            "valueText": "7.4"
-          },
-          {
-            "month": "2026-03",
-            "tag": "NORMAL",
-            "value": 7.9,
-            "valueText": "7.9"
-          },
-          {
-            "month": "2026-04",
-            "tag": "NORMAL",
-            "value": 7.2,
-            "valueText": "7.2"
-          }
-        ],
-        "current": 11,
-        "internHc": 2,
-        "outsourceHc": 0,
-        "internRatio": 15.4,
-        "total": 5,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 11,
-        "match": "超编"
-      },
-      {
-        "name": "行业七组",
-        "leader": "昭燃(千艺)",
-        "matchingDegree": "匹配",
-        "engagementInfo": [
-          {
-            "month": "2026-02",
-            "tag": "NORMAL",
-            "value": 7.8,
-            "valueText": "7.8"
-          },
-          {
-            "month": "2026-03",
-            "tag": "NORMAL",
-            "value": 8.6,
-            "valueText": "8.6"
-          },
-          {
-            "month": "2026-04",
-            "tag": "NORMAL",
-            "value": 8.0,
-            "valueText": "8.0"
-          }
-        ],
-        "current": 12,
-        "internHc": 3,
-        "outsourceHc": 0,
-        "internRatio": 20.0,
-        "total": 9,
-        "transIn": 1,
-        "transOut": 0,
-        "predict": 13,
-        "match": "超编"
-      },
-      {
-        "name": "行业八组",
-        "leader": "吴邪(吴建成)",
-        "matchingDegree": "优秀",
-        "engagementInfo": [
-          {
-            "month": "2026-02",
-            "tag": "NORMAL",
-            "value": 7.7,
-            "valueText": "7.7"
-          },
-          {
-            "month": "2026-03",
-            "tag": "NORMAL",
-            "value": 8.7,
-            "valueText": "8.7"
-          },
-          {
-            "month": "2026-04",
-            "tag": "NORMAL",
-            "value": 8.8,
-            "valueText": "8.8"
-          }
-        ],
-        "current": 6,
-        "internHc": 1,
-        "outsourceHc": 0,
-        "internRatio": 14.3,
-        "total": 7,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 6,
-        "match": "达标"
-      },
-      {
-        "name": "行业九组",
-        "leader": "白泉(陈可茵)",
-        "matchingDegree": "优秀",
-        "engagementInfo": [
-          {
-            "month": "2026-02",
-            "tag": "NORMAL",
-            "value": 6.8,
-            "valueText": "6.8"
-          },
-          {
-            "month": "2026-03",
-            "tag": "NORMAL",
-            "value": 7.6,
-            "valueText": "7.6"
-          },
-          {
-            "month": "2026-04",
-            "tag": "NORMAL",
-            "value": 8.1,
-            "valueText": "8.1"
-          }
-        ],
-        "current": 8,
-        "internHc": 1,
-        "outsourceHc": 0,
-        "internRatio": 11.1,
-        "total": 7,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 8,
-        "match": "超编"
-      },
-      {
-        "name": "行业十组",
-        "leader": "昂扬(李昂)",
-        "matchingDegree": "匹配",
-        "engagementInfo": [
-          {
-            "month": "2026-02",
-            "tag": "NORMAL",
-            "value": 8.2,
-            "valueText": "8.2"
-          },
-          {
-            "month": "2026-03",
-            "tag": "NORMAL",
-            "value": 8.8,
-            "valueText": "8.8"
-          },
-          {
-            "month": "2026-04",
-            "tag": "NORMAL",
-            "value": 8.3,
-            "valueText": "8.3"
-          }
-        ],
-        "current": 9,
-        "internHc": 2,
-        "outsourceHc": 0,
-        "internRatio": 18.2,
-        "total": 8,
-        "transIn": 1,
-        "transOut": 0,
-        "predict": 10,
-        "match": "超编"
-      },
-      {
-        "name": "行业十一组",
-        "leader": "南舟(姚苒)",
-        "matchingDegree": "匹配",
-        "engagementInfo": [
-          {
-            "month": "2026-02",
-            "tag": "NORMAL",
-            "value": 8.4,
-            "valueText": "8.4"
-          },
-          {
-            "month": "2026-03",
-            "tag": "NORMAL",
-            "value": 9.3,
-            "valueText": "9.3"
-          },
-          {
-            "month": "2026-04",
-            "tag": "NORMAL",
-            "value": 7.9,
-            "valueText": "7.9"
-          }
-        ],
-        "current": 5,
-        "internHc": 1,
-        "outsourceHc": 0,
-        "internRatio": 16.7,
-        "total": 6,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 5,
-        "match": "达标"
-      },
-      {
-        "name": "行业十二组",
-        "leader": "希坦(贺琼)",
-        "matchingDegree": "匹配",
-        "engagementInfo": [
-          {
-            "month": "2026-02",
-            "tag": "NORMAL",
-            "value": 8.3,
-            "valueText": "8.3"
-          },
-          {
-            "month": "2026-03",
-            "tag": "NORMAL",
-            "value": 9.2,
-            "valueText": "9.2"
-          },
-          {
-            "month": "2026-04",
-            "tag": "NORMAL",
-            "value": 9.9,
-            "valueText": "9.9"
-          }
-        ],
-        "current": 4,
-        "internHc": 3,
-        "outsourceHc": 0,
-        "internRatio": 42.9,
-        "total": 4,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 4,
-        "match": "达标"
-      },
-      {
-        "name": "平台专家一组",
-        "leader": "古娴(高逸群)",
-        "matchingDegree": "匹配",
-        "engagementInfo": [
-          {
-            "month": "2026-02",
-            "tag": "NORMAL",
-            "value": 8.4,
-            "valueText": "8.4"
-          },
-          {
-            "month": "2026-03",
-            "tag": "NORMAL",
-            "value": 9.7,
-            "valueText": "9.7"
-          },
-          {
-            "month": "2026-04",
-            "tag": "NORMAL",
-            "value": 9.9,
-            "valueText": "9.9"
-          }
-        ],
-        "current": 6,
-        "internHc": 2,
-        "outsourceHc": 0,
-        "internRatio": 25.0,
-        "total": 8,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 6,
-        "match": "达标"
-      },
-      {
-        "name": "平台专家二组",
-        "leader": "菀得(杨森)",
-        "matchingDegree": "优秀",
-        "engagementInfo": [
-          {
-            "month": "2026-02",
-            "tag": "NORMAL",
-            "value": 9.8,
-            "valueText": "9.8"
-          },
-          {
-            "month": "2026-03",
-            "tag": "NORMAL",
-            "value": 9.8,
-            "valueText": "9.8"
-          },
-          {
-            "month": "2026-04",
-            "tag": "NORMAL",
-            "value": 10.8,
-            "valueText": "10.8"
-          }
-        ],
-        "current": 9,
-        "internHc": 1,
-        "outsourceHc": 0,
-        "internRatio": 10.0,
-        "total": 5,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 9,
-        "match": "超编"
-      },
-      {
-        "name": "平台专家三组",
-        "leader": "若琳(陈若琳)",
-        "matchingDegree": "优秀",
-        "engagementInfo": [
-          {
-            "month": "2026-02",
-            "tag": "NORMAL",
-            "value": 9.9,
-            "valueText": "9.9"
-          },
-          {
-            "month": "2026-03",
-            "tag": "NORMAL",
-            "value": 10.7,
-            "valueText": "10.7"
-          },
-          {
-            "month": "2026-04",
-            "tag": "NORMAL",
-            "value": 11.8,
-            "valueText": "11.8"
-          }
-        ],
-        "current": 7,
-        "internHc": 1,
-        "outsourceHc": 0,
-        "internRatio": 12.5,
-        "total": 6,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 7,
-        "match": "超编"
-      },
-      {
-        "name": "平台专家四组",
-        "leader": "古娴(高逸群)",
-        "matchingDegree": "优秀",
-        "engagementInfo": [
-          {
-            "month": "2026-02",
-            "tag": "NORMAL",
-            "value": 9.1,
-            "valueText": "9.1"
-          },
-          {
-            "month": "2026-03",
-            "tag": "NORMAL",
-            "value": 10.0,
-            "valueText": "10.0"
-          },
-          {
-            "month": "2026-04",
-            "tag": "NORMAL",
-            "value": 11.2,
-            "valueText": "11.2"
-          }
-        ],
-        "current": 4,
-        "internHc": 1,
-        "outsourceHc": 0,
-        "internRatio": 20.0,
-        "total": 3,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 4,
-        "match": "超编"
-      },
-      {
-        "name": "平台专家五组",
-        "leader": "菀得(杨森)",
-        "matchingDegree": "优秀",
-        "engagementInfo": [
-          {
-            "month": "2026-02",
-            "tag": "NORMAL",
-            "value": 9.2,
-            "valueText": "9.2"
-          },
-          {
-            "month": "2026-03",
-            "tag": "NORMAL",
-            "value": 10.0,
-            "valueText": "10.0"
-          },
-          {
-            "month": "2026-04",
-            "tag": "NORMAL",
-            "value": 10.6,
-            "valueText": "10.6"
-          }
-        ],
-        "current": 5,
-        "internHc": 0,
-        "outsourceHc": 0,
-        "internRatio": 0.0,
-        "total": 5,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 5,
-        "match": "达标"
-      },
-      {
-        "name": "平台专家六组",
-        "leader": "希莫(焦潞林)",
-        "matchingDegree": "匹配",
-        "engagementInfo": [
-          {
-            "month": "2026-02",
-            "tag": "NORMAL",
-            "value": 9.8,
-            "valueText": "9.8"
-          },
-          {
-            "month": "2026-03",
-            "tag": "NORMAL",
-            "value": 10.4,
-            "valueText": "10.4"
-          },
-          {
-            "month": "2026-04",
-            "tag": "NORMAL",
-            "value": 10.5,
-            "valueText": "10.5"
-          }
-        ],
-        "current": 5,
-        "internHc": 2,
-        "outsourceHc": 0,
-        "internRatio": 28.6,
-        "total": 4,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 5,
-        "match": "超编"
-      },
-      {
-        "name": "平台专家七组",
-        "leader": "希莫(焦潞林)",
-        "matchingDegree": "匹配",
-        "engagementInfo": [
-          {
-            "month": "2026-02",
-            "tag": "NORMAL",
-            "value": 8.2,
-            "valueText": "8.2"
-          },
-          {
-            "month": "2026-03",
-            "tag": "NORMAL",
-            "value": 9.8,
-            "valueText": "9.8"
-          },
-          {
-            "month": "2026-04",
-            "tag": "NORMAL",
-            "value": 10.1,
-            "valueText": "10.1"
-          }
-        ],
-        "current": 9,
-        "internHc": 4,
-        "outsourceHc": 0,
-        "internRatio": 30.8,
-        "total": 8,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 9,
-        "match": "超编"
-      },
-      {
-        "name": "平台专家八组",
-        "leader": "菀得(杨森)",
-        "matchingDegree": "匹配",
-        "engagementInfo": [
-          {
-            "month": "2026-02",
-            "tag": "NORMAL",
-            "value": 8.9,
-            "valueText": "8.9"
-          },
-          {
-            "month": "2026-03",
-            "tag": "NORMAL",
-            "value": 9.6,
-            "valueText": "9.6"
-          },
-          {
-            "month": "2026-04",
-            "tag": "NORMAL",
-            "value": 10.9,
-            "valueText": "10.9"
-          }
-        ],
-        "current": 5,
-        "internHc": 1,
-        "outsourceHc": 0,
-        "internRatio": 16.7,
-        "total": 6,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 5,
-        "match": "达标"
-      },
-      {
-        "name": "平台专家九组",
-        "leader": "清也(刘月)",
-        "matchingDegree": "匹配",
-        "engagementInfo": [
-          {
-            "month": "2026-02",
-            "tag": "NORMAL",
-            "value": 10.0,
-            "valueText": "10.0"
-          },
-          {
-            "month": "2026-03",
-            "tag": "NORMAL",
-            "value": 10.2,
-            "valueText": "10.2"
-          },
-          {
-            "month": "2026-04",
-            "tag": "NORMAL",
-            "value": 10.1,
-            "valueText": "10.1"
-          }
-        ],
-        "current": 7,
-        "internHc": 2,
-        "outsourceHc": 0,
-        "internRatio": 22.2,
-        "total": 6,
-        "transIn": 0,
-        "transOut": 1,
-        "predict": 6,
-        "match": "超编"
-      },
-      {
-        "name": "平台专家十组",
-        "leader": "珠珠(朱梦倩)",
-        "matchingDegree": "匹配",
-        "engagementInfo": [
-          {
-            "month": "2026-02",
-            "tag": "NORMAL",
-            "value": 9.5,
-            "valueText": "9.5"
-          },
-          {
-            "month": "2026-03",
-            "tag": "NORMAL",
-            "value": 10.5,
-            "valueText": "10.5"
-          },
-          {
-            "month": "2026-04",
-            "tag": "NORMAL",
-            "value": 10.2,
-            "valueText": "10.2"
-          }
-        ],
-        "current": 6,
-        "internHc": 2,
-        "outsourceHc": 0,
-        "internRatio": 25.0,
-        "total": 6,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 6,
-        "match": "达标"
-      },
-      {
-        "name": "平台专家十一组",
-        "leader": "惊鸿(王晶晶)",
-        "matchingDegree": "",
-        "engagementInfo": [
-          {
-            "month": "2026-02",
-            "tag": "NORMAL",
-            "value": 10.5,
-            "valueText": "10.5"
-          },
-          {
-            "month": "2026-03",
-            "tag": "NORMAL",
-            "value": 10.8,
-            "valueText": "10.8"
-          },
-          {
-            "month": "2026-04",
-            "tag": "NORMAL",
-            "value": 11.0,
-            "valueText": "11.0"
-          }
-        ],
-        "current": 4,
-        "internHc": 0,
-        "outsourceHc": 0,
-        "internRatio": 0.0,
-        "total": 5,
-        "transIn": 1,
-        "transOut": 0,
-        "predict": 5,
-        "match": "达标"
-      },
-      {
-        "name": "平台专家十二组",
-        "leader": "惊鸿(王晶晶)",
-        "matchingDegree": "匹配",
-        "engagementInfo": [
-          {
-            "month": "2026-02",
-            "tag": "NORMAL",
-            "value": 10.2,
-            "valueText": "10.2"
-          },
-          {
-            "month": "2026-03",
-            "tag": "NORMAL",
-            "value": 10.6,
-            "valueText": "10.6"
-          },
-          {
-            "month": "2026-04",
-            "tag": "NORMAL",
-            "value": 11.1,
-            "valueText": "11.1"
-          }
-        ],
-        "current": 5,
-        "internHc": 2,
-        "outsourceHc": 0,
-        "internRatio": 28.6,
-        "total": 3,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 5,
-        "match": "超编"
-      },
-      {
-        "name": "行业策略组",
-        "leader": "飞云(张一鸣)",
-        "matchingDegree": "匹配",
-        "engagementInfo": [
-          {
-            "month": "2026-02",
-            "tag": "NORMAL",
-            "value": 9.0,
-            "valueText": "9.0"
-          },
-          {
-            "month": "2026-03",
-            "tag": "NORMAL",
-            "value": 10.1,
-            "valueText": "10.1"
-          },
-          {
-            "month": "2026-04",
-            "tag": "NORMAL",
-            "value": 10.0,
-            "valueText": "10.0"
-          }
-        ],
-        "current": 2,
-        "internHc": 1,
-        "outsourceHc": 0,
-        "internRatio": 33.3,
-        "total": 3,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 2,
-        "match": "达标"
-      }
-    ],
-    "pendingL1L2": [],
-    "leavingL1L2": [],
-    "yearOnboard": 28,
-    "yearDim": 9,
-    "monthOnboard": 2,
-    "monthDim": 2,
-    "hcTrend": [
-      {
-        "month": "2025年05月",
-        "hcPercent": 97.3,
-        "totalHc": 149,
-        "currentHc": 145
-      },
-      {
-        "month": "2025年06月",
-        "hcPercent": 101.3,
-        "totalHc": 149,
-        "currentHc": 151
-      },
-      {
-        "month": "2025年07月",
-        "hcPercent": 95.3,
-        "totalHc": 149,
-        "currentHc": 142
-      },
-      {
-        "month": "2025年08月",
-        "hcPercent": 98.7,
-        "totalHc": 149,
-        "currentHc": 147
-      },
-      {
-        "month": "2025年09月",
-        "hcPercent": 106.7,
-        "totalHc": 149,
-        "currentHc": 159
-      },
-      {
-        "month": "2025年10月",
-        "hcPercent": 107.4,
-        "totalHc": 149,
-        "currentHc": 160
-      },
-      {
-        "month": "2025年11月",
-        "hcPercent": 107.4,
-        "totalHc": 149,
-        "currentHc": 160
-      },
-      {
-        "month": "2025年12月",
-        "hcPercent": 107.4,
-        "totalHc": 149,
-        "currentHc": 160
-      },
-      {
-        "month": "2026年01月",
-        "hcPercent": 97.6,
-        "totalHc": 164,
-        "currentHc": 160
-      },
-      {
-        "month": "2026年02月",
-        "hcPercent": 102.4,
-        "totalHc": 164,
-        "currentHc": 168
-      },
-      {
-        "month": "2026年03月",
-        "hcPercent": 100.6,
-        "totalHc": 164,
-        "currentHc": 165
-      },
-      {
-        "month": "2026年04月",
-        "hcPercent": 101.2,
-        "totalHc": 164,
-        "currentHc": 166
-      }
-    ]
-  },
-  "财务一组": {
-    "deptName": "财务一组",
-    "leader": "白真(白乐天)",
-    "matchingDegree": "优秀",
-    "engagementInfo": [
-      {
-        "month": "2026-02",
-        "tag": "NORMAL",
-        "value": 10.2,
-        "valueText": "10.2"
-      },
-      {
-        "month": "2026-03",
-        "tag": "NORMAL",
-        "value": 10.3,
-        "valueText": "10.3"
-      },
-      {
-        "month": "2026-04",
-        "tag": "NORMAL",
-        "value": 11.2,
-        "valueText": "11.2"
-      }
-    ],
-    "currentHc": 56,
-    "internHc": 8,
-    "outsourceHc": 10,
-    "internRatio": 12.5,
-    "budgetHc": 51,
-    "transIn": 1,
-    "transOut": 1,
-    "subs": [
-      {
-        "name": "技术财务分析",
-        "leader": "艾妲(谭婧)",
-        "matchingDegree": "匹配",
-        "engagementInfo": [
-          {
-            "month": "2026-02",
-            "tag": "NORMAL",
-            "value": 9.8,
-            "valueText": "9.8"
-          },
-          {
-            "month": "2026-03",
-            "tag": "NORMAL",
-            "value": 10.4,
-            "valueText": "10.4"
-          },
-          {
-            "month": "2026-04",
-            "tag": "NORMAL",
-            "value": 10.0,
-            "valueText": "10.0"
-          }
-        ],
-        "current": 7,
-        "internHc": 2,
-        "outsourceHc": 0,
-        "internRatio": 22.2,
-        "total": 6,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 7,
-        "match": "超编"
-      },
-      {
-        "name": "交易财务分析",
-        "leader": "知易(邹知艺)",
-        "matchingDegree": "匹配",
-        "engagementInfo": [
-          {
-            "month": "2026-02",
-            "tag": "NORMAL",
-            "value": 10.3,
-            "valueText": "10.3"
-          },
-          {
-            "month": "2026-03",
-            "tag": "NORMAL",
-            "value": 11.1,
-            "valueText": "11.1"
-          },
-          {
-            "month": "2026-04",
-            "tag": "NORMAL",
-            "value": 12.2,
-            "valueText": "12.2"
-          }
-        ],
-        "current": 11,
-        "internHc": 2,
-        "outsourceHc": 0,
-        "internRatio": 15.4,
-        "total": 7,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 11,
-        "match": "超编"
-      },
-      {
-        "name": "商业财务分析",
-        "leader": "花且(王玮)",
-        "matchingDegree": "优秀",
-        "engagementInfo": [
-          {
-            "month": "2026-02",
-            "tag": "NORMAL",
-            "value": 10.1,
-            "valueText": "10.1"
-          },
-          {
-            "month": "2026-03",
-            "tag": "NORMAL",
-            "value": 10.0,
-            "valueText": "10.0"
-          },
-          {
-            "month": "2026-04",
-            "tag": "NORMAL",
-            "value": 10.7,
-            "valueText": "10.7"
-          }
-        ],
-        "current": 8,
-        "internHc": 2,
-        "outsourceHc": 0,
-        "internRatio": 20.0,
-        "total": 10,
-        "transIn": 0,
-        "transOut": 0,
-        "predict": 8,
-        "match": "达标"
-      },
-      {
-        "name": "财务职能",
-        "leader": "花且(王玮)",
-        "matchingDegree": "",
-        "engagementInfo": [
-          {
-            "month": "2026-02",
-            "tag": "NORMAL",
-            "value": 10.6,
-            "valueText": "10.6"
-          },
-          {
-            "month": "2026-03",
-            "tag": "NORMAL",
-            "value": 10.5,
-            "valueText": "10.5"
-          },
-          {
-            "month": "2026-04",
-            "tag": "NORMAL",
-            "value": 12.1,
-            "valueText": "12.1"
-          }
-        ],
-        "current": 20,
-        "internHc": 0,
-        "outsourceHc": 7,
-        "internRatio": 0.0,
-        "total": 20,
-        "transIn": 0,
-        "transOut": 1,
-        "predict": 19,
-        "match": "达标"
-      },
-      {
-        "name": "资金管理组",
-        "leader": "绫波(李静)",
-        "matchingDegree": "优秀",
-        "engagementInfo": [
-          {
-            "month": "2026-02",
-            "tag": "NORMAL",
-            "value": 9.5,
-            "valueText": "9.5"
-          },
-          {
-            "month": "2026-03",
-            "tag": "NORMAL",
-            "value": 9.4,
-            "valueText": "9.4"
-          },
-          {
-            "month": "2026-04",
-            "tag": "NORMAL",
-            "value": 9.4,
-            "valueText": "9.4"
-          }
-        ],
-        "current": 9,
-        "internHc": 2,
-        "outsourceHc": 3,
-        "internRatio": 18.2,
-        "total": 8,
-        "transIn": 1,
-        "transOut": 0,
-        "predict": 10,
-        "match": "超编"
-      }
-    ],
-    "pendingL1L2": [],
-    "leavingL1L2": [],
-    "yearOnboard": 11,
-    "yearDim": 4,
-    "monthOnboard": 1,
-    "monthDim": 0,
-    "hcTrend": [
-      {
-        "month": "2025年05月",
-        "hcPercent": 0.0,
-        "totalHc": 0,
-        "currentHc": 42
-      },
-      {
-        "month": "2025年06月",
-        "hcPercent": 114.3,
-        "totalHc": 42,
-        "currentHc": 48
-      },
-      {
-        "month": "2025年07月",
-        "hcPercent": 107.1,
-        "totalHc": 42,
-        "currentHc": 45
-      },
-      {
-        "month": "2025年08月",
-        "hcPercent": 104.8,
-        "totalHc": 42,
-        "currentHc": 44
-      },
-      {
-        "month": "2025年09月",
-        "hcPercent": 107.1,
-        "totalHc": 42,
-        "currentHc": 45
-      },
-      {
-        "month": "2025年10月",
-        "hcPercent": 111.9,
-        "totalHc": 42,
-        "currentHc": 47
-      },
-      {
-        "month": "2025年11月",
-        "hcPercent": 109.5,
-        "totalHc": 42,
-        "currentHc": 46
-      },
-      {
-        "month": "2025年12月",
-        "hcPercent": 114.3,
-        "totalHc": 42,
-        "currentHc": 48
-      },
-      {
-        "month": "2026年01月",
-        "hcPercent": 96.1,
-        "totalHc": 51,
-        "currentHc": 49
-      },
-      {
-        "month": "2026年02月",
-        "hcPercent": 94.1,
-        "totalHc": 51,
-        "currentHc": 48
-      },
-      {
-        "month": "2026年03月",
-        "hcPercent": 105.9,
-        "totalHc": 51,
-        "currentHc": 54
-      },
-      {
-        "month": "2026年04月",
-        "hcPercent": 107.8,
-        "totalHc": 51,
-        "currentHc": 55
-      }
-    ]
-  },
-  "资本市场": {
-    "deptName": "资本市场",
-    "leader": "劳拉(蒋晓雯)",
-    "matchingDegree": "存疑",
-    "engagementInfo": [
-      {
-        "month": "2026-02",
-        "tag": "NORMAL",
-        "value": 8.3,
-        "valueText": "8.3"
-      },
-      {
-        "month": "2026-03",
-        "tag": "NORMAL",
-        "value": 8.5,
-        "valueText": "8.5"
-      },
-      {
-        "month": "2026-04",
-        "tag": "NORMAL",
-        "value": 9.0,
-        "valueText": "9.0"
-      }
-    ],
-    "currentHc": 5,
-    "internHc": 0,
-    "outsourceHc": 0,
-    "internRatio": 0.0,
-    "budgetHc": 5,
-    "transIn": 0,
-    "transOut": 0,
-    "subs": [],
-    "pendingL1L2": [],
-    "leavingL1L2": [],
-    "yearOnboard": 0,
-    "yearDim": 0,
-    "monthOnboard": 0,
-    "monthDim": 0,
-    "hcTrend": [
-      {
-        "month": "2025年05月",
-        "hcPercent": 100.0,
-        "totalHc": 5,
-        "currentHc": 5
-      },
-      {
-        "month": "2025年06月",
-        "hcPercent": 100.0,
-        "totalHc": 5,
-        "currentHc": 5
-      },
-      {
-        "month": "2025年07月",
-        "hcPercent": 80.0,
-        "totalHc": 5,
-        "currentHc": 4
-      },
-      {
-        "month": "2025年08月",
-        "hcPercent": 80.0,
-        "totalHc": 5,
-        "currentHc": 4
-      },
-      {
-        "month": "2025年09月",
-        "hcPercent": 80.0,
-        "totalHc": 5,
-        "currentHc": 4
-      },
-      {
-        "month": "2025年10月",
-        "hcPercent": 80.0,
-        "totalHc": 5,
-        "currentHc": 4
-      },
-      {
-        "month": "2025年11月",
-        "hcPercent": 80.0,
-        "totalHc": 5,
-        "currentHc": 4
-      },
-      {
-        "month": "2025年12月",
-        "hcPercent": 100.0,
-        "totalHc": 5,
-        "currentHc": 5
-      },
-      {
-        "month": "2026年01月",
-        "hcPercent": 100.0,
-        "totalHc": 5,
-        "currentHc": 5
-      },
-      {
-        "month": "2026年02月",
-        "hcPercent": 100.0,
-        "totalHc": 5,
-        "currentHc": 5
-      },
-      {
-        "month": "2026年03月",
-        "hcPercent": 100.0,
-        "totalHc": 5,
-        "currentHc": 5
-      },
-      {
-        "month": "2026年04月",
-        "hcPercent": 100.0,
-        "totalHc": 5,
-        "currentHc": 5
-      }
-    ]
-  }
-};
+const DEPT_DETAIL_DB = {"行业一部": {"deptName": "行业一部", "leader": "昂扬(李昂)", "matchingDegree": "优秀", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 8.4, "valueText": "8.4"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.1, "valueText": "9.1"}, {"month": "2026-04", "tag": "NORMAL", "value": 9.3, "valueText": "9.3"}], "currentHc": 166, "internHc": 41, "outsourceHc": 0, "internRatio": 19.8, "budgetHc": 164, "transIn": 3, "transOut": 2, "subs": [{"name": "行业一组", "leader": "千月(陈思琪)", "matchingDegree": "优秀", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 7.0, "valueText": "7.0"}, {"month": "2026-03", "tag": "NORMAL", "value": 7.7, "valueText": "7.7"}, {"month": "2026-04", "tag": "NORMAL", "value": 7.4, "valueText": "7.4"}], "current": 9, "internHc": 3, "outsourceHc": 0, "internRatio": 25.0, "total": 8, "transIn": 0, "transOut": 0, "predict": 9, "match": "超编"}, {"name": "行业二组", "leader": "吴邪(吴建成)", "matchingDegree": "优秀", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 7.1, "valueText": "7.1"}, {"month": "2026-03", "tag": "NORMAL", "value": 7.5, "valueText": "7.5"}, {"month": "2026-04", "tag": "NORMAL", "value": 8.0, "valueText": "8.0"}], "current": 9, "internHc": 3, "outsourceHc": 0, "internRatio": 25.0, "total": 6, "transIn": 0, "transOut": 0, "predict": 9, "match": "超编"}, {"name": "行业三组", "leader": "克斯(陈宇田)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 7.5, "valueText": "7.5"}, {"month": "2026-03", "tag": "NORMAL", "value": 7.6, "valueText": "7.6"}, {"month": "2026-04", "tag": "NORMAL", "value": 8.1, "valueText": "8.1"}], "current": 9, "internHc": 1, "outsourceHc": 0, "internRatio": 10.0, "total": 8, "transIn": 0, "transOut": 0, "predict": 9, "match": "超编"}, {"name": "行业四组", "leader": "千月(陈思琪)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 8.5, "valueText": "8.5"}, {"month": "2026-03", "tag": "NORMAL", "value": 8.7, "valueText": "8.7"}, {"month": "2026-04", "tag": "NORMAL", "value": 8.8, "valueText": "8.8"}], "current": 5, "internHc": 1, "outsourceHc": 0, "internRatio": 16.7, "total": 4, "transIn": 0, "transOut": 1, "predict": 4, "match": "超编"}, {"name": "行业五组", "leader": "吴邪(吴建成)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 7.3, "valueText": "7.3"}, {"month": "2026-03", "tag": "NORMAL", "value": 7.8, "valueText": "7.8"}, {"month": "2026-04", "tag": "NORMAL", "value": 8.5, "valueText": "8.5"}], "current": 5, "internHc": 1, "outsourceHc": 0, "internRatio": 16.7, "total": 5, "transIn": 0, "transOut": 0, "predict": 5, "match": "达标"}, {"name": "行业六组", "leader": "嘉莉(惠江雯)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 7.4, "valueText": "7.4"}, {"month": "2026-03", "tag": "NORMAL", "value": 7.9, "valueText": "7.9"}, {"month": "2026-04", "tag": "NORMAL", "value": 7.2, "valueText": "7.2"}], "current": 11, "internHc": 2, "outsourceHc": 0, "internRatio": 15.4, "total": 5, "transIn": 0, "transOut": 0, "predict": 11, "match": "超编"}, {"name": "行业七组", "leader": "昭燃(千艺)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 7.8, "valueText": "7.8"}, {"month": "2026-03", "tag": "NORMAL", "value": 8.6, "valueText": "8.6"}, {"month": "2026-04", "tag": "NORMAL", "value": 8.0, "valueText": "8.0"}], "current": 12, "internHc": 3, "outsourceHc": 0, "internRatio": 20.0, "total": 9, "transIn": 1, "transOut": 0, "predict": 13, "match": "超编"}, {"name": "行业八组", "leader": "吴邪(吴建成)", "matchingDegree": "优秀", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 7.7, "valueText": "7.7"}, {"month": "2026-03", "tag": "NORMAL", "value": 8.7, "valueText": "8.7"}, {"month": "2026-04", "tag": "NORMAL", "value": 8.8, "valueText": "8.8"}], "current": 6, "internHc": 1, "outsourceHc": 0, "internRatio": 14.3, "total": 7, "transIn": 0, "transOut": 0, "predict": 6, "match": "达标"}, {"name": "行业九组", "leader": "白泉(陈可茵)", "matchingDegree": "优秀", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 6.8, "valueText": "6.8"}, {"month": "2026-03", "tag": "NORMAL", "value": 7.6, "valueText": "7.6"}, {"month": "2026-04", "tag": "NORMAL", "value": 8.1, "valueText": "8.1"}], "current": 8, "internHc": 1, "outsourceHc": 0, "internRatio": 11.1, "total": 7, "transIn": 0, "transOut": 0, "predict": 8, "match": "超编"}, {"name": "行业十组", "leader": "昂扬(李昂)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 8.2, "valueText": "8.2"}, {"month": "2026-03", "tag": "NORMAL", "value": 8.8, "valueText": "8.8"}, {"month": "2026-04", "tag": "NORMAL", "value": 8.3, "valueText": "8.3"}], "current": 9, "internHc": 2, "outsourceHc": 0, "internRatio": 18.2, "total": 8, "transIn": 1, "transOut": 0, "predict": 10, "match": "超编"}, {"name": "行业十一组", "leader": "南舟(姚苒)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 8.4, "valueText": "8.4"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.3, "valueText": "9.3"}, {"month": "2026-04", "tag": "NORMAL", "value": 7.9, "valueText": "7.9"}], "current": 5, "internHc": 1, "outsourceHc": 0, "internRatio": 16.7, "total": 6, "transIn": 0, "transOut": 0, "predict": 5, "match": "达标"}, {"name": "行业十二组", "leader": "希坦(贺琼)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 8.3, "valueText": "8.3"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.2, "valueText": "9.2"}, {"month": "2026-04", "tag": "NORMAL", "value": 9.9, "valueText": "9.9"}], "current": 4, "internHc": 3, "outsourceHc": 0, "internRatio": 42.9, "total": 4, "transIn": 0, "transOut": 0, "predict": 4, "match": "达标"}, {"name": "平台专家一组", "leader": "古娴(高逸群)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 8.4, "valueText": "8.4"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.7, "valueText": "9.7"}, {"month": "2026-04", "tag": "NORMAL", "value": 9.9, "valueText": "9.9"}], "current": 6, "internHc": 2, "outsourceHc": 0, "internRatio": 25.0, "total": 8, "transIn": 0, "transOut": 0, "predict": 6, "match": "达标"}, {"name": "平台专家二组", "leader": "菀得(杨森)", "matchingDegree": "优秀", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 9.8, "valueText": "9.8"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.8, "valueText": "9.8"}, {"month": "2026-04", "tag": "NORMAL", "value": 10.8, "valueText": "10.8"}], "current": 9, "internHc": 1, "outsourceHc": 0, "internRatio": 10.0, "total": 5, "transIn": 0, "transOut": 0, "predict": 9, "match": "超编"}, {"name": "平台专家三组", "leader": "若琳(陈若琳)", "matchingDegree": "优秀", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 9.9, "valueText": "9.9"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.7, "valueText": "10.7"}, {"month": "2026-04", "tag": "NORMAL", "value": 11.8, "valueText": "11.8"}], "current": 7, "internHc": 1, "outsourceHc": 0, "internRatio": 12.5, "total": 6, "transIn": 0, "transOut": 0, "predict": 7, "match": "超编"}, {"name": "平台专家四组", "leader": "古娴(高逸群)", "matchingDegree": "优秀", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 9.1, "valueText": "9.1"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.0, "valueText": "10.0"}, {"month": "2026-04", "tag": "NORMAL", "value": 11.2, "valueText": "11.2"}], "current": 4, "internHc": 1, "outsourceHc": 0, "internRatio": 20.0, "total": 3, "transIn": 0, "transOut": 0, "predict": 4, "match": "超编"}, {"name": "平台专家五组", "leader": "菀得(杨森)", "matchingDegree": "优秀", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 9.2, "valueText": "9.2"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.0, "valueText": "10.0"}, {"month": "2026-04", "tag": "NORMAL", "value": 10.6, "valueText": "10.6"}], "current": 5, "internHc": 0, "outsourceHc": 0, "internRatio": 0.0, "total": 5, "transIn": 0, "transOut": 0, "predict": 5, "match": "达标"}, {"name": "平台专家六组", "leader": "希莫(焦潞林)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 9.8, "valueText": "9.8"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.4, "valueText": "10.4"}, {"month": "2026-04", "tag": "NORMAL", "value": 10.5, "valueText": "10.5"}], "current": 5, "internHc": 2, "outsourceHc": 0, "internRatio": 28.6, "total": 4, "transIn": 0, "transOut": 0, "predict": 5, "match": "超编"}, {"name": "平台专家七组", "leader": "希莫(焦潞林)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 8.2, "valueText": "8.2"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.8, "valueText": "9.8"}, {"month": "2026-04", "tag": "NORMAL", "value": 10.1, "valueText": "10.1"}], "current": 9, "internHc": 4, "outsourceHc": 0, "internRatio": 30.8, "total": 8, "transIn": 0, "transOut": 0, "predict": 9, "match": "超编"}, {"name": "平台专家八组", "leader": "菀得(杨森)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 8.9, "valueText": "8.9"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.6, "valueText": "9.6"}, {"month": "2026-04", "tag": "NORMAL", "value": 10.9, "valueText": "10.9"}], "current": 5, "internHc": 1, "outsourceHc": 0, "internRatio": 16.7, "total": 6, "transIn": 0, "transOut": 0, "predict": 5, "match": "达标"}, {"name": "平台专家九组", "leader": "清也(刘月)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 10.0, "valueText": "10.0"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.2, "valueText": "10.2"}, {"month": "2026-04", "tag": "NORMAL", "value": 10.1, "valueText": "10.1"}], "current": 7, "internHc": 2, "outsourceHc": 0, "internRatio": 22.2, "total": 6, "transIn": 0, "transOut": 1, "predict": 6, "match": "超编"}, {"name": "平台专家十组", "leader": "珠珠(朱梦倩)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 9.5, "valueText": "9.5"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.5, "valueText": "10.5"}, {"month": "2026-04", "tag": "NORMAL", "value": 10.2, "valueText": "10.2"}], "current": 6, "internHc": 2, "outsourceHc": 0, "internRatio": 25.0, "total": 6, "transIn": 0, "transOut": 0, "predict": 6, "match": "达标"}, {"name": "平台专家十一组", "leader": "惊鸿(王晶晶)", "matchingDegree": "", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 10.5, "valueText": "10.5"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.8, "valueText": "10.8"}, {"month": "2026-04", "tag": "NORMAL", "value": 11.0, "valueText": "11.0"}], "current": 4, "internHc": 0, "outsourceHc": 0, "internRatio": 0.0, "total": 5, "transIn": 1, "transOut": 0, "predict": 5, "match": "达标"}, {"name": "平台专家十二组", "leader": "惊鸿(王晶晶)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 10.2, "valueText": "10.2"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.6, "valueText": "10.6"}, {"month": "2026-04", "tag": "NORMAL", "value": 11.1, "valueText": "11.1"}], "current": 5, "internHc": 2, "outsourceHc": 0, "internRatio": 28.6, "total": 3, "transIn": 0, "transOut": 0, "predict": 5, "match": "超编"}, {"name": "行业策略组", "leader": "飞云(张一鸣)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 9.0, "valueText": "9.0"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.1, "valueText": "10.1"}, {"month": "2026-04", "tag": "NORMAL", "value": 10.0, "valueText": "10.0"}], "current": 2, "internHc": 1, "outsourceHc": 0, "internRatio": 33.3, "total": 3, "transIn": 0, "transOut": 0, "predict": 2, "match": "达标"}], "pendingL1L2": [], "leavingL1L2": [], "yearOnboard": 28, "yearDim": 9, "monthOnboard": 2, "monthDim": 2, "hcTrend": [{"month": "2025年05月", "hcPercent": 97.3, "totalHc": 149, "currentHc": 145}, {"month": "2025年06月", "hcPercent": 101.3, "totalHc": 149, "currentHc": 151}, {"month": "2025年07月", "hcPercent": 95.3, "totalHc": 149, "currentHc": 142}, {"month": "2025年08月", "hcPercent": 98.7, "totalHc": 149, "currentHc": 147}, {"month": "2025年09月", "hcPercent": 106.7, "totalHc": 149, "currentHc": 159}, {"month": "2025年10月", "hcPercent": 107.4, "totalHc": 149, "currentHc": 160}, {"month": "2025年11月", "hcPercent": 107.4, "totalHc": 149, "currentHc": 160}, {"month": "2025年12月", "hcPercent": 107.4, "totalHc": 149, "currentHc": 160}, {"month": "2026年01月", "hcPercent": 97.6, "totalHc": 164, "currentHc": 160}, {"month": "2026年02月", "hcPercent": 102.4, "totalHc": 164, "currentHc": 168}, {"month": "2026年03月", "hcPercent": 100.6, "totalHc": 164, "currentHc": 165}, {"month": "2026年04月", "hcPercent": 101.2, "totalHc": 164, "currentHc": 166}]}, "财务一组": {"deptName": "财务一组", "leader": "白真(白乐天)", "matchingDegree": "优秀", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 10.2, "valueText": "10.2"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.3, "valueText": "10.3"}, {"month": "2026-04", "tag": "NORMAL", "value": 11.2, "valueText": "11.2"}], "currentHc": 56, "internHc": 8, "outsourceHc": 10, "internRatio": 12.5, "budgetHc": 51, "transIn": 1, "transOut": 1, "subs": [{"name": "技术财务分析", "leader": "艾妲(谭婧)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 9.8, "valueText": "9.8"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.4, "valueText": "10.4"}, {"month": "2026-04", "tag": "NORMAL", "value": 10.0, "valueText": "10.0"}], "current": 7, "internHc": 2, "outsourceHc": 0, "internRatio": 22.2, "total": 6, "transIn": 0, "transOut": 0, "predict": 7, "match": "超编"}, {"name": "交易财务分析", "leader": "知易(邹知艺)", "matchingDegree": "匹配", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 10.3, "valueText": "10.3"}, {"month": "2026-03", "tag": "NORMAL", "value": 11.1, "valueText": "11.1"}, {"month": "2026-04", "tag": "NORMAL", "value": 12.2, "valueText": "12.2"}], "current": 11, "internHc": 2, "outsourceHc": 0, "internRatio": 15.4, "total": 7, "transIn": 0, "transOut": 0, "predict": 11, "match": "超编"}, {"name": "商业财务分析", "leader": "花且(王玮)", "matchingDegree": "优秀", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 10.1, "valueText": "10.1"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.0, "valueText": "10.0"}, {"month": "2026-04", "tag": "NORMAL", "value": 10.7, "valueText": "10.7"}], "current": 8, "internHc": 2, "outsourceHc": 0, "internRatio": 20.0, "total": 10, "transIn": 0, "transOut": 0, "predict": 8, "match": "达标"}, {"name": "财务职能", "leader": "花且(王玮)", "matchingDegree": "", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 10.6, "valueText": "10.6"}, {"month": "2026-03", "tag": "NORMAL", "value": 10.5, "valueText": "10.5"}, {"month": "2026-04", "tag": "NORMAL", "value": 12.1, "valueText": "12.1"}], "current": 20, "internHc": 0, "outsourceHc": 7, "internRatio": 0.0, "total": 20, "transIn": 0, "transOut": 1, "predict": 19, "match": "达标"}, {"name": "资金管理组", "leader": "绫波(李静)", "matchingDegree": "优秀", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 9.5, "valueText": "9.5"}, {"month": "2026-03", "tag": "NORMAL", "value": 9.4, "valueText": "9.4"}, {"month": "2026-04", "tag": "NORMAL", "value": 9.4, "valueText": "9.4"}], "current": 9, "internHc": 2, "outsourceHc": 3, "internRatio": 18.2, "total": 8, "transIn": 1, "transOut": 0, "predict": 10, "match": "超编"}], "pendingL1L2": [], "leavingL1L2": [], "yearOnboard": 11, "yearDim": 4, "monthOnboard": 1, "monthDim": 0, "hcTrend": [{"month": "2025年05月", "hcPercent": 0.0, "totalHc": 0, "currentHc": 42}, {"month": "2025年06月", "hcPercent": 114.3, "totalHc": 42, "currentHc": 48}, {"month": "2025年07月", "hcPercent": 107.1, "totalHc": 42, "currentHc": 45}, {"month": "2025年08月", "hcPercent": 104.8, "totalHc": 42, "currentHc": 44}, {"month": "2025年09月", "hcPercent": 107.1, "totalHc": 42, "currentHc": 45}, {"month": "2025年10月", "hcPercent": 111.9, "totalHc": 42, "currentHc": 47}, {"month": "2025年11月", "hcPercent": 109.5, "totalHc": 42, "currentHc": 46}, {"month": "2025年12月", "hcPercent": 114.3, "totalHc": 42, "currentHc": 48}, {"month": "2026年01月", "hcPercent": 96.1, "totalHc": 51, "currentHc": 49}, {"month": "2026年02月", "hcPercent": 94.1, "totalHc": 51, "currentHc": 48}, {"month": "2026年03月", "hcPercent": 105.9, "totalHc": 51, "currentHc": 54}, {"month": "2026年04月", "hcPercent": 107.8, "totalHc": 51, "currentHc": 55}]}, "资本市场": {"deptName": "资本市场", "leader": "劳拉(蒋晓雯)", "matchingDegree": "存疑", "engagementInfo": [{"month": "2026-02", "tag": "NORMAL", "value": 8.3, "valueText": "8.3"}, {"month": "2026-03", "tag": "NORMAL", "value": 8.5, "valueText": "8.5"}, {"month": "2026-04", "tag": "NORMAL", "value": 9.0, "valueText": "9.0"}], "currentHc": 5, "internHc": 0, "outsourceHc": 0, "internRatio": 0.0, "budgetHc": 5, "transIn": 0, "transOut": 0, "subs": [], "pendingL1L2": [], "leavingL1L2": [], "yearOnboard": 0, "yearDim": 0, "monthOnboard": 0, "monthDim": 0, "hcTrend": [{"month": "2025年05月", "hcPercent": 100.0, "totalHc": 5, "currentHc": 5}, {"month": "2025年06月", "hcPercent": 100.0, "totalHc": 5, "currentHc": 5}, {"month": "2025年07月", "hcPercent": 80.0, "totalHc": 5, "currentHc": 4}, {"month": "2025年08月", "hcPercent": 80.0, "totalHc": 5, "currentHc": 4}, {"month": "2025年09月", "hcPercent": 80.0, "totalHc": 5, "currentHc": 4}, {"month": "2025年10月", "hcPercent": 80.0, "totalHc": 5, "currentHc": 4}, {"month": "2025年11月", "hcPercent": 80.0, "totalHc": 5, "currentHc": 4}, {"month": "2025年12月", "hcPercent": 100.0, "totalHc": 5, "currentHc": 5}, {"month": "2026年01月", "hcPercent": 100.0, "totalHc": 5, "currentHc": 5}, {"month": "2026年02月", "hcPercent": 100.0, "totalHc": 5, "currentHc": 5}, {"month": "2026年03月", "hcPercent": 100.0, "totalHc": 5, "currentHc": 5}, {"month": "2026年04月", "hcPercent": 100.0, "totalHc": 5, "currentHc": 5}]}, "平台部": {"deptName": "平台部", "leader": "木兰", "matchingDegree": "", "currentHc": 109, "internHc": 10, "budgetHc": 171, "transIn": 0, "transOut": 0, "hcTrend": [], "pendingL1L2": [], "leavingL1L2": [], "subs": [{"name": "公共事务一部", "leader": "—", "current": 39, "internHc": 4, "total": 0, "transIn": 0, "transOut": 0, "matchingDegree": "", "internRatio": 9.3, "match": "参考"}, {"name": "公共事务二部", "leader": "—", "current": 14, "internHc": 2, "total": 0, "transIn": 0, "transOut": 0, "matchingDegree": "", "internRatio": 12.5, "match": "参考"}, {"name": "公共事务三部", "leader": "—", "current": 5, "internHc": 0, "total": 0, "transIn": 0, "transOut": 0, "matchingDegree": "", "internRatio": 0, "match": "参考"}, {"name": "公共事务四部", "leader": "—", "current": 23, "internHc": 1, "total": 0, "transIn": 0, "transOut": 0, "matchingDegree": "", "internRatio": 4.2, "match": "参考"}, {"name": "公关部", "leader": "—", "current": 37, "internHc": 2, "total": 0, "transIn": 0, "transOut": 0, "matchingDegree": "", "internRatio": 5.1, "match": "参考"}, {"name": "决策支持", "leader": "—", "current": 3, "internHc": 1, "total": 0, "transIn": 0, "transOut": 0, "matchingDegree": "", "internRatio": 25.0, "match": "参考"}, {"name": "项目部", "leader": "—", "current": 1, "internHc": 0, "total": 0, "transIn": 0, "transOut": 0, "matchingDegree": "", "internRatio": 0, "match": "参考"}, {"name": "企业发展", "leader": "—", "current": 2, "internHc": 0, "total": 0, "transIn": 0, "transOut": 0, "matchingDegree": "", "internRatio": 0, "match": "参考"}]}};
 
 /* ═══════════════════════════════════════════
    DEPT DETAIL PANEL LOGIC
@@ -3901,6 +2505,9 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     target.classList.add('active');
     // Trigger bar animations on tab open
     setTimeout(() => animateBars(), 100);
+    if(btn.dataset.tab==='org'){renderOrgTab();}
+    var bm={'shyl':'商业化','jy':'交易','cw':'财务职能+DI','pt':'平台部'};
+    if(bm[btn.dataset.tab]){renderInternBanner(bm[btn.dataset.tab],'intern-banner-tab-'+btn.dataset.tab);}
     // Trigger KPI countups
     setTimeout(() => {
       target.querySelectorAll('.kpi-value[data-val]').forEach(el => {
@@ -4308,13 +2915,83 @@ function renderByL2Summary() {
 // ============================================================
 const ORG_DATA = {};  // 由 generate_v3.py 注入
 
-function renderOrgTab() {
-  // 填充部门选择下拉
-  const select = document.getElementById('orgDeptSelect');
-  const deptNames = Object.keys(DEPT_DETAIL_DB);
-  select.innerHTML = '<option value="">全部（按业务线）</option>' +
-    deptNames.map(n => `<option value="${n}">${n}</option>`).join('');
-  renderOrgTree();
+function renderOrgTab(){
+  var el=document.getElementById('tab-org');
+  if(!el||el.dataset.orgRendered==='1')return;
+  el.dataset.orgRendered='1';
+  var L1_CFG=[
+    {name:'行业一部',l1:'商业化',     color:'#FF2442',bg:'#fff5f5',icon:'🏢'},
+    {name:'财务一组',l1:'财务职能+DI',color:'#1565C0',bg:'#eff6ff',icon:'💰'},
+    {name:'资本市场',l1:'财务职能+DI',color:'#0284C7',bg:'#f0f9ff',icon:'📈'},
+    {name:'平台部',  l1:'平台部',     color:'#7C3AED',bg:'#f5f3ff',icon:'📡'},
+  ];
+  var h='<div style="padding:8px 0"><div style="font-size:13px;color:#6B7280;margin-bottom:20px">点击卡片展开子部门详情</div>'
+    +'<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px">';
+  L1_CFG.forEach(function(cfg){
+    var dept=DEPT_DETAIL_DB[cfg.name];if(!dept)return;
+    var act=dept.currentHc||0,bgt=dept.budgetHc||0,intern=dept.internHc||0;
+    var total=act+intern,ir=total>0?(intern/total*100).toFixed(1):0;
+    var pct=bgt>0?Math.round(act/bgt*100):0;
+    var subs=(dept.subs||[]).filter(function(s){return s.match!=='预估';});
+    var isRef=cfg.name==='平台部';
+    var pc=pct>=100?'#059669':pct>=90?'#111827':pct>=75?'#D97706':'#DC2626';
+    h+='<div style="background:white;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.08);overflow:hidden">';
+    h+='<div style="background:'+cfg.bg+';border-bottom:3px solid '+cfg.color+';padding:20px 24px;cursor:pointer" data-did-toggle="1">';
+    h+='<div style="display:flex;align-items:center;gap:12px">';
+    h+='<div style="width:44px;height:44px;border-radius:12px;background:'+cfg.color+';display:flex;align-items:center;justify-content:center;font-size:22px">'+cfg.icon+'</div>';
+    h+='<div><div style="font-size:16px;font-weight:800;color:#111827">'+cfg.name+'</div>';
+    h+='<div style="font-size:11px;color:#6B7280">'+cfg.l1+(isRef?' · 参考 12/31':'')+'</div></div>';
+    h+='<div style="margin-left:auto;text-align:right"><div style="font-size:22px;font-weight:800;color:'+pc+'">'+pct+'%</div>';
+    h+='<div style="font-size:11px;color:#6B7280">满编率</div></div></div>';
+    h+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px">';
+    h+='<div style="text-align:center"><div style="font-size:18px;font-weight:800;color:#1E40AF">'+act+'</div><div style="font-size:10px;color:#6B7280">在职</div></div>';
+    h+='<div style="text-align:center"><div style="font-size:18px;font-weight:800;color:#6B7280">'+bgt+'</div><div style="font-size:10px;color:#6B7280">编制</div></div>';
+    h+='<div style="text-align:center"><div style="font-size:18px;font-weight:800;color:'+(parseFloat(ir)>25?'#DC2626':'#059669')+'">'+ir+'%</div><div style="font-size:10px;color:#6B7280">实习占比</div></div>';
+    h+='<div style="text-align:center"><div style="font-size:18px;font-weight:800;color:#374151">'+subs.length+'</div><div style="font-size:10px;color:#6B7280">子部门</div></div>';
+    h+='</div><div id="arr-'+cfg.name+'" style="text-align:center;margin-top:12px;color:'+cfg.color+';font-size:12px;font-weight:600">▼ 展开子部门</div></div>';
+    h+='<div id="org-d-'+cfg.name+'" style="display:none;padding:0 24px 16px">';
+    h+='<table style="width:100%;border-collapse:collapse;margin-top:12px;font-size:12px">';
+    h+='<thead><tr style="border-bottom:2px solid #F3F4F6">';
+    ['子部门','负责人','在职','实习','实习占比','编制','状态'].forEach(function(th,i){
+      h+='<th style="text-align:'+(i<2?'left':'center')+';padding:8px 4px;color:#6B7280;font-weight:600">'+th+'</th>';
+    });
+    h+='</tr></thead><tbody>';
+    subs.forEach(function(sub,i){
+      var bg=i%2===0?'#FAFAFA':'white';
+      var ir2=sub.internRatio!=null?sub.internRatio.toFixed(1):(sub.current>0?((sub.internHc||0)/sub.current*100).toFixed(1):0);
+      var irW=parseFloat(ir2)>25;
+      var mc=sub.match==='超编'?'#059669':sub.match==='达标'?'#1565C0':sub.match==='参考'?'#7C3AED':'#D97706';
+      var mb=sub.match==='超编'?'#ECFDF5':sub.match==='达标'?'#EFF6FF':sub.match==='参考'?'#F5F3FF':'#FFFBEB';
+      h+='<tr style="background:'+bg+';border-bottom:1px solid #F3F4F6">';
+      h+='<td style="padding:8px 4px;font-weight:600;color:#111827">'+sub.name+'</td>';
+      h+='<td style="padding:8px 4px;color:#374151">'+(sub.leader||'—')+'</td>';
+      h+='<td style="padding:8px 4px;text-align:center;font-weight:700;color:#1E40AF">'+sub.current+'</td>';
+      h+='<td style="padding:8px 4px;text-align:center">'+(sub.internHc||0)+'</td>';
+      h+='<td style="padding:8px 4px;text-align:center;font-weight:700;color:'+(irW?'#DC2626':'#059669')+'">'+ir2+'%</td>';
+      h+='<td style="padding:8px 4px;text-align:center;color:#6B7280">'+(sub.total||'—')+'</td>';
+      h+='<td style="padding:8px 4px;text-align:center"><span style="background:'+mb+';color:'+mc+';padding:2px 8px;border-radius:8px;font-size:11px;font-weight:600">'+(sub.match||'—')+'</span></td>';
+      h+='</tr>';
+    });
+    h+='</tbody></table></div></div>';
+  });
+  h+='</div></div>';
+  el.innerHTML=h;
+  el.querySelectorAll('[data-did-toggle]').forEach(function(hdr){
+    hdr.addEventListener('click', function(){
+      // 找到紧跟的 org-d- div（下一个兄弟）
+      var detailDiv = hdr.parentElement.querySelector('[id^="org-d-"]');
+      if(!detailDiv) return;
+      var id = detailDiv.id;
+      toggleOrgDetail(id);
+    });
+  });
+}
+function toggleOrgDetail(id){
+  var el=document.getElementById(id);if(!el)return;
+  var show=el.style.display==='none';
+  el.style.display=show?'block':'none';
+  var arr=document.getElementById('arr-'+id.replace('org-d-',''));
+  if(arr)arr.textContent=show?'▲ 收起':'▼ 展开子部门';
 }
 
 function renderOrgTree() {
@@ -4465,6 +3142,69 @@ function renderInternTab() {
     </tbody></table></div>`;
 
   wrap.innerHTML = tableHtml;
+}
+
+
+function hcColor(p){return p>=100?'#059669':p>=90?'#111827':p>=75?'#D97706':'#DC2626';}
+function hcBg(p){return p>=100?'#ECFDF5':p>=90?'#F3F4F6':p>=75?'#FFFBEB':'#FEF2F2';}
+
+function renderFocusCard(){
+  var el=document.getElementById('focusCard');if(!el)return;
+  var L1=[{name:'商业化',tab:'shyl',c:'#FF2442'},{name:'交易',tab:'jy',c:'#00897B'},{name:'财务职能+DI',tab:'cw',c:'#1565C0'},{name:'平台部',tab:'pt',c:'#7C3AED'}];
+  var DOT={red:'#DC2626',orange:'#F59E0B',green:'#10B981',black:'#374151',gray:'#9CA3AF'};
+  var cols=L1.map(function(cfg){
+    var rows=BUDGET_DATA.filter(function(d){return d.l1===cfg.name;});
+    var act=rows.reduce(function(a,d){return a+(d.actual||0);},0);
+    var bgt=rows.reduce(function(a,d){return a+(d.budget||0);},0);
+    var inF=rows.reduce(function(a,d){return a+(d.transIn||0);},0);
+    var outF=rows.reduce(function(a,d){return a+(d.transOut||0);},0);
+    var isReal=rows.some(function(d){return d.real!==false;});
+    var pct=bgt>0?Math.round(act/bgt*100):0;
+    var al=[];
+    if(pct<75)al.push({l:'red',t:'满编率仅'+pct+'%，严重缺编'});
+    else if(pct<90)al.push({l:'orange',t:'满编率'+pct+'%，缺口'+(bgt-act)+'人'});
+    if(outF>0)al.push({l:'red',t:'有'+outF+'人流出在途，关注保留风险'});
+    if(inF>0)al.push({l:'green',t:'有'+inF+'人流入在途，补充中'});
+    if(!isReal)al.push({l:'gray',t:'数据来源：PPT 2025/12/31（参考值）'});
+    if(!al.length&&pct>=100)al.push({l:'green',t:'满编率'+pct+'%，HC健康'});
+    if(!al.length&&pct>=90)al.push({l:'black',t:'满编率'+pct+'%，正常水位'});
+    var dots=al.map(function(a){return '<div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:6px"><span style="width:6px;height:6px;border-radius:50%;background:'+DOT[a.l]+';margin-top:4px;flex-shrink:0"></span><span style="color:#E5E7EB;font-size:11px;line-height:1.5">'+a.t+'</span></div>';}).join('');
+    return '<div style="background:#1F2937;border-radius:12px;padding:16px;border-top:3px solid '+cfg.c+'"><div style="color:'+cfg.c+';font-weight:800;font-size:13px;margin-bottom:4px">'+cfg.name+'</div><div style="color:#9CA3AF;font-size:11px;margin-bottom:12px">满编率 <span style="color:'+hcColor(pct)+';font-weight:700">'+pct+'%</span> ('+act+'/'+bgt+')</div>'+dots+'</div>';
+  }).join('');
+  el.innerHTML='<div style="background:#111827;border-radius:16px;padding:24px 28px;margin-bottom:24px"><div style="color:#F9FAFB;font-size:16px;font-weight:800;margin-bottom:20px;display:flex;align-items:center;gap:8px"><span style="background:#374151;padding:4px 10px;border-radius:8px;font-size:12px;color:#9CA3AF">AUTO</span>重点关注事项</div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px">'+cols+'</div></div>';
+}
+
+function renderInternBanner(l1Name,cid){
+  var el=document.getElementById(cid);if(!el)return;
+  var rows=BUDGET_DATA.filter(function(d){return d.l1===l1Name;});
+  var act=rows.reduce(function(a,d){return a+(d.actual||0);},0);
+  var intern=rows.reduce(function(a,d){return a+(d.internHc||0);},0);
+  var total=act+intern,ratio=total>0?(intern/total*100).toFixed(1):0;
+  var warn=parseFloat(ratio)>25,color=warn?'#DC2626':'#059669',bg=warn?'#FEF2F2':'#ECFDF5';
+  el.innerHTML='<div style="background:'+bg+';border:1.5px solid '+color+'33;border-radius:12px;padding:12px 20px;margin-bottom:20px;display:flex;align-items:center;gap:16px"><div style="font-size:22px">🎓</div><div><div style="font-size:13px;font-weight:800;color:'+color+'">实习生占比 '+ratio+'%'+(warn?' ⚠️ 超过25%预警':' ✅ 正常')+'</div><div style="font-size:11px;color:#6B7280;margin-top:2px">在职（含实习）'+total+' 人 | 实习 '+intern+' 人 | 正式 '+(total-intern)+' 人</div></div><div style="margin-left:auto;background:'+color+';color:white;padding:6px 16px;border-radius:20px;font-size:16px;font-weight:800">'+ratio+'%</div></div>';
+}
+
+function renderL1KpiGrid(){
+  var el=document.getElementById('l1KpiGrid');if(!el)return;
+  var CFG=[{name:'商业化',color:'#FF2442',bg:'#fff5f5',tab:'shyl',bgt:2499,ico:'🏢'},{name:'交易',color:'#00897B',bg:'#f0fdf9',tab:'jy',bgt:426,ico:'🛒'},{name:'财务职能+DI',color:'#1565C0',bg:'#eff6ff',tab:'cw',bgt:272,ico:'💰'},{name:'平台部',color:'#7C3AED',bg:'#f5f3ff',tab:'pt',bgt:171,ico:'📡'}];
+  el.innerHTML=CFG.map(function(c){
+    var rows=BUDGET_DATA.filter(function(d){return d.l1===c.name;});
+    var act=rows.reduce(function(a,d){return a+(d.actual||0);},0);
+    var intern=rows.reduce(function(a,d){return a+(d.internHc||0);},0);
+    var inF=rows.reduce(function(a,d){return a+(d.transIn||0);},0);
+    var outF=rows.reduce(function(a,d){return a+(d.transOut||0);},0);
+    var isReal=rows.some(function(d){return d.real!==false;});
+    var p=c.bgt>0?Math.round(act/c.bgt*100):0;
+    var pc=hcColor(p),pb=hcBg(p),gap=c.bgt>act?c.bgt-act:0;
+    var th=act+intern,ir=th>0?(intern/th*100).toFixed(1):0;
+    var flow=isReal&&(inF||outF)?'<div style="display:flex;gap:6px;margin-top:8px">'+(inF?'<span style="background:#ECFDF5;color:#166534;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700">+'+inF+' 流入</span>':'')+(outF?'<span style="background:#FEE2E2;color:#991b1b;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700">-'+outF+' 流出</span>':'')+'</div>':'';
+    return '<div data-kpi-tab="'+c.tab+'" style="background:'+c.bg+';border-radius:16px;padding:18px;border:1.5px solid '+c.color+'33;cursor:pointer;transition:box-shadow .2s"><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><div style="width:38px;height:38px;border-radius:10px;background:'+c.color+';display:flex;align-items:center;justify-content:center;font-size:18px">'+c.ico+'</div><div><div style="font-size:14px;font-weight:800;color:#111827">'+c.name+'</div><div style="font-size:10px;color:#6b7280">编制'+c.bgt+' · '+(isReal?'实时':'参考12/31')+'</div></div><div style="margin-left:auto;background:'+pb+';border-radius:16px;padding:3px 10px;font-size:13px;font-weight:800;color:'+pc+'">'+p+'%</div></div><div style="height:5px;background:#e5e7eb;border-radius:3px;margin-bottom:10px;overflow:hidden"><div style="height:5px;width:'+Math.min(p,100)+'%;background:'+pc+';border-radius:3px"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div style="background:rgba(255,255,255,.7);border-radius:8px;padding:7px;text-align:center"><div style="font-size:18px;font-weight:800;color:#1e40af">'+(isReal?act:'—')+'</div><div style="font-size:10px;color:#6b7280">在职人数</div></div><div style="background:rgba(255,255,255,.7);border-radius:8px;padding:7px;text-align:center"><div style="font-size:18px;font-weight:800;color:'+pc+'">'+p+'%</div><div style="font-size:10px;color:#6b7280">满编率</div></div><div style="background:rgba(255,255,255,.7);border-radius:8px;padding:7px;text-align:center"><div style="font-size:15px;font-weight:700;color:#DC2626">'+(gap>0?'-'+gap:gap===0?'✅':'超编')+'</div><div style="font-size:10px;color:#6b7280">HC缺口</div></div><div style="background:rgba(255,255,255,.7);border-radius:8px;padding:7px;text-align:center"><div style="font-size:15px;font-weight:700;color:'+(parseFloat(ir)>25?'#DC2626':'#059669')+'">'+(isReal?ir+'%':'—')+'</div><div style="font-size:10px;color:#6b7280">实习占比</div></div></div>'+flow+'</div>';
+  }).join('');
+  el.querySelectorAll('[data-kpi-tab]').forEach(function(card){
+    card.addEventListener('mouseover',function(){this.style.boxShadow='0 8px 24px rgba(0,0,0,.12)';});
+    card.addEventListener('mouseout',function(){this.style.boxShadow='';});
+    card.addEventListener('click',function(){var btn=document.querySelector('[data-tab="'+this.getAttribute('data-kpi-tab')+'"]');if(btn)btn.click();});
+  });
 }
 
 </script>
