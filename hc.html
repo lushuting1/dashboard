@@ -2906,14 +2906,6 @@ function renderByL2Summary() {
 // ============================================================
 const ORG_DATA = {};  // 由 generate_v3.py 注入
 
-function renderOrgTab() {
-  // 填充部门选择下拉
-  const select = document.getElementById('orgDeptSelect');
-  const deptNames = Object.keys(DEPT_DETAIL_DB);
-  select.innerHTML = '<option value="">全部（按业务线）</option>' +
-    deptNames.map(n => `<option value="${n}">${n}</option>`).join('');
-  renderOrgTree();
-}
 
 function renderOrgTree() {
   const selected = document.getElementById('orgDeptSelect').value;
