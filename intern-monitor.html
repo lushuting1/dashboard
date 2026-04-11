@@ -3,155 +3,192 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>实习生用工比例监测 - 行业一部</title>
+<title>行业一部实习生用工比例监测</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f6fa; color: #2c3e50; }
-  .header { background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%); color: white; padding: 24px 32px; }
-  .header h1 { font-size: 24px; font-weight: 700; }
-  .header p { margin-top: 4px; opacity: 0.85; font-size: 14px; }
-  .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
-  .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
-  .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-  .card .label { font-size: 12px; color: #888; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .card .value { font-size: 32px; font-weight: 700; }
-  .card .value.ok { color: #27ae60; }
-  .card .value.warn { color: #e74c3c; }
-  .card .sub { font-size: 12px; color: #999; margin-top: 4px; }
-  .chart-section { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 24px; }
-  .chart-section h2 { font-size: 16px; font-weight: 600; margin-bottom: 16px; color: #2c3e50; }
-  .chart-wrapper { position: relative; height: 280px; }
-  .bar-section { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-  .bar-section h2 { font-size: 16px; font-weight: 600; margin-bottom: 16px; }
-  .bar-wrapper { position: relative; height: 520px; }
-  .footer { text-align: center; padding: 20px; color: #aaa; font-size: 12px; }
-  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
-  .badge.ok { background: #e8f5e9; color: #2e7d32; }
-  .badge.warn { background: #ffebee; color: #c62828; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif; background: #f5f6fa; margin: 0; padding: 20px; color: #333; }
+  .container { max-width: 1100px; margin: 0 auto; }
+  h1 { color: #222; font-size: 22px; margin-bottom: 6px; }
+  .subtitle { color: #666; font-size: 13px; margin-bottom: 20px; }
+  .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+  .card { background: white; border-radius: 10px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+  .card-label { font-size: 12px; color: #888; margin-bottom: 6px; }
+  .card-value { font-size: 28px; font-weight: 700; }
+  .card-value.green { color: #27ae60; }
+  .card-value.red { color: #e74c3c; }
+  .card-value.blue { color: #2980b9; }
+  .card-value.orange { color: #e67e22; }
+  .chart-box { background: white; border-radius: 10px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); margin-bottom: 20px; }
+  .chart-box h2 { font-size: 15px; color: #444; margin: 0 0 14px; }
+  .section-title { font-size: 15px; font-weight: 600; margin: 20px 0 12px; color: #444; }
+  .group-charts { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .group-chart-box { background: white; border-radius: 10px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+  .update-time { font-size: 11px; color: #bbb; text-align: right; margin-top: 16px; }
+  .over-summary { background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; font-size: 13px; }
+  .over-summary h3 { margin: 0 0 8px; font-size: 14px; color: #856404; }
 </style>
 </head>
 <body>
-<div class="header">
-  <h1>🔍 实习生用工比例监测 — 行业一部</h1>
-  <p>更新时间：2026-04-08 11:09 | 数据来源：花名册（人员类别=全部）</p>
-</div>
 <div class="container">
+  <h1>🏢 行业一部实习生用工比例监测</h1>
+  <div class="subtitle">基准值：24.7% | 计算口径：实习生 / 正式员工 | 数据来源：花名册（在职，行业一部）</div>
+  
+  <!-- 总览卡片 -->
   <div class="cards">
     <div class="card">
-      <div class="label">整体占比</div>
-      <div class="value ok">24.2%</div>
-      <div class="sub">基准 24.7% ✅ 正常</div>
+      <div class="card-label">整体比例</div>
+      <div class="card-value green">23.5%</div>
     </div>
     <div class="card">
-      <div class="label">实习生人数</div>
-      <div class="value" style="color:#e91e63">40</div>
-      <div class="sub">人员类别=实习生</div>
+      <div class="card-label">实习生人数</div>
+      <div class="card-value orange">39</div>
     </div>
     <div class="card">
-      <div class="label">正式员工人数</div>
-      <div class="value" style="color:#1976d2">165</div>
-      <div class="sub">人员类别=正式员工</div>
+      <div class="card-label">正式员工人数</div>
+      <div class="card-value blue">166</div>
     </div>
     <div class="card">
-      <div class="label">超标小组数</div>
-      <div class="value warn">12</div>
-      <div class="sub">共25个小组</div>
+      <div class="card-label">超标小组数</div>
+      <div class="card-value red">10</div>
     </div>
   </div>
+<div class="over-summary"><h3>⚠️ 超标小组</h3><span style='margin-right:14px'><b>行业十二组</b>: 75.0%（实3/正4）</span><span style='margin-right:14px'><b>行业策略组</b>: 50.0%（实1/正2）</span><span style='margin-right:14px'><b>平台专家七组</b>: 44.4%（实4/正9）</span><span style='margin-right:14px'><b>平台专家六组</b>: 40.0%（实2/正5）</span><span style='margin-right:14px'><b>平台专家十二组</b>: 40.0%（实2/正5）</span><span style='margin-right:14px'><b>行业二组</b>: 33.3%（实3/正9）</span><span style='margin-right:14px'><b>平台专家十组</b>: 33.3%（实2/正6）</span><span style='margin-right:14px'><b>平台专家一组</b>: 33.3%（实2/正6）</span><span style='margin-right:14px'><b>行业七组</b>: 25.0%（实3/正12）</span><span style='margin-right:14px'><b>平台专家四组</b>: 25.0%（实1/正4）</span></div>
 
-  <div class="chart-section">
-    <h2>📈 整体比例历史趋势（基准线 24.7%）</h2>
-    <div class="chart-wrapper">
-      <canvas id="trendChart"></canvas>
-    </div>
+  <div class="chart-box">
+    <h2>📈 整体比例历史趋势（近7天）</h2>
+    <canvas id="trendChart" height="80"></canvas>
   </div>
+<div class="section-title">各小组比例分布</div>
+<div class="group-charts">
 
-  <div class="bar-section">
-    <h2>📊 各小组今日占比（2026-04-08）</h2>
-    <div class="bar-wrapper">
-      <canvas id="barChart"></canvas>
-    </div>
+  <div class="group-chart-box">
+    <h2 style="font-size:14px;margin:0 0 10px">行业各组</h2>
+    <canvas id="barChart1" height="180"></canvas>
   </div>
+  <script>
+  new Chart(document.getElementById('barChart1'), {
+    type: 'bar',
+    data: {
+      labels: ["行业一组", "行业二组", "行业三组", "行业四组", "行业五组", "行业六组", "行业七组", "行业八组", "行业九组", "行业十组", "行业十一组", "行业十二组"],
+      datasets: [{
+        label: '实习生比例(%)',
+        data: [22.2, 33.3, 11.1, 20.0, 20.0, 18.2, 25.0, 16.7, 12.5, 22.2, 20.0, 75.0],
+        backgroundColor: ["#27ae60", "#e74c3c", "#27ae60", "#27ae60", "#27ae60", "#27ae60", "#e74c3c", "#27ae60", "#27ae60", "#27ae60", "#27ae60", "#e74c3c"],
+        borderRadius: 4
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        annotation: { annotations: { line1: { type: 'line', x: 24.7, borderColor: '#e74c3c', borderWidth: 2, borderDash: [6,3], label: { content: '基准24.7%', display: true, position: 'start' } } } }
+      },
+      scales: {
+        x: { beginAtZero: true, max: Math.max(100, Math.max(...[22.2, 33.3, 11.1, 20.0, 20.0, 18.2, 25.0, 16.7, 12.5, 22.2, 20.0, 75.0]) + 10), title: { display: true, text: '实习生比例 (%)' } },
+        y: { ticks: { font: { size: 11 } } }
+      }
+    }
+  });
+  </script>
+
+  <div class="group-chart-box">
+    <h2 style="font-size:14px;margin:0 0 10px">平台专家各组</h2>
+    <canvas id="barChart2" height="180"></canvas>
+  </div>
+  <script>
+  new Chart(document.getElementById('barChart2'), {
+    type: 'bar',
+    data: {
+      labels: ["平台专家一组", "平台专家二组", "平台专家三组", "平台专家四组", "平台专家五组", "平台专家六组", "平台专家七组", "平台专家八组", "平台专家九组", "平台专家十组", "平台专家十一组", "平台专家十二组"],
+      datasets: [{
+        label: '实习生比例(%)',
+        data: [33.3, 11.1, 14.3, 25.0, 0.0, 40.0, 44.4, 20.0, 14.3, 33.3, 0.0, 40.0],
+        backgroundColor: ["#e74c3c", "#27ae60", "#27ae60", "#e74c3c", "#27ae60", "#e74c3c", "#e74c3c", "#27ae60", "#27ae60", "#e74c3c", "#27ae60", "#e74c3c"],
+        borderRadius: 4
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        annotation: { annotations: { line1: { type: 'line', x: 24.7, borderColor: '#e74c3c', borderWidth: 2, borderDash: [6,3], label: { content: '基准24.7%', display: true, position: 'start' } } } }
+      },
+      scales: {
+        x: { beginAtZero: true, max: Math.max(100, Math.max(...[33.3, 11.1, 14.3, 25.0, 0.0, 40.0, 44.4, 20.0, 14.3, 33.3, 0.0, 40.0]) + 10), title: { display: true, text: '实习生比例 (%)' } },
+        y: { ticks: { font: { size: 11 } } }
+      }
+    }
+  });
+  </script>
 </div>
-<div class="footer">行业一部实习生用工比例监测 | 实习生/正式员工比例 | 计算不含离职人员</div>
+<div class="group-charts" style="margin-top:14px">
+
+  <div class="group-chart-box">
+    <h2 style="font-size:14px;margin:0 0 10px">其他小组</h2>
+    <canvas id="barChart3" height="180"></canvas>
+  </div>
+  <script>
+  new Chart(document.getElementById('barChart3'), {
+    type: 'bar',
+    data: {
+      labels: ["行业策略组"],
+      datasets: [{
+        label: '实习生比例(%)',
+        data: [50.0],
+        backgroundColor: ["#e74c3c"],
+        borderRadius: 4
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        annotation: { annotations: { line1: { type: 'line', x: 24.7, borderColor: '#e74c3c', borderWidth: 2, borderDash: [6,3], label: { content: '基准24.7%', display: true, position: 'start' } } } }
+      },
+      scales: {
+        x: { beginAtZero: true, max: Math.max(100, Math.max(...[50.0]) + 10), title: { display: true, text: '实习生比例 (%)' } },
+        y: { ticks: { font: { size: 11 } } }
+      }
+    }
+  });
+  </script>
+</div>
+
+<div class="update-time">更新时间：2026-04-11 | 数据：205人</div>
+</div>
 
 <script>
-const trendData = {
-  labels: ["04-01", "04-02", "04-04", "04-06", "04-07", "04-08"],
-  datasets: [{
-    label: "整体占比 %",
-    data: [24.1, 23.4, 24.1, 24.1, 24.1, 24.2],
-    borderColor: "#e91e63",
-    backgroundColor: "rgba(233,30,99,0.08)",
-    pointRadius: 5,
-    pointBackgroundColor: "#e91e63",
-    tension: 0.3,
-    fill: true
-  }, {
-    label: "基准线 24.7%",
-    data: Array(6).fill(24.7),
-    borderColor: "#ff9800",
-    borderDash: [6,3],
-    borderWidth: 2,
-    pointRadius: 0,
-    fill: false
-  }]
-};
-
-new Chart(document.getElementById("trendChart"), {
-  type: "line",
-  data: trendData,
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend: { position: "top" } },
-    scales: {
-      y: { min: 0, max: 100, ticks: { callback: v => v + "%" } }
-    }
-  }
-});
-
-const groupNames = ["\u884c\u4e1a\u4e00\u7ec4", "\u884c\u4e1a\u4e8c\u7ec4", "\u884c\u4e1a\u4e09\u7ec4", "\u884c\u4e1a\u56db\u7ec4", "\u884c\u4e1a\u4e94\u7ec4", "\u884c\u4e1a\u516d\u7ec4", "\u884c\u4e1a\u4e03\u7ec4", "\u884c\u4e1a\u516b\u7ec4", "\u884c\u4e1a\u4e5d\u7ec4", "\u884c\u4e1a\u5341\u7ec4", "\u884c\u4e1a\u5341\u4e00\u7ec4", "\u884c\u4e1a\u5341\u4e8c\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u4e00\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u4e8c\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u4e09\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u56db\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u4e94\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u516d\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u4e03\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u516b\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u4e5d\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u5341\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u5341\u4e00\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u5341\u4e8c\u7ec4", "\u884c\u4e1a\u7b56\u7565\u7ec4"];
-const groupRatios = [33.3, 33.3, 11.1, 20.0, 25.0, 18.2, 25.0, 16.7, 12.5, 22.2, 20.0, 75.0, 33.3, 11.1, 14.3, 25.0, 0.0, 40.0, 44.4, 20.0, 14.3, 33.3, 0.0, 40.0, 50.0];
-const baseline = 24.7;
-
-const barColors = groupRatios.map(r => r > baseline ? "rgba(231,76,60,0.8)" : "rgba(46,204,113,0.8)");
-
-new Chart(document.getElementById("barChart"), {
-  type: "bar",
+new Chart(document.getElementById('trendChart'), {
+  type: 'line',
   data: {
-    labels: groupNames,
+    labels: ["2026-04-01", "2026-04-02", "2026-04-04", "2026-04-06", "2026-04-07", "2026-04-08", "2026-04-11"],
     datasets: [{
-      label: "实习生占比 %",
-      data: groupRatios,
-      backgroundColor: barColors,
-      borderRadius: 4,
+      label: '整体实习生比例(%)',
+      data: [24.1, 23.4, 24.1, 24.1, 24.1, 24.2, 23.5],
+      borderColor: '#3498db',
+      backgroundColor: 'rgba(52,152,219,0.1)',
+      fill: true,
+      tension: 0.3,
+      pointRadius: 4
+    }, {
+      label: '基准值(24.7%)',
+      data: ["2026-04-01", "2026-04-02", "2026-04-04", "2026-04-06", "2026-04-07", "2026-04-08", "2026-04-11"].map(() => 24.7),
+      borderColor: '#e74c3c',
+      borderDash: [6, 3],
+      borderWidth: 2,
+      pointRadius: 0,
+      fill: false
     }]
   },
   options: {
-    indexAxis: "y",
     responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { display: false },
-      annotation: {},
-      tooltip: {
-        callbacks: {
-          label: ctx => {
-            const g = [{"name": "\u884c\u4e1a\u4e00\u7ec4", "intern": 3, "regular": 9}, {"name": "\u884c\u4e1a\u4e8c\u7ec4", "intern": 3, "regular": 9}, {"name": "\u884c\u4e1a\u4e09\u7ec4", "intern": 1, "regular": 9}, {"name": "\u884c\u4e1a\u56db\u7ec4", "intern": 1, "regular": 5}, {"name": "\u884c\u4e1a\u4e94\u7ec4", "intern": 1, "regular": 4}, {"name": "\u884c\u4e1a\u516d\u7ec4", "intern": 2, "regular": 11}, {"name": "\u884c\u4e1a\u4e03\u7ec4", "intern": 3, "regular": 12}, {"name": "\u884c\u4e1a\u516b\u7ec4", "intern": 1, "regular": 6}, {"name": "\u884c\u4e1a\u4e5d\u7ec4", "intern": 1, "regular": 8}, {"name": "\u884c\u4e1a\u5341\u7ec4", "intern": 2, "regular": 9}, {"name": "\u884c\u4e1a\u5341\u4e00\u7ec4", "intern": 1, "regular": 5}, {"name": "\u884c\u4e1a\u5341\u4e8c\u7ec4", "intern": 3, "regular": 4}, {"name": "\u5e73\u53f0\u4e13\u5bb6\u4e00\u7ec4", "intern": 2, "regular": 6}, {"name": "\u5e73\u53f0\u4e13\u5bb6\u4e8c\u7ec4", "intern": 1, "regular": 9}, {"name": "\u5e73\u53f0\u4e13\u5bb6\u4e09\u7ec4", "intern": 1, "regular": 7}, {"name": "\u5e73\u53f0\u4e13\u5bb6\u56db\u7ec4", "intern": 1, "regular": 4}, {"name": "\u5e73\u53f0\u4e13\u5bb6\u4e94\u7ec4", "intern": 0, "regular": 5}, {"name": "\u5e73\u53f0\u4e13\u5bb6\u516d\u7ec4", "intern": 2, "regular": 5}, {"name": "\u5e73\u53f0\u4e13\u5bb6\u4e03\u7ec4", "intern": 4, "regular": 9}, {"name": "\u5e73\u53f0\u4e13\u5bb6\u516b\u7ec4", "intern": 1, "regular": 5}, {"name": "\u5e73\u53f0\u4e13\u5bb6\u4e5d\u7ec4", "intern": 1, "regular": 7}, {"name": "\u5e73\u53f0\u4e13\u5bb6\u5341\u7ec4", "intern": 2, "regular": 6}, {"name": "\u5e73\u53f0\u4e13\u5bb6\u5341\u4e00\u7ec4", "intern": 0, "regular": 4}, {"name": "\u5e73\u53f0\u4e13\u5bb6\u5341\u4e8c\u7ec4", "intern": 2, "regular": 5}, {"name": "\u884c\u4e1a\u7b56\u7565\u7ec4", "intern": 1, "regular": 2}];
-            const d = g[ctx.dataIndex];
-            return `${ctx.parsed.x}%（实习${d.intern} / 正式${d.regular}）`;
-          }
-        }
-      }
-    },
+    plugins: { legend: { position: 'top' } },
     scales: {
-      x: {
-        min: 0,
-        max: 100,
-        ticks: { callback: v => v + "%" }
-      }
+      y: { beginAtZero: false, min: 15, max: 35, title: { display: true, text: '实习生比例 (%)' } },
+      x: { ticks: { font: { size: 11 } } }
     }
   }
 });
