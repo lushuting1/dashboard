@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小红书组织架构 2026 · April</title>
+<style>
+  :root {
+    --red: #FF2442;
+    --red-light: #FFF0F2;
+    --red-mid: #FFD6DC;
+    --orange: #FF6B35;
+    --blue: #4A90D9;
+    --blue-light: #EBF4FF;
+    --gray: #8C8C8C;
+    --gray-light: #F5F5F5;
+    --green: #27AE60;
+    --text: #1A1A1A;
+    --text-sub: #666;
+    --border: #E8E8E8;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #FAF8F8; color: var(--text); }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: linear-gradient(135deg, #FF2442 0%, #FF6B6B 100%);
+    color: white;
+    padding: 28px 40px 20px;
+  }
+  .header h1 { font-size: 26px; font-weight: 700; letter-spacing: 1px; }
+  .header p { font-size: 13px; opacity: 0.8; margin-top: 6px; }
+  .header-meta { display: flex; gap: 24px; margin-top: 14px; flex-wrap: wrap; }
+  .header-meta span { font-size: 12px; background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; }
+
+  /* ===== SEARCH ===== */
+  .search-bar {
+    background: white;
+    padding: 16px 40px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .search-bar input {
+    flex: 1; max-width: 360px;
+    border: 1.5px solid var(--border); border-radius: 24px;
+    padding: 8px 18px; font-size: 14px; outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-bar input:focus { border-color: var(--red); }
+  .search-bar input::placeholder { color: #BBB; }
+  #search-count { font-size: 13px; color: var(--red); font-weight: 600; }
+  .btn-clear {
+    font-size: 13px; color: var(--gray); cursor: pointer;
+    padding: 6px 12px; border-radius: 16px; border: 1px solid var(--border);
+    background: white; transition: all 0.15s;
+  }
+  .btn-clear:hover { border-color: var(--red); color: var(--red); }
+
+  /* ===== TABS ===== */
+  .tabs {
+    display: flex; gap: 0; background: white;
+    border-bottom: 2px solid var(--border);
+    padding: 0 32px; overflow-x: auto;
+  }
+  .tab {
+    padding: 14px 20px; font-size: 14px; font-weight: 500;
+    cursor: pointer; border-bottom: 3px solid transparent;
+    margin-bottom: -2px; white-space: nowrap; color: var(--text-sub);
+    transition: all 0.2s;
+  }
+  .tab:hover { color: var(--red); }
+  .tab.active { color: var(--red); border-bottom-color: var(--red); font-weight: 700; }
+  .tab-count {
+    display: inline-block; font-size: 11px;
+    background: var(--gray-light); color: var(--gray);
+    padding: 1px 7px; border-radius: 10px; margin-left: 6px;
+  }
+  .tab.active .tab-count { background: var(--red-light); color: var(--red); }
+
+  /* ===== CONTENT ===== */
+  .content { padding: 28px 32px; max-width: 1600px; margin: 0 auto; }
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+
+  /* ===== HC SUMMARY CARD ===== */
+  .hc-summary {
+    display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px;
+  }
+  .hc-card {
+    background: white; border-radius: var(--radius);
+    padding: 16px 24px; box-shadow: var(--shadow);
+    border-left: 4px solid var(--red);
+    min-width: 140px;
+  }
+  .hc-card.blue { border-left-color: var(--blue); }
+  .hc-card.green { border-left-color: var(--green); }
+  .hc-card.gray { border-left-color: var(--gray); }
+  .hc-card .num { font-size: 28px; font-weight: 700; color: var(--text); }
+  .hc-card .label { font-size: 12px; color: var(--text-sub); margin-top: 2px; }
+
+  /* ===== DEPT SECTION ===== */
+  .dept-section {
+    background: white; border-radius: var(--radius);
+    box-shadow: var(--shadow); margin-bottom: 20px; overflow: hidden;
+  }
+  .dept-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px; cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  .dept-header:hover { background: var(--red-light); }
+  .dept-header.highlight { background: var(--red-light); border-left: 4px solid var(--red); }
+  .dept-title { display: flex; align-items: center; gap: 10px; }
+  .dept-title h3 { font-size: 15px; font-weight: 700; }
+  .dept-title .lead { font-size: 13px; color: var(--red); font-weight: 600; }
+  .dept-toggle { font-size: 18px; color: var(--gray); transition: transform 0.2s; }
+  .dept-section.open .dept-toggle { transform: rotate(90deg); }
+  .dept-body { display: none; padding: 20px; }
+  .dept-section.open .dept-body { display: block; }
+
+  /* ===== ORG TREE ===== */
+  .org-tree { }
+  .org-level { display: flex; flex-wrap: wrap; gap: 12px; }
+  .org-node {
+    border: 1.5px solid var(--border); border-radius: 8px;
+    padding: 10px 14px; min-width: 150px; max-width: 220px;
+    background: white; position: relative;
+    transition: all 0.2s;
+  }
+  .org-node:hover { box-shadow: 0 4px 16px rgba(255,36,66,0.12); border-color: var(--red); }
+  .org-node.l1 { border-color: var(--red); background: var(--red-light); }
+  .org-node.l2 { border-color: var(--orange); background: #FFF5F0; }
+  .org-node.ic { border-color: #CBD5E1; background: white; }
+  .org-node.vacant { border-style: dashed; border-color: #CCC; background: var(--gray-light); }
+  .org-node.joining { border-style: dashed; border-color: var(--blue); background: var(--blue-light); }
+  .org-node .node-name { font-size: 14px; font-weight: 600; }
+  .org-node .node-role { font-size: 11px; color: var(--text-sub); margin-top: 3px; }
+  .org-node .node-hc { font-size: 11px; margin-top: 4px; }
+  .node-badge {
+    display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 4px;
+    font-weight: 600; margin-right: 4px;
+  }
+  .badge-l1 { background: var(--red); color: white; }
+  .badge-l2 { background: var(--orange); color: white; }
+  .badge-acting { background: #F39C12; color: white; }
+  .badge-vacant { background: #CCC; color: #666; }
+  .badge-joining { background: var(--blue); color: white; }
+  .badge-mt { background: #8E44AD; color: white; }
+
+  /* ===== PEOPLE GRID ===== */
+  .people-grid {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;
+  }
+  .person-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 5px 12px; border-radius: 20px;
+    font-size: 12px; background: var(--gray-light); color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .person-chip.l1 { background: var(--red-light); border-color: var(--red-mid); color: #C0001E; }
+  .person-chip.vacant { background: #F0F0F0; border-style: dashed; color: var(--gray); }
+  .person-chip.joining { background: var(--blue-light); border-color: #BDD7F5; color: #2563EB; }
+
+  /* ===== GROUP TABLE ===== */
+  .group-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 13px; }
+  .group-table th {
+    background: var(--gray-light); padding: 10px 14px; text-align: left;
+    font-size: 12px; color: var(--text-sub); font-weight: 600; border-bottom: 2px solid var(--border);
+  }
+  .group-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .group-table tr:hover td { background: var(--red-light); }
+  .group-table tr:last-child td { border-bottom: none; }
+
+  /* ===== HIGHLIGHT (search) ===== */
+  .highlight { background: #FFE066; border-radius: 2px; padding: 0 1px; }
+  .search-hidden { display: none !important; }
+  .search-match .dept-header { border-left: 3px solid #FF6B00; }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    text-align: center; padding: 32px; font-size: 12px; color: var(--gray);
+    border-top: 1px solid var(--border); margin-top: 40px;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    .header { padding: 20px 16px; }
+    .content { padding: 16px; }
+    .tabs { padding: 0 8px; }
+    .tab { padding: 10px 12px; font-size: 13px; }
+    .org-level { gap: 8px; }
+    .org-node { min-width: 130px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <h1>🏢 小红书组织架构 2026 · April</h1>
+  <p>数据来源：整合版org 2026.4月 PPTX</p>
+  <div class="header-meta">
+    <span>📅 数据截至 2026-04-01</span>
+    <span>🔄 页面生成 2026-04-13</span>
+    <span>📊 覆盖8大部门，100+张幻灯片</span>
+  </div>
+</div>
+
+<!-- SEARCH -->
+<div class="search-bar">
+  <input type="text" id="search-input" placeholder="🔍 搜索人名、部门名、职责..." oninput="doSearch(this.value)">
+  <span id="search-count"></span>
+  <button class="btn-clear" onclick="clearSearch()">清除</button>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('shangye')">商业部 <span class="tab-count">9行业</span></div>
+  <div class="tab" onclick="switchTab('caiwu')">财务投资 &amp; DI <span class="tab-count">6板块</span></div>
+  <div class="tab" onclick="switchTab('pingtai')">平台 &amp; 战略 <span class="tab-count">8部门</span></div>
+  <div class="tab" onclick="switchTab('shangpro')">商业产品部 <span class="tab-count">10组</span></div>
+  <div class="tab" onclick="switchTab('jiaoyi')">交易产品 &amp; 运营 <span class="tab-count">3部</span></div>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+<!-- ========== TAB: 商业部 ========== -->
+<div class="tab-pane active" id="tab-shangye">
+  <!-- HC Summary -->
+  <div class="hc-summary">
+    <div class="hc-card"><div class="num">之恒</div><div class="label">商业部负责人</div></div>
+    <div class="hc-card blue"><div class="num">9</div><div class="label">行业部</div></div>
+    <div class="hc-card green"><div class="num">167</div><div class="label">行业一部（美妆日化）</div></div>
+    <div class="hc-card gray"><div class="num">2026/04</div><div class="label">数据截至</div></div>
+  </div>
+
+  <!-- 商业部总览 -->
+  <div class="dept-section open" id="shangye-overview">
+    <div class="dept-header highlight" onclick="toggleDept('shangye-overview')">
+      <div class="dept-title">
+        <h3>🏢 商业部总览</h3>
+        <span class="lead">之恒</span>
+      </div>
+      <span class="dept-toggle">▶</span>
+    </div>
+    <div class="dept-body">
+      <table class="group-table">
+        <thead><tr><th>部门</th><th>负责人</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td><strong>行业一部</strong> 🌟</td><td><span class="node-badge badge-l1">L1</span>昂扬</td><td>美妆日化 | 167人在职 / Budget 164</td></tr>
+          <tr><td><strong>行业二部</strong></td><td><span class="node-badge badge-l1">L1</span>昂扬</td><td>服饰 | Actual 91 / Budget 90</td></tr>
+          <tr><td><strong>行业三部</strong></td><td><span class="node-badge badge-l1">L1</span>昂扬</td><td>耐消 | Actual 157 / Budget 157</td></tr>
+          <tr><td><strong>行业四部</strong></td><td><span class="node-badge badge-l1">L1</span>小源</td><td>快消 | Actual 197 / Budget 207，缺口10</td></tr>
+          <tr><td><strong>行业五部</strong></td><td><span class="node-badge badge-l1">L1</span>宗宪</td><td>互联网 | Actual 97 / Budget 90，超编</td></tr>
+          <tr><td><strong>行业六部</strong></td><td><span class="node-badge badge-l1">L1</span>昂扬</td><td>交通 | Actual 57 / Budget 48，超编</td></tr>
+          <tr><td><strong>行业七部</strong></td><td><span class="node-badge badge-l1">L1</span>觅阳</td><td>生服奢品 | Actual 137 / Budget 163，缺口26</td></tr>
+          <tr><td><strong>行业八部</strong></td><td><span class="node-badge badge-l1">L2</span>纳什</td><td>教育 | Actual 79 / Budget 95，缺口16</td></tr>
+          <tr><td><strong>行业九部</strong></td><td><span class="node-badge badge-l1">L1</span>宗宪</td><td>跨境业务 | Actual 38 / Budget 48，缺口10</td></tr>
+          <tr><td><strong>生态客户一部</strong></td><td><span class="node-badge badge-l1">L1</span>觅阳</td><td>Actual 424 / Budget 407</td></tr>
+          <tr><td><strong>生态客户二部</strong></td><td><span class="node-badge badge-l1">L1</span>米欧</td><td>Actual 336 / Budget 337</td></tr>
+          <tr><td><strong>渠道业务部</strong></td><td>米欧</td><td></td></tr>
+          <tr><td><strong>商业市场营销中台</strong></td><td>又思</td><td>商业市场 + 营销IP</td></tr>
+          <tr><td><strong>商业策略中台</strong></td><td>之恒</td><td>Actual 70 / Budget 88，缺口18</td></tr>
+          <tr><td><strong>小红书营销实验室</strong></td><td>圣香</td><td>Actual 12 / Budget 14</td></tr>
+          <tr><td><strong>创作者营销 &amp; 商业服务</strong></td><td>玄霜</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 行业一部（重点标注） -->
+  <div class="dept-section open" id="hy1">
+    <div class="dept-header highlight" onclick="toggleDept('hy1')">
+      <div class="dept-title">
+        <h3>🌟 行业一部 — 美妆日化</h3>
+        <span class="lead">昂扬（L1）</span>
+        <span style="font-size:12px;background:#FFD6DC;color:#C0001E;padding:2px 8px;border-radius:10px;font-weight:600;">瑾瑜负责业务</span>
+      </div>
+      <span class="dept-toggle">▶</span>
+    </div>
+    <div class="dept-body">
+      <div class="hc-summary">
+        <div class="hc-card"><div class="num">167</div><div class="label">Actual HC</div></div>
+        <div class="hc-card blue"><div class="num">164</div><div class="label">Budget HC</div></div>
+        <div class="hc-card green"><div class="num">12</div><div class="label">L1数量</div></div>
+        <div class="hc-card gray"><div class="num">150</div><div class="label">IC数量</div></div>
+      </div>
+      <p style="font-size:13px;color:var(--text-sub);margin-bottom:12px;">美妆日化行业全覆盖，含美妆、个护日化、母婴等品类</p>
+      <table class="group-table">
+        <thead><tr><th>职级</th><th>人员</th><th>职责</th></tr></thead>
+        <tbody>
+          <tr><td><span class="node-badge badge-l1">L1</span></td><td>昂扬</td><td>行业一部负责人</td></tr>
+          <tr><td><span class="node-badge badge-l1">L1</span>×12</td><td>-</td><td>各组负责人</td></tr>
+          <tr><td>IC ×150</td><td>-</td><td>执行层</td></tr>
+          <tr><td><span class="node-badge badge-mt">MT</span>/Intern ×5</td><td>-</td><td>实习/管培</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 行业二部 -->
+  <div class="dept-section" id="hy2">
+    <div class="dept-header" onclick="toggleDept('hy2')">
+      <div class="dept-title"><h3>行业二部 — 服饰</h3><span class="lead">昂扬（L1）</span></div>
+      <span class="dept-toggle">▶</span>
+    </div>
+    <div class="dept-body">
+      <div class="hc-summary">
+        <div class="hc-card"><div class="num">91</div><div class="label">Actual HC</div></div>
+        <div class="hc-card blue"><div class="num">90</div><div class="label">Budget HC</div></div>
+        <div class="hc-card green"><div class="num">9</div><div class="label">L1</div></div>
+        <div class="hc-card gray"><div class="num">82</div><div class="label">IC</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 行业三部 -->
+  <div class="dept-section" id="hy3">
+    <div class="dept-header" onclick="toggleDept('hy3')">
+      <div class="dept-title"><h3>行业三部 — 耐消</h3><span class="lead">昂扬（L1）</span></div>
+      <span class="dept-toggle">▶</span>
+    </div>
+    <div class="dept-body">
+      <div class="hc-summary">
+        <div class="hc-card"><div class="num">157</div><div class="label">Actual HC</div></div>
+        <div class="hc-card blue"><div class="num">157</div><div class="label">Budget HC</div></div>
+        <div class="hc-card gray"><div class="num">4</div><div class="label">Trainee</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 行业四部 -->
+  <div class="dept-section" id="hy4">
+    <div class="dept-header" onclick="toggleDept('hy4')">
+      <div class="dept-title"><h3>行业四部 — 快消</h3><span class="lead">小源（L1）</span></div>
+      <span class="dept-toggle">▶</span>
+    </div>
+    <div class="dept-body">
+      <div class="hc-summary">
+        <div class="hc-card"><div class="num">197</div><div class="label">Actual HC</div></div>
+        <div class="hc-card blue"><div class="num">207</div><div class="label">Budget HC</div></div>
+        <div class="hc-card" style="border-left-color:#E74C3C"><div class="num" style="color:#E74C3C">-10</div><div class="label">缺口</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 行业五~九部 简版 -->
+  <div class="dept-section" id="hy5to9">
+    <div class="dept-header" onclick="toggleDept('hy5to9')">
+      <div class="dept-title"><h3>行业五～九部</h3><span class="lead">互联网/交通/生服奢品/教育/跨境</span></div>
+      <span class="dept-toggle">▶</span>
+    </div>
+    <div class="dept-body">
+      <table class="group-table">
+        <thead><tr><th>部门</th><th>负责人</th><th>行业</th><th>Actual</th><th>Budget</th><th>差值</th></tr></thead>
+        <tbody>
+          <tr><td>行业五部</td><td>宗宪</td><td>互联网</td><td>97</td><td>90</td><td style="color:var(--green)">+7</td></tr>
+          <tr><td>行业六部</td><td>昂扬</td><td>交通</td><td>57</td><td>48</td><td style="color:var(--green)">+9</td></tr>
+          <tr><td>行业七部</td><td>觅阳</td><td>生服奢品</td><td>137</td><td>163</td><td style="color:#E74C3C">-26</td></tr>
+          <tr><td>行业八部</td><td>纳什 (L2)</td><td>教育</td><td>79</td><td>95</td><td style="color:#E74C3C">-16</td></tr>
+          <tr><td>行业九部</td><td>宗宪</td><td>跨境</td><td>38</td><td>48</td><td style="color:#E74C3C">-10</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 行业八部详细 -->
+  <div class="dept-section" id="hy8">
+    <div class="dept-header" onclick="toggleDept('hy8')">
+      <div class="dept-title"><h3>行业八部 — 教育</h3><span class="lead">纳什（L2）</span></div>
+      <span class="dept-toggle">▶</span>
+    </div>
+    <div class="dept-body">
+      <table class="group-table">
+        <thead><tr><th>组别</th><th>负责人</th><th>HC（实/预）</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td>行业一组</td><td><span class="node-badge badge-l1">L1</span>摩卡</td><td>21/25</td><td>少儿 &amp; 教辅</td></tr>
+          <tr><td>行业二组</td><td><span class="node-badge badge-acting">acting</span>斯谷</td><td>10/10</td><td>职培兴趣图书</td></tr>
+          <tr><td>平台专家二组</td><td><span class="node-badge badge-acting">acting</span>神舞</td><td>7/8</td><td>职培兴趣图书</td></tr>
+          <tr><td>平台专家三组</td><td><span class="node-badge badge-l1">L1</span>神舞</td><td>9/10</td><td>留学学历语言</td></tr>
+          <tr><td>行业三组</td><td>斯谷 / 明波</td><td>9/11</td><td>留学学历语言</td></tr>
+          <tr><td>一笑</td><td>-</td><td colspan="2"><span class="node-badge badge-vacant">Vacant×3</span></td></tr>
+          <tr><td>歌呗 L1</td><td>-</td><td colspan="2">在职</td></tr>
+          <tr><td>文乐、子虞、嘉欣</td><td>-</td><td colspan="2"><span class="node-badge badge-mt">MT</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div><!-- end tab-shangye -->
+
+
+<!-- ========== TAB: 财务投资 & DI ========== -->
+<div class="tab-pane" id="tab-caiwu">
+  <div class="hc-summary">
+    <div class="hc-card"><div class="num">曼巴</div><div class="label">财务投资部负责人</div></div>
+    <div class="hc-card blue"><div class="num">78</div><div class="label">DI实际HC</div></div>
+    <div class="hc-card green"><div class="num">107</div><div class="label">DI预算HC</div></div>
+  </div>
+
+  <!-- 财务一组 -->
+  <div class="dept-section open" id="cw1">
+    <div class="dept-header" onclick="toggleDept('cw1')">
+      <div class="dept-title"><h3>💰 财务一组</h3><span class="lead">白真（L2）</span></div>
+      <span class="dept-toggle">▶</span>
+    </div>
+    <div class="dept-body">
+      <div class="hc-summary">
+        <div class="hc-card"><div class="num">54</div><div class="label">在职</div></div>
+        <div class="hc-card blue"><div class="num">46</div><div class="label">HC预算</div></div>
+      </div>
+      <table class="group-table">
+        <thead><tr><th>小组</th><th>负责人</th><th>成员</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>财务职能<br><small>20人在/18预算</small></td>
+            <td><span class="node-badge badge-l1">L1</span>花且</td>
+            <td>
+              <b>资金管理</b>（绫波 L1，8/6）：三月、安琪、刹那、慎言、安欣、汪淼<br>
+              三多（代理商融资&amp;结算运营&amp;模型交易/渠道拓展&amp;AI产品）<br>
+              鲍天玥（待入职）
+            </td>
+          </tr>
+          <tr>
+            <td>大商业财务分析</td>
+            <td><span class="node-badge badge-l2">L2</span>白真</td>
+            <td>
+              <b>交易组</b>（10/7，白真 acting）：知易、星子、彼格、何故、小樱、逍遥<br>
+              <b>技术财务分析</b>（艾妲 L1，6/5）：七宝、白泽、雷德、科斯、赛勒、素子<br>
+              技术财务：时透、李辰怡（待入职）
+            </td>
+          </tr>
+          <tr>
+            <td>业务核算</td>
+            <td>-</td>
+            <td>贝鲁（蒲公英）、言梳GL、诗源（电商成本）、采薇GL、夏果（薯币短剧）、泽泽GL、默默（定价广告）、穆恩、露奈、苏里（电商收入）、楼兰、琳妮GL</td>
+          </tr>
+          <tr>
+            <td>财务数字化</td>
+            <td>-</td>
+            <td>橙汁、云飞、白星、少游</td>
+          </tr>
+          <tr>
+            <td>代理商融资&amp;结算</td>
+            <td>-</td>
+            <td>平旌、月兔、艾莉、一歌、黛安、曦光</td>
+          </tr>
+          <tr>
+            <td>Reporting</td>
+            <td>-</td>
+            <td>饭团、地云</td>
+          </tr>
+          <tr>
+            <td><span class="node-badge badge-joining">待入职</span></td>
+            <td>-</td>
+            <td>安玖、刘潇阳、曹腾</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 财务二组 -->
+  <div class="dept-section" id="cw2">
+    <div class="dept-header" onclick="toggleDept('cw2')">
+      <div class="dept-title"><h3>💰 财务二组</h3><span class="lead">潇潇（L1）</span></div>
+      <span class="dept-toggle">▶</span>
+    </div>
+    <div class="dept-body">
+      <div class="hc-summary">
+        <div class="hc-card"><div class="num">12</div><div class="label">在职</div></div>
+        <div class="hc-card blue"><div class="num">14</div><div class="label">HC预算</div></div>
+      </div>
+      <table class="group-table">
+        <thead><tr><th>小组</th><th>负责人</th><th>成员</th></tr></thead>
+        <tbody>
+          <tr><td>社区财务分析（6/5）</td><td><span class="node-badge badge-l1">L1</span>林云</td><td>千御（国内用增-厂商渠道）、落衡（国内用增-信息流渠道）、时钦（内容市场-游戏/女性）、三井（内容市场-娱乐/运动）</td></tr>
+          <tr><td>财务计划（4/6）</td><td><span class="node-badge badge-acting">acting</span>潇潇</td><td>易辰（社区技术+AI）、保尔（财务预测）、姜承（财务产品建设）</td></tr>
+          <tr><td>职能财务分析（1/2）</td><td>-</td><td>银灵（行政、专服）、底迪（人力，兼）</td></tr>
+          <tr><td>智能化分析（4人）</td><td>索菲</td><td>底迪（兼）</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 税务/采购/内控 -->
+  <div class="dept-section" id="cw-tax">
+    <div class="dept-header" onclick="toggleDept('cw-tax')">
+      <div class="dept-title"><h3>税务 / 采购 / 内控 / 内审</h3></div>
+      <span class="dept-toggle">▶</span>
+    </div>
+    <div class="dept-body">
+      <table class="group-table">
+        <thead><tr><th>部门</th><th>负责人</th><th>Actual</th><th>Budget</th><th>成员/说明</th></tr></thead>
+        <tbody>
+          <tr><td>税务</td><td>-</td><td>10</td><td>12</td><td>缺口2</td></tr>
+          <tr><td>采购</td><td>-</td><td>20</td><td>18</td><td>超编2</td></tr>
+          <tr>
+            <td>内控（8/6）</td>
+            <td><span class="node-badge badge-acting">acting</span>狄狄</td>
+            <td>8</td><td>6</td>
+            <td>燕子（内控中台/内控薯）、子奇（商业内控）、佐那（商业内控/新能力建设）、周周（服务中心内控）、青竹（电商/技术内控）</td>
+          </tr>
+          <tr>
+            <td>内审（4/4）</td>
+            <td><span class="node-badge badge-l1">L1</span>狄狄</td>
+            <td>4</td><td>4</td>
+            <td>淮竹、宁缺、毡毡、黑桐、太宰、卡特；Vacant：数据风险</td>
+          </tr>
+          <tr><td>投资</td><td>-</td><td>17</td><td>16</td><td>超编1</td></tr>
+          <tr><td>法务</td><td>-</td><td>31</td><td>30</td><td>超编1</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- DI -->
+  <div class="dept-section" id="di">
+    <div class="dept-header" onclick="toggleDept('di')">
+      <div class="dept-title"><h3>📊 数据科学与分析（DI）</h3></div>
+      <span class="dept-toggle">▶</span>
+    </div>
+    <div class="dept-body">
+      <div class="hc-summary">
+        <div class="hc-card"><div class="num">78</div><div class="label">Actual HC</div></div>
+        <div class="hc-card blue"><div class="num">107</div><div class="label">Budget HC</div></div>
+        <div class="hc-card" style="border-left-color:#E74C3C"><div class="num" style="color:#E74C3C">-29</div><div class="label">缺口</div></div>
+        <div class="hc-card gray"><div class="num">6</div><div class="label">L1（预算9）</div></div>
+      </div>
+      <div class="people-grid">
+        <span class="person-chip">社区分析组</span>
+        <span class="person-chip">增长分析组</span>
+        <span class="person-chip">ROI中台组</span>
+        <span class="person-chip">商业分析一组</span>
+        <span class="person-chip">商业分析二组</span>
+        <span class="person-chip">交易分析一组</span>
+        <span class="person-chip">交易分析二组</span>
+        <span class="person-chip">平台分析组</span>
+        <span class="person-chip">算法分析组</span>
+      </div>
+    </div>
+  </div>
+</div><!-- end tab-caiwu -->
+
+
+<!-- ========== TAB: 平台 & 战略 ========== -->
+<div class="tab-pane" id="tab-pingtai">
+  <div class="hc-summary">
+    <div class="hc-card"><div class="num">木兰</div><div class="label">平台部负责人</div></div>
+    <div class="hc-card blue"><div class="num">109</div><div class="label">平台部在职</div></div>
+    <div class="hc-card green"><div class="num">55</div><div class="label">战略部在职</div></div>
+    <div class="hc-card gray"><div class="num">74</div><div class="label">战略部Budget</div></div>
+  </div>
+
+  <div class="dept-section open" id="pt1">
+    <div class="dept-header" onclick="toggleDept('pt1')">
+      <div class="dept-title"><h3>📢 平台部总览</h3><span class="lead">木兰</span></div>
+      <span class="dept-toggle">▶</span>
+    </div>
+    <div class="dept-body">
+      <table class="group-table">
+        <thead><tr><th>部门</th><th>在职</th><th>MT</th><th>2025 Budget</th><th>差值</th></tr></thead>
+        <tbody>
+          <tr><td><strong>公共事务一部</strong></td><td>39</td><td>4</td><td>-</td><td>-</td></tr>
+          <tr><td><strong>公共事务二部</strong></td><td>14</td><td>2</td><td>-</td><td>-</td></tr>
+          <tr><td><strong>公共事务三部</strong></td><td>5</td><td>0</td><td>-</td><td>-</td></tr>
+          <tr><td><strong>公共事务四部</strong></td><td>23</td><td>1</td><td>-</td><td>-</td></tr>
+          <tr><td><strong>公关部</strong></td><td>37</td><td>2</td><td>-</td><td>-</td></tr>
+          <tr><td><strong>决策支持</strong></td><td>3</td><td>1</td><td>-</td><td>-</td></tr>
+          <tr><td><strong>项目部</strong></td><td>1</td><td>0</td><td>-</td><td>-</td></tr>
+          <tr><td><strong>企业发展</strong></td><td>2</td><td>0</td><td>-</td><td>-</td></tr>
+          <tr style="font-weight:700;background:var(--gray-light)"><td>平台部合计</td><td>109</td><td>10</td><td>100</td><td style="color:#E74C3C">+9</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="dept-section" id="zl">
+    <div class="dept-header" onclick="toggleDept('zl')">
+      <div class="dept-title"><h3>🎯 战略部</h3></div>
+      <span class="dept-toggle">▶</span>
+    </div>
+    <div class="dept-body">
+      <div class="hc-summary">
+        <div class="hc-card"><div class="num">55</div><div class="label">Actual HC</div></div>
+        <div class="hc-card blue"><div class="num">74</div><div class="label">Budget HC</div></div>
+        <div class="hc-card" style="border-left-color:#E74C3C"><div class="num" style="color:#E74C3C">-15</div><div class="label">缺口（L1级3）</div></div>
+        <div class="hc-card gray"><div class="num">4</div><div class="label">L1在职</div></div>
+      </div>
+    </div>
+  </div>
+</div><!-- end tab-pingtai -->
+
+
+<!-- ========== TAB: 商业产品部 ========== -->
+<div class="tab-pane" id="tab-shangpro">
+  <div class="hc-summary">
+    <div class="hc-card"><div class="num">菠萝</div><div class="label">商业产品部负责人</div></div>
+    <div class="hc-card blue"><div class="num">131</div><div class="label">Actual HC</div></div>
+    <div class="hc-card green"><div class="num">143</div><div class="label">Budget HC</div></div>
+  </div>
+
+  <div class="dept-section open" id="sp-overview">
+    <div class="dept-header" onclick="toggleDept('sp-overview')">
+      <div class="dept-title"><h3>商业产品部总览（10组）</h3><span class="lead">菠萝</span></div>
+      <span class="dept-toggle">▶</span>
+    </div>
+    <div class="dept-body">
+      <table class="group-table">
+        <thead><tr><th>组别</th><th>负责人</th><th>Actual/Budget</th><th>职责</th></tr></thead>
+        <tbody>
+          <tr><td>商业产品一组</td><td><span class="node-badge badge-l1">L1</span>长云</td><td>16/16</td><td>流量策略中台 + 搜索广告 + 买手</td></tr>
+          <tr><td>商业产品二组</td><td><span class="node-badge badge-l1">L1</span>许晴</td><td>16/14</td><td>品牌 &amp; 种草</td></tr>
+          <tr><td>商业产品三组</td><td><span class="node-badge badge-l1">L1</span>马烈</td><td>15/18</td><td>闭环电商广告（线索广告 + AI中台）</td></tr>
+          <tr><td>商业产品四组</td><td><span class="node-badge badge-l1">L1</span>马烈</td><td>7/13</td><td>开环行业（电商策略）</td></tr>
+          <tr><td>商业产品五组</td><td><span class="node-badge badge-l1">L1</span>迷谷</td><td>13/11</td><td>非游变现 + 开环行业</td></tr>
+          <tr><td>商业产品六组</td><td><span class="node-badge badge-l1">L1</span>许晴</td><td>12/11</td><td>灵犀（投放平台 + CRM）</td></tr>
+          <tr><td>商业产品七组</td><td><span class="node-badge badge-l1">L1</span>闻仲</td><td>9/10</td><td>聚光数据（广审风控）</td></tr>
+          <tr><td>商业产品八组</td><td><span class="node-badge badge-l1">L1</span>子俊</td><td>12/13</td><td>风控策略运营 + 风控产品</td></tr>
+          <tr><td>商业产品九组</td><td><span class="node-badge badge-l1">L1</span>子昂</td><td>20/18</td><td>代理商平台 + 星火 + CRM</td></tr>
+          <tr><td>商业产品十组</td><td><span class="node-badge badge-l1">L1</span>许晴</td><td>10/18</td><td>蒲公英</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 一组详细 -->
+  <div class="dept-section" id="sp1">
+    <div class="dept-header" onclick="toggleDept('sp1')">
+      <div class="dept-title"><h3>商品产品一组</h3><span class="lead">长云 L1 | 16/16</span></div>
+      <span class="dept-toggle">▶</span>
+    </div>
+    <div class="dept-body">
+      <table class="group-table">
+        <thead><tr><th>子组</th><th>HC</th><th>成员</th></tr></thead>
+        <tbody>
+          <tr><td>搜索广告</td><td>6/6</td><td>冉耕（高潜词包投放）、辰北（AI+搜索）、舟澪（词工具）、馆陶（生服行业运营）、玥瑶（电商搜索运营）</td></tr>
+          <tr><td>流量策略</td><td>3/3</td><td>独秀（薯条）、谢阳（薯条）</td></tr>
+          <tr><td>买手</td><td>4/4</td><td>弘中（买手K）、灵云（买手B）、郑什（买手K）、栗仔（买手产运）</td></tr>
+          <tr><td>薯条</td><td>2/2</td><td>归海（AI+搜索）</td></tr>
+          <tr><td>创意</td><td>-</td><td>丸尾</td></tr>
+          <tr><td>信息流策略</td><td>-</td><td>邹衍</td></tr>
+          <tr><td>混排</td><td>-</td><td>玉桂</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 九组详细 -->
+  <div class="dept-section" id="sp9">
+    <div class="dept-header" onclick="toggleDept('sp9')">
+      <div class="dept-title"><h3>商业产品九组</h3><span class="lead">子昂 L1 | 20/18</span></div>
+      <span class="dept-toggle">▶</span>
+    </div>
+    <div class="dept-body">
+      <table class="group-table">
+        <thead><tr><th>子组</th><th>HC</th><th>成员</th></tr></thead>
+        <tbody>
+          <tr><td>代理商平台 &amp; 星火</td><td>4/4</td><td>豆花（产运）、拜月（产运）、元济（星火平台）</td></tr>
+          <tr><td>销售平台</td><td>5/4</td><td>堂嶋（生态CRM）、神医（代理商CRM）、嘉轩（业绩数据）、姜花（代理和服务商）</td></tr>
+          <tr><td>基础 &amp; 资金交易平台</td><td>5/5</td><td>昆仑（代理商管控）、之丞（资金池）、菲亚（财务，三期）、南厦（资金）</td></tr>
+          <tr><td>电商CRM</td><td>-</td><td>陆左（电商CRM）</td></tr>
+          <tr><td>业绩数据</td><td>4/4</td><td>杰哈（电商CRM）、姽婳（星火平台）、须良（代理商AI）</td></tr>
+          <tr><td>行业CRM</td><td>-</td><td>宗羲、猎空、徐伦</td></tr>
+          <tr><td>基础服务</td><td>-</td><td>中也</td></tr>
+          <tr><td><span class="node-badge badge-mt">MT</span></td><td>-</td><td>须良</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div><!-- end tab-shangpro -->
+
+
+<!-- ========== TAB: 交易产品 & 运营 ========== -->
+<div class="tab-pane" id="tab-jiaoyi">
+  <div class="hc-summary">
+    <div class="hc-card"><div class="num">32</div><div class="label">交易产品一部在职</div></div>
+    <div class="hc-card blue"><div class="num">39</div><div class="label">交易产品一部Budget</div></div>
+    <div class="hc-card green"><div class="num">81</div><div class="label">交易产品二部在职</div></div>
+    <div class="hc-card gray"><div class="num">106</div><div class="label">交易产品二部Budget</div></div>
+  </div>
+
+  <!-- 交易部-行业运营 -->
+  <div class="dept-section open" id="jy-hy">
+    <div class="dept-header" onclick="toggleDept('jy-hy')">
+      <div class="dept-title"><h3>🛒 交易部 — 行业运营</h3></div>
+      <span class="dept-toggle">▶</span>
+    </div>
+    <div class="dept-body">
+      <table class="group-table">
+        <thead><tr><th>部门</th><th>Actual</th><th>Budget</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td>电商行业运营一部（业务部）</td><td>64</td><td>79</td><td>缺口15；L1×4在职/9预算</td></tr>
+          <tr><td>电商行业运营二部</td><td>15</td><td>25</td><td>缺口10</td></tr>
+          <tr><td>电商行业运营三部</td><td>-</td><td>-</td><td>中小商家，米欧负责</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:12px;color:var(--gray);margin-top:12px;">
+        行业运营团队：青岩（行业一/五/六组）、斐然（行业二/三/十三组）、麦昆（行业十一组）、子木（行业七/八/十五组）、圆慧（Solution+行业四组）
+      </p>
+    </div>
+  </div>
+
+  <!-- 交易产品一部 -->
+  <div class="dept-section" id="jyp1">
+    <div class="dept-header" onclick="toggleDept('jyp1')">
+      <div class="dept-title"><h3>📦 交易产品一部</h3><span style="font-size:12px;color:var(--gray)">32/39</span></div>
+      <span class="dept-toggle">▶</span>
+    </div>
+    <div class="dept-body">
+      <table class="group-table">
+        <thead><tr><th>组别</th><th>负责人</th><th>HC</th><th>职责</th></tr></thead>
+        <tbody>
+          <tr><td>电商一组</td><td><span class="node-badge badge-l1">Jr.L1</span>月眠</td><td>6/9</td><td>基础用户产品（交易链路/评价/营销/结算）</td></tr>
+          <tr><td>电商二组</td><td><span class="node-badge badge-l1">Jr.L1</span>里包</td><td>5/7</td><td>市集产品（市集频道、小红卡）</td></tr>
+          <tr><td>电商三组</td><td><span class="node-badge badge-vacant">待招 L1</span></td><td>9/13</td><td>推荐+搜索（直播分发、商搜、综搜）</td></tr>
+          <tr><td>电商四组</td><td><span class="node-badge badge-l1">L1</span>佐罗</td><td>10/10</td><td>用增营销（新人承接、UG策略、补贴）</td></tr>
+          <tr><td>买手C端&amp;直播</td><td><span class="node-badge badge-vacant">待招 L1</span></td><td>3/3</td><td>买手C端、直播间框架、新人交易直播</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:12px;">
+        <p style="font-size:12px;color:var(--text-sub);margin-bottom:8px;"><b>电商二组成员（市集产品）</b></p>
+        <div class="people-grid">
+          <span class="person-chip">阿蝉（积分/星光夜市）</span>
+          <span class="person-chip">昂热（宠粉清单）</span>
+          <span class="person-chip">伽蓝（小红卡）</span>
+          <span class="person-chip">玄月（美妙商店）</span>
+          <span class="person-chip vacant">小红卡 Vacant</span>
+          <span class="person-chip">里包（市集频道营销）</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 交易产品二部 -->
+  <div class="dept-section" id="jyp2">
+    <div class="dept-header" onclick="toggleDept('jyp2')">
+      <div class="dept-title"><h3>📦 交易产品二部</h3><span style="font-size:12px;color:var(--gray)">81/106</span></div>
+      <span class="dept-toggle">▶</span>
+    </div>
+    <div class="dept-body">
+      <table class="group-table">
+        <thead><tr><th>组别</th><th>负责人</th><th>HC</th><th>职责</th></tr></thead>
+        <tbody>
+          <tr><td>电商一组</td><td><span class="node-badge badge-acting">在途 MF</span></td><td>8/7</td><td>营销产品</td></tr>
+          <tr><td>电商二组</td><td><span class="node-badge badge-vacant">待招 L1</span></td><td>0/5</td><td>行业产品</td></tr>
+          <tr><td>电商三组</td><td><span class="node-badge badge-l1">L1</span>旗木</td><td>8/12</td><td>商家产品（商品产品）</td></tr>
+          <tr><td>电商四组</td><td><span class="node-badge badge-l1">L1</span>筱筱</td><td>11/16</td><td>商品产品</td></tr>
+          <tr><td>电商五组</td><td><span class="node-badge badge-acting">在途 CJW</span></td><td>7/9</td><td>履约物流供应链产品</td></tr>
+          <tr><td>电商六组</td><td><span class="node-badge badge-l1">L1</span>深一</td><td>13/16</td><td>体验客服产品</td></tr>
+          <tr><td>电商七组</td><td><span class="node-badge badge-l1">L1</span>玛茵</td><td>14/17</td><td>交易治理产品</td></tr>
+          <tr><td>电商八组</td><td><span class="node-badge badge-l1">L1</span>托托</td><td>15/17</td><td>消费者服务组</td></tr>
+          <tr><td>电商九组</td><td><span class="node-badge badge-vacant">待招 L1</span></td><td>4/3</td><td>支付结算产品</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div><!-- end tab-jiaoyi -->
+
+</div><!-- end content -->
+
+<div class="footer">
+  小红书组织架构 2026 · April &nbsp;|&nbsp; 数据来源：整合版org 2026.4月 PPTX &nbsp;|&nbsp; 页面生成：2026-04-13
+</div>
+
+<script>
+// Tab switch
+function switchTab(name) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// Toggle dept
+function toggleDept(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+
+// Search
+function doSearch(query) {
+  const q = query.trim().toLowerCase();
+  const countEl = document.getElementById('search-count');
+  
+  if (!q) {
+    clearSearch();
+    return;
+  }
+
+  // Show all tab panes for search
+  let matchCount = 0;
+  
+  document.querySelectorAll('.dept-section').forEach(section => {
+    const text = section.textContent.toLowerCase();
+    if (text.includes(q)) {
+      section.classList.remove('search-hidden');
+      section.classList.add('open');
+      matchCount++;
+    } else {
+      section.classList.add('search-hidden');
+    }
+  });
+
+  // Show all tabs
+  document.querySelectorAll('.tab-pane').forEach(p => p.style.display = 'block');
+
+  countEl.textContent = matchCount > 0 ? `找到 ${matchCount} 个板块` : '无匹配结果';
+}
+
+function clearSearch() {
+  document.getElementById('search-input').value = '';
+  document.getElementById('search-count').textContent = '';
+  document.querySelectorAll('.dept-section').forEach(s => s.classList.remove('search-hidden'));
+  // Restore tab display
+  document.querySelectorAll('.tab-pane').forEach(p => p.style.display = '');
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelector('.tab').classList.add('active');
+  document.querySelector('.tab-pane').classList.add('active');
+}
+
+// Init: open first tab
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.dept-section').forEach(s => {
+    if (!s.classList.contains('open')) s.classList.remove('open');
+  });
+});
+</script>
+</body>
+</html>
