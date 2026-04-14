@@ -1,121 +1,104 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>实习生比例监测 - 2026-04-13</title>
+<title>实习生用工比例监测</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background:#f0f2f5; color:#1a1a1a; }
-.header { background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); color:white; padding:24px 32px; }
-.header h1 { font-size:22px; font-weight:700; }
-.header p { font-size:13px; opacity:0.85; margin-top:4px; }
-.cards { display:flex; gap:16px; padding:24px 32px 0; flex-wrap:wrap; }
-.card { background:white; border-radius:12px; padding:20px 24px; flex:1; min-width:160px; box-shadow:0 1px 4px rgba(0,0,0,0.08); }
-.card .value { font-size:32px; font-weight:800; }
-.card .label { font-size:12px; color:#6b7280; margin-top:4px; }
-.card.over .value { color:#ef4444; }
-.card.ok .value { color:#22c55e; }
-.chart-wrap { background:white; border-radius:12px; margin:24px 32px 0; padding:24px; box-shadow:0 1px 4px rgba(0,0,0,0.08); }
-.chart-wrap h2 { font-size:15px; font-weight:600; margin-bottom:16px; color:#374151; }
-.chart-container { position:relative; }
-footer { text-align:center; padding:24px; font-size:12px; color:#9ca3af; }
+  body { font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background:#f8fafc; margin:0; padding:20px; color:#1e293b; }
+  h1 { text-align:center; font-size:1.5rem; margin-bottom:20px; }
+  .cards { display:flex; gap:16px; flex-wrap:wrap; margin-bottom:24px; justify-content:center; }
+  .card { background:#fff; border-radius:12px; padding:20px 28px; box-shadow:0 1px 4px rgba(0,0,0,.08); min-width:140px; text-align:center; }
+  .card .val { font-size:2rem; font-weight:700; }
+  .card .lbl { font-size:.85rem; color:#64748b; margin-top:4px; }
+  .card.warn .val { color:#ef4444; }
+  .card.ok .val { color:#22c55e; }
+  .chart-box { background:#fff; border-radius:12px; padding:24px; box-shadow:0 1px 4px rgba(0,0,0,.08); margin-bottom:24px; }
+  .chart-box h2 { font-size:1rem; margin:0 0 16px 0; color:#475569; }
+  .updated { text-align:center; font-size:.8rem; color:#94a3b8; margin-top:16px; }
 </style>
 </head>
 <body>
-<div class="header">
-  <h1>📊 实习生用工比例监测</h1>
-  <p>行业一部 · 更新于 2026-04-13 · 基准线 24.7%</p>
-</div>
+<h1>🎓 行业一部实习生用工比例监测</h1>
+
 <div class="cards">
   <div class="card ok">
-    <div class="value">23.5%</div>
-    <div class="label">整体占比（实习/正式）</div>
+    <div class="val">23.6%</div>
+    <div class="lbl">整体占比（基准24.7%）</div>
   </div>
   <div class="card">
-    <div class="value" style="color:#6366f1">39</div>
-    <div class="label">实习生人数</div>
+    <div class="val">39</div>
+    <div class="lbl">实习生人数</div>
   </div>
   <div class="card">
-    <div class="value" style="color:#0ea5e9">166</div>
-    <div class="label">正式员工人数</div>
+    <div class="val">165</div>
+    <div class="lbl">正式员工人数</div>
   </div>
-  <div class="card over">
-    <div class="value">10</div>
-    <div class="label">超标小组数</div>
-  </div>
-</div>
-
-<div class="chart-wrap">
-  <h2>📈 整体比例历史趋势（近30天）</h2>
-  <div class="chart-container" style="height:220px">
-    <canvas id="trendChart"></canvas>
+  <div class="card warn">
+    <div class="val">11</div>
+    <div class="lbl">超标小组数</div>
   </div>
 </div>
 
-<div class="chart-wrap">
-  <h2>📊 各小组当日比例</h2>
-  <div class="chart-container" style="height:520px">
-    <canvas id="groupChart"></canvas>
-  </div>
+<div class="chart-box">
+  <h2>📈 整体比例历史趋势（近10天）</h2>
+  <canvas id="trendChart" height="80"></canvas>
 </div>
 
-<footer>数据来源：小红书HR系统花名册 · intern-ratio-monitor</footer>
+<div class="chart-box">
+  <h2>📊 各小组实习生占比（2026-04-14）</h2>
+  <canvas id="barChart" height="120"></canvas>
+</div>
+
+<p class="updated">更新时间：2026-04-14 · 数据来源：花名册-HRBP · 基准值 24.7%</p>
 
 <script>
-// 趋势图
-const tCtx = document.getElementById('trendChart').getContext('2d');
-new Chart(tCtx, {
+const trendCtx = document.getElementById('trendChart').getContext('2d');
+new Chart(trendCtx, {
   type: 'line',
   data: {
-    labels: ["04-01", "04-02", "04-04", "04-06", "04-07", "04-08", "04-11", "04-12", "04-13"],
-    datasets: [{
-      label: '整体占比%',
-      data: [24.1, 23.4, 24.1, 24.1, 24.1, 24.2, 23.5, 23.5, 23.5],
-      borderColor: '#6366f1',
-      backgroundColor: 'rgba(99,102,241,0.1)',
-      fill: true,
-      tension: 0.3,
-      pointRadius: 4,
-    }, {
-      label: '基准线 24.7%',
-      data: Array(9).fill(24.7),
-      borderColor: '#ef4444',
-      borderDash: [6,3],
-      borderWidth: 1.5,
-      pointRadius: 0,
-    }]
+    labels: ["2026-04-01", "2026-04-02", "2026-04-04", "2026-04-06", "2026-04-07", "2026-04-08", "2026-04-11", "2026-04-12", "2026-04-13", "2026-04-14"],
+    datasets: [
+      {
+        label: '整体占比(%)',
+        data: [24.1, 23.4, 24.1, 24.1, 24.1, 24.2, 23.5, 23.5, 23.5, 23.6],
+        borderColor: 'rgba(59,130,246,0.9)',
+        backgroundColor: 'rgba(59,130,246,0.1)',
+        fill: true, tension: 0.3, pointRadius: 4
+      },
+      {
+        label: '基准线 24.7%',
+        data: Array(10).fill(24.7),
+        borderColor: 'rgba(239,68,68,0.6)',
+        borderDash: [6,3], pointRadius: 0
+      }
+    ]
   },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { position: 'top' } },
-    scales: { y: { min: 0, max: 80 } }
-  }
+  options: { responsive:true, plugins:{ legend:{ position:'top' } }, scales:{ y:{ suggestedMin:15, suggestedMax:35, ticks:{ callback: v => v+'%' } } } }
 });
 
-// 小组条形图
-const gCtx = document.getElementById('groupChart').getContext('2d');
-new Chart(gCtx, {
+const barCtx = document.getElementById('barChart').getContext('2d');
+new Chart(barCtx, {
   type: 'bar',
   data: {
     labels: ["\u884c\u4e1a\u4e00\u7ec4", "\u884c\u4e1a\u4e8c\u7ec4", "\u884c\u4e1a\u4e09\u7ec4", "\u884c\u4e1a\u56db\u7ec4", "\u884c\u4e1a\u4e94\u7ec4", "\u884c\u4e1a\u516d\u7ec4", "\u884c\u4e1a\u4e03\u7ec4", "\u884c\u4e1a\u516b\u7ec4", "\u884c\u4e1a\u4e5d\u7ec4", "\u884c\u4e1a\u5341\u7ec4", "\u884c\u4e1a\u5341\u4e00\u7ec4", "\u884c\u4e1a\u5341\u4e8c\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u4e00\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u4e8c\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u4e09\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u56db\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u4e94\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u516d\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u4e03\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u516b\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u4e5d\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u5341\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u5341\u4e00\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u5341\u4e8c\u7ec4", "\u884c\u4e1a\u7b56\u7565\u7ec4"],
     datasets: [{
-      label: '实习/正式 %',
-      data: [22.2, 33.3, 11.1, 20.0, 20.0, 18.2, 25.0, 16.7, 12.5, 22.2, 20.0, 75.0, 33.3, 11.1, 14.3, 25.0, 0.0, 40.0, 44.4, 20.0, 14.3, 33.3, 0.0, 40.0, 50.0],
-      backgroundColor: ["rgba(34,197,94,0.8)", "rgba(239,68,68,0.8)", "rgba(34,197,94,0.8)", "rgba(34,197,94,0.8)", "rgba(34,197,94,0.8)", "rgba(34,197,94,0.8)", "rgba(239,68,68,0.8)", "rgba(34,197,94,0.8)", "rgba(34,197,94,0.8)", "rgba(34,197,94,0.8)", "rgba(34,197,94,0.8)", "rgba(239,68,68,0.8)", "rgba(239,68,68,0.8)", "rgba(34,197,94,0.8)", "rgba(34,197,94,0.8)", "rgba(239,68,68,0.8)", "rgba(34,197,94,0.8)", "rgba(239,68,68,0.8)", "rgba(239,68,68,0.8)", "rgba(34,197,94,0.8)", "rgba(34,197,94,0.8)", "rgba(239,68,68,0.8)", "rgba(34,197,94,0.8)", "rgba(239,68,68,0.8)", "rgba(239,68,68,0.8)"],
+      label: '实习生/正式员工(%)',
+      data: [22.2, 33.3, 11.1, 25.0, 20.0, 18.2, 25.0, 16.7, 12.5, 22.2, 20.0, 75.0, 33.3, 11.1, 14.3, 25.0, 0.0, 40.0, 44.4, 20.0, 14.3, 33.3, 0.0, 40.0, 50.0],
+      backgroundColor: ["rgba(34,197,94,0.8)", "rgba(239,68,68,0.8)", "rgba(34,197,94,0.8)", "rgba(239,68,68,0.8)", "rgba(34,197,94,0.8)", "rgba(34,197,94,0.8)", "rgba(239,68,68,0.8)", "rgba(34,197,94,0.8)", "rgba(34,197,94,0.8)", "rgba(34,197,94,0.8)", "rgba(34,197,94,0.8)", "rgba(239,68,68,0.8)", "rgba(239,68,68,0.8)", "rgba(34,197,94,0.8)", "rgba(34,197,94,0.8)", "rgba(239,68,68,0.8)", "rgba(34,197,94,0.8)", "rgba(239,68,68,0.8)", "rgba(239,68,68,0.8)", "rgba(34,197,94,0.8)", "rgba(34,197,94,0.8)", "rgba(239,68,68,0.8)", "rgba(34,197,94,0.8)", "rgba(239,68,68,0.8)", "rgba(239,68,68,0.8)"],
     }]
   },
   options: {
     indexAxis: 'y',
-    responsive: true, maintainAspectRatio: false,
+    responsive: true,
     plugins: {
-      legend: { display: false },
-      annotation: {}
+      legend: { display:false },
+      annotation: { annotations: { line1: { type:'line', xMin:24.7, xMax:24.7, borderColor:'rgba(239,68,68,0.7)', borderWidth:2, borderDash:[4,3] } } }
     },
     scales: {
-      x: { min:0, max:80, grid: { color: 'rgba(0,0,0,0.05)' } },
-      y: { ticks: { font: { size: 12 } } }
+      x: { ticks: { callback: v => v+'%' }, suggestedMax: 80 },
+      y: { ticks: { font: { size: 11 } } }
     }
   }
 });
