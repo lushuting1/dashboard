@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HC Dashboard · 2026-04-19 · 招财出品</title>
+<title>HC Dashboard v3 · 招财出品</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -878,7 +878,7 @@ const BUDGET_DATA = [
   { l1:'交易', l2:'行业运营三部', budget:127, actual:108, transIn:0, transOut:0, pending:0, leaving:3, real:false },
   { l1:'交易', l2:'中小商家', budget:50, actual:38, transIn:0, transOut:0, pending:0, leaving:2, real:false },
   { l1:'交易', l2:'交易产品', budget:146, actual:130, transIn:0, transOut:0, pending:0, leaving:4, real:false },
-  { l1:'商业化', l2:'行业一部', budget:164, actual:165, transIn:4, transOut:3, pending:0, leaving:0, real:true },
+  { l1:'商业化', l2:'行业一部', budget:164, actual:165, transIn:4, transOut:2, pending:0, leaving:0, real:true },
   { l1:'商业化', l2:'行业二部', budget:90, actual:0, transIn:0, transOut:0, pending:0, leaving:0, real:false },
   { l1:'商业化', l2:'行业三部', budget:157, actual:0, transIn:0, transOut:0, pending:0, leaving:0, real:false },
   { l1:'商业化', l2:'行业四部', budget:207, actual:0, transIn:0, transOut:0, pending:0, leaving:0, real:false },
@@ -908,18 +908,21 @@ const BUDGET_DATA = [
   { l1:'财务职能+DI', l2:'DI', budget:107, actual:0, transIn:0, transOut:0, pending:0, leaving:0, real:false },
 ];
 
-// 真实入离职数据（来自 ehr-workbench/hrbp 2026-04-19 自动更新）
+// 真实入离职数据（来自 ehr-workbench/hrbp 2026-04-02）
 const FLOW_DATA = {
   transIn: [
     { name:'王肖肖', level:'IC', dept:'行业一部', subDept:'行业十组', date:'2026-04-20', manager:'南舟(姚苒)', highlight:false },
     { name:'洪方雯', level:'IC', dept:'行业一部', subDept:'平台专家十一组', date:'2026-04-27', manager:'惊鸿(王晶晶)', highlight:false },
     { name:'刘一霖', level:'IC', dept:'行业一部', subDept:'平台专家三组', date:'2026-05-08', manager:'若琳(陈若琳)', highlight:false },
     { name:'陈静仪', level:'IC', dept:'行业一部', subDept:'行业七组', date:'2026-07-01', manager:'昭燃(千艺)', highlight:false },
+    { name:'曹腾', level:'IC', dept:'财务职能+DI', subDept:'交易财务分析', date:'2026-04-08', manager:'白真(白乐天)', highlight:false },
+    { name:'鲍天玥', level:'IC', dept:'财务职能+DI', subDept:'资金管理组', date:'2026-04-13', manager:'绫波(李静)', highlight:false },
+    { name:'刘潇阳', level:'IC', dept:'财务职能+DI', subDept:'资金管理组', date:'2026-04-27', manager:'绫波(李静)', highlight:false },
   ],
   transOut: [
-    { name:'夏实(钱依琳)', level:'IC', dept:'行业一部', subDept:'平台专家九组', date:'2026-05-06', type:'主动离职', highlight:false },
     { name:'雷纯(陈彧)', level:'IC', dept:'行业一部', subDept:'平台专家五组', date:'2026-05-18', type:'主动离职', highlight:false },
-    { name:'俊杰(张俊杰)', level:'IC', dept:'行业一部', subDept:'', date:'2026-05-01', type:'转出', highlight:false },
+    { name:'夏实(钱依琳)', level:'IC', dept:'行业一部', subDept:'平台专家九组', date:'2026-05-06', type:'主动离职', highlight:false },
+    { name:'诗源(杨骑宇)', level:'IC', dept:'财务职能+DI', subDept:'财务职能', date:'2026-04-23', type:'被动离职', highlight:false },
   ],
 };
 
@@ -1400,28 +1403,28 @@ const HANGYIBU_SUBS = [
   {name:'行业一组', leader:'千月(陈思琪)', current:9, total:8, transIn:0, transOut:0, predict:9, match:'优秀'},
   {name:'行业二组', leader:'吴邪(吴建成)', current:9, total:6, transIn:0, transOut:0, predict:9, match:'优秀'},
   {name:'行业三组', leader:'克斯(陈宇田)', current:9, total:8, transIn:0, transOut:0, predict:9, match:'优秀'},
-  {name:'行业四组', leader:'千月(陈思琪)', current:4, total:4, transIn:0, transOut:0, predict:4, match:'匹配'},
-  {name:'行业五组', leader:'吴邪(吴建成)', current:5, total:5, transIn:0, transOut:0, predict:5, match:'匹配'},
-  {name:'行业六组', leader:'嘉莉(惠江雯)', current:11, total:5, transIn:0, transOut:0, predict:11, match:'匹配'},
-  {name:'行业七组', leader:'昭燃(千艺)', current:12, total:9, transIn:1, transOut:0, predict:13, match:'匹配'},
-  {name:'行业八组', leader:'吴邪(吴建成)', current:6, total:7, transIn:0, transOut:0, predict:6, match:'优秀'},
+  {name:'行业四组', leader:'千月(陈思琪)', current:4, total:4, transIn:0, transOut:0, predict:4, match:'优秀'},
+  {name:'行业五组', leader:'吴邪(吴建成)', current:5, total:5, transIn:0, transOut:0, predict:5, match:'优秀'},
+  {name:'行业六组', leader:'嘉莉(惠江雯)', current:11, total:5, transIn:0, transOut:0, predict:11, match:'优秀'},
+  {name:'行业七组', leader:'昭燃(千艺)', current:12, total:9, transIn:1, transOut:0, predict:13, match:'优秀'},
+  {name:'行业八组', leader:'吴邪(吴建成)', current:6, total:7, transIn:0, transOut:0, predict:6, match:'匹配'},
   {name:'行业九组', leader:'白泉(陈可茵)', current:8, total:7, transIn:0, transOut:0, predict:8, match:'优秀'},
-  {name:'行业十组', leader:'昂扬(李昂)', current:9, total:8, transIn:1, transOut:1, predict:9, match:'匹配'},
+  {name:'行业十组', leader:'昂扬(李昂)', current:9, total:8, transIn:1, transOut:0, predict:10, match:'优秀'},
   {name:'行业十一组', leader:'南舟(姚苒)', current:5, total:6, transIn:0, transOut:0, predict:5, match:'匹配'},
-  {name:'行业十二组', leader:'希坦(贺琼)', current:4, total:4, transIn:0, transOut:0, predict:4, match:'匹配'},
-  {name:'平台专家一组', leader:'古娴(高逸群)', current:6, total:8, transIn:0, transOut:0, predict:6, match:'匹配'},
+  {name:'行业十二组', leader:'希坦(贺琼)', current:4, total:4, transIn:0, transOut:0, predict:4, match:'优秀'},
+  {name:'平台专家一组', leader:'古娴(高逸群)', current:6, total:8, transIn:0, transOut:0, predict:6, match:'偏低'},
   {name:'平台专家二组', leader:'菀得(杨森)', current:9, total:5, transIn:0, transOut:0, predict:9, match:'优秀'},
   {name:'平台专家三组', leader:'若琳(陈若琳)', current:7, total:6, transIn:1, transOut:0, predict:8, match:'优秀'},
   {name:'平台专家四组', leader:'古娴(高逸群)', current:4, total:3, transIn:0, transOut:0, predict:4, match:'优秀'},
   {name:'平台专家五组', leader:'菀得(杨森)', current:5, total:5, transIn:0, transOut:1, predict:4, match:'优秀'},
-  {name:'平台专家六组', leader:'希莫(焦潞林)', current:5, total:4, transIn:0, transOut:0, predict:5, match:'匹配'},
-  {name:'平台专家七组', leader:'希莫(焦潞林)', current:9, total:8, transIn:0, transOut:0, predict:9, match:'匹配'},
+  {name:'平台专家六组', leader:'希莫(焦潞林)', current:5, total:4, transIn:0, transOut:0, predict:5, match:'优秀'},
+  {name:'平台专家七组', leader:'希莫(焦潞林)', current:9, total:8, transIn:0, transOut:0, predict:9, match:'优秀'},
   {name:'平台专家八组', leader:'菀得(杨森)', current:5, total:6, transIn:0, transOut:0, predict:5, match:'匹配'},
-  {name:'平台专家九组', leader:'清也(刘月)', current:7, total:6, transIn:0, transOut:1, predict:6, match:'匹配'},
-  {name:'平台专家十组', leader:'珠珠(朱梦倩)', current:6, total:6, transIn:0, transOut:0, predict:6, match:'匹配'},
-  {name:'平台专家十一组', leader:'惊鸿(王晶晶)', current:4, total:5, transIn:1, transOut:0, predict:5, match:'匹配'},
-  {name:'平台专家十二组', leader:'惊鸿(王晶晶)', current:5, total:3, transIn:0, transOut:0, predict:5, match:'匹配'},
-  {name:'行业策略组', leader:'飞云(张一鸣)', current:2, total:3, transIn:0, transOut:0, predict:2, match:'匹配'},
+  {name:'平台专家九组', leader:'清也(刘月)', current:7, total:6, transIn:0, transOut:1, predict:6, match:'优秀'},
+  {name:'平台专家十组', leader:'珠珠(朱梦倩)', current:6, total:6, transIn:0, transOut:0, predict:6, match:'优秀'},
+  {name:'平台专家十一组', leader:'惊鸿(王晶晶)', current:4, total:5, transIn:1, transOut:0, predict:5, match:null},
+  {name:'平台专家十二组', leader:'惊鸿(王晶晶)', current:5, total:3, transIn:0, transOut:0, predict:5, match:'优秀'},
+  {name:'行业策略组', leader:'飞云(张一鸣)', current:2, total:3, transIn:0, transOut:0, predict:2, match:'偏低'},
 ];
 
 const HANGYIBU_PENDING_L1L2 = [];
@@ -1434,7 +1437,7 @@ const DEPT_DETAIL_DB = {
     currentHc: 165,
     budgetHc: 164,
     transIn: 4,
-    transOut: 3,
+    transOut: 2,
     pendingL1L2: HANGYIBU_PENDING_L1L2,
     leavingL1L2: HANGYIBU_LEAVING_L1L2,
     subs: HANGYIBU_SUBS,
