@@ -1,87 +1,186 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>实习生比例监测 - 2026-05-23</title>
+<title>实习生比例监测 - 行业一部</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:#f5f7fa;color:#1d2129;padding:24px}
-.header{text-align:center;margin-bottom:24px}
-.header h1{font-size:24px;font-weight:600}
-.header .date{color:#86909c;font-size:14px;margin-top:4px}
-.summary{display:flex;gap:16px;margin-bottom:24px;flex-wrap:wrap}
-.card{background:#fff;border-radius:8px;padding:20px 24px;flex:1;min-width:180px;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
-.card .label{font-size:13px;color:#86909c;margin-bottom:8px}
-.card .value{font-size:28px;font-weight:700}
-.card .sub{font-size:12px;color:#86909c;margin-top:4px}
-.status-ok{color:#00b42a}.status-warn{color:#f53f3f}
-.section{background:#fff;border-radius:8px;padding:24px;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
-.section h2{font-size:16px;font-weight:600;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #e5e6eb}
-.section h3{font-size:14px;color:#4e5969;margin:16px 0 12px}
-.chart-container{position:relative;width:100%;height:300px}
-.bar-row{display:flex;align-items:center;margin-bottom:8px;font-size:13px}
-.bar-label{width:100px;text-align:right;padding-right:12px;flex-shrink:0;color:#4e5969}
-.bar-track{flex:1;height:22px;background:#f2f3f5;border-radius:4px;position:relative;overflow:hidden;min-width:200px}
-.bar-fill{height:100%;border-radius:4px;transition:width .3s}
-.bar-ok{background:#00b42a}.bar-warn{background:#f53f3f}
-.bar-val{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:600;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,0.3)}
-.bar-meta{width:80px;text-align:right;padding-left:8px;color:#86909c;font-size:12px;flex-shrink:0}
-.over-summary{background:#fffbe6;border:1px solid #ffe58f;border-radius:6px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:#ad6800}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f7fa; color: #333; padding: 20px; }
+.container { max-width: 1200px; margin: 0 auto; }
+h1 { font-size: 24px; margin-bottom: 20px; color: #1a1a1a; }
+.date { font-size: 14px; color: #999; margin-bottom: 20px; }
+.summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+.card { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+.card-label { font-size: 13px; color: #999; margin-bottom: 8px; }
+.card-value { font-size: 32px; font-weight: 700; }
+.card-value.green { color: #52c41a; }
+.card-value.red { color: #ff4d4f; }
+.card-value.blue { color: #1890ff; }
+.chart-section { background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+.chart-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; }
+canvas { width: 100% !important; height: auto !important; }
+.bar-group { margin-bottom: 8px; }
+.bar-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
+.bar-track { background: #f0f0f0; border-radius: 4px; height: 24px; position: relative; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 4px; transition: width 0.3s; }
+.bar-fill.green { background: #52c41a; }
+.bar-fill.red { background: #ff4d4f; }
+.bar-baseline { position: absolute; top: 0; bottom: 0; width: 2px; background: #ff4d4f; opacity: 0.6; }
+.section-header { font-size: 15px; font-weight: 600; color: #666; margin: 20px 0 12px; padding-bottom: 8px; border-bottom: 1px solid #eee; }
+.section-header:first-child { margin-top: 0; }
+.chart-container { position: relative; height: 300px; }
 </style>
 </head>
 <body>
-<div class="header">
-<h1>实习生比例监测</h1>
-<div class="date">2026-05-23（行业一部）</div>
-</div>
+<div class="container">
+<h1>📊 行业一部实习生比例监测</h1>
+<div class="date">数据日期：2026-05-25 | 基准值：24.7%</div>
 <div class="summary">
-<div class="card"><div class="label">整体比例</div><div class="value status-ok">18.6%</div><div class="sub">基准 24.7%</div></div>
-<div class="card"><div class="label">实习生</div><div class="value">30</div><div class="sub">正式员工 161</div></div>
-<div class="card"><div class="label">超标小组</div><div class="value status-warn">7</div><div class="sub">共 25 个小组</div></div>
+<div class="card"><div class="card-label">整体比例</div><div class="card-value green">18.6%</div></div>
+<div class="card"><div class="card-label">实习生</div><div class="card-value blue">30</div></div>
+<div class="card"><div class="card-label">正式员工</div><div class="card-value blue">161</div></div>
+<div class="card"><div class="card-label">超标小组</div><div class="card-value red">7</div></div>
 </div>
-<div class="over-summary">⚠️ 超标小组（>24.7%）：行业四组(25.0%), 行业七组(33.3%), 行业十二组(33.3%), 平台专家七组(33.3%), 平台专家四组(33.3%), 平台专家十组(50.0%), 行业策略组(50.0%)</div>
-<div class="section">
-<h2>📈 整体比例趋势（近30天）</h2>
-<div class="chart-container"><canvas id="lineChart"></canvas></div>
+<div class="chart-section">
+<div class="chart-title">📈 整体比例趋势（近16天）</div>
+<div class="chart-container"><canvas id="trendChart"></canvas></div>
 </div>
-<div class="section">
-<h2>📊 各小组实习生比例</h2>
-<h3>行业一组 ~ 行业十二组</h3>
-<div id="industry-bars"></div>
-<h3>平台专家一组 ~ 平台专家十二组</h3>
-<div id="platform-bars"></div>
-<h3>行业策略组</h3>
-<div id="strategy-bars"></div>
+<div class="chart-section">
+<div class="chart-title">各小组实习生比例</div>
+<div class="section-header">行业组</div>
+<div class="bar-group">
+<div class="bar-label"><span>行业一组</span><span style="color:#52c41a">11.1%（实习1 / 正式9）</span></div>
+<div class="bar-track"><div class="bar-fill green" style="width:18.5%"></div><div class="bar-baseline" style="left:41.16666666666667%"></div></div>
 </div>
+<div class="bar-group">
+<div class="bar-label"><span>行业七组</span><span style="color:#ff4d4f">33.3%（实习3 / 正式9）</span></div>
+<div class="bar-track"><div class="bar-fill red" style="width:55.49999999999999%"></div><div class="bar-baseline" style="left:41.16666666666667%"></div></div>
+</div>
+<div class="bar-group">
+<div class="bar-label"><span>行业三组</span><span style="color:#52c41a">11.1%（实习1 / 正式9）</span></div>
+<div class="bar-track"><div class="bar-fill green" style="width:18.5%"></div><div class="bar-baseline" style="left:41.16666666666667%"></div></div>
+</div>
+<div class="bar-group">
+<div class="bar-label"><span>行业九组</span><span style="color:#52c41a">10.0%（实习1 / 正式10）</span></div>
+<div class="bar-track"><div class="bar-fill green" style="width:16.666666666666664%"></div><div class="bar-baseline" style="left:41.16666666666667%"></div></div>
+</div>
+<div class="bar-group">
+<div class="bar-label"><span>行业二组</span><span style="color:#52c41a">22.2%（实习2 / 正式9）</span></div>
+<div class="bar-track"><div class="bar-fill green" style="width:37.0%"></div><div class="bar-baseline" style="left:41.16666666666667%"></div></div>
+</div>
+<div class="bar-group">
+<div class="bar-label"><span>行业五组</span><span style="color:#52c41a">20.0%（实习1 / 正式5）</span></div>
+<div class="bar-track"><div class="bar-fill green" style="width:33.33333333333333%"></div><div class="bar-baseline" style="left:41.16666666666667%"></div></div>
+</div>
+<div class="bar-group">
+<div class="bar-label"><span>行业八组</span><span style="color:#52c41a">20.0%（实习1 / 正式5）</span></div>
+<div class="bar-track"><div class="bar-fill green" style="width:33.33333333333333%"></div><div class="bar-baseline" style="left:41.16666666666667%"></div></div>
+</div>
+<div class="bar-group">
+<div class="bar-label"><span>行业六组</span><span style="color:#52c41a">11.1%（实习1 / 正式9）</span></div>
+<div class="bar-track"><div class="bar-fill green" style="width:18.5%"></div><div class="bar-baseline" style="left:41.16666666666667%"></div></div>
+</div>
+<div class="bar-group">
+<div class="bar-label"><span>行业十一组</span><span style="color:#52c41a">14.3%（实习1 / 正式7）</span></div>
+<div class="bar-track"><div class="bar-fill green" style="width:23.833333333333336%"></div><div class="bar-baseline" style="left:41.16666666666667%"></div></div>
+</div>
+<div class="bar-group">
+<div class="bar-label"><span>行业十二组</span><span style="color:#ff4d4f">33.3%（实习1 / 正式3）</span></div>
+<div class="bar-track"><div class="bar-fill red" style="width:55.49999999999999%"></div><div class="bar-baseline" style="left:41.16666666666667%"></div></div>
+</div>
+<div class="bar-group">
+<div class="bar-label"><span>行业十组</span><span style="color:#52c41a">22.2%（实习2 / 正式9）</span></div>
+<div class="bar-track"><div class="bar-fill green" style="width:37.0%"></div><div class="bar-baseline" style="left:41.16666666666667%"></div></div>
+</div>
+<div class="bar-group">
+<div class="bar-label"><span>行业四组</span><span style="color:#ff4d4f">25.0%（实习1 / 正式4）</span></div>
+<div class="bar-track"><div class="bar-fill red" style="width:41.66666666666667%"></div><div class="bar-baseline" style="left:41.16666666666667%"></div></div>
+</div><div class="section-header">平台专家组</div>
+<div class="bar-group">
+<div class="bar-label"><span>平台专家一组</span><span style="color:#52c41a">20.0%（实习1 / 正式5）</span></div>
+<div class="bar-track"><div class="bar-fill green" style="width:33.33333333333333%"></div><div class="bar-baseline" style="left:41.16666666666667%"></div></div>
+</div>
+<div class="bar-group">
+<div class="bar-label"><span>平台专家七组</span><span style="color:#ff4d4f">33.3%（实习3 / 正式9）</span></div>
+<div class="bar-track"><div class="bar-fill red" style="width:55.49999999999999%"></div><div class="bar-baseline" style="left:41.16666666666667%"></div></div>
+</div>
+<div class="bar-group">
+<div class="bar-label"><span>平台专家三组</span><span style="color:#52c41a">0.0%（实习0 / 正式8）</span></div>
+<div class="bar-track"><div class="bar-fill green" style="width:0.0%"></div><div class="bar-baseline" style="left:41.16666666666667%"></div></div>
+</div>
+<div class="bar-group">
+<div class="bar-label"><span>平台专家九组</span><span style="color:#52c41a">16.7%（实习1 / 正式6）</span></div>
+<div class="bar-track"><div class="bar-fill green" style="width:27.833333333333332%"></div><div class="bar-baseline" style="left:41.16666666666667%"></div></div>
+</div>
+<div class="bar-group">
+<div class="bar-label"><span>平台专家二组</span><span style="color:#52c41a">11.1%（实习1 / 正式9）</span></div>
+<div class="bar-track"><div class="bar-fill green" style="width:18.5%"></div><div class="bar-baseline" style="left:41.16666666666667%"></div></div>
+</div>
+<div class="bar-group">
+<div class="bar-label"><span>平台专家五组</span><span style="color:#52c41a">0.0%（实习0 / 正式5）</span></div>
+<div class="bar-track"><div class="bar-fill green" style="width:0.0%"></div><div class="bar-baseline" style="left:41.16666666666667%"></div></div>
+</div>
+<div class="bar-group">
+<div class="bar-label"><span>平台专家八组</span><span style="color:#52c41a">20.0%（实习1 / 正式5）</span></div>
+<div class="bar-track"><div class="bar-fill green" style="width:33.33333333333333%"></div><div class="bar-baseline" style="left:41.16666666666667%"></div></div>
+</div>
+<div class="bar-group">
+<div class="bar-label"><span>平台专家六组</span><span style="color:#52c41a">20.0%（实习1 / 正式5）</span></div>
+<div class="bar-track"><div class="bar-fill green" style="width:33.33333333333333%"></div><div class="bar-baseline" style="left:41.16666666666667%"></div></div>
+</div>
+<div class="bar-group">
+<div class="bar-label"><span>平台专家十一组</span><span style="color:#52c41a">0.0%（实习0 / 正式5）</span></div>
+<div class="bar-track"><div class="bar-fill green" style="width:0.0%"></div><div class="bar-baseline" style="left:41.16666666666667%"></div></div>
+</div>
+<div class="bar-group">
+<div class="bar-label"><span>平台专家十二组</span><span style="color:#52c41a">20.0%（实习1 / 正式5）</span></div>
+<div class="bar-track"><div class="bar-fill green" style="width:33.33333333333333%"></div><div class="bar-baseline" style="left:41.16666666666667%"></div></div>
+</div>
+<div class="bar-group">
+<div class="bar-label"><span>平台专家十组</span><span style="color:#ff4d4f">50.0%（实习3 / 正式6）</span></div>
+<div class="bar-track"><div class="bar-fill red" style="width:83.33333333333334%"></div><div class="bar-baseline" style="left:41.16666666666667%"></div></div>
+</div>
+<div class="bar-group">
+<div class="bar-label"><span>平台专家四组</span><span style="color:#ff4d4f">33.3%（实习1 / 正式3）</span></div>
+<div class="bar-track"><div class="bar-fill red" style="width:55.49999999999999%"></div><div class="bar-baseline" style="left:41.16666666666667%"></div></div>
+</div><div class="section-header">其他</div>
+<div class="bar-group">
+<div class="bar-label"><span>行业策略组</span><span style="color:#ff4d4f">50.0%（实习1 / 正式2）</span></div>
+<div class="bar-track"><div class="bar-fill red" style="width:83.33333333333334%"></div><div class="bar-baseline" style="left:41.16666666666667%"></div></div>
+</div></div></div>
 <script>
-var ctx=document.getElementById('lineChart').getContext('2d');
-new Chart(ctx,{
-type:'line',
-data:{
-labels:["04-01", "04-02", "04-04", "04-06", "04-07", "04-08", "04-11", "04-12", "04-14", "04-22", "05-15", "05-21", "05-22", "05-23"],
-datasets:[{label:'实习生比例(%)',data:[24.1, 23.4, 24.1, 24.1, 24.1, 24.2, 23.5, 23.5, 23.6, 22.3, 18.6, 18.6, 18.6, 18.6],borderColor:'#165DFF',backgroundColor:'rgba(22,93,255,0.08)',fill:true,tension:0.3,pointRadius:3,pointBackgroundColor:'#165DFF'}]
-},
-options:{
-responsive:true,maintainAspectRatio:false,
-plugins:{
-annotation:{annotations:{baseline:{type:'line',yMin:24.7,yMax:24.7,borderColor:'#f53f3f',borderWidth:2,borderDash:[6,4],label:{display:true,content:'基准24.7%',position:'start',backgroundColor:'#f53f3f',font:{size:11}}}}
-},
-scales:{y:{beginAtZero:true,max:30,ticks:{callback:v=>v+'%'},grid:{color:'#f2f3f5'}},x:{grid:{display:false},ticks:{font:{size:10},maxRotation:45}}}
-}});
-function renderBars(cid,groups){
-var c=document.getElementById(cid),mx=Math.max(...groups.map(g=>g.ratio||0),24.7);
-groups.forEach(function(g){
-var p=g.ratio||0,bp=Math.min(p/mx*100,100),cl=p>24.7?'bar-warn':'bar-ok';
-var r=document.createElement('div');r.className='bar-row';
-r.innerHTML='<div class="bar-label">'+g.name+'</div><div class="bar-track"><div class="bar-fill '+cl+'" style="width:'+bp+'%"></div><div class="bar-val">'+p.toFixed(1)+'%</div></div><div class="bar-meta">'+g.intern+'/'+g.regular+'</div>';
-c.appendChild(r);
-});
-}
-renderBars('industry-bars',[{"name": "\u884c\u4e1a\u4e00\u7ec4", "intern": 1, "regular": 9, "ratio": 11.1}, {"name": "\u884c\u4e1a\u56db\u7ec4", "intern": 1, "regular": 4, "ratio": 25.0}, {"name": "\u884c\u4e1a\u5341\u7ec4", "intern": 2, "regular": 9, "ratio": 22.2}, {"name": "\u884c\u4e1a\u516b\u7ec4", "intern": 1, "regular": 5, "ratio": 20.0}, {"name": "\u884c\u4e1a\u4e8c\u7ec4", "intern": 2, "regular": 9, "ratio": 22.2}, {"name": "\u884c\u4e1a\u4e09\u7ec4", "intern": 1, "regular": 9, "ratio": 11.1}, {"name": "\u884c\u4e1a\u5341\u4e00\u7ec4", "intern": 1, "regular": 7, "ratio": 14.3}, {"name": "\u884c\u4e1a\u4e94\u7ec4", "intern": 1, "regular": 5, "ratio": 20.0}, {"name": "\u884c\u4e1a\u4e03\u7ec4", "intern": 3, "regular": 9, "ratio": 33.3}, {"name": "\u884c\u4e1a\u4e5d\u7ec4", "intern": 1, "regular": 10, "ratio": 10.0}, {"name": "\u884c\u4e1a\u516d\u7ec4", "intern": 1, "regular": 9, "ratio": 11.1}, {"name": "\u884c\u4e1a\u5341\u4e8c\u7ec4", "intern": 1, "regular": 3, "ratio": 33.3}]);
-renderBars('platform-bars',[{"name": "\u5e73\u53f0\u4e13\u5bb6\u516b\u7ec4", "intern": 1, "regular": 5, "ratio": 20.0}, {"name": "\u5e73\u53f0\u4e13\u5bb6\u4e09\u7ec4", "intern": 0, "regular": 8, "ratio": 0.0}, {"name": "\u5e73\u53f0\u4e13\u5bb6\u4e94\u7ec4", "intern": 0, "regular": 5, "ratio": 0.0}, {"name": "\u5e73\u53f0\u4e13\u5bb6\u5341\u4e00\u7ec4", "intern": 0, "regular": 5, "ratio": 0.0}, {"name": "\u5e73\u53f0\u4e13\u5bb6\u4e03\u7ec4", "intern": 3, "regular": 9, "ratio": 33.3}, {"name": "\u5e73\u53f0\u4e13\u5bb6\u4e8c\u7ec4", "intern": 1, "regular": 9, "ratio": 11.1}, {"name": "\u5e73\u53f0\u4e13\u5bb6\u56db\u7ec4", "intern": 1, "regular": 3, "ratio": 33.3}, {"name": "\u5e73\u53f0\u4e13\u5bb6\u5341\u7ec4", "intern": 3, "regular": 6, "ratio": 50.0}, {"name": "\u5e73\u53f0\u4e13\u5bb6\u516d\u7ec4", "intern": 1, "regular": 5, "ratio": 20.0}, {"name": "\u5e73\u53f0\u4e13\u5bb6\u4e5d\u7ec4", "intern": 1, "regular": 6, "ratio": 16.7}, {"name": "\u5e73\u53f0\u4e13\u5bb6\u5341\u4e8c\u7ec4", "intern": 1, "regular": 5, "ratio": 20.0}, {"name": "\u5e73\u53f0\u4e13\u5bb6\u4e00\u7ec4", "intern": 1, "regular": 5, "ratio": 20.0}]);
-renderBars('strategy-bars',[{"name": "\u884c\u4e1a\u7b56\u7565\u7ec4", "intern": 1, "regular": 2, "ratio": 50.0}]);
+const canvas = document.getElementById('trendChart');
+const ctx = canvas.getContext('2d');
+const container = canvas.parentElement;
+canvas.width = container.offsetWidth * 2;
+canvas.height = 600;
+ctx.scale(2, 2);
+const W = container.offsetWidth, H = 300;
+const padding = {top: 30, right: 30, bottom: 40, left: 50};
+const chartW = W - padding.left - padding.right, chartH = H - padding.top - padding.bottom;
+const dates = ["05-25", "05-23", "05-22", "05-21", "05-15", "04-22", "04-14", "04-13", "04-12", "04-11", "04-08", "04-07", "04-06", "04-04", "04-02", "04-01"];
+const ratios = [18.6, 18.6, 18.6, 18.6, 18.6, 22.3, 23.6, 23.5, 23.5, 23.5, 24.2, 24.1, 24.1, 24.1, 23.4, 24.1];
+const base = 24.7;
+const maxR = Math.max(...ratios, base) * 1.2;
+const bY = padding.top + chartH - (base / maxR) * chartH;
+ctx.strokeStyle = '#ff4d4f'; ctx.lineWidth = 1; ctx.setLineDash([5,5]);
+ctx.beginPath(); ctx.moveTo(padding.left, bY); ctx.lineTo(W - padding.right, bY); ctx.stroke(); ctx.setLineDash([]);
+ctx.fillStyle = '#ff4d4f'; ctx.font = '11px sans-serif'; ctx.textAlign = 'right';
+ctx.fillText('基准 ' + base + '%', W - padding.right - 5, bY - 5);
+ctx.strokeStyle = '#f0f0f0'; ctx.lineWidth = 0.5;
+for (let i = 0; i <= 4; i++) { const y = padding.top + (chartH/4)*i; ctx.beginPath(); ctx.moveTo(padding.left, y); ctx.lineTo(W-padding.right, y); ctx.stroke(); }
+ctx.strokeStyle = '#1890ff'; ctx.lineWidth = 2.5; ctx.lineJoin = 'round'; ctx.beginPath();
+const step = chartW / (dates.length - 1 || 1);
+ratios.forEach((r, i) => { const x = padding.left + i*step; const y = padding.top + chartH - (r/maxR)*chartH; if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); }); ctx.stroke();
+ratios.forEach((r, i) => { const x = padding.left + i*step; const y = padding.top + chartH - (r/maxR)*chartH;
+ctx.fillStyle = r > base ? '#ff4d4f' : '#1890ff'; ctx.beginPath(); ctx.arc(x,y,4,0,Math.PI*2); ctx.fill();
+ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(x,y,2,0,Math.PI*2); ctx.fill();
+ctx.fillStyle = '#666'; ctx.font = '10px sans-serif'; ctx.textAlign = 'center';
+if(i%2===0||dates.length<=10) ctx.fillText(r+'%', x, y-10); });
+ctx.fillStyle = '#999'; ctx.font = '10px sans-serif'; ctx.textAlign = 'center';
+dates.forEach((d, i) => { const x = padding.left + i*step; if(i%2===0||dates.length<=10) ctx.fillText(d, x, H-10); });
+ctx.fillStyle = '#999'; ctx.textAlign = 'right';
+for(let i=0;i<=4;i++){ const v=(maxR/4)*(4-i); const y=padding.top+(chartH/4)*i; ctx.fillText(v.toFixed(0)+'%', padding.left-8, y+4); }
 </script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
 </body></html>
