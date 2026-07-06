@@ -784,7 +784,7 @@ body {
   </div>
   <div class="topbar-meta">
     <span class="badge-live">LIVE</span>
-    2026 Q2 · 更新于 2026-06-28
+    2026 Q2 · 更新于 2026-07-06
   </div>
 </div>
 
@@ -950,9 +950,48 @@ const BUDGET_DATA = [
     "l1": "商业化",
     "l2": "行业一部",
     "budget": 164,
-    "actual": 162,
-    "transIn": 14,
-    "transOut": 3,
+    "actual": 172,
+    "transIn": 3,
+    "transOut": 2,
+    "pending": 0,
+    "leaving": 0,
+    "real": true,
+    "leader": "昂扬(李昂)",
+    "matchingDegree": "优秀"
+  },
+  {
+    "l1": "商业化",
+    "l2": "行业六部",
+    "budget": 48,
+    "actual": 52,
+    "transIn": 3,
+    "transOut": 1,
+    "pending": 0,
+    "leaving": 0,
+    "real": true,
+    "leader": "昂扬(李昂)",
+    "matchingDegree": "优秀"
+  },
+  {
+    "l1": "商业化",
+    "l2": "行业一部",
+    "budget": 164,
+    "actual": 172,
+    "transIn": 3,
+    "transOut": 2,
+    "pending": 0,
+    "leaving": 0,
+    "real": true,
+    "leader": "昂扬(李昂)",
+    "matchingDegree": "优秀"
+  },
+  {
+    "l1": "商业化",
+    "l2": "行业六部",
+    "budget": 48,
+    "actual": 52,
+    "transIn": 3,
+    "transOut": 1,
     "pending": 0,
     "leaving": 0,
     "real": true,
@@ -1050,17 +1089,6 @@ const BUDGET_DATA = [
   {
     "l1": "商业化",
     "l2": "行业五部",
-    "budget": 0,
-    "actual": 0,
-    "transIn": 0,
-    "transOut": 0,
-    "pending": 0,
-    "leaving": 0,
-    "real": false
-  },
-  {
-    "l1": "商业化",
-    "l2": "行业六部",
     "budget": 0,
     "actual": 0,
     "transIn": 0,
@@ -1405,119 +1433,11 @@ const BUDGET_DATA = [
 const FLOW_DATA = {
   transIn: [
   {
-    "name": "夏昭曦",
-    "level": "IC",
-    "dept": "商业化",
-    "subDept": "行业七组",
-    "date": "2026-06-29",
-    "manager": "",
-    "highlight": false
-  },
-  {
-    "name": "陈静仪",
-    "level": "IC",
-    "dept": "商业化",
-    "subDept": "行业七组",
-    "date": "2026-07-01",
-    "manager": "",
-    "highlight": false
-  },
-  {
-    "name": "李乐文",
-    "level": "IC",
-    "dept": "商业化",
-    "subDept": "平台专家四组",
-    "date": "2026-07-01",
-    "manager": "",
-    "highlight": false
-  },
-  {
-    "name": "夏以尧",
-    "level": "IC",
-    "dept": "商业化",
-    "subDept": "平台专家二组",
-    "date": "2026-07-01",
-    "manager": "",
-    "highlight": false
-  },
-  {
-    "name": "张诗佳",
-    "level": "IC",
-    "dept": "商业化",
-    "subDept": "平台专家十组",
-    "date": "2026-07-01",
-    "manager": "",
-    "highlight": false
-  },
-  {
-    "name": "鲍瑞欣",
-    "level": "IC",
-    "dept": "商业化",
-    "subDept": "行业四组",
-    "date": "2026-07-01",
-    "manager": "",
-    "highlight": false
-  },
-  {
-    "name": "郭梓妍",
-    "level": "IC",
-    "dept": "商业化",
-    "subDept": "平台专家十组",
-    "date": "2026-07-01",
-    "manager": "",
-    "highlight": false
-  },
-  {
     "name": "金润雅",
     "level": "IC",
     "dept": "商业化",
     "subDept": "行业一组",
-    "date": "2026-07-01",
-    "manager": "",
-    "highlight": false
-  },
-  {
-    "name": "冯钰婷",
-    "level": "IC",
-    "dept": "商业化",
-    "subDept": "平台专家二组",
-    "date": "2026-07-01",
-    "manager": "",
-    "highlight": false
-  },
-  {
-    "name": "陈梦莹",
-    "level": "IC",
-    "dept": "商业化",
-    "subDept": "平台专家二组",
-    "date": "2026-07-01",
-    "manager": "",
-    "highlight": false
-  },
-  {
-    "name": "万莎莎",
-    "level": "IC",
-    "dept": "商业化",
-    "subDept": "平台专家七组",
-    "date": "2026-07-01",
-    "manager": "",
-    "highlight": false
-  },
-  {
-    "name": "张婧颖",
-    "level": "IC",
-    "dept": "商业化",
-    "subDept": "行业一组",
-    "date": "2026-07-01",
-    "manager": "",
-    "highlight": false
-  },
-  {
-    "name": "沈青青",
-    "level": "IC",
-    "dept": "商业化",
-    "subDept": "平台专家一组",
-    "date": "2026-07-03",
+    "date": "2026-07-06",
     "manager": "",
     "highlight": false
   },
@@ -1529,9 +1449,108 @@ const FLOW_DATA = {
     "date": "2026-07-10",
     "manager": "",
     "highlight": false
+  },
+  {
+    "name": "万莎莎",
+    "level": "IC",
+    "dept": "商业化",
+    "subDept": "平台专家七组",
+    "date": "2026-08-03",
+    "manager": "",
+    "highlight": false
+  },
+  {
+    "name": "王玉熙",
+    "level": "IC",
+    "dept": "商业化",
+    "subDept": "行业四组",
+    "date": "2026-07-13",
+    "manager": "",
+    "highlight": false
+  },
+  {
+    "name": "贺煦",
+    "level": "IC",
+    "dept": "商业化",
+    "subDept": "平台专家二组",
+    "date": "2026-07-17",
+    "manager": "",
+    "highlight": false
+  },
+  {
+    "name": "吴超",
+    "level": "L1",
+    "dept": "商业化",
+    "subDept": "行业六部",
+    "date": "2026-07-24",
+    "manager": "",
+    "highlight": true
+  },
+  {
+    "name": "金润雅",
+    "level": "IC",
+    "dept": "商业化",
+    "subDept": "行业一组",
+    "date": "2026-07-06",
+    "manager": "",
+    "highlight": false
+  },
+  {
+    "name": "邱宇轩",
+    "level": "IC",
+    "dept": "商业化",
+    "subDept": "平台专家一组",
+    "date": "2026-07-10",
+    "manager": "",
+    "highlight": false
+  },
+  {
+    "name": "万莎莎",
+    "level": "IC",
+    "dept": "商业化",
+    "subDept": "平台专家七组",
+    "date": "2026-08-03",
+    "manager": "",
+    "highlight": false
+  },
+  {
+    "name": "王玉熙",
+    "level": "IC",
+    "dept": "商业化",
+    "subDept": "行业四组",
+    "date": "2026-07-13",
+    "manager": "",
+    "highlight": false
+  },
+  {
+    "name": "贺煦",
+    "level": "IC",
+    "dept": "商业化",
+    "subDept": "平台专家二组",
+    "date": "2026-07-17",
+    "manager": "",
+    "highlight": false
+  },
+  {
+    "name": "吴超",
+    "level": "L1",
+    "dept": "商业化",
+    "subDept": "行业六部",
+    "date": "2026-07-24",
+    "manager": "",
+    "highlight": true
   }
 ],
   transOut: [
+  {
+    "name": "十七(孙潇)",
+    "level": "IC",
+    "dept": "商业化",
+    "subDept": "行业九组",
+    "date": "2026-07-31",
+    "type": "被动离职",
+    "highlight": false
+  },
   {
     "name": "沐泽(孔敏)",
     "level": "IC",
@@ -1542,20 +1561,38 @@ const FLOW_DATA = {
     "highlight": false
   },
   {
-    "name": "十四(李哲威)",
+    "name": "朔良(宋炫玮)",
     "level": "IC",
     "dept": "商业化",
-    "subDept": "行业四组",
-    "date": "2026-07-03",
+    "subDept": "平台专家四组",
+    "date": "2026-08-03",
     "type": "主动离职",
     "highlight": false
   },
   {
-    "name": "火舞(王宁静)",
+    "name": "十七(孙潇)",
     "level": "IC",
     "dept": "商业化",
-    "subDept": "平台专家三组",
-    "date": "2026-06-30",
+    "subDept": "行业九组",
+    "date": "2026-07-31",
+    "type": "被动离职",
+    "highlight": false
+  },
+  {
+    "name": "沐泽(孔敏)",
+    "level": "IC",
+    "dept": "商业化",
+    "subDept": "平台专家十一组",
+    "date": "2026-07-24",
+    "type": "主动离职",
+    "highlight": false
+  },
+  {
+    "name": "朔良(宋炫玮)",
+    "level": "IC",
+    "dept": "商业化",
+    "subDept": "平台专家四组",
+    "date": "2026-08-03",
     "type": "主动离职",
     "highlight": false
   }
@@ -2037,76 +2074,76 @@ const EEDATA_DATA = {
   "l1Trend": {
     "商业化": [
       {
-        "month": "2025年07月",
-        "hcPercent": 95.3,
-        "totalHc": 149,
-        "currentHc": 142
-      },
-      {
         "month": "2025年08月",
-        "hcPercent": 98.7,
-        "totalHc": 149,
-        "currentHc": 147
+        "hcPercent": 103.6,
+        "totalHc": 193,
+        "currentHc": 200
       },
       {
         "month": "2025年09月",
-        "hcPercent": 106.7,
-        "totalHc": 149,
-        "currentHc": 159
+        "hcPercent": 109.8,
+        "totalHc": 193,
+        "currentHc": 212
       },
       {
         "month": "2025年10月",
-        "hcPercent": 107.4,
-        "totalHc": 149,
-        "currentHc": 160
+        "hcPercent": 110.9,
+        "totalHc": 193,
+        "currentHc": 214
       },
       {
         "month": "2025年11月",
-        "hcPercent": 107.4,
-        "totalHc": 149,
-        "currentHc": 160
+        "hcPercent": 110.9,
+        "totalHc": 193,
+        "currentHc": 214
       },
       {
         "month": "2025年12月",
-        "hcPercent": 107.4,
-        "totalHc": 149,
-        "currentHc": 160
+        "hcPercent": 110.9,
+        "totalHc": 193,
+        "currentHc": 214
       },
       {
         "month": "2026年01月",
-        "hcPercent": 97.6,
-        "totalHc": 164,
-        "currentHc": 160
+        "hcPercent": 101.4,
+        "totalHc": 212,
+        "currentHc": 215
       },
       {
         "month": "2026年02月",
-        "hcPercent": 102.4,
-        "totalHc": 164,
-        "currentHc": 168
+        "hcPercent": 105.2,
+        "totalHc": 212,
+        "currentHc": 223
       },
       {
         "month": "2026年03月",
-        "hcPercent": 100.6,
-        "totalHc": 164,
-        "currentHc": 165
+        "hcPercent": 104.7,
+        "totalHc": 212,
+        "currentHc": 222
       },
       {
         "month": "2026年04月",
-        "hcPercent": 101.8,
-        "totalHc": 164,
-        "currentHc": 167
+        "hcPercent": 106.1,
+        "totalHc": 212,
+        "currentHc": 225
       },
       {
         "month": "2026年05月",
-        "hcPercent": 96.3,
-        "totalHc": 164,
-        "currentHc": 158
+        "hcPercent": 100.5,
+        "totalHc": 212,
+        "currentHc": 213
       },
       {
         "month": "2026年06月",
-        "hcPercent": 98.8,
-        "totalHc": 164,
-        "currentHc": 162
+        "hcPercent": 102.4,
+        "totalHc": 212,
+        "currentHc": 217
+      },
+      {
+        "month": "2026年07月",
+        "hcPercent": 105.7,
+        "totalHc": 212,
+        "currentHc": 224
       }
     ],
     "平台部": [],
@@ -2116,12 +2153,6 @@ const EEDATA_DATA = {
   "deptTrend": {
     "行业一部": [
       {
-        "month": "2025年07月",
-        "hcPercent": 95.3,
-        "totalHc": 149,
-        "currentHc": 142
-      },
-      {
         "month": "2025年08月",
         "hcPercent": 98.7,
         "totalHc": 149,
@@ -2183,18 +2214,104 @@ const EEDATA_DATA = {
       },
       {
         "month": "2026年06月",
-        "hcPercent": 98.8,
+        "hcPercent": 99.4,
         "totalHc": 164,
-        "currentHc": 162
+        "currentHc": 163
+      },
+      {
+        "month": "2026年07月",
+        "hcPercent": 104.9,
+        "totalHc": 164,
+        "currentHc": 172
+      }
+    ],
+    "行业六部": [
+      {
+        "month": "2025年08月",
+        "hcPercent": 120.5,
+        "totalHc": 44,
+        "currentHc": 53
+      },
+      {
+        "month": "2025年09月",
+        "hcPercent": 120.5,
+        "totalHc": 44,
+        "currentHc": 53
+      },
+      {
+        "month": "2025年10月",
+        "hcPercent": 122.7,
+        "totalHc": 44,
+        "currentHc": 54
+      },
+      {
+        "month": "2025年11月",
+        "hcPercent": 122.7,
+        "totalHc": 44,
+        "currentHc": 54
+      },
+      {
+        "month": "2025年12月",
+        "hcPercent": 122.7,
+        "totalHc": 44,
+        "currentHc": 54
+      },
+      {
+        "month": "2026年01月",
+        "hcPercent": 114.6,
+        "totalHc": 48,
+        "currentHc": 55
+      },
+      {
+        "month": "2026年02月",
+        "hcPercent": 114.6,
+        "totalHc": 48,
+        "currentHc": 55
+      },
+      {
+        "month": "2026年03月",
+        "hcPercent": 118.8,
+        "totalHc": 48,
+        "currentHc": 57
+      },
+      {
+        "month": "2026年04月",
+        "hcPercent": 120.8,
+        "totalHc": 48,
+        "currentHc": 58
+      },
+      {
+        "month": "2026年05月",
+        "hcPercent": 114.6,
+        "totalHc": 48,
+        "currentHc": 55
+      },
+      {
+        "month": "2026年06月",
+        "hcPercent": 112.5,
+        "totalHc": 48,
+        "currentHc": 54
+      },
+      {
+        "month": "2026年07月",
+        "hcPercent": 108.3,
+        "totalHc": 48,
+        "currentHc": 52
       }
     ]
   },
   "deptCard": {
     "行业一部": {
-      "monthOnboard": 6,
-      "yearOnboard": 38,
-      "monthDim": 2,
-      "yearDim": 18
+      "monthOnboard": 11,
+      "yearOnboard": 50,
+      "monthDim": 1,
+      "yearDim": 20
+    },
+    "行业六部": {
+      "monthOnboard": 2,
+      "yearOnboard": 14,
+      "monthDim": 1,
+      "yearDim": 6
     }
   }
 };
@@ -2419,34 +2536,34 @@ const DEPT_DETAIL_DB = {
     "deptName": "行业一部",
     "leader": "昂扬(李昂)",
     "matchingDegree": "优秀",
-    "currentHc": 162,
-    "internHc": 33,
+    "currentHc": 172,
+    "internHc": 29,
     "budgetHc": 164,
-    "transIn": 14,
-    "transOut": 3,
+    "transIn": 3,
+    "transOut": 2,
     "subs": [
       {
         "name": "行业一组",
         "leader": "千月(陈思琪)",
         "matchingDegree": "优秀",
-        "current": 10,
-        "internHc": 3,
+        "current": 12,
+        "internHc": 2,
         "total": 8,
-        "transIn": 2,
+        "transIn": 1,
         "transOut": 0,
-        "predict": 12,
+        "predict": 13,
         "match": "超编"
       },
       {
         "name": "行业二组",
         "leader": "吴邪(吴建成)",
         "matchingDegree": "优秀",
-        "current": 9,
+        "current": 10,
         "internHc": 1,
         "total": 6,
         "transIn": 0,
         "transOut": 0,
-        "predict": 9,
+        "predict": 10,
         "match": "超编"
       },
       {
@@ -2465,32 +2582,32 @@ const DEPT_DETAIL_DB = {
         "name": "行业四组",
         "leader": "千月(陈思琪)",
         "matchingDegree": "匹配",
-        "current": 4,
+        "current": 3,
         "internHc": 1,
         "total": 4,
-        "transIn": 1,
-        "transOut": 1,
-        "predict": 4,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 3,
         "match": "达标"
       },
       {
         "name": "行业五组",
         "leader": "吴邪(吴建成)",
         "matchingDegree": "匹配",
-        "current": 5,
+        "current": 6,
         "internHc": 1,
         "total": 5,
         "transIn": 0,
         "transOut": 0,
-        "predict": 5,
-        "match": "达标"
+        "predict": 6,
+        "match": "超编"
       },
       {
         "name": "行业六组",
         "leader": "嘉莉(惠江雯)",
         "matchingDegree": "匹配",
         "current": 9,
-        "internHc": 2,
+        "internHc": 1,
         "total": 5,
         "transIn": 0,
         "transOut": 0,
@@ -2501,35 +2618,35 @@ const DEPT_DETAIL_DB = {
         "name": "行业七组",
         "leader": "昭燃(千艺)",
         "matchingDegree": "匹配",
-        "current": 10,
+        "current": 11,
         "internHc": 2,
         "total": 9,
-        "transIn": 2,
+        "transIn": 0,
         "transOut": 0,
-        "predict": 12,
+        "predict": 11,
         "match": "超编"
       },
       {
         "name": "行业八组",
         "leader": "吴邪(吴建成)",
         "matchingDegree": "优秀",
-        "current": 5,
+        "current": 6,
         "internHc": 1,
         "total": 7,
         "transIn": 0,
         "transOut": 0,
-        "predict": 5,
+        "predict": 6,
         "match": "达标"
       },
       {
         "name": "行业九组",
         "leader": "迪非(李琦)",
         "matchingDegree": "匹配",
-        "current": 10,
+        "current": 11,
         "internHc": 1,
         "total": 7,
         "transIn": 0,
-        "transOut": 0,
+        "transOut": 1,
         "predict": 10,
         "match": "超编"
       },
@@ -2561,47 +2678,47 @@ const DEPT_DETAIL_DB = {
         "name": "行业十二组",
         "leader": "希坦(贺琼)",
         "matchingDegree": "匹配",
-        "current": 3,
+        "current": 4,
         "internHc": 1,
         "total": 4,
         "transIn": 0,
         "transOut": 0,
-        "predict": 3,
+        "predict": 4,
         "match": "达标"
       },
       {
         "name": "平台专家一组",
         "leader": "古娴(高逸群)",
         "matchingDegree": "匹配",
-        "current": 5,
+        "current": 7,
         "internHc": 2,
         "total": 8,
-        "transIn": 2,
+        "transIn": 1,
         "transOut": 0,
-        "predict": 7,
+        "predict": 8,
         "match": "达标"
       },
       {
         "name": "平台专家二组",
         "leader": "菀得(杨森)",
         "matchingDegree": "优秀",
-        "current": 9,
+        "current": 10,
         "internHc": 1,
         "total": 5,
-        "transIn": 3,
+        "transIn": 0,
         "transOut": 0,
-        "predict": 12,
+        "predict": 10,
         "match": "超编"
       },
       {
         "name": "平台专家三组",
         "leader": "若琳(陈若琳)",
         "matchingDegree": "优秀",
-        "current": 8,
+        "current": 7,
         "internHc": 2,
         "total": 6,
         "transIn": 0,
-        "transOut": 1,
+        "transOut": 0,
         "predict": 7,
         "match": "超编"
       },
@@ -2609,10 +2726,10 @@ const DEPT_DETAIL_DB = {
         "name": "平台专家四组",
         "leader": "古娴(高逸群)",
         "matchingDegree": "优秀",
-        "current": 2,
+        "current": 3,
         "internHc": 1,
         "total": 3,
-        "transIn": 1,
+        "transIn": 0,
         "transOut": 0,
         "predict": 3,
         "match": "达标"
@@ -2621,37 +2738,37 @@ const DEPT_DETAIL_DB = {
         "name": "平台专家五组",
         "leader": "菀得(杨森)",
         "matchingDegree": "优秀",
-        "current": 4,
+        "current": 5,
         "internHc": 0,
         "total": 5,
         "transIn": 0,
         "transOut": 0,
-        "predict": 4,
+        "predict": 5,
         "match": "达标"
       },
       {
         "name": "平台专家六组",
         "leader": "希莫(焦潞林)",
         "matchingDegree": "匹配",
-        "current": 3,
-        "internHc": 0,
+        "current": 6,
+        "internHc": 1,
         "total": 4,
         "transIn": 0,
         "transOut": 0,
-        "predict": 3,
-        "match": "达标"
+        "predict": 6,
+        "match": "超编"
       },
       {
         "name": "平台专家七组",
         "leader": "希莫(焦潞林)",
         "matchingDegree": "匹配",
-        "current": 9,
-        "internHc": 4,
+        "current": 6,
+        "internHc": 3,
         "total": 8,
         "transIn": 1,
         "transOut": 0,
-        "predict": 10,
-        "match": "超编"
+        "predict": 7,
+        "match": "达标"
       },
       {
         "name": "平台专家八组",
@@ -2669,36 +2786,36 @@ const DEPT_DETAIL_DB = {
         "name": "平台专家九组",
         "leader": "清也(刘月)",
         "matchingDegree": "匹配",
-        "current": 7,
+        "current": 6,
         "internHc": 1,
         "total": 6,
         "transIn": 0,
         "transOut": 0,
-        "predict": 7,
-        "match": "超编"
+        "predict": 6,
+        "match": "达标"
       },
       {
         "name": "平台专家十组",
         "leader": "珠珠(朱梦倩)",
         "matchingDegree": "匹配",
-        "current": 7,
-        "internHc": 3,
+        "current": 8,
+        "internHc": 1,
         "total": 6,
-        "transIn": 2,
+        "transIn": 0,
         "transOut": 0,
-        "predict": 9,
+        "predict": 8,
         "match": "超编"
       },
       {
         "name": "平台专家十一组",
         "leader": "惊鸿(王晶晶)",
         "matchingDegree": "",
-        "current": 5,
+        "current": 4,
         "internHc": 0,
         "total": 5,
         "transIn": 0,
         "transOut": 1,
-        "predict": 4,
+        "predict": 3,
         "match": "达标"
       },
       {
@@ -2715,7 +2832,7 @@ const DEPT_DETAIL_DB = {
       },
       {
         "name": "行业策略组",
-        "leader": "飞云(张一鸣)",
+        "leader": "久堂(顾翔浩)",
         "matchingDegree": "匹配",
         "current": 2,
         "internHc": 0,
@@ -2728,17 +2845,11 @@ const DEPT_DETAIL_DB = {
     ],
     "pendingL1L2": [],
     "leavingL1L2": [],
-    "yearOnboard": 38,
-    "yearDim": 18,
-    "monthOnboard": 6,
-    "monthDim": 2,
+    "yearOnboard": 50,
+    "yearDim": 20,
+    "monthOnboard": 11,
+    "monthDim": 1,
     "hcTrend": [
-      {
-        "month": "2025年07月",
-        "hcPercent": 95.3,
-        "totalHc": 149,
-        "currentHc": 142
-      },
       {
         "month": "2025年08月",
         "hcPercent": 98.7,
@@ -2801,9 +2912,234 @@ const DEPT_DETAIL_DB = {
       },
       {
         "month": "2026年06月",
-        "hcPercent": 98.8,
+        "hcPercent": 99.4,
         "totalHc": 164,
-        "currentHc": 162
+        "currentHc": 163
+      },
+      {
+        "month": "2026年07月",
+        "hcPercent": 104.9,
+        "totalHc": 164,
+        "currentHc": 172
+      }
+    ]
+  },
+  "行业六部": {
+    "deptName": "行业六部",
+    "leader": "昂扬(李昂)",
+    "matchingDegree": "优秀",
+    "currentHc": 52,
+    "internHc": 13,
+    "budgetHc": 48,
+    "transIn": 3,
+    "transOut": 1,
+    "subs": [
+      {
+        "name": "行业一组",
+        "leader": "子歇(陈智健)",
+        "matchingDegree": "匹配",
+        "current": 5,
+        "internHc": 1,
+        "total": 10,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 5,
+        "match": "达标"
+      },
+      {
+        "name": "行业五组",
+        "leader": "星爵(鲍志浩)",
+        "matchingDegree": "匹配",
+        "current": 3,
+        "internHc": 1,
+        "total": 0,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 3,
+        "match": "超编"
+      },
+      {
+        "name": "行业二组",
+        "leader": "诗思(王瑞雪)",
+        "matchingDegree": "匹配",
+        "current": 7,
+        "internHc": 1,
+        "total": 6,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 7,
+        "match": "超编"
+      },
+      {
+        "name": "行业三组",
+        "leader": "原野(祁毓豪)",
+        "matchingDegree": "匹配",
+        "current": 4,
+        "internHc": 1,
+        "total": 8,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 4,
+        "match": "达标"
+      },
+      {
+        "name": "行业四组",
+        "leader": "达羽(李大羽)",
+        "matchingDegree": "匹配",
+        "current": 7,
+        "internHc": 3,
+        "total": 5,
+        "transIn": 1,
+        "transOut": 0,
+        "predict": 8,
+        "match": "超编"
+      },
+      {
+        "name": "平台专家一组",
+        "leader": "沙伽(朱舜杰)",
+        "matchingDegree": "匹配",
+        "current": 4,
+        "internHc": 1,
+        "total": 6,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 4,
+        "match": "达标"
+      },
+      {
+        "name": "平台专家二组",
+        "leader": "沙伽(朱舜杰)",
+        "matchingDegree": "优秀",
+        "current": 5,
+        "internHc": 1,
+        "total": 0,
+        "transIn": 1,
+        "transOut": 0,
+        "predict": 6,
+        "match": "超编"
+      },
+      {
+        "name": "平台专家三组",
+        "leader": "奕衡(周鹏辉)",
+        "matchingDegree": "匹配",
+        "current": 5,
+        "internHc": 2,
+        "total": 6,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 5,
+        "match": "达标"
+      },
+      {
+        "name": "平台专家四组",
+        "leader": "久堂(顾翔浩)",
+        "matchingDegree": "匹配",
+        "current": 9,
+        "internHc": 1,
+        "total": 5,
+        "transIn": 0,
+        "transOut": 1,
+        "predict": 8,
+        "match": "超编"
+      },
+      {
+        "name": "行业策略组",
+        "leader": "久堂(顾翔浩)",
+        "matchingDegree": "优秀",
+        "current": 3,
+        "internHc": 1,
+        "total": 2,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 3,
+        "match": "超编"
+      }
+    ],
+    "pendingL1L2": [
+      {
+        "name": "吴超",
+        "level": "L1",
+        "dept": "行业六部",
+        "date": "2026-07-24"
+      }
+    ],
+    "leavingL1L2": [],
+    "yearOnboard": 14,
+    "yearDim": 6,
+    "monthOnboard": 2,
+    "monthDim": 1,
+    "hcTrend": [
+      {
+        "month": "2025年08月",
+        "hcPercent": 120.5,
+        "totalHc": 44,
+        "currentHc": 53
+      },
+      {
+        "month": "2025年09月",
+        "hcPercent": 120.5,
+        "totalHc": 44,
+        "currentHc": 53
+      },
+      {
+        "month": "2025年10月",
+        "hcPercent": 122.7,
+        "totalHc": 44,
+        "currentHc": 54
+      },
+      {
+        "month": "2025年11月",
+        "hcPercent": 122.7,
+        "totalHc": 44,
+        "currentHc": 54
+      },
+      {
+        "month": "2025年12月",
+        "hcPercent": 122.7,
+        "totalHc": 44,
+        "currentHc": 54
+      },
+      {
+        "month": "2026年01月",
+        "hcPercent": 114.6,
+        "totalHc": 48,
+        "currentHc": 55
+      },
+      {
+        "month": "2026年02月",
+        "hcPercent": 114.6,
+        "totalHc": 48,
+        "currentHc": 55
+      },
+      {
+        "month": "2026年03月",
+        "hcPercent": 118.8,
+        "totalHc": 48,
+        "currentHc": 57
+      },
+      {
+        "month": "2026年04月",
+        "hcPercent": 120.8,
+        "totalHc": 48,
+        "currentHc": 58
+      },
+      {
+        "month": "2026年05月",
+        "hcPercent": 114.6,
+        "totalHc": 48,
+        "currentHc": 55
+      },
+      {
+        "month": "2026年06月",
+        "hcPercent": 112.5,
+        "totalHc": 48,
+        "currentHc": 54
+      },
+      {
+        "month": "2026年07月",
+        "hcPercent": 108.3,
+        "totalHc": 48,
+        "currentHc": 52
       }
     ]
   }
