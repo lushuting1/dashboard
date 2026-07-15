@@ -70,8 +70,26 @@ new Chart(document.getElementById('trendChart'), {
   },
   options: {
     responsive: true,
+    plugins: {
+      annotation: {
+        annotations: {
+          line1: {
+            type: 'line',
+            yMin: baseline,
+            yMax: baseline,
+            borderColor: '#ff4d4f',
+            borderWidth: 2,
+            borderDash: [5,5]
+          }
+        }
+      }
+    },
     scales: {
-      y: { beginAtZero: true, max: 80, ticks: {callback: v => v + '%'} }
+      y: {
+        beginAtZero: true,
+        max: 80,
+        ticks: {callback: v => v + '%'}
+      }
     }
   }
 });
@@ -80,13 +98,34 @@ new Chart(document.getElementById('barChart'), {
   type: 'bar',
   data: {
     labels: ["\u884c\u4e1a\u4e00\u7ec4", "\u884c\u4e1a\u4e8c\u7ec4", "\u884c\u4e1a\u4e09\u7ec4", "\u884c\u4e1a\u56db\u7ec4", "\u884c\u4e1a\u4e94\u7ec4", "\u884c\u4e1a\u516d\u7ec4", "\u884c\u4e1a\u4e03\u7ec4", "\u884c\u4e1a\u516b\u7ec4", "\u884c\u4e1a\u4e5d\u7ec4", "\u884c\u4e1a\u5341\u7ec4", "\u884c\u4e1a\u5341\u4e00\u7ec4", "\u884c\u4e1a\u5341\u4e8c\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u4e00\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u4e8c\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u4e09\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u56db\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u4e94\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u516d\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u4e03\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u516b\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u4e5d\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u5341\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u5341\u4e00\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u5341\u4e8c\u7ec4", "\u884c\u4e1a\u7b56\u7565\u7ec4"],
-    datasets: [{ data: [7.7, 10.0, 11.1, 33.3, 16.7, 11.1, 18.2, 16.7, 9.1, 11.1, 14.3, 25.0, 14.3, 12.5, 28.6, 33.3, 0.0, 16.7, 66.7, 16.7, 16.7, 12.5, 0.0, 33.3, 0.0], backgroundColor: ["#52c41a", "#52c41a", "#52c41a", "#ff4d4f", "#52c41a", "#52c41a", "#52c41a", "#52c41a", "#52c41a", "#52c41a", "#52c41a", "#ff4d4f", "#52c41a", "#52c41a", "#ff4d4f", "#ff4d4f", "#52c41a", "#52c41a", "#ff4d4f", "#52c41a", "#52c41a", "#52c41a", "#52c41a", "#ff4d4f", "#52c41a"] }]
+    datasets: [{
+      data: [7.7, 10.0, 11.1, 33.3, 16.7, 11.1, 18.2, 16.7, 9.1, 11.1, 14.3, 25.0, 14.3, 12.5, 28.6, 33.3, 0.0, 16.7, 66.7, 16.7, 16.7, 12.5, 0.0, 33.3, 0.0],
+      backgroundColor: ["#52c41a", "#52c41a", "#52c41a", "#ff4d4f", "#52c41a", "#52c41a", "#52c41a", "#52c41a", "#52c41a", "#52c41a", "#52c41a", "#ff4d4f", "#52c41a", "#52c41a", "#ff4d4f", "#ff4d4f", "#52c41a", "#52c41a", "#ff4d4f", "#52c41a", "#52c41a", "#52c41a", "#52c41a", "#ff4d4f", "#52c41a"]
+    }]
   },
   options: {
     indexAxis: 'y',
     responsive: true,
+    plugins: {
+      annotation: {
+        annotations: {
+          line1: {
+            type: 'line',
+            xMin: baseline,
+            xMax: baseline,
+            borderColor: '#ff4d4f',
+            borderWidth: 2,
+            borderDash: [5,5]
+          }
+        }
+      }
+    },
     scales: {
-      x: { beginAtZero: true, max: 80, ticks: {callback: v => v + '%'} }
+      x: {
+        beginAtZero: true,
+        max: 80,
+        ticks: {callback: v => v + '%'}
+      }
     }
   }
 });
