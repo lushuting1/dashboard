@@ -1,0 +1,4099 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HC Dashboard v3 · 招财出品</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red: #FF2442;
+  --red-light: #FF6B7A;
+  --red-bg: #FFF0F2;
+  --orange: #FF8C00;
+  --green: #00C853;
+  --blue: #1565C0;
+  --gray-1: #F8F9FA;
+  --gray-2: #F0F2F5;
+  --gray-3: #E4E8EC;
+  --gray-5: #8D9BAB;
+  --gray-7: #4A5568;
+  --gray-9: #1A202C;
+  --white: #FFFFFF;
+  --shadow-sm: 0 1px 4px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.14);
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+  background: var(--gray-1);
+  color: var(--gray-9);
+  min-height: 100vh;
+}
+
+/* ── TOP NAV ── */
+.topbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-3);
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  height: 60px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-sm);
+}
+.topbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: 18px;
+  color: var(--red);
+  flex: 1;
+}
+.topbar-logo svg { width: 28px; height: 28px; }
+.topbar-meta {
+  font-size: 12px;
+  color: var(--gray-5);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.badge-live {
+  background: var(--red);
+  color: white;
+  border-radius: 4px;
+  padding: 2px 7px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  animation: pulse-badge 2s infinite;
+}
+@keyframes pulse-badge {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* ── TABS ── */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  padding: 0 32px;
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-3);
+  overflow-x: auto;
+}
+.tab-btn {
+  padding: 14px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gray-5);
+  cursor: pointer;
+  border: none;
+  background: none;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+  font-family: inherit;
+}
+.tab-btn:hover { color: var(--red); }
+.tab-btn.active {
+  color: var(--red);
+  border-bottom-color: var(--red);
+  font-weight: 700;
+}
+
+/* ── MAIN CONTAINER ── */
+.main { padding: 28px 32px 48px; max-width: 1400px; margin: 0 auto; }
+.tab-pane { display: none; animation: fadeSlide 0.3s ease; }
+.tab-pane.active { display: block; }
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── SECTION TITLE ── */
+.section-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--gray-9);
+  letter-spacing: 0.3px;
+  margin-bottom: 16px;
+  margin-top: 32px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-left: 3px solid var(--red);
+  padding-left: 10px;
+}
+.section-title:first-child { margin-top: 0; }
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--gray-3);
+}
+
+/* ── DONUT GRID ── */
+.donut-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 8px;
+}
+.donut-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: default;
+}
+.donut-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: var(--shadow-lg);
+}
+.donut-wrapper {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  flex-shrink: 0;
+}
+.donut-wrapper svg { width: 110px; height: 110px; overflow: visible; }
+.donut-track { fill: none; stroke: var(--gray-2); stroke-width: 10; }
+.donut-fill {
+  fill: none;
+  stroke-width: 10;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: 55px 55px;
+  transition: stroke-dasharray 1.2s cubic-bezier(0.4,0,0.2,1);
+}
+.donut-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+.donut-pct {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1;
+}
+.donut-pct-label { font-size: 10px; color: var(--gray-5); font-weight: 500; }
+.donut-info { flex: 1; min-width: 0; }
+.donut-name { font-size: 17px; font-weight: 700; margin-bottom: 10px; }
+.donut-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--gray-5);
+  margin-bottom: 5px;
+}
+.donut-row span:last-child { font-weight: 600; color: var(--gray-7); }
+.donut-tag {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.tag-green { background: #E8F5E9; color: #2E7D32; }
+.tag-orange { background: #FFF3E0; color: #E65100; }
+.tag-red { background: var(--red-bg); color: var(--red); }
+.tag-blue { background: #E3F2FD; color: var(--blue); }
+
+/* ── BUBBLE CHART ── */
+.bubble-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: var(--shadow-sm);
+  margin-top: 20px;
+}
+.bubble-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.bubble-title { font-size: 15px; font-weight: 700; }
+.bubble-legend {
+  display: flex;
+  gap: 16px;
+  font-size: 11px;
+  color: var(--gray-5);
+}
+.legend-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 4px;
+}
+#bubbleSvg { width: 100%; display: block; overflow: hidden; }
+.bubble-tooltip {
+  position: fixed;
+  background: rgba(26,32,44,0.92);
+  color: white;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 12px;
+  line-height: 1.7;
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.15s;
+  backdrop-filter: blur(8px);
+  max-width: 200px;
+}
+.bubble-tooltip.show { opacity: 1; }
+
+
+
+/* ── FLOW CARD ── */
+.flow-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 20px;
+}
+.flow-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+}
+.flow-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--gray-3);
+}
+.flow-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+.flow-icon-in { background: #E8F5E9; }
+.flow-icon-out { background: var(--red-bg); }
+.flow-card-title { font-size: 15px; font-weight: 700; }
+.flow-total {
+  font-size: 12px;
+  color: var(--gray-5);
+  margin-left: auto;
+}
+.flow-total strong { font-size: 20px; font-weight: 800; color: var(--gray-9); }
+.flow-item {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--gray-2);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.flow-item:last-child { border-bottom: none; padding-bottom: 0; }
+.flow-dept-tag {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.flow-dept-tag-in { background: #E8F5E9; color: #2E7D32; }
+.flow-dept-tag-out { background: var(--red-bg); color: var(--red); }
+.flow-names { font-size: 13px; color: var(--gray-5); flex: 1; }
+.flow-count {
+  font-size: 22px;
+  font-weight: 800;
+  margin-left: auto;
+}
+.flow-count-in { color: #2E7D32; }
+.flow-count-out { color: var(--red); }
+
+/* ── KPI CARDS (Detail tabs) ── */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.kpi-card {
+  background: var(--white);
+  border-radius: var(--radius-sm);
+  padding: 18px 16px;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  border: 2px solid transparent;
+}
+.kpi-card:hover {
+  border-color: var(--red);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+.kpi-card.active-kpi { border-color: var(--red); background: var(--red-bg); }
+.kpi-label { font-size: 11px; color: var(--gray-5); margin-bottom: 6px; font-weight: 500; }
+.kpi-value {
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.kpi-sub { font-size: 11px; color: var(--gray-5); }
+
+/* ── BAR RANKING ── */
+.bar-ranking {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 20px;
+}
+.bar-ranking-title { font-size: 15px; font-weight: 700; margin-bottom: 18px; }
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.bar-label { font-size: 12px; color: var(--gray-7); width: 130px; flex-shrink: 0; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar-track {
+  flex: 1;
+  height: 12px;
+  background: var(--gray-2);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 1s cubic-bezier(0.4,0,0.2,1);
+}
+.bar-pct { font-size: 12px; font-weight: 700; width: 48px; text-align: right; }
+
+/* ── DEPT TABLE ── */
+.dept-table-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.dept-table-card table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.dept-table-card thead th {
+  background: var(--gray-1);
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gray-5);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+.dept-table-card thead th:not(:first-child) { text-align: center; }
+.dept-table-card tbody tr {
+  border-bottom: 1px solid var(--gray-2);
+  transition: background 0.15s;
+  cursor: pointer;
+}
+.dept-table-card tbody tr:hover { background: var(--gray-1); }
+.dept-table-card tbody tr:last-child { border-bottom: none; }
+.dept-table-card td { padding: 13px 16px; }
+.dept-table-card td:not(:first-child) { text-align: center; }
+.dept-name { font-weight: 600; }
+.dept-real-badge {
+  display: inline-block;
+  background: #E8F5E9;
+  color: #2E7D32;
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 10px;
+  font-weight: 700;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.dept-est-badge {
+  display: inline-block;
+  background: var(--gray-2);
+  color: var(--gray-5);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 10px;
+  font-weight: 700;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.pct-pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 12px;
+}
+.mini-bar-wrap { display: flex; align-items: center; gap: 8px; }
+.mini-bar-track {
+  width: 80px;
+  height: 6px;
+  background: var(--gray-2);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.mini-bar-fill { height: 100%; border-radius: 3px; }
+
+/* ── MODAL ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(6px);
+  z-index: 500;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease;
+}
+.modal-overlay.open { display: flex; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal-box {
+  background: white;
+  border-radius: 20px;
+  padding: 32px;
+  width: 600px;
+  max-width: 95vw;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  animation: slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.modal-title { font-size: 18px; font-weight: 800; }
+.modal-close {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--gray-2);
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+  font-family: inherit;
+}
+.modal-close:hover { background: var(--gray-3); }
+
+/* ── COUNTUP ── */
+.countup { display: inline-block; }
+
+/* ── DEPT DETAIL PANEL ── */
+.dept-panel-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 600;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+}
+.dept-panel-overlay.open { display: flex; }
+.dept-panel {
+  background: white;
+  width: 100%;
+  max-width: 1100px;
+  max-height: 90vh;
+  border-radius: 24px 24px 0 0;
+  overflow-y: auto;
+  box-shadow: 0 -8px 40px rgba(0,0,0,0.18);
+  animation: panelSlideUp 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes panelSlideUp {
+  from { opacity: 0; transform: translateY(60px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.dept-panel-header {
+  padding: 28px 32px 20px;
+  background: linear-gradient(135deg, #ffffff 0%, #FFF0F2 100%);
+  border-bottom: 1px solid var(--gray-3);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-radius: 24px 24px 0 0;
+}
+.dept-panel-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.dept-panel-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--gray-9);
+}
+.dept-panel-subtitle {
+  font-size: 13px;
+  color: var(--gray-5);
+  margin-top: 2px;
+}
+.dept-panel-close {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--gray-2);
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+  font-family: inherit;
+  flex-shrink: 0;
+}
+.dept-panel-close:hover { background: var(--gray-3); }
+.dept-panel-header-stats {
+  display: flex;
+  gap: 24px;
+  font-size: 13px;
+  color: var(--gray-7);
+}
+.dept-panel-header-stats span { font-weight: 700; }
+.dept-panel-body { padding: 24px 32px 40px; }
+
+/* 7 KPI mini cards */
+.dp-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.dp-kpi-card {
+  background: var(--gray-1);
+  border-radius: 10px;
+  padding: 10px 8px;
+  text-align: center;
+  border: 2px solid transparent;
+  min-width: 0;
+}
+.dp-kpi-label { font-size: 10px; color: var(--gray-5); margin-bottom: 4px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dp-kpi-value { font-size: 18px; font-weight: 800; line-height: 1; }
+
+/* sub-group chart */
+.dp-chart-wrap {
+  background: var(--gray-1);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 24px;
+  position: relative;
+}
+.dp-chart-title { font-size: 14px; font-weight: 700; margin-bottom: 14px; }
+.dp-chart-legend {
+  display: flex; gap: 14px; font-size: 11px; color: var(--gray-5);
+  margin-bottom: 10px;
+}
+.dp-chart-legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: middle; }
+#dpChartSvg { width: 100%; display: block; overflow: visible; }
+.dp-svg-tooltip {
+  position: fixed;
+  background: rgba(26,32,44,0.92);
+  color: white;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 12px;
+  line-height: 1.7;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.15s;
+  backdrop-filter: blur(8px);
+  max-width: 180px;
+  white-space: pre-wrap;
+}
+.dp-svg-tooltip.show { opacity: 1; }
+
+/* key people section */
+.dp-people-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.dp-people-card {
+  background: var(--gray-1);
+  border-radius: 14px;
+  padding: 18px 20px;
+}
+.dp-people-title {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.dp-person-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--gray-3);
+  font-size: 12px;
+}
+.dp-person-row:last-child { border-bottom: none; padding-bottom: 0; }
+.dp-person-name { font-weight: 600; color: var(--gray-9); }
+.dp-person-dept { color: var(--gray-5); flex: 1; }
+.dp-person-date { color: var(--green); font-weight: 600; }
+.dp-person-type { color: var(--red); font-weight: 600; }
+.dp-empty-tip { color: var(--gray-5); font-size: 12px; padding: 8px 0; }
+
+/* ── ALERT BANNER ── */
+.alert-banner {
+  background: #FFF8F0;
+  border: 1.5px solid #FBBF24;
+  border-radius: 14px;
+  padding: 16px 20px;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.alert-section { flex: 1; min-width: 200px; }
+.alert-section-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #92400E;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.alert-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 3px 4px 3px 0;
+  cursor: default;
+}
+.alert-tag-over { background: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; }
+.alert-tag-low  { background: #FEF3C7; color: #D97706; border: 1px solid #FDE68A; }
+
+/* sub-group detail table */
+.dp-table-wrap {
+  background: white;
+  border-radius: 14px;
+  border: 1px solid var(--gray-3);
+  overflow: hidden;
+}
+.dp-table-title { font-size: 14px; font-weight: 700; padding: 16px 20px; border-bottom: 1px solid var(--gray-3); }
+.dp-table-wrap table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.dp-table-wrap thead th {
+  background: var(--gray-1);
+  padding: 10px 14px;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--gray-5);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--gray-3);
+}
+.dp-table-wrap thead th:first-child { text-align: left; }
+.dp-table-wrap tbody tr { border-bottom: 1px solid var(--gray-2); }
+.dp-table-wrap tbody tr:nth-child(even) { background: #FAFBFC; }
+.dp-table-wrap tbody tr:last-child { border-bottom: none; }
+.dp-table-wrap tbody tr:hover { background: var(--red-bg); }
+.dp-table-wrap td { padding: 11px 14px; text-align: center; }
+.dp-table-wrap td:first-child { text-align: left; font-weight: 600; }
+.match-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+}
+.match-green { background: #E8F5E9; color: #2E7D32; }
+.match-blue { background: #E3F2FD; color: var(--blue); }
+.match-orange { background: #FFF3E0; color: #FF6900; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .donut-grid { grid-template-columns: 1fr; }
+  .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+  .flow-grid { grid-template-columns: 1fr; }
+  .main { padding: 16px; }
+}
+
+.sec-tab-bar{display:flex;gap:0;padding:12px 32px 0;background:#f8f9fa;border-bottom:1px solid #e5e7eb;}
+.sec-tab-btn{padding:7px 16px;font-size:13px;font-weight:500;color:#6b7280;cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;transition:all 0.2s;font-family:inherit;}
+.sec-tab-btn:hover{color:#e0474c;}
+.sec-tab-btn.active{color:#e0474c;border-bottom-color:#e0474c;font-weight:700;}
+.sec-pane{display:none;}
+.sec-pane.active{display:block;}
+.org-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;padding:24px;}
+.org-card{background:#fff;border-radius:10px;padding:18px;box-shadow:0 1px 4px rgba(0,0,0,0.08);}
+.org-card-title{font-weight:700;font-size:14px;margin-bottom:12px;color:#1f2937;}
+.org-metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;}
+.org-metric-label{color:#6b7280;font-size:11px;}
+.org-metric-val{font-weight:700;font-size:16px;}
+.early-alert{background:#fef2f2;border-radius:6px;padding:6px 10px;margin-top:8px;font-size:11px;color:#dc2626;}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-logo">
+    <svg viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#FF2442"/><path d="M8 10h12M8 14h8M8 18h10" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+    HC Dashboard
+  </div>
+  <div class="topbar-meta">
+    <span class="badge-live">LIVE</span>
+    2026 Q2 · 更新于 2026-07-26
+  </div>
+</div>
+
+<!-- TAB BAR -->
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="overview">📊 总览</button>
+  <button class="tab-btn" data-tab="jy">🛒 交易</button>
+  <button class="tab-btn" data-tab="shyl">🏢 商业</button>
+  <button class="tab-btn" data-tab="pt">🏛️ 平台部</button>
+    <button class="tab-btn" data-tab="cw">💼 职能+DI</button>
+</div>
+
+<!-- TOOLTIP -->
+<div class="bubble-tooltip" id="bTooltip"></div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="kpiModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">部门明细</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<!-- DEPT DETAIL PANEL -->
+<div class="dept-panel-overlay" id="deptPanelOverlay">
+  <div class="dept-panel" id="deptPanel">
+    <div class="dept-panel-header">
+      <div class="dept-panel-header-top">
+        <div>
+          <div class="dept-panel-title" id="dpTitle">—</div>
+          <div class="dept-panel-subtitle" id="dpSubtitle">系统实时数据</div>
+        </div>
+        <button class="dept-panel-close" id="dpClose">✕</button>
+      </div>
+      <div class="dept-panel-header-stats" id="dpHeaderStats"></div>
+    </div>
+    <div class="dept-panel-body">
+      <div class="dp-kpi-grid" id="dpKpiGrid"></div>
+      <div class="dp-chart-wrap">
+        <div class="dp-chart-title">子组 HC 对比图</div>
+        <div class="dp-chart-legend">
+          <span><span class="dp-chart-legend-dot" style="background:#00C853"></span>在职</span>
+          <span><span class="dp-chart-legend-dot" style="background:#90CAF9;border:1.5px dashed #1565C0;width:9px;height:9px;box-sizing:border-box"></span>目标</span>
+          <span><span class="dp-chart-legend-dot" style="background:#1565C0;border-radius:50%"></span>满编率趋势</span>
+        </div>
+        <svg id="dpChartSvg" height="220"></svg>
+      </div>
+      <div id="dpMiniTrend" style="display:none;background:#F8F9FA;border-radius:10px;padding:12px 16px;margin-bottom:16px;border:1px solid #E4E8EC;"></div>
+      <div class="dp-people-grid" id="dpPeopleGrid"></div>
+      <div class="dp-table-wrap" id="dpTableWrap">
+        <div class="dp-table-title">子组明细</div>
+        <div id="dpTableBody"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dp-svg-tooltip" id="dpSvgTooltip"></div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- ===== OVERVIEW TAB ===== -->
+  <div class="tab-pane active" id="tab-overview">
+
+    <div id="summaryCard" style="display:none;margin-bottom:24px"></div>
+    <div class="section-title">🏢 部门满编概况</div>
+    <div class="donut-grid" id="donutGrid"></div>
+
+    <div class="section-title" style="margin-top:28px;">🫧 各部门分布气泡图</div>
+    <div class="bubble-card">
+      <div class="bubble-header">
+        <div class="bubble-title">满编率 vs 在职规模</div>
+        <div class="bubble-legend">
+          <span><span class="legend-dot" style="background:#FF2442"></span>&lt;75%</span>
+          <span><span class="legend-dot" style="background:#FF8C00"></span>75-90%</span>
+          <span><span class="legend-dot" style="background:#00C853"></span>≥90%</span>
+          <span><span class="legend-dot" style="background:#1565C0"></span>超编</span>
+          <span><span class="legend-dot" style="background:#ccc;opacity:0.5"></span>估算</span>
+        </div>
+      </div>
+      <svg id="bubbleSvg" height="520"></svg>
+    </div>
+
+    <div class="section-title" style="margin-top:28px;">📈 满编率走势（近12个月）</div>
+    <div class="bubble-card" id="hcTrendCard">
+      <div class="bubble-header">
+        <div class="bubble-title">各业务线满编率月度趋势</div>
+        <div class="bubble-legend">
+          <span><span class="legend-dot" style="background:#FF2442"></span>商业化</span>
+          <span><span class="legend-dot" style="background:#1565C0"></span>财务职能+DI</span>
+          <span><span class="legend-dot" style="background:#00C853"></span>交易</span>
+        </div>
+      </div>
+      <svg id="trendSvg" width="100%" height="260"></svg>
+      <div style="font-size:11px;color:#9ca3af;margin-top:8px;">数据来源：eedata.xiaohongshu.com · 仅含权限内部门</div>
+    </div>
+
+    <div class="section-title" style="margin-top:28px;">🔄 关键人流动（L1/L2）</div>
+    <div class="flow-grid" id="flowGrid"></div>
+
+  </div>
+
+  <!-- ===== 商业化 TAB ===== -->
+  <div class="tab-pane" id="tab-shyl">
+    <div class="section-title">📊 指标总览</div>
+    <div class="kpi-grid" id="kpi-shyl"></div>
+    <div class="section-title" style="margin-top:8px;">满编率排行</div>
+    <div class="bar-ranking" id="bar-shyl"><div class="bar-ranking-title">各子部门满编率排行（仅含有真实数据）</div><div id="bars-shyl"></div></div>
+    <div class="section-title">部门明细</div>
+    <div class="dept-table-card" id="table-shyl"></div>
+    <div class="section-title" style="margin-top:28px;">🔄 流入流出明细</div>
+    <div id="flow-detail-shyl"></div>
+  </div>
+
+
+  <!-- ===== 平台部 TAB ===== -->
+  <div class="tab-pane" id="tab-pt">
+    <div class="section-title">📊 指标总览</div>
+    <div class="kpi-grid" id="kpi-pt"></div>
+    <div class="section-title" style="margin-top:8px;">满编率排行</div>
+    <div class="bar-ranking" id="bar-pt"><div class="bar-ranking-title">各子部门满编率排行（仅含有真实数据）</div><div id="bars-pt"></div></div>
+    <div class="section-title">部门明细</div>
+    <div class="dept-table-card" id="table-pt"></div>
+    <div class="section-title" style="margin-top:28px;">🔄 流入流出明细</div>
+    <div id="flow-detail-pt"></div>
+  </div>
+
+  <!-- ===== 财务职能+DI TAB ===== -->
+  <div class="tab-pane" id="tab-cw">
+    <div class="section-title">📊 指标总览</div>
+    <div class="kpi-grid" id="kpi-cw"></div>
+    <div class="section-title" style="margin-top:8px;">满编率排行</div>
+    <div class="bar-ranking" id="bar-cw"><div class="bar-ranking-title">各子部门满编率排行（仅含有真实数据）</div><div id="bars-cw"></div></div>
+    <div class="section-title">部门明细</div>
+    <div class="dept-table-card" id="table-cw"></div>
+    <div class="section-title" style="margin-top:28px;">🔄 流入流出明细</div>
+    <div id="flow-detail-cw"></div>
+  </div>
+
+  <!-- ===== 交易 TAB ===== -->
+  <div class="tab-pane" id="tab-jy">
+    <div class="section-title">📊 指标总览</div>
+    <div class="kpi-grid" id="kpi-jy"></div>
+    <div class="section-title" style="margin-top:8px;">满编率排行</div>
+    <div class="bar-ranking" id="bar-jy"><div class="bar-ranking-title">各子部门满编率排行（仅含有真实数据）</div><div id="bars-jy"></div></div>
+    <div class="section-title">部门明细</div>
+    <div class="dept-table-card" id="table-jy"></div>
+    <div class="section-title" style="margin-top:28px;">🔄 流入流出明细</div>
+    <div id="flow-detail-jy"></div>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+/* ═══════════════════════════════════════════
+   DATA
+═══════════════════════════════════════════ */
+const BUDGET_DATA = [
+  {
+    "l1": "商业化",
+    "l2": "行业一部",
+    "budget": 164,
+    "actual": 174,
+    "transIn": 5,
+    "transOut": 4,
+    "pending": 0,
+    "leaving": 0,
+    "real": true,
+    "leader": "昂扬(李昂)",
+    "matchingDegree": "优秀"
+  },
+  {
+    "l1": "商业化",
+    "l2": "行业六部",
+    "budget": 48,
+    "actual": 54,
+    "transIn": 4,
+    "transOut": 2,
+    "pending": 0,
+    "leaving": 0,
+    "real": true,
+    "leader": "昂扬(李昂)",
+    "matchingDegree": "优秀"
+  },
+  {
+    "l1": "商业化",
+    "l2": "行业一部",
+    "budget": 164,
+    "actual": 174,
+    "transIn": 5,
+    "transOut": 4,
+    "pending": 0,
+    "leaving": 0,
+    "real": true,
+    "leader": "昂扬(李昂)",
+    "matchingDegree": "优秀"
+  },
+  {
+    "l1": "商业化",
+    "l2": "行业六部",
+    "budget": 48,
+    "actual": 54,
+    "transIn": 4,
+    "transOut": 2,
+    "pending": 0,
+    "leaving": 0,
+    "real": true,
+    "leader": "昂扬(李昂)",
+    "matchingDegree": "优秀"
+  },
+  {
+    "l1": "交易",
+    "l2": "行业运营一部",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "交易",
+    "l2": "行业运营二部",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "交易",
+    "l2": "行业运营三部",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "交易",
+    "l2": "中小商家",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "交易",
+    "l2": "交易产品",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "商业化",
+    "l2": "行业二部",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "商业化",
+    "l2": "行业三部",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "商业化",
+    "l2": "行业四部",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "商业化",
+    "l2": "行业五部",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "商业化",
+    "l2": "行业七部",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "商业化",
+    "l2": "行业八部",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "商业化",
+    "l2": "行业九部",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "商业化",
+    "l2": "渠道业务",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "商业化",
+    "l2": "创作者营销与商业服务",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "商业化",
+    "l2": "策略中台",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "商业化",
+    "l2": "生态一部",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "商业化",
+    "l2": "生态二部",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "商业化",
+    "l2": "市场营销中台",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "商业化",
+    "l2": "营销实验室",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "商业化",
+    "l2": "商业产品",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "平台部",
+    "l2": "公共事务一部",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "平台部",
+    "l2": "公共事务二部",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "平台部",
+    "l2": "公共事务三部",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "平台部",
+    "l2": "公共事务四部",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "平台部",
+    "l2": "企业发展部",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "平台部",
+    "l2": "项目部",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "平台部",
+    "l2": "公关部",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "平台部",
+    "l2": "决策支持",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "财务职能+DI",
+    "l2": "财务一组",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "财务职能+DI",
+    "l2": "财务二组",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "财务职能+DI",
+    "l2": "税务",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "财务职能+DI",
+    "l2": "内控内审",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "财务职能+DI",
+    "l2": "采购",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "财务职能+DI",
+    "l2": "资本市场",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "财务职能+DI",
+    "l2": "内审",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "财务职能+DI",
+    "l2": "投资部",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "财务职能+DI",
+    "l2": "科技投资",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "财务职能+DI",
+    "l2": "法务部",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  },
+  {
+    "l1": "财务职能+DI",
+    "l2": "DI",
+    "budget": 0,
+    "actual": 0,
+    "transIn": 0,
+    "transOut": 0,
+    "pending": 0,
+    "leaving": 0,
+    "real": false
+  }
+];
+
+// 真实入离职数据（来自 ehr-workbench/hrbp 2026-04-02）
+const FLOW_DATA = {
+  transIn: [
+  {
+    "name": "万莎莎",
+    "level": "IC",
+    "dept": "商业化",
+    "subDept": "平台专家七组",
+    "date": "2026-08-03",
+    "manager": "",
+    "highlight": false
+  },
+  {
+    "name": "李行",
+    "level": "IC",
+    "dept": "商业化",
+    "subDept": "平台专家九组",
+    "date": "2026-08-12",
+    "manager": "",
+    "highlight": false
+  },
+  {
+    "name": "高绪楠",
+    "level": "L1",
+    "dept": "商业化",
+    "subDept": "行业一部",
+    "date": "2026-08-13",
+    "manager": "",
+    "highlight": true
+  },
+  {
+    "name": "向浩嘉",
+    "level": "IC",
+    "dept": "商业化",
+    "subDept": "平台专家三组",
+    "date": "2026-08-17",
+    "manager": "",
+    "highlight": false
+  },
+  {
+    "name": "黄嘉颖",
+    "level": "IC",
+    "dept": "商业化",
+    "subDept": "行业九组",
+    "date": "2026-08-24",
+    "manager": "",
+    "highlight": false
+  },
+  {
+    "name": "吴超",
+    "level": "L1",
+    "dept": "商业化",
+    "subDept": "行业六部",
+    "date": "2026-07-31",
+    "manager": "",
+    "highlight": true
+  },
+  {
+    "name": "胡瀛珊",
+    "level": "IC",
+    "dept": "商业化",
+    "subDept": "平台专家三组",
+    "date": "2026-08-03",
+    "manager": "",
+    "highlight": false
+  },
+  {
+    "name": "周晋宇",
+    "level": "IC",
+    "dept": "商业化",
+    "subDept": "平台专家一组",
+    "date": "2026-08-10",
+    "manager": "",
+    "highlight": false
+  },
+  {
+    "name": "李伊萌",
+    "level": "L1",
+    "dept": "商业化",
+    "subDept": "行业六部",
+    "date": "2026-08-17",
+    "manager": "",
+    "highlight": true
+  },
+  {
+    "name": "万莎莎",
+    "level": "IC",
+    "dept": "商业化",
+    "subDept": "平台专家七组",
+    "date": "2026-08-03",
+    "manager": "",
+    "highlight": false
+  },
+  {
+    "name": "李行",
+    "level": "IC",
+    "dept": "商业化",
+    "subDept": "平台专家九组",
+    "date": "2026-08-12",
+    "manager": "",
+    "highlight": false
+  },
+  {
+    "name": "高绪楠",
+    "level": "L1",
+    "dept": "商业化",
+    "subDept": "行业一部",
+    "date": "2026-08-13",
+    "manager": "",
+    "highlight": true
+  },
+  {
+    "name": "向浩嘉",
+    "level": "IC",
+    "dept": "商业化",
+    "subDept": "平台专家三组",
+    "date": "2026-08-17",
+    "manager": "",
+    "highlight": false
+  },
+  {
+    "name": "黄嘉颖",
+    "level": "IC",
+    "dept": "商业化",
+    "subDept": "行业九组",
+    "date": "2026-08-24",
+    "manager": "",
+    "highlight": false
+  },
+  {
+    "name": "吴超",
+    "level": "L1",
+    "dept": "商业化",
+    "subDept": "行业六部",
+    "date": "2026-07-31",
+    "manager": "",
+    "highlight": true
+  },
+  {
+    "name": "胡瀛珊",
+    "level": "IC",
+    "dept": "商业化",
+    "subDept": "平台专家三组",
+    "date": "2026-08-03",
+    "manager": "",
+    "highlight": false
+  },
+  {
+    "name": "周晋宇",
+    "level": "IC",
+    "dept": "商业化",
+    "subDept": "平台专家一组",
+    "date": "2026-08-10",
+    "manager": "",
+    "highlight": false
+  },
+  {
+    "name": "李伊萌",
+    "level": "L1",
+    "dept": "商业化",
+    "subDept": "行业六部",
+    "date": "2026-08-17",
+    "manager": "",
+    "highlight": true
+  }
+],
+  transOut: [
+  {
+    "name": "惊鸿(王晶晶)",
+    "level": "L1",
+    "dept": "商业化",
+    "subDept": "平台专家十二组",
+    "date": "2026-08-21",
+    "type": "主动离职",
+    "highlight": true
+  },
+  {
+    "name": "克斯(陈宇田)",
+    "level": "L1",
+    "dept": "商业化",
+    "subDept": "行业三组",
+    "date": "2026-08-19",
+    "type": "主动离职",
+    "highlight": true
+  },
+  {
+    "name": "肯肯(王婉)",
+    "level": "IC",
+    "dept": "商业化",
+    "subDept": "行业十一组",
+    "date": "2026-08-06",
+    "type": "主动离职",
+    "highlight": false
+  },
+  {
+    "name": "十七(孙潇)",
+    "level": "IC",
+    "dept": "商业化",
+    "subDept": "行业九组",
+    "date": "2026-07-31",
+    "type": "被动离职",
+    "highlight": false
+  },
+  {
+    "name": "星爵(鲍志浩)",
+    "level": "L1",
+    "dept": "商业化",
+    "subDept": "行业五组",
+    "date": "2026-08-20",
+    "type": "主动离职",
+    "highlight": true
+  },
+  {
+    "name": "朔良(宋炫玮)",
+    "level": "IC",
+    "dept": "商业化",
+    "subDept": "平台专家四组",
+    "date": "2026-08-03",
+    "type": "主动离职",
+    "highlight": false
+  },
+  {
+    "name": "惊鸿(王晶晶)",
+    "level": "L1",
+    "dept": "商业化",
+    "subDept": "平台专家十二组",
+    "date": "2026-08-21",
+    "type": "主动离职",
+    "highlight": true
+  },
+  {
+    "name": "克斯(陈宇田)",
+    "level": "L1",
+    "dept": "商业化",
+    "subDept": "行业三组",
+    "date": "2026-08-19",
+    "type": "主动离职",
+    "highlight": true
+  },
+  {
+    "name": "肯肯(王婉)",
+    "level": "IC",
+    "dept": "商业化",
+    "subDept": "行业十一组",
+    "date": "2026-08-06",
+    "type": "主动离职",
+    "highlight": false
+  },
+  {
+    "name": "十七(孙潇)",
+    "level": "IC",
+    "dept": "商业化",
+    "subDept": "行业九组",
+    "date": "2026-07-31",
+    "type": "被动离职",
+    "highlight": false
+  },
+  {
+    "name": "星爵(鲍志浩)",
+    "level": "L1",
+    "dept": "商业化",
+    "subDept": "行业五组",
+    "date": "2026-08-20",
+    "type": "主动离职",
+    "highlight": true
+  },
+  {
+    "name": "朔良(宋炫玮)",
+    "level": "IC",
+    "dept": "商业化",
+    "subDept": "平台专家四组",
+    "date": "2026-08-03",
+    "type": "主动离职",
+    "highlight": false
+  }
+],
+};
+
+/* ═══════════════════════════════════════════
+   HELPERS
+═══════════════════════════════════════════ */
+function pct(actual, budget) {
+  if (!budget) return 0;
+  return Math.round(actual / budget * 100);
+}
+function pctColor(p) {
+  if (p >= 100) return '#1565C0';
+  if (p >= 90) return '#00C853';
+  if (p >= 75) return '#FF8C00';
+  return '#FF2442';
+}
+function pctTag(p) {
+  if (p >= 100) return ['tag-blue','超编'];
+  if (p >= 90) return ['tag-green','良好'];
+  if (p >= 75) return ['tag-orange','偏低'];
+  return ['tag-red','缺编'];
+}
+function groupBy(arr, key) {
+  return arr.reduce((acc, d) => {
+    (acc[d[key]] = acc[d[key]] || []).push(d);
+    return acc;
+  }, {});
+}
+// Y26 固定规划数（来自规划文档，用于 KPI 卡编制总数展示）
+const L1_BUDGET = { '商业化': 2439, '交易': 486, '财务职能+DI': 344, '平台部': 105 };
+
+function l1Summary(l1Name) {
+  const rows = BUDGET_DATA.filter(d => d.l1 === l1Name);
+  // KPI 卡「编制总数」用固定规划数；满编率用权限内真实数据计算
+  const realRows = rows.filter(d => d.real);
+  const budget = L1_BUDGET[l1Name] || rows.reduce((s,d)=>s+d.budget,0);
+  const realBudget = realRows.reduce((s,d)=>s+d.budget,0);
+  const actual = rows.reduce((s,d)=>s+d.actual,0);
+  const transIn = rows.reduce((s,d)=>s+d.transIn,0);
+  const transOut = rows.reduce((s,d)=>s+d.transOut,0);
+  const pending = rows.reduce((s,d)=>s+d.pending,0);
+  const leaving = rows.reduce((s,d)=>s+d.leaving,0);
+  return { budget, actual, transIn, transOut, pending, leaving };
+}
+
+/* ═══════════════════════════════════════════
+   COUNT UP ANIMATION
+═══════════════════════════════════════════ */
+function countUp(el, end, duration = 900, suffix = '') {
+  const start = 0;
+  const startTime = performance.now();
+  function update(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const val = Math.round(start + (end - start) * eased);
+    el.textContent = val + suffix;
+    if (progress < 1) requestAnimationFrame(update);
+  }
+  requestAnimationFrame(update);
+}
+
+/* ═══════════════════════════════════════════
+   DONUT CHART
+═══════════════════════════════════════════ */
+const L1_NAMES = ['商业化', '平台部', '财务职能+DI', '交易'];
+const RADIUS = 45, CX = 55, CY = 55;
+const CIRC = 2 * Math.PI * RADIUS;
+
+function buildDonut(l1) {
+  const s = l1Summary(l1);
+  // 圆环满编率用权限内实际数据（real:true），避免因为权限不全导致满编率虚低
+  const realActual = BUDGET_DATA.filter(d=>d.l1===l1&&d.real).reduce((a,d)=>a+d.actual,0);
+  const realBudget = BUDGET_DATA.filter(d=>d.l1===l1&&d.real).reduce((a,d)=>a+d.budget,0);
+  const p = realBudget > 0 ? pct(realActual, realBudget) : 0;
+  const color = pctColor(p);
+  const [tagClass, tagLabel] = pctTag(p);
+  const dash = Math.min(p / 100, 1.3) * CIRC;
+  const gap = CIRC - dash;
+
+  const card = document.createElement('div');
+  card.className = 'donut-card';
+  card.innerHTML = `
+    <div class="donut-wrapper">
+      <svg viewBox="0 0 110 110">
+        <circle class="donut-track" cx="${CX}" cy="${CY}" r="${RADIUS}"/>
+        <circle class="donut-fill" id="df-${l1}" cx="${CX}" cy="${CY}" r="${RADIUS}"
+          stroke="${color}"
+          stroke-dasharray="0 ${CIRC}"/>
+      </svg>
+      <div class="donut-center">
+        <div class="donut-pct countup" id="dpct-${l1}" style="color:${color}">0%</div>
+        <div class="donut-pct-label">满编率</div>
+      </div>
+    </div>
+    <div class="donut-info">
+      <div class="donut-name">${l1}</div>
+      <div class="donut-row"><span>在职</span><span class="countup" id="dact-${l1}">0</span></div>
+      <div class="donut-row"><span>编制</span><span>${s.budget}</span></div>
+      <div class="donut-row"><span>缺口</span><span>${Math.max(0, s.budget - s.actual)}</span></div>
+      <div class="donut-row"><span>流入在途</span><span style="color:#00C853">+${s.transIn}</span></div>
+      <div class="donut-row"><span>流出在途</span><span style="color:#FF2442">-${s.transOut}</span></div>
+      <span class="donut-tag ${tagClass}">${tagLabel}</span>
+    </div>
+  `;
+  document.getElementById('donutGrid').appendChild(card);
+
+  // Animate after a tick
+  setTimeout(() => {
+    const fillEl = document.getElementById('df-' + l1);
+    fillEl.setAttribute('stroke-dasharray', `${dash} ${gap}`);
+    countUp(document.getElementById('dpct-' + l1), p, 1000, '%');
+    countUp(document.getElementById('dact-' + l1), s.actual, 1000);
+  }, 100);
+}
+
+L1_NAMES.forEach(n => buildDonut(n));
+
+/* ═══════════════════════════════════════════
+   BUBBLE CHART (pure SVG)
+═══════════════════════════════════════════ */
+(function() {
+  const svg = document.getElementById('bubbleSvg');
+  const tooltip = document.getElementById('bTooltip');
+  const W = 960;
+  const data = BUDGET_DATA.filter(d => d.actual > 0);
+  const dataLen = data.length;
+  // 高度足够大，保证所有气泡可见
+  const H = Math.max(520, Math.min(760, 280 + dataLen * 16));
+  const PAD = { l: 60, r: 100, t: 40, b: 52 };
+  const cW = W - PAD.l - PAD.r;
+  const cH = H - PAD.t - PAD.b;
+
+  svg.setAttribute('height', H);
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
+  const maxBudget = Math.max(...data.map(d => d.budget));
+  const maxActual = Math.max(...data.map(d => d.actual));
+
+  function bubbleR(d) {
+    return Math.max(14, 12 + (d.budget / maxBudget) * 38);
+  }
+
+  // 理想坐标
+  function idealX(d) {
+    const p = d.actual / d.budget;
+    return PAD.l + Math.min(p, 1.35) / 1.35 * cW;
+  }
+  function idealY(d) {
+    return PAD.t + cH - (d.actual / maxActual) * cH;
+  }
+
+  // Force-separation：迭代推开重叠气泡
+  const nodes = data.map(d => ({
+    d, r: bubbleR(d),
+    x: idealX(d), y: idealY(d),
+    ix: idealX(d), iy: idealY(d),
+  }));
+  for (let iter = 0; iter < 120; iter++) {
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const a = nodes[i], b = nodes[j];
+        const minD = a.r + b.r + 6;
+        const dx = b.x - a.x || 0.01, dy = b.y - a.y || 0.01;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < minD) {
+          const push = (minD - dist) / 2;
+          const nx = dx / dist * push, ny = dy / dist * push;
+          a.x -= nx; a.y -= ny; b.x += nx; b.y += ny;
+        }
+      }
+      // 弹簧力，轻拉回理想位置
+      nodes[i].x += (nodes[i].ix - nodes[i].x) * 0.06;
+      nodes[i].y += (nodes[i].iy - nodes[i].y) * 0.06;
+    }
+  }
+  // 夹回画布边界
+  nodes.forEach(n => {
+    n.x = Math.max(PAD.l + n.r + 2, Math.min(W - PAD.r - n.r - 2, n.x));
+    n.y = Math.max(PAD.t + n.r + 2, Math.min(PAD.t + cH - n.r - 2, n.y));
+  });
+
+  // 用 nodes 中计算好的坐标
+  const nodeMap = new Map(nodes.map(n => [n.d, n]));
+  function xPos(d) { return nodeMap.get(d)?.x ?? idealX(d); }
+  function yPos(d) { return nodeMap.get(d)?.y ?? idealY(d); }
+
+  // Grid lines
+  const ns = 'http://www.w3.org/2000/svg';
+  function el(tag, attrs, parent) {
+    const e = document.createElementNS(ns, tag);
+    Object.entries(attrs).forEach(([k,v]) => e.setAttribute(k, v));
+    parent.appendChild(e);
+    return e;
+  }
+
+  // X axis ticks: 0, 25, 50, 75, 90, 100, 125%
+  [0, 25, 50, 75, 90, 100, 125].forEach(pv => {
+    const x = PAD.l + (pv / 130) * cW;
+    el('line', { x1:x, y1:PAD.t, x2:x, y2:PAD.t+cH, stroke:'#E4E8EC', 'stroke-width':1 }, svg);
+    const t = el('text', { x, y:PAD.t+cH+18, 'text-anchor':'middle', fill:'#8D9BAB', 'font-size':'10', 'font-family':'Inter' }, svg);
+    t.textContent = pv + '%';
+    // 90% & 100% markers
+    if (pv === 90 || pv === 100) {
+      el('line', { x1:x, y1:PAD.t, x2:x, y2:PAD.t+cH, stroke: pv===100?'#1565C0':'#FF8C00', 'stroke-width':1.5, 'stroke-dasharray':'4,3', opacity:0.7 }, svg);
+    }
+  });
+  // Y axis label
+  const yLabel = el('text', { x:14, y:PAD.t+cH/2, transform:`rotate(-90,14,${PAD.t+cH/2})`, 'text-anchor':'middle', fill:'#8D9BAB', 'font-size':'10', 'font-family':'Inter' }, svg);
+  yLabel.textContent = '在职人数';
+  const xLabel = el('text', { x:PAD.l+cW/2, y:H-6, 'text-anchor':'middle', fill:'#8D9BAB', 'font-size':'10', 'font-family':'Inter' }, svg);
+  xLabel.textContent = '满编率';
+
+  // Axes
+  el('line', { x1:PAD.l, y1:PAD.t+cH, x2:PAD.l+cW, y2:PAD.t+cH, stroke:'#CBD5E0', 'stroke-width':1.5 }, svg);
+  el('line', { x1:PAD.l, y1:PAD.t, x2:PAD.l, y2:PAD.t+cH, stroke:'#CBD5E0', 'stroke-width':1.5 }, svg);
+
+  // Draw bubbles
+  data.forEach(d => {
+    const x = xPos(d);
+    const y = yPos(d);
+    const r = bubbleR(d);
+    const hasData = d.actual > 0;
+    const p = hasData ? Math.round(d.actual / d.budget * 100) : 0;
+    const color = pctColor(p);
+    const alpha = hasData ? 0.85 : 0.32;
+
+    const g = el('g', { class:'bubble-g', style:'cursor:pointer' }, svg);
+
+    el('circle', { cx:x, cy:y, r:r, fill:color, opacity:alpha, filter: d.real ? `url(#glow)` : 'none' }, g);
+    // Label inside if big enough
+    if (r > 22) {
+      const lb = el('text', { x, y: y - 4, 'text-anchor':'middle', fill:'white', 'font-size': r > 30 ? '9' : '8', 'font-weight':'700', 'font-family':'Inter', 'pointer-events':'none' }, g);
+      lb.textContent = d.l2.length > 6 ? d.l2.slice(0,5)+'…' : d.l2;
+      const lb2 = el('text', { x, y: y + 9, 'text-anchor':'middle', fill:'white', 'font-size':'9', 'font-family':'Inter', 'pointer-events':'none' }, g);
+      lb2.textContent = hasData ? p + '%' : '估算';
+    }
+
+    g.addEventListener('mousemove', e => {
+      tooltip.innerHTML = `<strong>${d.l1} · ${d.l2}</strong><br>编制：${d.budget}<br>在职：${hasData ? d.actual : '估算'}<br>满编率：${hasData ? p + '%' : '—'}<br>流入在途：+${d.transIn} 流出：-${d.transOut}`;
+      tooltip.style.left = (e.clientX + 12) + 'px';
+      tooltip.style.top = (e.clientY - 10) + 'px';
+      tooltip.classList.add('show');
+    });
+    g.addEventListener('mouseleave', () => tooltip.classList.remove('show'));
+  });
+
+  // glow filter
+  const defs = el('defs', {}, svg);
+  const filter = el('filter', { id:'glow', x:'-50%', y:'-50%', width:'200%', height:'200%' }, defs);
+  const feGaussianBlur = el('feGaussianBlur', { stdDeviation:'3', result:'blur' }, filter);
+  const feMerge = el('feMerge', {}, filter);
+  el('feMergeNode', { in:'blur' }, feMerge);
+  el('feMergeNode', { in:'SourceGraphic' }, feMerge);
+})();
+
+/* ═══════════════════════════════════════════
+   FLOW CARDS（总览 - 仅展示L1/L2）
+═══════════════════════════════════════════ */
+(function() {
+  const grid = document.getElementById('flowGrid');
+
+  // 总览只显示 L1/L2 高亮人员
+  const l12In  = FLOW_DATA.transIn.filter(p => p.level === 'L1' || p.level === 'L2');
+  const l12Out = FLOW_DATA.transOut.filter(p => p.level === 'L1' || p.level === 'L2');
+
+  function levelBadge(lv) {
+    const c = lv==='L1'?'#D91B36':lv==='L2'?'#FF8C00':'#6B7280';
+    return `<span style="display:inline-block;padding:1px 7px;border-radius:4px;font-size:11px;font-weight:700;background:${c}15;color:${c};border:1px solid ${c}40;margin-right:6px">${lv}</span>`;
+  }
+
+  function buildFlowCard(isIn) {
+    const items = isIn ? l12In : l12Out;
+    const allCount = isIn ? FLOW_DATA.transIn.length : FLOW_DATA.transOut.length;
+    const card = document.createElement('div');
+    card.className = 'flow-card';
+    const rows = items.length > 0
+      ? items.map(p => `
+        <div class="flow-item" style="border-left:3px solid ${isIn?'#22c55e':'#FF2442'};padding-left:10px;margin-bottom:8px;background:${isIn?'#f0fdf4':'#fff0f2'};border-radius:0 8px 8px 0;padding:8px 10px 8px 12px">
+          ${levelBadge(p.level)}
+          <strong style="font-size:13px">${p.name}</strong>
+          <span style="font-size:12px;color:#6b7280;margin-left:6px">${p.subDept}</span>
+          <span style="float:right;font-size:12px;color:${isIn?'#16a34a':'#dc2626'}">${isIn?p.date:p.type}</span>
+        </div>`).join('')
+      : `<div style="padding:14px;text-align:center;color:#9ca3af;font-size:13px">暂无 L1/L2 ${isIn?'流入':'流出'}</div>`;
+
+    card.innerHTML = `
+      <div class="flow-card-header">
+        <div class="flow-icon ${isIn?'flow-icon-in':'flow-icon-out'}">${isIn?'🟢':'🔴'}</div>
+        <div class="flow-card-title">${isIn?'流入在途 · L1/L2':'流出在途 · L1/L2'}</div>
+        <div class="flow-total" style="font-size:12px;color:#6b7280">共 ${allCount} 人</div>
+      </div>
+      ${rows}
+      ${allCount > items.length ? `<div style="margin-top:8px;font-size:11px;color:#9ca3af">另有 IC ${allCount-items.length} 人（见各tab明细）</div>` : ''}
+    `;
+    grid.appendChild(card);
+  }
+
+  buildFlowCard(true);
+  buildFlowCard(false);
+})();
+
+/* ═══════════════════════════════════════════
+   FLOW DETAIL TABLE（各业务tab底部）
+═══════════════════════════════════════════ */
+function renderFlowDetail(containerId, l1Filter) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+
+  const inItems  = FLOW_DATA.transIn.filter(p => l1Filter === '全部' || p.dept === l1Filter);
+  const outItems = FLOW_DATA.transOut.filter(p => l1Filter === '全部' || p.dept === l1Filter);
+
+  function levelBadge(lv) {
+    if (lv==='L1') return `<span style="padding:1px 6px;border-radius:4px;font-size:11px;font-weight:700;background:#fee2e2;color:#dc2626;border:1px solid #fca5a5">${lv}</span>`;
+    if (lv==='L2') return `<span style="padding:1px 6px;border-radius:4px;font-size:11px;font-weight:700;background:#fff7ed;color:#ea580c;border:1px solid #fdba74">${lv}</span>`;
+    return `<span style="padding:1px 6px;border-radius:4px;font-size:11px;color:#9ca3af;border:1px solid #e5e7eb">${lv}</span>`;
+  }
+
+  function buildTable(items, isIn) {
+    if (!items.length) return `<div style="padding:14px 18px;color:#9ca3af;font-size:13px">暂无数据</div>`;
+    const headers = isIn
+      ? ['人员','层级','所在部门/小组','入职日期','直接上级']
+      : ['人员','层级','所在部门/小组','离职日期','离职类型'];
+    const rows = items.map(p => {
+      const isHL = p.level==='L1'||p.level==='L2';
+      const bg = isHL ? (isIn?'#f0fdf4':'#fff0f2') : '';
+      const vals = isIn
+        ? [p.name, levelBadge(p.level), p.subDept, p.date, p.manager||'—']
+        : [p.name, levelBadge(p.level), p.subDept, p.date, p.type||'—'];
+      return `<tr style="background:${bg}">
+        <td style="font-weight:${isHL?'700':'400'};color:${isHL?(isIn?'#16a34a':'#dc2626'):'inherit'}">${vals[0]}</td>
+        <td>${vals[1]}</td>
+        <td style="color:#4b5563">${vals[2]}</td>
+        <td style="color:#6b7280">${vals[3]}</td>
+        <td style="color:#6b7280">${vals[4]}</td>
+      </tr>`;
+    }).join('');
+    return `<table style="width:100%;border-collapse:collapse;font-size:13px">
+      <thead><tr style="background:#f9fafb;border-bottom:2px solid #e5e7eb">
+        ${headers.map(h=>`<th style="padding:10px 14px;text-align:left;font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px">${h}</th>`).join('')}
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+  }
+
+  el.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div style="background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.07);overflow:hidden">
+        <div style="padding:14px 18px;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;gap:8px">
+          <span style="width:8px;height:8px;border-radius:50%;background:#22c55e;display:inline-block"></span>
+          <span style="font-weight:600;font-size:14px">流入在途</span>
+          <span style="margin-left:auto;font-size:12px;color:#6b7280">${inItems.length} 人</span>
+        </div>
+        ${buildTable(inItems, true)}
+      </div>
+      <div style="background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.07);overflow:hidden">
+        <div style="padding:14px 18px;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;gap:8px">
+          <span style="width:8px;height:8px;border-radius:50%;background:#FF2442;display:inline-block"></span>
+          <span style="font-weight:600;font-size:14px">流出在途</span>
+          <span style="margin-left:auto;font-size:12px;color:#6b7280">${outItems.length} 人</span>
+        </div>
+        ${buildTable(outItems, false)}
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:#9ca3af">
+      ✅ 数据来源：hr.xiaohongshu.com 系统实时数据 · L1/L2 高亮显示 · 仅限有权限部门
+    </div>`;
+}
+
+// ── HRBP Summary Card（按商业化/交易/财务职能+DI 分组展示）──
+(function() {
+  const card = document.getElementById('summaryCard');
+  if (!card) return;
+
+  // 按 L1 分组统计
+  const byL1 = { '商业化': [], '平台部': [], '交易': [], '财务职能+DI': [] };
+  BUDGET_DATA.forEach(d => {
+    if (!d.real || d.actual <= 0 || d.budget <= 0) return;
+    const p = Math.round(d.actual / d.budget * 100);
+    byL1[d.l1].push({ name: d.l2, pct: p });
+  });
+
+  // 流入流出（L1/L2 级别）
+  const l1l2Out = FLOW_DATA.transOut.filter(d => d.level === 'L1' || d.level === 'L2');
+  const l1l2In  = FLOW_DATA.transIn.filter(d => d.level === 'L1' || d.level === 'L2');
+
+  // 每个 L1 生成 items
+  function getL1Items(l1Name, rows) {
+    const items = [];
+    const overHigh = rows.filter(d => d.pct >= 110);
+    const overMild = rows.filter(d => d.pct >= 100 && d.pct < 110);
+    const low      = rows.filter(d => d.pct < 75);
+    const mid      = rows.filter(d => d.pct >= 75 && d.pct < 90);
+    const l1Out    = l1l2Out.filter(d => d.dept === l1Name);
+    const l1In     = l1l2In.filter(d => d.dept === l1Name);
+
+    if (overHigh.length) items.push({ icon:'🔴', level:'p00',
+      title: `严重超编(≥110%)：${overHigh.map(d=>`${d.name}(${d.pct}%)`).join('、')}`,
+      desc: '建议立即评估用工合规风险，暂停增编申请，与业务 L1 对齐缩编计划。' });
+    if (overMild.length) items.push({ icon:'🟠', level:'p0',
+      title: `超编(100-110%)：${overMild.map(d=>`${d.name}(${d.pct}%)`).join('、')}`,
+      desc: '尚在可控范围，建议下季度 HC 计划中优先消化，新增流入需额外审批。' });
+    if (l1Out.length) items.push({ icon:'🚨', level:'p00',
+      title: `L1/L2 离职在途：${l1Out.map(d=>d.name).join('、')}`,
+      desc: '关键管理层流失，请确认接班人和业务交接，评估是否需要紧急补位。' });
+    if (l1In.length) items.push({ icon:'🟢', level:'p1',
+      title: `L1/L2 入职在途：${l1In.map(d=>d.name).join('、')}`,
+      desc: '即将到岗，请提前准备 onboarding 和融入计划。' });
+    if (low.length) items.push({ icon:'🟡', level:'p0',
+      title: `低满编率(<75%)：${low.map(d=>`${d.name}(${d.pct}%)`).join('、')}`,
+      desc: '人员缺口大，业务承接能力受限，建议加快招聘或重新评估 HC 计划。' });
+    if (mid.length) items.push({ icon:'⚠️', level:'p1',
+      title: `满编率偏低(75-90%)：${mid.map(d=>d.name).join('、')}`,
+      desc: '存在缺口，需关注招聘进度，避免影响 Q2 目标达成。' });
+    if (!items.length) items.push({ icon:'✅', level:'ok',
+      title: '状态良好', desc: '满编率正常，无超编或严重缺编，保持关注流动动态。' });
+    return items;
+  }
+
+  const L1_META = [
+    { name:'商业化',      emoji:'🏢', color:'#FF2442' },
+    { name:'平台部',      emoji:'🏛️', color:'#7C3AED' },
+    { name:'交易',        emoji:'🛒', color:'#00897B' },
+    { name:'财务职能+DI', emoji:'💰', color:'#1565C0' },
+  ];
+  const levelColor = { 'p00':'#DC2626','p0':'#D97706','p1':'#2563EB','ok':'#059669','':`#374151` };
+  const levelBg    = { 'p00':'#FEE2E2','p0':'#FEF3C7','p1':'#EFF6FF','ok':'#ECFDF5','':'#F8F9FA' };
+
+  let html = `<div style="background:#fff;border-radius:16px;border:1.5px solid #E4E8EC;box-shadow:0 4px 16px rgba(0,0,0,0.08);overflow:hidden;">
+    <div style="background:linear-gradient(135deg,#1A202C 0%,#2D3748 100%);padding:14px 24px;display:flex;align-items:center;gap:10px;">
+      <div style="font-size:20px;">📋</div>
+      <div style="color:#fff;font-size:15px;font-weight:700;">重点关注事项</div>
+      <div style="margin-left:auto;font-size:11px;color:#9CA3AF;">基于实时数据自动生成</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:none;">`;
+
+  L1_META.forEach(({name, emoji, color}) => {
+    const rows = byL1[name] || [];
+    const items = getL1Items(name, rows);
+    html += `<div style="border-right:1px solid #E4E8EC;padding:16px;min-width:0;">
+      <div style="font-size:13px;font-weight:800;color:${color};margin-bottom:12px;display:flex;align-items:center;gap:6px;border-bottom:2px solid ${color}20;padding-bottom:8px;">
+        <span>${emoji}</span><span>${name}</span>
+      </div>`;
+    items.forEach(item => {
+      const bg = levelBg[item.level] || '#F8F9FA';
+      const fc = levelColor[item.level] || '#374151';
+      html += `<div style="background:${bg};border-radius:8px;padding:10px 12px;margin-bottom:8px;border-left:3px solid ${fc};">
+        <div style="font-size:12px;font-weight:700;color:${fc};margin-bottom:3px;display:flex;align-items:center;gap:5px;">
+          <span>${item.icon}</span>
+          ${item.level && item.level!=='ok' ? `<span style="background:${fc};color:#fff;font-size:9px;padding:1px 5px;border-radius:3px;">${item.level.toUpperCase()}</span>` : ''}
+          <span>${item.title}</span>
+        </div>
+        <div style="font-size:11px;color:#6B7280;line-height:1.5;">${item.desc}</div>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+
+  html += `</div></div>`;
+  card.innerHTML = html;
+  card.style.display = 'block';
+})();
+
+// 渲染各tab流入流出明细
+renderFlowDetail('flow-detail-shyl', '商业化');
+renderFlowDetail('flow-detail-pt', '平台部');
+renderFlowDetail('flow-detail-cw', '财务职能+DI');
+renderFlowDetail('flow-detail-jy', '交易');
+
+
+
+/* ═══════════════════════════════════════════
+   DETAIL TABS - KPI / BAR / TABLE
+═══════════════════════════════════════════ */
+const EEDATA_DATA = {
+  "l1Trend": {
+    "商业化": [
+      {
+        "month": "2025年08月",
+        "hcPercent": 103.6,
+        "totalHc": 193,
+        "currentHc": 200
+      },
+      {
+        "month": "2025年09月",
+        "hcPercent": 109.8,
+        "totalHc": 193,
+        "currentHc": 212
+      },
+      {
+        "month": "2025年10月",
+        "hcPercent": 110.9,
+        "totalHc": 193,
+        "currentHc": 214
+      },
+      {
+        "month": "2025年11月",
+        "hcPercent": 110.9,
+        "totalHc": 193,
+        "currentHc": 214
+      },
+      {
+        "month": "2025年12月",
+        "hcPercent": 110.9,
+        "totalHc": 193,
+        "currentHc": 214
+      },
+      {
+        "month": "2026年01月",
+        "hcPercent": 101.4,
+        "totalHc": 212,
+        "currentHc": 215
+      },
+      {
+        "month": "2026年02月",
+        "hcPercent": 105.2,
+        "totalHc": 212,
+        "currentHc": 223
+      },
+      {
+        "month": "2026年03月",
+        "hcPercent": 104.7,
+        "totalHc": 212,
+        "currentHc": 222
+      },
+      {
+        "month": "2026年04月",
+        "hcPercent": 106.1,
+        "totalHc": 212,
+        "currentHc": 225
+      },
+      {
+        "month": "2026年05月",
+        "hcPercent": 100.5,
+        "totalHc": 212,
+        "currentHc": 213
+      },
+      {
+        "month": "2026年06月",
+        "hcPercent": 102.4,
+        "totalHc": 212,
+        "currentHc": 217
+      },
+      {
+        "month": "2026年07月",
+        "hcPercent": 107.5,
+        "totalHc": 212,
+        "currentHc": 228
+      }
+    ],
+    "平台部": [],
+    "财务职能+DI": [],
+    "交易": []
+  },
+  "deptTrend": {
+    "行业一部": [
+      {
+        "month": "2025年08月",
+        "hcPercent": 98.7,
+        "totalHc": 149,
+        "currentHc": 147
+      },
+      {
+        "month": "2025年09月",
+        "hcPercent": 106.7,
+        "totalHc": 149,
+        "currentHc": 159
+      },
+      {
+        "month": "2025年10月",
+        "hcPercent": 107.4,
+        "totalHc": 149,
+        "currentHc": 160
+      },
+      {
+        "month": "2025年11月",
+        "hcPercent": 107.4,
+        "totalHc": 149,
+        "currentHc": 160
+      },
+      {
+        "month": "2025年12月",
+        "hcPercent": 107.4,
+        "totalHc": 149,
+        "currentHc": 160
+      },
+      {
+        "month": "2026年01月",
+        "hcPercent": 97.6,
+        "totalHc": 164,
+        "currentHc": 160
+      },
+      {
+        "month": "2026年02月",
+        "hcPercent": 102.4,
+        "totalHc": 164,
+        "currentHc": 168
+      },
+      {
+        "month": "2026年03月",
+        "hcPercent": 100.6,
+        "totalHc": 164,
+        "currentHc": 165
+      },
+      {
+        "month": "2026年04月",
+        "hcPercent": 101.8,
+        "totalHc": 164,
+        "currentHc": 167
+      },
+      {
+        "month": "2026年05月",
+        "hcPercent": 96.3,
+        "totalHc": 164,
+        "currentHc": 158
+      },
+      {
+        "month": "2026年06月",
+        "hcPercent": 99.4,
+        "totalHc": 164,
+        "currentHc": 163
+      },
+      {
+        "month": "2026年07月",
+        "hcPercent": 106.1,
+        "totalHc": 164,
+        "currentHc": 174
+      }
+    ],
+    "行业六部": [
+      {
+        "month": "2025年08月",
+        "hcPercent": 120.5,
+        "totalHc": 44,
+        "currentHc": 53
+      },
+      {
+        "month": "2025年09月",
+        "hcPercent": 120.5,
+        "totalHc": 44,
+        "currentHc": 53
+      },
+      {
+        "month": "2025年10月",
+        "hcPercent": 122.7,
+        "totalHc": 44,
+        "currentHc": 54
+      },
+      {
+        "month": "2025年11月",
+        "hcPercent": 122.7,
+        "totalHc": 44,
+        "currentHc": 54
+      },
+      {
+        "month": "2025年12月",
+        "hcPercent": 122.7,
+        "totalHc": 44,
+        "currentHc": 54
+      },
+      {
+        "month": "2026年01月",
+        "hcPercent": 114.6,
+        "totalHc": 48,
+        "currentHc": 55
+      },
+      {
+        "month": "2026年02月",
+        "hcPercent": 114.6,
+        "totalHc": 48,
+        "currentHc": 55
+      },
+      {
+        "month": "2026年03月",
+        "hcPercent": 118.8,
+        "totalHc": 48,
+        "currentHc": 57
+      },
+      {
+        "month": "2026年04月",
+        "hcPercent": 120.8,
+        "totalHc": 48,
+        "currentHc": 58
+      },
+      {
+        "month": "2026年05月",
+        "hcPercent": 114.6,
+        "totalHc": 48,
+        "currentHc": 55
+      },
+      {
+        "month": "2026年06月",
+        "hcPercent": 112.5,
+        "totalHc": 48,
+        "currentHc": 54
+      },
+      {
+        "month": "2026年07月",
+        "hcPercent": 112.5,
+        "totalHc": 48,
+        "currentHc": 54
+      }
+    ]
+  },
+  "deptCard": {
+    "行业一部": {
+      "monthOnboard": 14,
+      "yearOnboard": 53,
+      "monthDim": 2,
+      "yearDim": 21
+    },
+    "行业六部": {
+      "monthOnboard": 4,
+      "yearOnboard": 16,
+      "monthDim": 1,
+      "yearDim": 6
+    }
+  }
+};
+
+const TAB_MAP = {
+  'shyl': '商业化',
+  'pt':   '平台部',
+  'cw':   '财务职能+DI',
+  'jy':   '交易'
+};
+
+Object.entries(TAB_MAP).forEach(([tabId, l1]) => {
+  const rows = BUDGET_DATA.filter(d => d.l1 === l1);
+  const s = l1Summary(l1);
+  const realRows = rows.filter(d => d.real);
+  // 满编率统一用权限内真实数据（real:true）计算，与总览卡片保持一致
+  const realActual = realRows.reduce((a,d)=>a+d.actual,0);
+  const realBudget = realRows.reduce((a,d)=>a+d.budget,0);
+  const p = realBudget > 0 ? pct(realActual, realBudget) : 0;
+  const overBudget = rows.filter(d => d.actual > d.budget).length;
+  const pending = s.pending;
+
+  // eedata 本年入离职汇总（该 L1 下所有部门）
+  const dc = EEDATA_DATA.deptCard || {};
+  const yearOb = realRows.reduce((a, r) => a + (dc[r.l2]?.yearOnboard || 0), 0);
+  const yearDm = realRows.reduce((a, r) => a + (dc[r.l2]?.yearDim || 0), 0);
+
+  // KPI cards
+  // 实习生比例：从 DEPT_DETAIL_DB 取该 L1 下各部门 internHc 汇总
+  const internHcTotal = realRows.reduce((a, r) => {
+    const dd = DEPT_DETAIL_DB[r.l2] || {};
+    return a + (dd.internHc || 0);
+  }, 0);
+  const internPct = realActual > 0 ? Math.round(internHcTotal / realActual * 1000) / 10 : 0;
+
+  kpiDefs = [
+    { label:'编制总数',   value: realBudget, color: '#4A5568', suffix:'' },
+    { label:'在职总数',   value: realActual, color: pctColor(p), suffix:'' },
+    { label:'满编率',     value: p, color: pctColor(p), suffix:'%' },
+    { label:'缺口',       value: Math.max(0, realBudget - realActual), color: '#FF2442', suffix:'' },
+    { label:'本年入职',   value: yearOb, color: '#00C853', suffix:'人' },
+    { label:'本年离职',   value: yearDm, color: '#FF8C00', suffix:'人' },
+    { label:'流入在途',   value: s.transIn, color: '#2563EB', suffix:'' },
+    { label:'流出在途',   value: s.transOut, color: '#7C3AED', suffix:'' },
+    { label:'实习生比例', value: internPct, color: internPct > 30 ? '#FF2442' : '#FF8C00', suffix:'%' },
+  ];
+  const kpiGrid = document.getElementById('kpi-' + tabId);
+  kpiDefs.forEach((kpi, i) => {
+    const card = document.createElement('div');
+    card.className = 'kpi-card';
+    card.style.cursor = 'pointer';
+    card.innerHTML = `
+      <div class="kpi-label">${kpi.label}</div>
+      <div class="kpi-value countup" style="color:${kpi.color}" data-val="${kpi.value}" data-suffix="${kpi.suffix}">0${kpi.suffix}</div>
+      <div class="kpi-sub">${kpi.label === '满编率' ? (kpi.value >= 100 ? '🔵超编' : kpi.value >= 90 ? '🟢良好' : kpi.value >= 75 ? '🟠偏低' : '🔴缺编') : '<span style="color:#1565C0;font-size:10px;">点击展示明细 ↗</span>'}</div>
+    `;
+    card.addEventListener('click', () => openKpiModal(kpi.label, rows, l1));
+    kpiGrid.appendChild(card);
+  });
+
+  // Bar ranking (real data only)
+  const barsEl = document.getElementById('bars-' + tabId);
+  const sortedRows = [...rows].filter(d => d.actual > 0).sort((a,b) => pct(b.actual,b.budget) - pct(a.actual,a.budget));
+  if (sortedRows.length === 0) {
+    barsEl.innerHTML = '<div style="color:#8D9BAB;font-size:13px;padding:12px 0">暂无真实数据</div>';
+  } else {
+    sortedRows.forEach(d => {
+      const p2 = pct(d.actual, d.budget);
+      const color = pctColor(p2);
+      const row = document.createElement('div');
+      row.className = 'bar-row';
+      row.innerHTML = `
+        <div class="bar-label" title="${d.l2}">${d.l2}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:0%;background:${color}" data-w="${Math.min(p2,130)}"></div></div>
+        <div class="bar-pct" style="color:${color}">${p2}%</div>
+      `;
+      barsEl.appendChild(row);
+    });
+  }
+
+  // Table
+  const tableEl = document.getElementById('table-' + tabId);
+  let html = `<table>
+    <thead><tr>
+      <th>部门</th><th>负责人</th><th>编制</th><th>在职</th><th>满编率</th><th>缺口</th><th>流入</th><th>流出</th>
+    </tr></thead><tbody>`;
+  rows.forEach(d => {
+    const p2 = d.actual > 0 ? pct(d.actual, d.budget) : 0;
+    const color = d.actual > 0 ? pctColor(p2) : '#CBD5E0';
+    const [tagClass] = pctTag(p2);
+    html += `<tr>
+      <td>
+        <span class="dept-name">${d.l2}</span>
+        <span class="${d.real ? 'dept-real-badge' : 'dept-est-badge'}">${d.real ? '实时' : '估算'}</span>
+        ${d.real ? '<span style="color:#1565C0;font-size:10px;margin-left:4px;cursor:pointer;">点击展示详情 ↗</span>' : ''}
+      </td>
+      <td style="color:#4A5568;font-size:12px">${d.leader || '—'}</td>
+      <td>${d.budget}</td>
+      <td>${d.actual > 0 ? d.actual : '—'}</td>
+      <td>
+        ${d.actual > 0 ? `<div class="mini-bar-wrap">
+          <div class="mini-bar-track"><div class="mini-bar-fill" style="width:${Math.min(p2,100)}%;background:${color}"></div></div>
+          <span class="pct-pill" style="background:${color}18;color:${color}">${p2}%</span>
+        </div>` : '<span style="color:#CBD5E0">—</span>'}
+      </td>
+      <td style="color:#FF2442;font-weight:600">${d.actual > 0 && d.budget > d.actual ? d.budget - d.actual : d.actual > d.budget ? '超编' : '—'}</td>
+      <td style="color:#00C853;font-weight:600">${d.transIn > 0 ? '+'+d.transIn : '—'}</td>
+      <td style="color:#FF8C00;font-weight:600">${d.transOut > 0 ? '-'+d.transOut : '—'}</td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  tableEl.innerHTML = html;
+});
+
+/* ═══════════════════════════════════════════
+   MODAL
+═══════════════════════════════════════════ */
+function openKpiModal(kpiLabel, rows, l1) {
+  document.getElementById('modalTitle').textContent = `${l1} · ${kpiLabel} 明细`;
+  let body = '';
+  if (kpiLabel === '满编率') {
+    body = rows.map(d => {
+      const p2 = d.actual > 0 ? pct(d.actual, d.budget) : 0;
+      const color = pctColor(p2);
+      return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <span style="flex:1;font-size:13px;font-weight:600">${d.l2}</span>
+        <div style="width:120px;height:8px;background:#F0F2F5;border-radius:4px;overflow:hidden">
+          <div style="width:${Math.min(p2,100)}%;height:100%;background:${color};border-radius:4px"></div>
+        </div>
+        <span style="width:42px;text-align:right;font-size:13px;font-weight:700;color:${color}">${d.actual > 0 ? p2+'%' : '—'}</span>
+      </div>`;
+    }).join('');
+  } else if (kpiLabel === '编制总数') {
+    body = rows.map(d => `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #F0F2F5;font-size:13px"><span>${d.l2}</span><strong>${d.budget}</strong></div>`).join('');
+  } else if (kpiLabel === '在职总数') {
+    body = rows.map(d => `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #F0F2F5;font-size:13px"><span>${d.l2}</span><strong>${d.actual > 0 ? d.actual : '—'}</strong></div>`).join('');
+  } else if (kpiLabel === '缺口') {
+    const withGap = rows.filter(d => d.actual > 0 && d.budget > d.actual);
+    body = withGap.length ? withGap.map(d => `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #F0F2F5;font-size:13px"><span>${d.l2}</span><strong style="color:#FF2442">-${d.budget - d.actual}</strong></div>`).join('') : '<div style="color:#8D9BAB;font-size:13px;padding:12px 0">暂无缺口数据</div>';
+  } else if (kpiLabel === '流入在途') {
+    const withIn = rows.filter(d => d.transIn > 0);
+    body = withIn.length ? withIn.map(d => `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #F0F2F5;font-size:13px"><span>${d.l2}</span><strong style="color:#00C853">+${d.transIn}</strong></div>`).join('') : '<div style="color:#8D9BAB;font-size:13px;padding:12px 0">暂无流入在途</div>';
+  } else if (kpiLabel === '流出在途') {
+    const withOut = rows.filter(d => d.transOut > 0);
+    body = withOut.length ? withOut.map(d => `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #F0F2F5;font-size:13px"><span>${d.l2}</span><strong style="color:#FF8C00">-${d.transOut}</strong></div>`).join('') : '<div style="color:#8D9BAB;font-size:13px;padding:12px 0">暂无流出在途</div>';
+  } else if (kpiLabel === '本年入职') {
+    const dc2 = EEDATA_DATA.deptCard || {};
+    const withOb = rows.filter(d => d.real && (dc2[d.l2]?.yearOnboard || 0) > 0)
+      .sort((a,b) => (dc2[b.l2]?.yearOnboard||0) - (dc2[a.l2]?.yearOnboard||0));
+    body = withOb.length
+      ? withOb.map(d => `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #F0F2F5;font-size:13px">
+          <span>${d.l2}</span>
+          <span><strong style="color:#00897B">${dc2[d.l2].yearOnboard}人</strong>
+            <span style="color:#9CA3AF;font-size:11px;margin-left:6px">本月+${dc2[d.l2].monthOnboard||0}</span>
+          </span>
+        </div>`).join('')
+      : '<div style="color:#8D9BAB;font-size:13px;padding:12px 0">暂无本年入职数据（需 eedata 权限）</div>';
+  } else if (kpiLabel === '本年离职') {
+    const dc2 = EEDATA_DATA.deptCard || {};
+    const withDm = rows.filter(d => d.real && (dc2[d.l2]?.yearDim || 0) > 0)
+      .sort((a,b) => (dc2[b.l2]?.yearDim||0) - (dc2[a.l2]?.yearDim||0));
+    body = withDm.length
+      ? withDm.map(d => `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #F0F2F5;font-size:13px">
+          <span>${d.l2}</span>
+          <span><strong style="color:#FF8C00">${dc2[d.l2].yearDim}人</strong>
+            <span style="color:#9CA3AF;font-size:11px;margin-left:6px">本月-${dc2[d.l2].monthDim||0}</span>
+          </span>
+        </div>`).join('')
+      : '<div style="color:#8D9BAB;font-size:13px;padding:12px 0">暂无本年离职数据（需 eedata 权限）</div>';
+  } else if (kpiLabel === '招聘中') {
+    const withP = rows.filter(d => d.pending > 0);
+    body = withP.length ? withP.map(d => `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #F0F2F5;font-size:13px"><span>${d.l2}</span><strong style="color:#1565C0">${d.pending} 人</strong></div>`).join('') : '<div style="color:#8D9BAB;font-size:13px;padding:12px 0">暂无在招岗位</div>';
+  }
+  document.getElementById('modalBody').innerHTML = body || '<div style="color:#8D9BAB;font-size:13px">暂无数据</div>';
+  document.getElementById('kpiModal').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('kpiModal').classList.remove('open');
+}
+document.getElementById('kpiModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('kpiModal')) closeModal();
+});
+
+/* ═══════════════════════════════════════════
+   DEPT DETAIL PANEL DATA
+═══════════════════════════════════════════ */
+const HANGYIBU_SUBS = [
+  {name:'行业一组', leader:'千月(陈思琪)', current:9, total:8, transIn:0, transOut:0, predict:9, match:'优秀'},
+  {name:'行业二组', leader:'吴邪(吴建成)', current:9, total:6, transIn:0, transOut:0, predict:9, match:'优秀'},
+  {name:'行业三组', leader:'克斯(陈宇田)', current:9, total:8, transIn:0, transOut:0, predict:9, match:'匹配'},
+  {name:'行业四组', leader:'千月(陈思琪)', current:5, total:4, transIn:0, transOut:1, predict:4, match:'匹配'},
+  {name:'行业五组', leader:'吴邪(吴建成)', current:4, total:5, transIn:1, transOut:0, predict:5, match:'匹配'},
+  {name:'行业六组', leader:'嘉莉(惠江雯)', current:11, total:5, transIn:0, transOut:0, predict:11, match:'匹配'},
+  {name:'行业七组', leader:'昭燃(千艺)', current:12, total:9, transIn:1, transOut:0, predict:13, match:'匹配'},
+  {name:'行业八组', leader:'吴邪(吴建成)', current:6, total:7, transIn:0, transOut:0, predict:6, match:'优秀'},
+  {name:'行业九组', leader:'白泉(陈可茵)', current:8, total:7, transIn:0, transOut:0, predict:8, match:'优秀'},
+  {name:'行业十组', leader:'昂扬(李昂)', current:9, total:8, transIn:1, transOut:1, predict:9, match:'匹配'},
+  {name:'行业十一组', leader:'南舟(姚苒)', current:5, total:6, transIn:0, transOut:0, predict:5, match:'匹配'},
+  {name:'行业十二组', leader:'希坦(贺琼)', current:5, total:4, transIn:0, transOut:1, predict:4, match:'匹配'},
+  {name:'平台专家一组', leader:'古娴(高逸群)', current:6, total:8, transIn:0, transOut:0, predict:6, match:'匹配'},
+  {name:'平台专家二组', leader:'菀得(杨森)', current:9, total:5, transIn:0, transOut:0, predict:9, match:'优秀'},
+  {name:'平台专家三组', leader:'若琳(陈若琳)', current:7, total:6, transIn:0, transOut:0, predict:7, match:'优秀'},
+  {name:'平台专家四组', leader:'古娴(高逸群)', current:4, total:3, transIn:0, transOut:0, predict:4, match:'优秀'},
+  {name:'平台专家五组', leader:'菀得(杨森)', current:5, total:5, transIn:0, transOut:0, predict:5, match:'优秀'},
+  {name:'平台专家六组', leader:'希莫(焦潞林)', current:5, total:4, transIn:0, transOut:0, predict:5, match:'匹配'},
+  {name:'平台专家七组', leader:'希莫(焦潞林)', current:9, total:8, transIn:0, transOut:0, predict:9, match:'匹配'},
+  {name:'平台专家八组', leader:'菀得(杨森)', current:5, total:6, transIn:0, transOut:0, predict:5, match:'匹配'},
+  {name:'平台专家九组', leader:'清也(刘月)', current:8, total:6, transIn:0, transOut:1, predict:7, match:'匹配'},
+  {name:'平台专家十组', leader:'珠珠(朱梦倩)', current:6, total:6, transIn:0, transOut:0, predict:6, match:'匹配'},
+  {name:'平台专家十一组', leader:'惊鸿(王晶晶)', current:4, total:5, transIn:1, transOut:0, predict:5, match:null},
+  {name:'平台专家十二组', leader:'惊鸿(王晶晶)', current:5, total:3, transIn:0, transOut:0, predict:5, match:'匹配'},
+  {name:'行业策略组', leader:'飞云(张一鸣)', current:2, total:3, transIn:0, transOut:0, predict:2, match:'匹配'},
+];
+
+const HANGYIBU_PENDING_L1L2 = [
+  {name:'JICHAO SUN', level:'L1', dept:'行业一部', date:'04-08'},
+];
+const HANGYIBU_LEAVING_L1L2 = [];
+
+const DEPT_DETAIL_DB = {
+  "行业一部": {
+    "deptName": "行业一部",
+    "leader": "昂扬(李昂)",
+    "matchingDegree": "优秀",
+    "currentHc": 174,
+    "internHc": 33,
+    "budgetHc": 164,
+    "transIn": 5,
+    "transOut": 4,
+    "subs": [
+      {
+        "name": "行业一组",
+        "leader": "千月(陈思琪)",
+        "matchingDegree": "优秀",
+        "current": 13,
+        "internHc": 1,
+        "total": 8,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 13,
+        "match": "超编"
+      },
+      {
+        "name": "行业二组",
+        "leader": "吴邪(吴建成)",
+        "matchingDegree": "优秀",
+        "current": 10,
+        "internHc": 1,
+        "total": 6,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 10,
+        "match": "超编"
+      },
+      {
+        "name": "行业三组",
+        "leader": "克斯(陈宇田)",
+        "matchingDegree": "匹配",
+        "current": 9,
+        "internHc": 1,
+        "total": 8,
+        "transIn": 0,
+        "transOut": 1,
+        "predict": 8,
+        "match": "超编"
+      },
+      {
+        "name": "行业四组",
+        "leader": "千月(陈思琪)",
+        "matchingDegree": "匹配",
+        "current": 3,
+        "internHc": 1,
+        "total": 4,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 3,
+        "match": "达标"
+      },
+      {
+        "name": "行业五组",
+        "leader": "吴邪(吴建成)",
+        "matchingDegree": "匹配",
+        "current": 6,
+        "internHc": 1,
+        "total": 5,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 6,
+        "match": "超编"
+      },
+      {
+        "name": "行业六组",
+        "leader": "嘉莉(惠江雯)",
+        "matchingDegree": "匹配",
+        "current": 9,
+        "internHc": 1,
+        "total": 5,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 9,
+        "match": "超编"
+      },
+      {
+        "name": "行业七组",
+        "leader": "昭燃(千艺)",
+        "matchingDegree": "匹配",
+        "current": 11,
+        "internHc": 2,
+        "total": 9,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 11,
+        "match": "超编"
+      },
+      {
+        "name": "行业八组",
+        "leader": "吴邪(吴建成)",
+        "matchingDegree": "优秀",
+        "current": 6,
+        "internHc": 1,
+        "total": 7,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 6,
+        "match": "达标"
+      },
+      {
+        "name": "行业九组",
+        "leader": "迪非(李琦)",
+        "matchingDegree": "匹配",
+        "current": 11,
+        "internHc": 3,
+        "total": 7,
+        "transIn": 1,
+        "transOut": 1,
+        "predict": 11,
+        "match": "超编"
+      },
+      {
+        "name": "行业十组",
+        "leader": "秦朗(吴佳锌)",
+        "matchingDegree": "匹配",
+        "current": 9,
+        "internHc": 1,
+        "total": 8,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 9,
+        "match": "超编"
+      },
+      {
+        "name": "行业十一组",
+        "leader": "南舟(姚苒)",
+        "matchingDegree": "匹配",
+        "current": 7,
+        "internHc": 1,
+        "total": 6,
+        "transIn": 0,
+        "transOut": 1,
+        "predict": 6,
+        "match": "超编"
+      },
+      {
+        "name": "行业十二组",
+        "leader": "希坦(贺琼)",
+        "matchingDegree": "匹配",
+        "current": 4,
+        "internHc": 2,
+        "total": 4,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 4,
+        "match": "达标"
+      },
+      {
+        "name": "平台专家一组",
+        "leader": "古娴(高逸群)",
+        "matchingDegree": "匹配",
+        "current": 8,
+        "internHc": 2,
+        "total": 8,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 8,
+        "match": "达标"
+      },
+      {
+        "name": "平台专家二组",
+        "leader": "菀得(杨森)",
+        "matchingDegree": "优秀",
+        "current": 8,
+        "internHc": 1,
+        "total": 5,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 8,
+        "match": "超编"
+      },
+      {
+        "name": "平台专家三组",
+        "leader": "若琳(陈若琳)",
+        "matchingDegree": "优秀",
+        "current": 7,
+        "internHc": 2,
+        "total": 6,
+        "transIn": 1,
+        "transOut": 0,
+        "predict": 8,
+        "match": "超编"
+      },
+      {
+        "name": "平台专家四组",
+        "leader": "古娴(高逸群)",
+        "matchingDegree": "优秀",
+        "current": 3,
+        "internHc": 1,
+        "total": 3,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 3,
+        "match": "达标"
+      },
+      {
+        "name": "平台专家五组",
+        "leader": "菀得(杨森)",
+        "matchingDegree": "优秀",
+        "current": 6,
+        "internHc": 1,
+        "total": 5,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 6,
+        "match": "超编"
+      },
+      {
+        "name": "平台专家六组",
+        "leader": "希莫(焦潞林)",
+        "matchingDegree": "匹配",
+        "current": 6,
+        "internHc": 1,
+        "total": 4,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 6,
+        "match": "超编"
+      },
+      {
+        "name": "平台专家七组",
+        "leader": "希莫(焦潞林)",
+        "matchingDegree": "匹配",
+        "current": 6,
+        "internHc": 4,
+        "total": 8,
+        "transIn": 1,
+        "transOut": 0,
+        "predict": 7,
+        "match": "达标"
+      },
+      {
+        "name": "平台专家八组",
+        "leader": "菀得(杨森)",
+        "matchingDegree": "匹配",
+        "current": 6,
+        "internHc": 1,
+        "total": 6,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 6,
+        "match": "达标"
+      },
+      {
+        "name": "平台专家九组",
+        "leader": "清也(刘月)",
+        "matchingDegree": "匹配",
+        "current": 7,
+        "internHc": 1,
+        "total": 6,
+        "transIn": 1,
+        "transOut": 0,
+        "predict": 8,
+        "match": "超编"
+      },
+      {
+        "name": "平台专家十组",
+        "leader": "珠珠(朱梦倩)",
+        "matchingDegree": "匹配",
+        "current": 8,
+        "internHc": 1,
+        "total": 6,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 8,
+        "match": "超编"
+      },
+      {
+        "name": "平台专家十一组",
+        "leader": "惊鸿(王晶晶)",
+        "matchingDegree": "",
+        "current": 3,
+        "internHc": 0,
+        "total": 5,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 3,
+        "match": "达标"
+      },
+      {
+        "name": "平台专家十二组",
+        "leader": "惊鸿(王晶晶)",
+        "matchingDegree": "匹配",
+        "current": 6,
+        "internHc": 2,
+        "total": 3,
+        "transIn": 0,
+        "transOut": 1,
+        "predict": 5,
+        "match": "超编"
+      },
+      {
+        "name": "行业策略组",
+        "leader": "久堂(顾翔浩)",
+        "matchingDegree": "匹配",
+        "current": 2,
+        "internHc": 0,
+        "total": 3,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 2,
+        "match": "达标"
+      }
+    ],
+    "pendingL1L2": [
+      {
+        "name": "高绪楠",
+        "level": "L1",
+        "dept": "行业一部",
+        "date": "2026-08-13"
+      }
+    ],
+    "leavingL1L2": [
+      {
+        "name": "惊鸿(王晶晶)",
+        "level": "L1",
+        "dept": "平台专家十二组",
+        "type": "主动离职"
+      },
+      {
+        "name": "克斯(陈宇田)",
+        "level": "L1",
+        "dept": "行业三组",
+        "type": "主动离职"
+      }
+    ],
+    "yearOnboard": 53,
+    "yearDim": 21,
+    "monthOnboard": 14,
+    "monthDim": 2,
+    "hcTrend": [
+      {
+        "month": "2025年08月",
+        "hcPercent": 98.7,
+        "totalHc": 149,
+        "currentHc": 147
+      },
+      {
+        "month": "2025年09月",
+        "hcPercent": 106.7,
+        "totalHc": 149,
+        "currentHc": 159
+      },
+      {
+        "month": "2025年10月",
+        "hcPercent": 107.4,
+        "totalHc": 149,
+        "currentHc": 160
+      },
+      {
+        "month": "2025年11月",
+        "hcPercent": 107.4,
+        "totalHc": 149,
+        "currentHc": 160
+      },
+      {
+        "month": "2025年12月",
+        "hcPercent": 107.4,
+        "totalHc": 149,
+        "currentHc": 160
+      },
+      {
+        "month": "2026年01月",
+        "hcPercent": 97.6,
+        "totalHc": 164,
+        "currentHc": 160
+      },
+      {
+        "month": "2026年02月",
+        "hcPercent": 102.4,
+        "totalHc": 164,
+        "currentHc": 168
+      },
+      {
+        "month": "2026年03月",
+        "hcPercent": 100.6,
+        "totalHc": 164,
+        "currentHc": 165
+      },
+      {
+        "month": "2026年04月",
+        "hcPercent": 101.8,
+        "totalHc": 164,
+        "currentHc": 167
+      },
+      {
+        "month": "2026年05月",
+        "hcPercent": 96.3,
+        "totalHc": 164,
+        "currentHc": 158
+      },
+      {
+        "month": "2026年06月",
+        "hcPercent": 99.4,
+        "totalHc": 164,
+        "currentHc": 163
+      },
+      {
+        "month": "2026年07月",
+        "hcPercent": 106.1,
+        "totalHc": 164,
+        "currentHc": 174
+      }
+    ]
+  },
+  "行业六部": {
+    "deptName": "行业六部",
+    "leader": "昂扬(李昂)",
+    "matchingDegree": "优秀",
+    "currentHc": 54,
+    "internHc": 15,
+    "budgetHc": 48,
+    "transIn": 4,
+    "transOut": 2,
+    "subs": [
+      {
+        "name": "行业一组",
+        "leader": "子歇(陈智健)",
+        "matchingDegree": "匹配",
+        "current": 5,
+        "internHc": 1,
+        "total": 10,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 5,
+        "match": "达标"
+      },
+      {
+        "name": "行业五组",
+        "leader": "星爵(鲍志浩)",
+        "matchingDegree": "匹配",
+        "current": 3,
+        "internHc": 1,
+        "total": 0,
+        "transIn": 0,
+        "transOut": 1,
+        "predict": 2,
+        "match": "超编"
+      },
+      {
+        "name": "行业二组",
+        "leader": "诗思(王瑞雪)",
+        "matchingDegree": "匹配",
+        "current": 7,
+        "internHc": 1,
+        "total": 6,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 7,
+        "match": "超编"
+      },
+      {
+        "name": "行业三组",
+        "leader": "原野(祁毓豪)",
+        "matchingDegree": "匹配",
+        "current": 4,
+        "internHc": 1,
+        "total": 8,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 4,
+        "match": "达标"
+      },
+      {
+        "name": "行业四组",
+        "leader": "达羽(李大羽)",
+        "matchingDegree": "匹配",
+        "current": 8,
+        "internHc": 3,
+        "total": 5,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 8,
+        "match": "超编"
+      },
+      {
+        "name": "平台专家一组",
+        "leader": "沙伽(朱舜杰)",
+        "matchingDegree": "匹配",
+        "current": 4,
+        "internHc": 1,
+        "total": 6,
+        "transIn": 1,
+        "transOut": 0,
+        "predict": 5,
+        "match": "达标"
+      },
+      {
+        "name": "平台专家二组",
+        "leader": "沙伽(朱舜杰)",
+        "matchingDegree": "优秀",
+        "current": 5,
+        "internHc": 2,
+        "total": 0,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 5,
+        "match": "超编"
+      },
+      {
+        "name": "平台专家三组",
+        "leader": "奕衡(周鹏辉)",
+        "matchingDegree": "匹配",
+        "current": 5,
+        "internHc": 2,
+        "total": 6,
+        "transIn": 1,
+        "transOut": 0,
+        "predict": 6,
+        "match": "达标"
+      },
+      {
+        "name": "平台专家四组",
+        "leader": "久堂(顾翔浩)",
+        "matchingDegree": "匹配",
+        "current": 10,
+        "internHc": 2,
+        "total": 5,
+        "transIn": 0,
+        "transOut": 1,
+        "predict": 9,
+        "match": "超编"
+      },
+      {
+        "name": "行业策略组",
+        "leader": "久堂(顾翔浩)",
+        "matchingDegree": "优秀",
+        "current": 3,
+        "internHc": 1,
+        "total": 2,
+        "transIn": 0,
+        "transOut": 0,
+        "predict": 3,
+        "match": "超编"
+      }
+    ],
+    "pendingL1L2": [
+      {
+        "name": "吴超",
+        "level": "L1",
+        "dept": "行业六部",
+        "date": "2026-07-31"
+      },
+      {
+        "name": "李伊萌",
+        "level": "L1",
+        "dept": "行业六部",
+        "date": "2026-08-17"
+      }
+    ],
+    "leavingL1L2": [
+      {
+        "name": "星爵(鲍志浩)",
+        "level": "L1",
+        "dept": "行业五组",
+        "type": "主动离职"
+      }
+    ],
+    "yearOnboard": 16,
+    "yearDim": 6,
+    "monthOnboard": 4,
+    "monthDim": 1,
+    "hcTrend": [
+      {
+        "month": "2025年08月",
+        "hcPercent": 120.5,
+        "totalHc": 44,
+        "currentHc": 53
+      },
+      {
+        "month": "2025年09月",
+        "hcPercent": 120.5,
+        "totalHc": 44,
+        "currentHc": 53
+      },
+      {
+        "month": "2025年10月",
+        "hcPercent": 122.7,
+        "totalHc": 44,
+        "currentHc": 54
+      },
+      {
+        "month": "2025年11月",
+        "hcPercent": 122.7,
+        "totalHc": 44,
+        "currentHc": 54
+      },
+      {
+        "month": "2025年12月",
+        "hcPercent": 122.7,
+        "totalHc": 44,
+        "currentHc": 54
+      },
+      {
+        "month": "2026年01月",
+        "hcPercent": 114.6,
+        "totalHc": 48,
+        "currentHc": 55
+      },
+      {
+        "month": "2026年02月",
+        "hcPercent": 114.6,
+        "totalHc": 48,
+        "currentHc": 55
+      },
+      {
+        "month": "2026年03月",
+        "hcPercent": 118.8,
+        "totalHc": 48,
+        "currentHc": 57
+      },
+      {
+        "month": "2026年04月",
+        "hcPercent": 120.8,
+        "totalHc": 48,
+        "currentHc": 58
+      },
+      {
+        "month": "2026年05月",
+        "hcPercent": 114.6,
+        "totalHc": 48,
+        "currentHc": 55
+      },
+      {
+        "month": "2026年06月",
+        "hcPercent": 112.5,
+        "totalHc": 48,
+        "currentHc": 54
+      },
+      {
+        "month": "2026年07月",
+        "hcPercent": 112.5,
+        "totalHc": 48,
+        "currentHc": 54
+      }
+    ]
+  }
+};
+
+/* ═══════════════════════════════════════════
+   DEPT DETAIL PANEL LOGIC
+═══════════════════════════════════════════ */
+function openDeptPanel(deptName) {
+  const data = DEPT_DETAIL_DB[deptName];
+  const overlay = document.getElementById('deptPanelOverlay');
+
+  if (!data) {
+    // No data available – show friendly notice via existing KPI modal
+    document.getElementById('modalTitle').textContent = deptName + ' · 子组详情';
+    document.getElementById('modalBody').innerHTML =
+      '<div style="color:#8D9BAB;font-size:14px;padding:20px 0;text-align:center">该部门暂无子组数据权限</div>';
+    document.getElementById('kpiModal').classList.add('open');
+    return;
+  }
+
+  // --- Header ---
+  const predict = data.currentHc + data.transIn - data.transOut;
+  const gap = data.currentHc - data.budgetHc; // positive = over budget
+  const fillRate = Math.round(data.currentHc / data.budgetHc * 100);
+
+  document.getElementById('dpTitle').textContent = data.deptName + ' · ' + data.leader;
+  document.getElementById('dpSubtitle').textContent = '系统实时';
+  document.getElementById('dpHeaderStats').innerHTML =
+    '<span>' + data.currentHc + '在职</span>' +
+    '<span>' + data.budgetHc + '规划</span>' +
+    '<span style="color:' + (gap > 0 ? '#1565C0' : '#FF2442') + '">' + (gap > 0 ? '超' + gap : '缺' + Math.abs(gap)) + ' Gap</span>' +
+    '<span style="color:#00C853">' + fillRate + '%满编率</span>';
+
+  // --- eedata 数据 ---
+  var eeCard = (EEDATA_DATA.deptCard || {})[deptName] || {};
+  var yearOb2 = eeCard.yearOnboard || 0;
+  var yearDm2 = eeCard.yearDim || 0;
+  var monthOb2 = eeCard.monthOnboard || 0;
+  var monthDm2 = eeCard.monthDim || 0;
+
+  // --- KPI cards (增加本年入离职) ---
+  var kpiDefs2 = [
+    {label:'在职', value: data.currentHc, color:'#1565C0', prefix:'', suffix:''},
+    {label:'Y26规划', value: data.budgetHc, color:'#4A5568', prefix:'', suffix:''},
+    {label:'满编率', value: fillRate, color: fillRate >= 100 ? '#1565C0' : fillRate >= 90 ? '#00C853' : '#FF8C00', prefix:'', suffix:'%'},
+    {label:'HC Gap', value: Math.abs(gap), color: gap >= 0 ? '#FF2442' : '#FF8C00',
+      prefix: gap > 0 ? '超' : gap < 0 ? '缺' : '', suffix:''},
+    {label:'流入在途', value: data.transIn, color:'#00C853', prefix:'+', suffix:''},
+    {label:'流出在途', value: data.transOut, color:'#FF2442', prefix:'-', suffix:''},
+    {label:'本年入职', value: yearOb2, color:'#00897B', prefix:'', suffix:'人'},
+    {label:'本年离职', value: yearDm2, color:'#FF8C00', prefix:'', suffix:'人'},
+  ];
+  var kpiHtml = '';
+  kpiDefs2.forEach(function(k) {
+    kpiHtml += '<div class="dp-kpi-card">' +
+      '<div class="dp-kpi-label">' + k.label + '</div>' +
+      '<div class="dp-kpi-value" style="color:' + k.color + '">' + k.prefix + k.value + k.suffix + '</div>' +
+      '</div>';
+  });
+  document.getElementById('dpKpiGrid').innerHTML = kpiHtml;
+
+  // --- SVG combo chart ---
+  buildDpChart(data.subs);
+
+  // --- 满编率迷你折线图（eedata 数据）---
+  var hcTrend = (EEDATA_DATA.deptTrend || {})[deptName] || data.hcTrend || [];
+  var miniChartEl = document.getElementById('dpMiniTrend');
+  if (miniChartEl) {
+    if (hcTrend.length >= 2) {
+      var W2 = 560, H2 = 130;
+      var PAD2 = {l:30, r:20, t:22, b:22};
+      var cW2 = W2 - PAD2.l - PAD2.r, cH2 = H2 - PAD2.t - PAD2.b;
+      // 值域
+      var allV2 = hcTrend.map(d => d.hcPercent);
+      var minV2 = Math.max(0, Math.floor(Math.min(...allV2) / 10) * 10 - 5);
+      var maxV2 = Math.ceil(Math.max(...allV2) / 10) * 10 + 5;
+      var pts = hcTrend.map((d, i) => ({
+        x: PAD2.l + i * cW2 / Math.max(hcTrend.length - 1, 1),
+        y: PAD2.t + cH2 - ((d.hcPercent - minV2) / (maxV2 - minV2)) * cH2,
+        v: d.hcPercent, m: d.month,
+      }));
+      var polyline = pts.map(p => p.x + ',' + p.y).join(' ');
+      var lastV = pts[pts.length-1].v;
+      var lineColor = lastV >= 100 ? '#1565C0' : lastV >= 90 ? '#00C853' : lastV >= 75 ? '#FF8C00' : '#FF2442';
+      // 每个点：圆点 + 数值标签（交替上下）
+      var dots = pts.map((p, i) => {
+        var above = i % 2 === 0;
+        var ty = above ? p.y - 7 : p.y + 15;
+        return '<circle cx="' + p.x + '" cy="' + p.y + '" r="3.5" fill="' + lineColor + '" stroke="white" stroke-width="1"/>'
+          + '<text x="' + p.x + '" y="' + ty + '" text-anchor="middle" font-size="9" font-weight="700" fill="' + lineColor + '">' + p.v + '%</text>';
+      }).join('');
+      // X 轴月份（只首/中/末）
+      var xLabels = [pts[0], pts[Math.floor(pts.length/2)], pts[pts.length-1]].map(p =>
+        '<text x="' + p.x + '" y="' + (H2 - 4) + '" text-anchor="middle" font-size="9" fill="#9CA3AF">'
+        + p.m.replace('年','/').replace('月','') + '</text>'
+      ).join('');
+      miniChartEl.innerHTML = '<div style="font-size:11px;font-weight:700;color:#4A5568;margin-bottom:6px;">📈 满编率走势（'
+        + hcTrend[0].month + ' ~ ' + hcTrend[hcTrend.length-1].month + '）</div>'
+        + '<svg viewBox="0 0 ' + W2 + ' ' + H2 + '" width="100%" height="' + H2 + '" style="display:block;">'
+        + '<line x1="' + PAD2.l + '" y1="' + (PAD2.t+cH2) + '" x2="' + (W2-PAD2.r) + '" y2="' + (PAD2.t+cH2) + '" stroke="#E4E8EC" stroke-width="1"/>'
+        + '<polyline points="' + polyline + '" fill="none" stroke="' + lineColor + '" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>'
+        + dots + xLabels
+        + '</svg>';
+    } else {
+      miniChartEl.innerHTML = '<div style="color:#9CA3AF;font-size:11px;padding:8px 0;">满编率趋势数据加载中...</div>';
+    }
+    miniChartEl.style.display = 'block';
+  }
+
+  // --- Key people ---
+  var pendingHtml = '';
+  if (data.pendingL1L2 && data.pendingL1L2.length > 0) {
+    data.pendingL1L2.forEach(function(p) {
+      pendingHtml += '<div class="dp-person-row">' +
+        '<span class="dp-person-name">' + p.name + '</span>' +
+        '<span class="dp-person-dept">' + p.dept + ' · ' + p.level + '</span>' +
+        '<span class="dp-person-date">预计 ' + p.date + '</span>' +
+        '</div>';
+    });
+    var icPendingCount = (data.transIn || 0) - (data.pendingL1L2 ? data.pendingL1L2.length : 0);
+    if (icPendingCount > 0) {
+      pendingHtml += '<div class="dp-empty-tip" style="margin-top:6px;color:#8D9BAB">另有 IC ' + icPendingCount + ' 人待入职</div>';
+    }
+  } else {
+    pendingHtml = '<div class="dp-empty-tip">暂无 L1/L2 待入职</div>';
+  }
+
+  var leavingHtml = '';
+  if (data.leavingL1L2 && data.leavingL1L2.length > 0) {
+    data.leavingL1L2.forEach(function(p) {
+      leavingHtml += '<div class="dp-person-row">' +
+        '<span class="dp-person-name">' + p.name + '</span>' +
+        '<span class="dp-person-dept">' + p.dept + '</span>' +
+        '<span class="dp-person-type">' + p.type + '</span>' +
+        '</div>';
+    });
+  } else {
+    var icLeavingCount = (data.transOut || 0) - (data.leavingL1L2 ? data.leavingL1L2.length : 0);
+    leavingHtml = '<div class="dp-empty-tip">暂无 L1/L2 流出</div>';
+    if (icLeavingCount > 0) {
+      leavingHtml += '<div class="dp-empty-tip" style="margin-top:4px">另有 IC ' + icLeavingCount + ' 人流出（离职/转岗）</div>';
+    }
+  }
+
+  document.getElementById('dpPeopleGrid').innerHTML =
+    '<div class="dp-people-card">' +
+      '<div class="dp-people-title">🌱 关键人选 · 待入职 L1/L2</div>' +
+      pendingHtml +
+    '</div>' +
+    '<div class="dp-people-card">' +
+      '<div class="dp-people-title">🚪 L1/L2 流出</div>' +
+      leavingHtml +
+    '</div>';
+
+  // --- Detail table ---
+  var tableHtml = '<table><thead><tr>' +
+    '<th>子组</th><th>负责人</th><th>在职</th><th>目标</th>' +
+    '<th>流入</th><th>流出</th><th>预计</th><th>HC Gap</th><th>满编率</th><th>人岗匹配</th>' +
+    '</tr></thead><tbody>';
+  data.subs.forEach(function(sub, idx) {
+    var subRate = Math.round(sub.current / sub.total * 100);
+    var subGap = sub.current - sub.total;
+    var gapHtml = subGap > 0
+      ? '<span style="color:#FF2442;font-weight:700">超' + subGap + '</span>'
+      : subGap < 0
+      ? '<span style="color:#FF8C00;font-weight:600">' + subGap + '</span>'
+      : '<span style="color:#8D9BAB">达标</span>';
+    var rateColor = subRate >= 100 ? '#1565C0' : subRate >= 90 ? '#00C853' : subRate >= 75 ? '#FF8C00' : '#FF2442';
+    var matchHtml = '';
+    var matchDeg = sub.matchingDegree || sub.match || '';
+    if (matchDeg === '优秀') matchHtml = '<span class="match-badge match-green">优秀</span>';
+    else if (matchDeg === '匹配') matchHtml = '<span class="match-badge match-blue">匹配</span>';
+    else if (matchDeg === '存疑') matchHtml = '<span class="match-badge match-orange">存疑</span>';
+    else matchHtml = '<span style="color:#CBD5E0">—</span>';
+
+    tableHtml += '<tr>' +
+      '<td>' + sub.name + '</td>' +
+      '<td style="color:#4A5568">' + sub.leader + '</td>' +
+      '<td style="font-weight:700;color:#1565C0">' + sub.current + '</td>' +
+      '<td>' + sub.total + '</td>' +
+      '<td style="color:#00C853">' + (sub.transIn > 0 ? '+' + sub.transIn : '—') + '</td>' +
+      '<td style="color:#FF2442">' + (sub.transOut > 0 ? '-' + sub.transOut : '—') + '</td>' +
+      '<td style="font-weight:600">' + sub.predict + '</td>' +
+      '<td>' + gapHtml + '</td>' +
+      '<td style="color:' + rateColor + ';font-weight:700">' + subRate + '%</td>' +
+      '<td>' + matchHtml + '</td>' +
+      '</tr>';
+  });
+  tableHtml += '</tbody></table>';
+  document.getElementById('dpTableBody').innerHTML = tableHtml;
+
+  // Show panel
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDeptPanel() {
+  document.getElementById('deptPanelOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('dpClose').addEventListener('click', closeDeptPanel);
+document.getElementById('deptPanelOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeDeptPanel();
+});
+
+/* ═══════════════════════════════════════════
+   DEPT PANEL SVG COMBO CHART
+═══════════════════════════════════════════ */
+function buildDpChart(subs) {
+  var svgEl = document.getElementById('dpChartSvg');
+  var tooltip2 = document.getElementById('dpSvgTooltip');
+  svgEl.innerHTML = '';
+
+  var H = 220;
+  var PAD2 = {l: 36, r: 50, t: 10, b: 60};
+  var ns2 = 'http://www.w3.org/2000/svg';
+
+  function el2(tag, attrs, parent) {
+    var e = document.createElementNS(ns2, tag);
+    Object.entries(attrs).forEach(function(pair) { e.setAttribute(pair[0], pair[1]); });
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+
+  // We use clientWidth but SVG is responsive; use a fixed logical width
+  var W2 = 1040;
+  svgEl.setAttribute('viewBox', '0 0 ' + W2 + ' ' + H);
+  svgEl.setAttribute('height', H);
+
+  var cW2 = W2 - PAD2.l - PAD2.r;
+  var cH2 = H - PAD2.t - PAD2.b;
+  var n = subs.length;
+  var slotW = cW2 / n;
+  var barW = Math.min(slotW * 0.3, 18);
+
+  var maxVal = Math.max.apply(null, subs.map(function(s){ return Math.max(s.current, s.total); }));
+  maxVal = Math.ceil(maxVal * 1.15);
+
+  // Y-axis left (count)
+  var yTicks = [0, Math.round(maxVal*0.25), Math.round(maxVal*0.5), Math.round(maxVal*0.75), maxVal];
+  yTicks.forEach(function(v) {
+    var y2 = PAD2.t + cH2 - (v / maxVal) * cH2;
+    el2('line', {x1: PAD2.l, y1: y2, x2: PAD2.l + cW2, y2: y2, stroke:'#E4E8EC', 'stroke-width':1}, svgEl);
+    var t = el2('text', {x: PAD2.l - 4, y: y2 + 4, 'text-anchor':'end', fill:'#8D9BAB', 'font-size':'9', 'font-family':'Inter'}, svgEl);
+    t.textContent = v;
+  });
+
+  // Right Y-axis (满编率 %)
+  var maxRate = 180;
+  [0, 50, 100, 150].forEach(function(rv) {
+    var y2 = PAD2.t + cH2 - (rv / maxRate) * cH2;
+    var t = el2('text', {x: PAD2.l + cW2 + 4, y: y2 + 4, fill:'#90CAF9', 'font-size':'9', 'font-family':'Inter'}, svgEl);
+    t.textContent = rv + '%';
+  });
+
+  // Axes
+  el2('line', {x1: PAD2.l, y1: PAD2.t + cH2, x2: PAD2.l + cW2, y2: PAD2.t + cH2, stroke:'#CBD5E0', 'stroke-width':1.5}, svgEl);
+  el2('line', {x1: PAD2.l, y1: PAD2.t, x2: PAD2.l, y2: PAD2.t + cH2, stroke:'#CBD5E0', 'stroke-width':1.5}, svgEl);
+
+  // Line points collector
+  var linePoints = [];
+
+  subs.forEach(function(sub, i) {
+    var cx = PAD2.l + i * slotW + slotW / 2;
+    var barX1 = cx - barW - 1;
+    var barX2 = cx + 1;
+
+    // Green bar: current
+    var curH = (sub.current / maxVal) * cH2;
+    var curY = PAD2.t + cH2 - curH;
+    var gBar = el2('rect', {
+      x: barX1, y: curY, width: barW, height: curH,
+      fill: '#00C853', rx: 2, opacity: 0.85, style: 'cursor:pointer'
+    }, svgEl);
+
+    // Blue dashed bar: total (outline only)
+    var totH = (sub.total / maxVal) * cH2;
+    var totY = PAD2.t + cH2 - totH;
+    var tBar = el2('rect', {
+      x: barX2, y: totY, width: barW, height: totH,
+      fill: '#E3F2FD', stroke: '#1565C0', 'stroke-width': 1.5, 'stroke-dasharray': '3,2', rx: 2,
+      style: 'cursor:pointer'
+    }, svgEl);
+
+    // X label (45° rotated)
+    var labelEl = el2('text', {
+      x: cx, y: PAD2.t + cH2 + 8,
+      'text-anchor': 'end',
+      fill: '#4A5568', 'font-size': '8', 'font-family': 'Inter',
+      transform: 'rotate(-45 ' + cx + ' ' + (PAD2.t + cH2 + 8) + ')'
+    }, svgEl);
+    labelEl.textContent = sub.name;
+
+    // Line point: fill rate mapped to right Y-axis
+    var subRate = Math.round(sub.current / sub.total * 100);
+    var ly = PAD2.t + cH2 - (Math.min(subRate, maxRate) / maxRate) * cH2;
+    linePoints.push([cx, ly, sub, subRate]);
+
+    // Hover group
+    var hoverG = el2('g', {style:'cursor:pointer'}, svgEl);
+    el2('rect', {x: barX1 - 2, y: PAD2.t, width: slotW, height: cH2 + 2, fill:'transparent'}, hoverG);
+
+    function showTip(e) {
+      tooltip2.innerHTML = sub.name + '\n在职: ' + sub.current + '  目标: ' + sub.total + '\n满编率: ' + subRate + '%';
+      tooltip2.style.left = (e.clientX + 12) + 'px';
+      tooltip2.style.top = (e.clientY - 10) + 'px';
+      tooltip2.classList.add('show');
+    }
+    function hideTip() { tooltip2.classList.remove('show'); }
+
+    [gBar, tBar, hoverG].forEach(function(el3) {
+      el3.addEventListener('mousemove', showTip);
+      el3.addEventListener('mouseleave', hideTip);
+    });
+  });
+
+  // Draw line
+  if (linePoints.length > 1) {
+    var pathD = linePoints.map(function(pt, i) {
+      return (i === 0 ? 'M' : 'L') + pt[0] + ',' + pt[1];
+    }).join(' ');
+    el2('path', {d: pathD, fill:'none', stroke:'#1565C0', 'stroke-width':2, 'stroke-linejoin':'round', opacity:0.8}, svgEl);
+  }
+
+  // Dots on line
+  linePoints.forEach(function(pt) {
+    el2('circle', {cx: pt[0], cy: pt[1], r: 3.5, fill:'#1565C0', stroke:'white', 'stroke-width':1.5}, svgEl);
+  });
+}
+
+/* ═══════════════════════════════════════════
+   BIND BUBBLE CHART CLICKS → DEPT PANEL
+═══════════════════════════════════════════ */
+(function() {
+  // We need to re-wire bubble click after the bubble chart is built.
+  // Since bubble chart is built in IIFE above, we attach click handlers
+  // via event delegation on the SVG.
+  var bubbleSvg = document.getElementById('bubbleSvg');
+  bubbleSvg.addEventListener('click', function(e) {
+    var g = e.target.closest('.bubble-g');
+    if (!g) return;
+    // find matching data by reading label text from child text elements
+    var texts = g.querySelectorAll('text');
+    var labelText = '';
+    texts.forEach(function(t) { if (!labelText) labelText = t.textContent; });
+    // match against BUDGET_DATA
+    var matched = BUDGET_DATA.find(function(d) {
+      return labelText && d.l2.indexOf(labelText.replace('…','')) === 0;
+    });
+    if (matched) openDeptPanel(matched.l2);
+  });
+})();
+
+/* ═══════════════════════════════════════════
+   BIND TABLE ROW CLICKS → DEPT PANEL
+═══════════════════════════════════════════ */
+(function bindTableClicks() {
+  // Use event delegation on dept-table-card containers
+  document.querySelectorAll('.dept-table-card').forEach(function(card) {
+    card.addEventListener('click', function(e) {
+      var tr = e.target.closest('tbody tr');
+      if (!tr) return;
+      var deptNameEl = tr.querySelector('.dept-name');
+      if (!deptNameEl) return;
+      var deptName = deptNameEl.textContent.trim();
+      openDeptPanel(deptName);
+    });
+  });
+})();
+
+/* ═══════════════════════════════════════════
+   TABS
+═══════════════════════════════════════════ */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    const target = document.getElementById('tab-' + btn.dataset.tab);
+    target.classList.add('active');
+    // Trigger bar animations on tab open
+    setTimeout(() => animateBars(), 100);
+    // Trigger KPI countups
+    setTimeout(() => {
+      target.querySelectorAll('.kpi-value[data-val]').forEach(el => {
+        const v = parseInt(el.dataset.val);
+        const suf = el.dataset.suffix || '';
+        countUp(el, v, 800, suf);
+      });
+    }, 150);
+  });
+});
+
+/* ═══════════════════════════════════════════
+   BAR ANIMATION (on-demand + initial)
+═══════════════════════════════════════════ */
+function animateBars() {
+  document.querySelectorAll('.bar-fill[data-w]').forEach(el => {
+    el.style.width = el.dataset.w + '%';
+  });
+}
+
+/* ═══════════════════════════════════════════
+   INITIAL ANIMATIONS
+═══════════════════════════════════════════ */
+window.addEventListener('load', () => {
+  // ── 满编率折线图（交互版）──
+  (function() {
+    const trendData = EEDATA_DATA.l1Trend || {};
+    const L1_LINES = [
+      { name:'商业化',      color:'#FF2442' },
+      { name:'平台部',      color:'#7C3AED' },
+      { name:'财务职能+DI', color:'#1565C0' },
+      { name:'交易',        color:'#00C853' },
+    ];
+
+    // 只取6月及以后的数据
+    const monthSet = new Set();
+    L1_LINES.forEach(({name}) => {
+      (trendData[name]||[]).forEach(d => {
+        // 过滤：只保留 2025年06月 以后（含）
+        if (d.month >= '2025年06月') monthSet.add(d.month);
+      });
+    });
+    const months = Array.from(monthSet).sort();
+
+    const svgEl = document.getElementById('trendSvg');
+    if (!svgEl || months.length < 2) {
+      if (svgEl) svgEl.parentElement.insertAdjacentHTML('beforeend',
+        '<div style="color:#9CA3AF;font-size:12px;text-align:center;padding:20px;">满编率趋势数据暂未加载</div>');
+      return;
+    }
+
+    const W = 900, H = 280;
+    const PAD = {l:52, r:60, t:28, b:44};
+    const cW = W - PAD.l - PAD.r;
+    const cH = H - PAD.t - PAD.b;
+
+    svgEl.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    svgEl.setAttribute('height', H);
+    svgEl.style.cursor = 'crosshair';
+
+    // 数值范围（过滤6月后重算）
+    let allVals = [];
+    L1_LINES.forEach(({name}) => {
+      (trendData[name]||[]).filter(d => d.month >= '2025年06月')
+        .forEach(d => allVals.push(d.hcPercent));
+    });
+    if (!allVals.length) return;
+    const minV = Math.max(0, Math.floor(Math.min(...allVals) / 10) * 10 - 5);
+    const maxV = Math.ceil(Math.max(...allVals) / 10) * 10 + 5;
+
+    const xP = i => PAD.l + (months.length === 1 ? cW/2 : i / (months.length - 1) * cW);
+    const yP = v => PAD.t + cH - ((v - minV) / (maxV - minV)) * cH;
+
+    const ns = 'http://www.w3.org/2000/svg';
+    const mk = (tag, attrs) => {
+      const e = document.createElementNS(ns, tag);
+      Object.entries(attrs).forEach(([k,v]) => e.setAttribute(k,v));
+      return e;
+    };
+    svgEl.innerHTML = '';
+
+    // ── 背景格线 ──
+    [minV, Math.round((minV+maxV)/2), maxV, 100].forEach(v => {
+      const y = yP(v);
+      const isRef = v === 100;
+      svgEl.appendChild(mk('line', {x1:PAD.l, y1:y, x2:W-PAD.r, y2:y,
+        stroke: isRef ? '#1565C040' : '#F0F2F5',
+        'stroke-width': isRef ? 1.5 : 1,
+        'stroke-dasharray': isRef ? '5,3' : 'none'}));
+      const t = mk('text', {x:PAD.l-6, y:y+4, 'text-anchor':'end',
+        'font-size':'9', fill: isRef ? '#1565C0' : '#9CA3AF', 'font-weight': isRef ? '700' : '400', 'font-family':'Inter'});
+      t.textContent = v + '%';
+      svgEl.appendChild(t);
+    });
+
+    // X 轴
+    svgEl.appendChild(mk('line', {x1:PAD.l, y1:PAD.t+cH, x2:W-PAD.r, y2:PAD.t+cH,
+      stroke:'#E4E8EC', 'stroke-width':'1'}));
+
+    // X 轴月份标签（全部显示，短格式）
+    months.forEach((m, i) => {
+      const label = m.replace('年','/').replace('月','');
+      const t = mk('text', {x:xP(i), y:PAD.t+cH+16, 'text-anchor':'middle',
+        'font-size':'9', fill:'#9CA3AF', 'font-family':'Inter'});
+      t.textContent = label;
+      svgEl.appendChild(t);
+    });
+
+    // ── 折线 + 数据点 + 标签 ──
+    const allSeriesPts = {};  // 用于 hover
+    L1_LINES.forEach(({name, color}) => {
+      const series = (trendData[name]||[]).filter(d => d.month >= '2025年06月');
+      if (!series.length) return;
+      const monthMap = {};
+      series.forEach(d => monthMap[d.month] = d.hcPercent);
+
+      const pts = months.map((m, i) => ({
+        x: xP(i), y: yP(monthMap[m] != null ? monthMap[m] : null),
+        v: monthMap[m] != null ? monthMap[m] : null, m, i
+      })).filter(p => p.v !== null);
+      allSeriesPts[name] = pts;
+
+      if (pts.length < 1) return;
+
+      // 填充区域（渐变）
+      if (pts.length >= 2) {
+        const areaPoints = pts.map(p=>`${p.x},${p.y}`).join(' ')
+          + ` ${pts[pts.length-1].x},${PAD.t+cH} ${pts[0].x},${PAD.t+cH}`;
+        const poly = mk('polygon', {points: areaPoints, fill: color, opacity:'0.07'});
+        svgEl.appendChild(poly);
+        const line = mk('polyline', {points: pts.map(p=>`${p.x},${p.y}`).join(' '),
+          fill:'none', stroke:color, 'stroke-width':'2.5',
+          'stroke-linejoin':'round', 'stroke-linecap':'round'});
+        svgEl.appendChild(line);
+      }
+
+      // 数据点 + 数值标签（每个点都标）
+      pts.forEach((p, idx) => {
+        // 圆点
+        const c = mk('circle', {cx:p.x, cy:p.y, r:'4', fill:color,
+          'stroke':'white', 'stroke-width':'1.5'});
+        svgEl.appendChild(c);
+
+        // 数值标签（交替上下避免重叠）
+        const above = idx % 2 === 0;
+        const t = mk('text', {x:p.x, y: above ? p.y - 8 : p.y + 16,
+          'text-anchor':'middle', 'font-size':'9', 'font-weight':'700',
+          fill:color, 'font-family':'Inter'});
+        t.textContent = p.v + '%';
+        svgEl.appendChild(t);
+      });
+    });
+
+    // ── 图例（右上角）──
+    L1_LINES.forEach(({name, color}, i) => {
+      const lx = W - PAD.r + 8, ly = PAD.t + i * 22;
+      svgEl.appendChild(mk('line', {x1:lx, y1:ly+5, x2:lx+14, y2:ly+5,
+        stroke:color, 'stroke-width':'2.5'}));
+      svgEl.appendChild(mk('circle', {cx:lx+7, cy:ly+5, r:'3', fill:color}));
+      const lt = mk('text', {x:lx+18, y:ly+9, 'font-size':'10', fill:'#4A5568', 'font-family':'Inter'});
+      lt.textContent = name === '财务职能+DI' ? '财务+DI' : name;
+      svgEl.appendChild(lt);
+    });
+
+    // ── Hover 竖线 + tooltip ──
+    const hoverLine = mk('line', {x1:0, y1:PAD.t, x2:0, y2:PAD.t+cH,
+      stroke:'#4A5568', 'stroke-width':'1', 'stroke-dasharray':'4,3', opacity:'0', 'pointer-events':'none'});
+    svgEl.appendChild(hoverLine);
+
+    // tooltip div
+    const tCard = document.createElement('div');
+    tCard.style.cssText = 'position:absolute;display:none;background:#1A202C;color:#fff;border-radius:10px;padding:10px 14px;font-size:12px;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,0.25);z-index:999;min-width:150px;';
+    svgEl.parentElement.style.position = 'relative';
+    svgEl.parentElement.appendChild(tCard);
+
+    svgEl.addEventListener('mousemove', e => {
+      const rect = svgEl.getBoundingClientRect();
+      const scaleX = W / rect.width;
+      const mx = (e.clientX - rect.left) * scaleX;
+
+      // 找最近的月份索引
+      let bestIdx = 0, bestDist = Infinity;
+      months.forEach((m, i) => {
+        const d = Math.abs(xP(i) - mx);
+        if (d < bestDist) { bestDist = d; bestIdx = i; }
+      });
+      if (bestDist > cW / months.length) {
+        hoverLine.setAttribute('opacity', '0');
+        tCard.style.display = 'none';
+        return;
+      }
+
+      const hx = xP(bestIdx);
+      hoverLine.setAttribute('x1', hx); hoverLine.setAttribute('x2', hx);
+      hoverLine.setAttribute('opacity', '0.6');
+
+      // 高亮当月圆点
+      const curMonth = months[bestIdx];
+      let tipHtml = `<div style="font-weight:700;margin-bottom:6px;color:#E2E8F0">${curMonth.replace('年','/').replace('月','')}</div>`;
+      L1_LINES.forEach(({name, color}) => {
+        const pts = allSeriesPts[name] || [];
+        const pt = pts.find(p => p.m === curMonth);
+        if (pt) {
+          tipHtml += `<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">
+            <span style="width:8px;height:8px;border-radius:50%;background:${color};display:inline-block;flex-shrink:0"></span>
+            <span style="color:#CBD5E0">${name === '财务职能+DI' ? '财务+DI' : name}</span>
+            <span style="margin-left:auto;font-weight:700;color:${color}">${pt.v}%</span>
+          </div>`;
+        }
+      });
+      tCard.innerHTML = tipHtml;
+      tCard.style.display = 'block';
+
+      // 定位 tooltip（跟随鼠标，避免超出右边）
+      const relX = e.clientX - rect.left;
+      const relY = e.clientY - rect.top;
+      const tW = 160;
+      tCard.style.left = (relX + 16 + tW > rect.width ? relX - tW - 8 : relX + 16) + 'px';
+      tCard.style.top = (relY - 20) + 'px';
+    });
+
+    svgEl.addEventListener('mouseleave', () => {
+      hoverLine.setAttribute('opacity', '0');
+      tCard.style.display = 'none';
+    });
+  })();
+
+  setTimeout(() => {
+    animateBars();
+    // Overview countups in flow cards
+    document.querySelectorAll('.countup[data-val]').forEach(el => {
+      countUp(el, parseInt(el.dataset.val), 900);
+    });
+  }, 300);
+});
+
+/* ═══ SECONDARY TABS - PURE JS INJECTION (no HTML changes) ═══ */
+var ORG_STATS = {"商业化": {}, "交易": {}, "平台部": {}, "财务职能+DI": {}};
+var ENGAGE_DATA = {"行业一部-美妆个护": {"hr_input": 9.12, "hr_early": 0.412}, "行业二部-服饰潮流": {"hr_input": 9.05, "hr_early": 0.398}, "行业三部-耐用消费": {"hr_input": 9.18, "hr_early": 0.421}, "行业四部-快速消费": {"hr_input": 9.08, "hr_early": 0.385}, "行业五部-互联网": {"hr_input": 9.23, "hr_early": 0.445}, "行业六部-交通出行": {"hr_input": 8.95, "hr_early": 0.362}, "行业七部-生活服务": {"hr_input": 9.11, "hr_early": 0.403}, "行业八部-教育到综": {"hr_input": 9.07, "hr_early": 0.391}, "生态客户一部": {"hr_input": 9.15, "hr_early": 0.408}, "生态客户二部": {"hr_input": 9.09, "hr_early": 0.395}, "商业产品部": {"hr_input": 9.31, "hr_early": 0.462}, "商业策略中台": {"hr_input": 9.27, "hr_early": 0.453}, "商业市场营销中台": {"hr_input": 9.02, "hr_early": 0.378}, "创作者营销与商业服务": {"hr_input": 9.06, "hr_early": 0.389}, "渠道业务部": {"hr_input": 8.98, "hr_early": 0.371}, "电商业务一部": {"hr_input": 9.14, "hr_early": 0.407}, "电商业务二部": {"hr_input": 9.09, "hr_early": 0.394}, "电商业务三部": {"hr_input": 9.19, "hr_early": 0.425}, "交易部-产品一部": {"hr_input": 9.28, "hr_early": 0.455}, "交易部-产品二部": {"hr_input": 9.22, "hr_early": 0.441}};
+
+var L1_MAP = {'shyl':'商业化','jy':'交易','pt':'平台部','cw':'财务职能+DI'};
+var DEPT_KEY_JS = {
+  '行业一部':'行业一部-美妆个护','行业二部':'行业二部-服饰潮流','行业三部':'行业三部-耐用消费',
+  '行业四部':'行业四部-快速消费','行业五部':'行业五部-互联网','行业六部':'行业六部-交通出行',
+  '行业七部':'行业七部-生活服务','行业八部':'行业八部-教育到综',
+  '生态客户一部':'生态客户一部','生态客户二部':'生态客户二部',
+  '商业产品部':'商业产品部','商业策略中台':'商业策略中台',
+  '商业市场营销中台':'商业市场营销中台','创作者营销与商业服务':'创作者营销与商业服务',
+  '渠道业务部':'渠道业务部','电商业务一部':'电商业务一部','电商业务二部':'电商业务二部',
+  '电商业务三部':'电商业务三部','交易部-产品一部':'交易部-产品一部','交易部-产品二部':'交易部-产品二部'
+};
+
+function injectSecTabs() {
+  var tabs = ['shyl','jy','pt','cw'];
+  tabs.forEach(function(tk) {
+    var tabEl = document.getElementById('tab-' + tk);
+    if (!tabEl) { return; }
+
+    // 创建 sec-tab-bar
+    var bar = document.createElement('div');
+    bar.className = 'sec-tab-bar';
+    bar.setAttribute('data-ptab', tk);
+    var secs = [['hc','📊 HC 数据'],['org','🔬 组织诊断'],['l1','⚔️ L1 战斗力'],['engage','⏰ 投入度']];
+    secs.forEach(function(pair, i) {
+      var btn = document.createElement('button');
+      btn.className = 'sec-tab-btn' + (i === 0 ? ' active' : '');
+      btn.setAttribute('data-ptab', tk);
+      btn.setAttribute('data-sec', pair[0]);
+      btn.textContent = pair[1];
+      btn.addEventListener('click', function() {
+        tabEl.querySelectorAll('.sec-tab-btn').forEach(function(b) { b.classList.remove('active'); });
+        tabEl.querySelectorAll('.sec-pane').forEach(function(p) { p.classList.remove('active'); });
+        btn.classList.add('active');
+        var pane = document.getElementById(tk + '-sec-' + pair[0]);
+        if (pane) { pane.classList.add('active'); }
+        if (pair[0] !== 'hc') { renderSecPane(tk, pair[0]); }
+      });
+      bar.appendChild(btn);
+    });
+
+    // 把原有内容包进 hc pane
+    var hcPane = document.createElement('div');
+    hcPane.className = 'sec-pane active';
+    hcPane.id = tk + '-sec-hc';
+    while (tabEl.firstChild) { hcPane.appendChild(tabEl.firstChild); }
+
+    // 创建其他三个 pane
+    var orgPane = document.createElement('div');
+    orgPane.className = 'sec-pane'; orgPane.id = tk + '-sec-org';
+    var orgContent = document.createElement('div');
+    orgContent.id = tk + '-org-content'; orgContent.style.minHeight = '200px';
+    orgPane.appendChild(orgContent);
+
+    var l1Pane = document.createElement('div');
+    l1Pane.className = 'sec-pane'; l1Pane.id = tk + '-sec-l1';
+    var l1Content = document.createElement('div');
+    l1Content.id = tk + '-l1-content'; l1Content.style.minHeight = '200px';
+    l1Pane.appendChild(l1Content);
+
+    var engPane = document.createElement('div');
+    engPane.className = 'sec-pane'; engPane.id = tk + '-sec-engage';
+    var engContent = document.createElement('div');
+    engContent.id = tk + '-engage-content'; engContent.style.minHeight = '200px';
+    engPane.appendChild(engContent);
+
+    // 组装
+    tabEl.appendChild(bar);
+    tabEl.appendChild(hcPane);
+    tabEl.appendChild(orgPane);
+    tabEl.appendChild(l1Pane);
+    tabEl.appendChild(engPane);
+  });
+}
+
+// 在页面初始化后执行（等原有 JS 先跑完）
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', injectSecTabs);
+} else {
+  injectSecTabs();
+}
+
+function fmtPct(v) { return v != null ? v + '%' : '-'; }
+function metricColor(v, threshold, reverse) {
+  if (v == null) { return '#6b7280'; }
+  return (reverse ? v <= threshold : v >= threshold) ? '#059669' : '#dc2626';
+}
+
+function renderSecPane(ptab, sec) {
+  var l1 = L1_MAP[ptab];
+  if (!l1) { return; }
+  if (sec === 'org')    { renderOrgPane(ptab, l1); }
+  if (sec === 'l1')     { renderL1Pane(ptab, l1); }
+  if (sec === 'engage') { renderEngagePane(ptab, l1); }
+}
+
+function renderOrgPane(ptab, l1) {
+  var el = document.getElementById(ptab + '-org-content');
+  if (!el) { return; }
+  var depts = ORG_STATS[l1] || {};
+  var keys = Object.keys(depts);
+  if (!keys.length) {
+    el.innerHTML = '<div style="padding:60px;text-align:center;color:#9ca3af;font-size:14px">暂无组织数据（需要 RedBI 花名册权限）</div>';
+    return;
+  }
+  var h = '<div class="org-grid">';
+  for (var i = 0; i < keys.length; i++) {
+    var dept = keys[i]; var s = depts[dept];
+    var early = '';
+    if (s.early_exits && s.early_exits.length) {
+      early = '<div class="early-alert">⚠️ 早期流失：';
+      for (var j = 0; j < s.early_exits.length; j++) {
+        early += s.early_exits[j].name + '(' + s.early_exits[j].days + 'd) ';
+      }
+      early += '</div>';
+    }
+    h += '<div class="org-card">';
+    h += '<div class="org-card-title">' + dept + '<span style="font-weight:400;font-size:12px;color:#6b7280;margin-left:6px">在职 ' + (s.hc||0) + '</span></div>';
+    h += '<div class="org-metrics">';
+    h += '<div><div class="org-metric-label">高绩效保留率</div><div class="org-metric-val" style="color:' + metricColor(s.keep375,90,false) + '">' + fmtPct(s.keep375) + '</div></div>';
+    h += '<div><div class="org-metric-label">低绩效汰换率</div><div class="org-metric-val" style="color:' + metricColor(s.dismiss,60,false) + '">' + fmtPct(s.dismiss) + '</div></div>';
+    h += '<div><div class="org-metric-label">6月留存</div><div class="org-metric-val">' + fmtPct(s.retain_6m_pct) + '</div></div>';
+    h += '<div><div class="org-metric-label">12月留存</div><div class="org-metric-val">' + fmtPct(s.retain_12m_pct) + '</div></div>';
+    h += '<div><div class="org-metric-label">主动离职率</div><div class="org-metric-val" style="color:' + metricColor(s.vol_quit_rate,3,true) + '">' + fmtPct(s.vol_quit_rate) + '</div></div>';
+    h += '<div><div class="org-metric-label">近1月入/离</div><div class="org-metric-val">' + (s.entries_n||0) + '/' + (s.exits_n||0) + '</div></div>';
+    h += '</div>' + early + '</div>';
+  }
+  h += '</div>';
+  el.innerHTML = h;
+}
+
+function renderL1Pane(ptab, l1) {
+  var el = document.getElementById(ptab + '-l1-content');
+  if (!el) { return; }
+  var depts = ORG_STATS[l1] || {};
+  var keys = Object.keys(depts);
+  if (!keys.length) {
+    el.innerHTML = '<div style="padding:60px;text-align:center;color:#9ca3af;font-size:14px">暂无 L1 数据</div>';
+    return;
+  }
+  var h = '<div style="padding:24px;display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:16px">';
+  for (var i = 0; i < keys.length; i++) {
+    var dept = keys[i]; var s = depts[dept];
+    h += '<div style="background:#fff;border-radius:10px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,0.08)">';
+    h += '<div style="font-weight:700;font-size:14px;margin-bottom:10px">' + dept + '</div>';
+    h += '<table style="width:100%;border-collapse:collapse;font-size:12px">';
+    h += '<thead><tr style="background:#f9fafb"><th style="padding:6px 10px;text-align:left;color:#6b7280">层级</th><th style="padding:6px 10px;text-align:center;color:#6b7280">年轻</th><th style="padding:6px 10px;text-align:center;color:#6b7280">投资期</th><th style="padding:6px 10px;text-align:center;color:#6b7280">突破期</th><th style="padding:6px 10px;text-align:center;color:#6b7280">成熟期</th></tr></thead>';
+    h += '<tbody>';
+    h += '<tr><td style="padding:6px 10px;font-weight:600">L1/L2</td><td style="padding:6px 10px;text-align:center">' + (s.young_l1!=null?s.young_l1:'-') + '</td><td style="padding:6px 10px;text-align:center">' + (s.invest_l1!=null?s.invest_l1:'-') + '</td><td style="padding:6px 10px;text-align:center">' + (s.break_l1!=null?s.break_l1:'-') + '</td><td style="padding:6px 10px;text-align:center">' + (s.mature_l1!=null?s.mature_l1:'-') + '</td></tr>';
+    h += '<tr style="background:#f9fafb"><td style="padding:6px 10px;font-weight:600">IC</td><td style="padding:6px 10px;text-align:center">' + (s.young_ic!=null?s.young_ic:'-') + '</td><td style="padding:6px 10px;text-align:center">' + (s.invest_ic!=null?s.invest_ic:'-') + '</td><td style="padding:6px 10px;text-align:center">' + (s.break_ic!=null?s.break_ic:'-') + '</td><td style="padding:6px 10px;text-align:center">' + (s.mature_ic!=null?s.mature_ic:'-') + '</td></tr>';
+    h += '</tbody></table></div>';
+  }
+  h += '</div>';
+  el.innerHTML = h;
+}
+
+function renderEngagePane(ptab, l1) {
+  var el = document.getElementById(ptab + '-engage-content');
+  if (!el) { return; }
+  var depts = ORG_STATS[l1] || {};
+  var keys = Object.keys(depts);
+  var h = '<div style="padding:24px"><div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.08)">';
+  h += '<table style="width:100%;border-collapse:collapse;font-size:13px">';
+  h += '<thead><tr style="background:#f9fafb"><th style="padding:12px 16px;text-align:left;color:#6b7280;font-weight:600">部门</th><th style="padding:12px 16px;text-align:center;color:#6b7280;font-weight:600">投入度(h/天)</th><th style="padding:12px 16px;text-align:center;color:#6b7280;font-weight:600">早到率</th></tr></thead>';
+  h += '<tbody>';
+  for (var i = 0; i < keys.length; i++) {
+    var dept = keys[i]; var dk = DEPT_KEY_JS[dept] || dept; var e = ENGAGE_DATA[dk] || {};
+    var bg = i % 2 === 1 ? 'background:#f9fafb;' : '';
+    h += '<tr style="' + bg + '"><td style="padding:10px 16px;font-weight:500">' + dept + '</td><td style="padding:10px 16px;text-align:center">' + (e.hr_input!=null?e.hr_input:'-') + '</td><td style="padding:10px 16px;text-align:center">' + (e.hr_early!=null?Math.round(e.hr_early*100)+'%':'-') + '</td></tr>';
+  }
+  h += '</tbody></table></div></div>';
+  el.innerHTML = h;
+}
+
+</script>
+<!-- Omni Branding Badge -->
+<style>
+.omni-badge,.omni-badge *,.omni-badge *:before,.omni-badge *:after{box-sizing:border-box!important;margin:0!important;line-height:normal!important}
+.omni-badge{position:fixed!important;bottom:1.25rem!important;right:1.25rem!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:0!important;padding:9px!important;background:rgba(255,255,255,0.85)!important;backdrop-filter:blur(8px)!important;-webkit-backdrop-filter:blur(8px)!important;border:1px solid rgba(216,216,213,0.5)!important;border-radius:9999px!important;cursor:pointer!important;transition:all 0.35s cubic-bezier(0.4,0,0.2,1)!important;box-shadow:0 2px 8px rgba(0,0,0,0.08)!important;text-decoration:none!important;overflow:hidden!important;width:40px!important;height:40px!important;z-index:99999!important}
+.omni-badge:hover{width:156px!important;padding:0.5rem 0.875rem 0.5rem 0.625rem!important;gap:0.5rem!important;justify-content:flex-start!important;transform:translateY(-2px)!important;box-shadow:0 6px 20px rgba(46,170,220,0.2)!important;border-color:rgba(46,170,220,0.4)!important;background:rgba(255,255,255,0.95)!important}
+.omni-badge svg{flex-shrink:0!important;display:block!important;width:22px!important;height:22px!important;transition:transform 0.3s!important}
+.omni-badge:hover svg{transform:scale(1.05)!important}
+.omni-badge .omni-badge-text{position:absolute!important;left:40px!important;display:flex!important;align-items:center!important;gap:0.25rem!important;opacity:0!important;transition:all 0.25s cubic-bezier(0.4,0,0.2,1)!important;white-space:nowrap!important}
+.omni-badge:hover .omni-badge-text{left:32px!important;opacity:1!important}
+.omni-badge .omni-badge-label{font-size:0.75rem!important;font-weight:500!important;color:#6b6b68!important;font-family:system-ui,-apple-system,sans-serif!important}
+.omni-badge .omni-badge-brand{font-size:0.875rem!important;font-weight:700!important;color:#37352f!important;letter-spacing:-0.01em!important;font-family:system-ui,-apple-system,sans-serif!important}
+</style>
+<a href="/" class="omni-badge" title="Built with Omni">
+<svg width="22" height="22" viewBox="0 0 32 32" fill="none"><defs><clipPath id="omni-clip"><rect x="16" y="0" width="16" height="16"/></clipPath></defs><circle cx="12" cy="19" r="7" stroke="#5ec5e8" stroke-width="2.5" fill="none"/><circle cx="20" cy="13" r="7" stroke="#7dcbb8" stroke-width="2.5" fill="none"/><circle cx="12" cy="19" r="7" stroke="#5ec5e8" stroke-width="2.5" fill="none" clip-path="url(#omni-clip)"/></svg>
+<div class="omni-badge-text"><span class="omni-badge-label">Built with</span><span class="omni-badge-brand">Omni</span></div>
+</a>
+</body>
+</html>
