@@ -4,187 +4,163 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>行业一部实习生用工比例监测</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif; background: #0f1117; color: #e4e4e7; padding: 24px; min-height: 100vh; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f172a; color: #e2e8f0; padding: 24px; }
   .container { max-width: 1200px; margin: 0 auto; }
-  h1 { font-size: 20px; font-weight: 600; color: #fafafa; margin-bottom: 4px; }
-  .subtitle { font-size: 13px; color: #71717a; margin-bottom: 24px; }
+  h1 { font-size: 24px; font-weight: 700; margin-bottom: 20px; color: #f1f5f9; }
   .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
-  .card { background: #1a1b1e; border-radius: 12px; padding: 20px; border: 1px solid #27272a; }
-  .card-label { font-size: 12px; color: #a1a1aa; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .card-value { font-size: 32px; font-weight: 700; }
-  .card-value.green { color: #22c55e; }
-  .card-value.yellow { color: #eab308; }
-  .card-value.red { color: #ef4444; }
-  .card-value.blue { color: #3b82f6; }
-  .card-sub { font-size: 12px; color: #71717a; margin-top: 4px; }
-  .section { margin-bottom: 32px; }
-  .section-title { font-size: 15px; font-weight: 600; color: #fafafa; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-  .section-title::before { content: ''; width: 3px; height: 16px; background: #3b82f6; border-radius: 2px; }
-  .chart-box { background: #1a1b1e; border-radius: 12px; padding: 24px; border: 1px solid #27272a; }
-  .chart-box canvas { width: 100% !important; }
-  .group-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
-  .group-item { background: #1a1b1e; border-radius: 10px; padding: 16px; border: 1px solid #27272a; }
-  .group-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-  .group-name { font-size: 13px; font-weight: 500; color: #e4e4e7; }
-  .group-ratio { font-size: 18px; font-weight: 700; }
-  .group-ratio.ok { color: #22c55e; }
-  .group-ratio.warn { color: #ef4444; }
-  .group-bar-bg { height: 6px; background: #27272a; border-radius: 3px; position: relative; overflow: visible; }
-  .group-bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
-  .group-bar-fill.ok { background: #22c55e; }
-  .group-bar-fill.warn { background: #ef4444; }
-  .group-baseline { position: absolute; top: -4px; width: 2px; height: 14px; background: #eab308; border-radius: 1px; }
-  .group-detail { display: flex; justify-content: space-between; margin-top: 8px; font-size: 11px; color: #71717a; }
-  .footer { text-align: center; padding: 24px 0; font-size: 12px; color: #52525b; }
-  @media (max-width: 768px) { .cards { grid-template-columns: repeat(2, 1fr); } }
+  .card { background: #1e293b; border-radius: 12px; padding: 20px; border: 1px solid #334155; }
+  .card .label { font-size: 13px; color: #94a3b8; margin-bottom: 6px; }
+  .card .value { font-size: 28px; font-weight: 700; }
+  .card .value.green { color: #22c55e; }
+  .card .value.red { color: #ef4444; }
+  .card .value.blue { color: #3b82f6; }
+  .card .value.amber { color: #f59e0b; }
+  .section { background: #1e293b; border-radius: 12px; padding: 24px; margin-bottom: 24px; border: 1px solid #334155; }
+  .section h2 { font-size: 16px; font-weight: 600; margin-bottom: 16px; color: #cbd5e1; }
+  .chart-container { position: relative; height: 300px; }
+  .groups-section { margin-bottom: 24px; }
+  .groups-section h3 { font-size: 14px; font-weight: 600; color: #94a3b8; margin-bottom: 12px; padding-left: 4px; }
+  .bar-row { display: flex; align-items: center; margin-bottom: 6px; }
+  .bar-label { width: 120px; font-size: 13px; color: #cbd5e1; flex-shrink: 0; }
+  .bar-wrap { flex: 1; height: 24px; background: #0f172a; border-radius: 4px; position: relative; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; }
+  .bar-fill.green { background: linear-gradient(90deg, #166534, #22c55e); }
+  .bar-fill.red { background: linear-gradient(90deg, #991b1b, #ef4444); }
+  .bar-val { font-size: 11px; font-weight: 600; color: #fff; white-space: nowrap; }
+  .baseline-line { position: absolute; top: 0; bottom: 0; width: 2px; background: #f59e0b; z-index: 2; }
+  .baseline-label { position: absolute; top: -18px; font-size: 10px; color: #f59e0b; transform: translateX(-50%); }
+  .footer { text-align: center; color: #64748b; font-size: 12px; margin-top: 24px; padding-top: 16px; border-top: 1px solid #1e293b; }
+  .updated { color: #64748b; font-size: 12px; margin-bottom: 16px; }
 </style>
 </head>
 <body>
 <div class="container">
   <h1>📊 行业一部实习生用工比例监测</h1>
-  <div class="subtitle">数据日期：2026-08-09（沿用08-08实际导出） · 基准线：24.7%</div>
-
+  <p class="updated">数据日期：2026-08-10 | 基准值：24.7% | 更新频率：每日</p>
+  
   <div class="cards">
     <div class="card">
-      <div class="card-label">整体比例</div>
-      <div class="card-value green">18.7%</div>
-      <div class="card-sub">✅ 正常（基准24.7%）</div>
+      <div class="label">整体比例</div>
+      <div class="value green">18.7%</div>
     </div>
     <div class="card">
-      <div class="card-label">实习生人数</div>
-      <div class="card-value blue">32</div>
-      <div class="card-sub">较前日 +0</div>
+      <div class="label">实习生人数</div>
+      <div class="value blue">32</div>
     </div>
     <div class="card">
-      <div class="card-label">正式员工</div>
-      <div class="card-value blue">171</div>
-      <div class="card-sub">较前日 +0</div>
+      <div class="label">正式员工</div>
+      <div class="value blue">171</div>
     </div>
     <div class="card">
-      <div class="card-label">超标小组</div>
-      <div class="card-value red">8</div>
-      <div class="card-sub">共25个小组</div>
+      <div class="label">超标小组</div>
+      <div class="value red">8/25</div>
     </div>
   </div>
 
   <div class="section">
-    <div class="section-title">整体比例趋势（近30次）</div>
-    <div class="chart-box">
-      <canvas id="trendChart" height="200"></canvas>
+    <h2>📈 整体比例历史趋势（近30天）</h2>
+    <div class="chart-container">
+      <canvas id="trendChart"></canvas>
     </div>
   </div>
 
   <div class="section">
-    <div class="section-title">行业组（1-12组）</div>
-    <div class="group-grid" id="hyGrid"></div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">平台专家组（1-12组）</div>
-    <div class="group-grid" id="ptGrid"></div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">行业策略组</div>
-    <div class="group-grid" id="clGrid"></div>
+    <h2>📋 各小组实习生比例（2026-08-10）</h2>
+    
+    <div class="groups-section">
+      <h3>行业组（1-12）</h3>
+      <div id="industry-bars"></div>
+    </div>
+    
+    <div class="groups-section">
+      <h3>平台专家组（1-12）</h3>
+      <div id="expert-bars"></div>
+    </div>
+    
+    <div class="groups-section">
+      <h3>行业策略组</h3>
+      <div id="strategy-bars"></div>
+    </div>
   </div>
 
   <div class="footer">
-    数据来源：HR花名册 · 计算公式：实习生÷正式员工 · 自动监测 by 招财
+    数据来源：花名册（roster-hrbp）| 计算公式：实习生/正式员工 | 基准值：24.7%
   </div>
 </div>
 
 <script>
-const baseline = 24.7;
-const dates = ["06-06","06-14","06-18","06-19","06-20","06-21","06-22","06-28","07-10","07-15","07-16","07-17","07-20","07-21","07-22","07-23","07-24","07-26","07-27","07-28","07-30","07-31","08-01","08-02","08-03","08-04","08-05","08-06","08-08","08-09"];
-const ratios = [18.9,21.3,21.3,21.3,21.3,20.3,21.4,20.4,16.2,16.2,16.2,16.2,16.2,16.2,16.2,16.2,16.2,16.2,16.2,16.2,16.2,16.2,16.2,16.2,16.2,16.2,16.2,16.2,18.7,18.7];
-
-// Trend Chart
-new Chart(document.getElementById('trendChart'), {
+// Trend chart
+const ctx = document.getElementById('trendChart').getContext('2d');
+new Chart(ctx, {
   type: 'line',
   data: {
-    labels: dates,
+    labels: ["06-14", "06-18", "06-19", "06-20", "06-21", "06-22", "06-28", "07-10", "07-15", "07-16", "07-17", "07-20", "07-21", "07-22", "07-23", "07-24", "07-26", "07-27", "07-28", "07-30", "07-31", "08-01", "08-02", "08-03", "08-04", "08-05", "08-06", "08-08", "08-09", "08-10"],
     datasets: [{
-      label: '实习生比例(%)',
-      data: ratios,
+      label: '实习生比例 (%)',
+      data: [21.3, 21.3, 21.3, 21.3, 20.3, 21.4, 20.4, 16.2, 16.2, 16.2, 16.2, 16.2, 16.2, 16.2, 16.2, 16.2, 16.2, 16.2, 16.2, 16.2, 16.2, 16.2, 16.2, 16.2, 16.2, 16.2, 16.2, 18.7, 18.7, 18.7],
       borderColor: '#3b82f6',
       backgroundColor: 'rgba(59,130,246,0.1)',
       fill: true,
       tension: 0.3,
       pointRadius: 3,
-      pointBackgroundColor: '#3b82f6',
-      borderWidth: 2
+      pointBackgroundColor: '#3b82f6'
+    }, {
+      label: '基准值 (24.7%)',
+      data: Array(30).fill(24.7),
+      borderColor: '#f59e0b',
+      borderDash: [5, 5],
+      pointRadius: 0,
+      fill: false
     }]
   },
   options: {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
-      legend: { display: false },
-      annotation: {
-        annotations: {
-          baseline: {
-            type: 'line',
-            yMin: baseline,
-            yMax: baseline,
-            borderColor: '#ef4444',
-            borderWidth: 2,
-            borderDash: [6,4],
-            label: {
-              display: true,
-              content: '基准 24.7%',
-              position: 'end',
-              backgroundColor: '#ef4444',
-              color: '#fff',
-              font: { size: 11 }
-            }
-          }
-        }
-      }
+      legend: { labels: { color: '#94a3b8' } }
     },
     scales: {
-      x: { ticks: { color: '#71717a', font: { size: 10 } }, grid: { color: '#27272a' } },
-      y: { min: 0, max: 30, ticks: { color: '#71717a', callback: v => v + '%' }, grid: { color: '#27272a' } }
+      x: { ticks: { color: '#64748b', maxRotation: 45 }, grid: { color: '#1e293b' } },
+      y: { ticks: { color: '#64748b', callback: v => v + '%' }, grid: { color: '#1e293b' } }
     }
   }
 });
 
-// Group cards
-function renderGroup(container, groups) {
-  const el = document.getElementById(container);
-  groups.forEach(g => {
-    const ratio = g.ratio || 0;
-    const isOver = ratio > baseline;
-    const barW = Math.min(ratio / 80 * 100, 100);
-    const basePos = Math.min(baseline / 80 * 100, 100);
-    el.innerHTML += `
-      <div class="group-item">
-        <div class="group-header">
-          <span class="group-name">${g.name}</span>
-          <span class="group-ratio ${isOver ? 'warn' : 'ok'}">${ratio}%</span>
-        </div>
-        <div class="group-bar-bg">
-          <div class="group-bar-fill ${isOver ? 'warn' : 'ok'}" style="width:${barW}%"></div>
-          <div class="group-baseline" style="left:${basePos}%"></div>
-        </div>
-        <div class="group-detail">
-          <span>实习 ${g.intern} / 正式 ${g.regular}</span>
-          <span>${isOver ? '⚠️ 超标' : '✅ 正常'}</span>
-        </div>
-      </div>`;
-  });
+// Bar charts
+const groups = [{"name": "行业一组", "intern": 1, "regular": 12, "ratio": 8.3}, {"name": "行业二组", "intern": 1, "regular": 10, "ratio": 10.0}, {"name": "行业三组", "intern": 1, "regular": 9, "ratio": 11.1}, {"name": "行业四组", "intern": 1, "regular": 4, "ratio": 25.0}, {"name": "行业五组", "intern": 1, "regular": 6, "ratio": 16.7}, {"name": "行业六组", "intern": 1, "regular": 9, "ratio": 11.1}, {"name": "行业七组", "intern": 2, "regular": 10, "ratio": 20.0}, {"name": "行业八组", "intern": 1, "regular": 6, "ratio": 16.7}, {"name": "行业九组", "intern": 2, "regular": 10, "ratio": 20.0}, {"name": "行业十组", "intern": 1, "regular": 9, "ratio": 11.1}, {"name": "行业十一组", "intern": 1, "regular": 6, "ratio": 16.7}, {"name": "行业十二组", "intern": 1, "regular": 4, "ratio": 25.0}, {"name": "平台专家一组", "intern": 2, "regular": 8, "ratio": 25.0}, {"name": "平台专家二组", "intern": 1, "regular": 8, "ratio": 12.5}, {"name": "平台专家三组", "intern": 2, "regular": 7, "ratio": 28.6}, {"name": "平台专家四组", "intern": 1, "regular": 3, "ratio": 33.3}, {"name": "平台专家五组", "intern": 1, "regular": 6, "ratio": 16.7}, {"name": "平台专家六组", "intern": 1, "regular": 6, "ratio": 16.7}, {"name": "平台专家七组", "intern": 4, "regular": 6, "ratio": 66.7}, {"name": "平台专家八组", "intern": 1, "regular": 6, "ratio": 16.7}, {"name": "平台专家九组", "intern": 2, "regular": 7, "ratio": 28.6}, {"name": "平台专家十组", "intern": 1, "regular": 8, "ratio": 12.5}, {"name": "平台专家十一组", "intern": 0, "regular": 3, "ratio": 0.0}, {"name": "平台专家十二组", "intern": 2, "regular": 6, "ratio": 33.3}, {"name": "行业策略组", "intern": 0, "regular": 2, "ratio": 0.0}];
+const baselineVal = 24.7;
+
+function createBar(container, name, ratio) {
+  const maxRatio = 80;
+  const row = document.createElement('div');
+  row.className = 'bar-row';
+  
+  const isOver = ratio > baselineVal;
+  const pct = Math.min((ratio / maxRatio) * 100, 100);
+  const basePct = (baselineVal / maxRatio) * 100;
+  
+  row.innerHTML = `
+    <div class="bar-label">${name}</div>
+    <div class="bar-wrap">
+      <div class="bar-fill ${isOver ? 'red' : 'green'}" style="width:${pct}%">
+        <span class="bar-val">${ratio}%</span>
+      </div>
+      <div class="baseline-line" style="left:${basePct}%"></div>
+    </div>
+  `;
+  container.appendChild(row);
 }
 
-const hyGroups = [{"name":"行业一组","intern":1,"regular":12,"ratio":8.3},{"name":"行业二组","intern":1,"regular":10,"ratio":10},{"name":"行业三组","intern":1,"regular":9,"ratio":11.1},{"name":"行业四组","intern":1,"regular":4,"ratio":25},{"name":"行业五组","intern":1,"regular":6,"ratio":16.7},{"name":"行业六组","intern":1,"regular":9,"ratio":11.1},{"name":"行业七组","intern":2,"regular":10,"ratio":20},{"name":"行业八组","intern":1,"regular":6,"ratio":16.7},{"name":"行业九组","intern":2,"regular":10,"ratio":20},{"name":"行业十组","intern":1,"regular":9,"ratio":11.1},{"name":"行业十一组","intern":1,"regular":6,"ratio":16.7},{"name":"行业十二组","intern":1,"regular":4,"ratio":25}];
-const ptGroups = [{"name":"平台专家一组","intern":2,"regular":8,"ratio":25},{"name":"平台专家二组","intern":1,"regular":8,"ratio":12.5},{"name":"平台专家三组","intern":2,"regular":7,"ratio":28.6},{"name":"平台专家四组","intern":1,"regular":3,"ratio":33.3},{"name":"平台专家五组","intern":1,"regular":6,"ratio":16.7},{"name":"平台专家六组","intern":1,"regular":6,"ratio":16.7},{"name":"平台专家七组","intern":4,"regular":6,"ratio":66.7},{"name":"平台专家八组","intern":1,"regular":6,"ratio":16.7},{"name":"平台专家九组","intern":2,"regular":7,"ratio":28.6},{"name":"平台专家十组","intern":1,"regular":8,"ratio":12.5},{"name":"平台专家十一组","intern":0,"regular":3,"ratio":0},{"name":"平台专家十二组","intern":2,"regular":6,"ratio":33.3}];
-const clGroups = [{"name":"行业策略组","intern":0,"regular":2,"ratio":0}];
+const industryGroups = groups.filter(g => g.name.startsWith('行业') && !g.name.includes('策略'));
+const expertGroups = groups.filter(g => g.name.startsWith('平台专家'));
+const strategyGroups = groups.filter(g => g.name.includes('策略'));
 
-renderGroup('hyGrid', hyGroups);
-renderGroup('ptGrid', ptGroups);
-renderGroup('clGrid', clGroups);
+industryGroups.forEach(g => createBar(document.getElementById('industry-bars'), g.name, g.ratio));
+expertGroups.forEach(g => createBar(document.getElementById('expert-bars'), g.name, g.ratio));
+strategyGroups.forEach(g => createBar(document.getElementById('strategy-bars'), g.name, g.ratio));
 </script>
 </body>
 </html>
