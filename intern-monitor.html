@@ -21,19 +21,26 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC",sa
 .card .value.orange{color:#fa8c16}
 .chart-container,.bar-section{background:#fff;border-radius:12px;padding:24px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
 .chart-container h3,.bar-section h3{font-size:16px;font-weight:600;margin-bottom:16px}
+.overdue-box{background:#fff2f0;border:1px solid #ffccc7;border-radius:12px;padding:16px;margin-bottom:24px}
+.overdue-box h3{color:#ff4d4f;font-size:14px;margin-bottom:8px}
+.overdue-box p{font-size:13px;color:#333;line-height:1.8}
 canvas{max-width:100%}
 </style>
 </head>
 <body>
 <div class="header">
-<h1>📊 行业一部实习生比例监测</h1>
-<p>数据截至 2026-09-18 | 基准值 24.7%</p>
+<h1> 行业一部实习生比例监测</h1>
+<p>数据截至 2026-09-24 | 基准值 24.7%</p>
 </div>
 <div class="overview">
-<div class="card"><div class="label">整体比例</div><div class="value green">16.3%</div></div>
-<div class="card"><div class="label">实习生数</div><div class="value blue">28</div></div>
-<div class="card"><div class="label">正式员工数</div><div class="value orange">172</div></div>
-<div class="card"><div class="label">超标小组</div><div class="value red">6</div></div>
+<div class="card"><div class="label">整体比例</div><div class="value green">17.8%</div></div>
+<div class="card"><div class="label">实习生数</div><div class="value blue">31</div></div>
+<div class="card"><div class="label">正式员工数</div><div class="value orange">174</div></div>
+<div class="card"><div class="label">超标小组</div><div class="value red">5</div></div>
+</div>
+<div class="overdue-box">
+<h3>⚠️ 超标小组汇总（>24.7%）</h3>
+<p>行业十二组: 25% (实习1/正式4) ️<br>平台专家一组: 28.6% (实习2/正式7) ️<br>平台专家四组: 25% (实习1/正式4) ️<br>平台专家七组: 50% (实习4/正式8) ️<br>平台专家十二组: 60% (实习3/正式5) ️</p>
 </div>
 <div class="chart-container">
 <h3>整体比例趋势</h3>
@@ -41,92 +48,42 @@ canvas{max-width:100%}
 </div>
 <div class="bar-section">
 <h3>各小组实习生比例</h3>
-<canvas id="barChart" height="400"></canvas>
+<canvas id="barChart" height="600"></canvas>
 </div>
 <script>
-const dates = ["04-01", "04-02", "04-04", "04-06", "04-07", "04-08", "04-11", "04-12", "04-13", "08-25", "09-17", "09-18"];
-const ratios = [24.1, 23.4, 24.1, 24.1, 24.1, 24.2, 23.5, 23.5, 23.5, 21.8, 20.3, 16.3];
+const dates = ["04-01", "04-02", "04-04", "04-06", "04-07", "04-08", "04-11", "04-12", "08-25", "09-17", "09-18", "09-24"];
+const ratios = [24.1, 23.4, 24.1, 24.1, 24.1, 24.2, 23.5, 23.5, 21.8, 20.3, 16.3, 17.8];
 const baseline = 24.7;
 
 new Chart(document.getElementById('trendChart'), {
   type: 'line',
   data: {
     labels: dates,
-    datasets: [{
-      label: '实习生比例(%)',
-      data: ratios,
-      borderColor: '#1890ff',
-      backgroundColor: 'rgba(24,144,255,0.1)',
-      tension: 0.3,
-      fill: true
-    }, {
-      label: '基准值',
-      data: Array(dates.length).fill(baseline),
-      borderColor: '#ff4d4f',
-      borderDash: [5,5],
-      fill: false,
-      pointRadius: 0
-    }]
+    datasets: [
+      {label: '实习生比例(%)', data: ratios, borderColor: '#1890ff', backgroundColor: 'rgba(24,144,255,0.1)', fill: true, tension: 0.3},
+      {label: '基准值', data: dates.map(() => baseline), borderColor: '#ff4d4f', borderDash: [5,5], pointRadius: 0, fill: false}
+    ]
   },
-  options: {
-    responsive: true,
-    plugins: {
-      annotation: {
-        annotations: {
-          line1: {
-            type: 'line',
-            yMin: baseline,
-            yMax: baseline,
-            borderColor: '#ff4d4f',
-            borderWidth: 2,
-            borderDash: [5,5]
-          }
-        }
-      }
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-        max: 80,
-        ticks: {callback: v => v + '%'}
-      }
-    }
-  }
+  options: {responsive: true, scales: {y: {beginAtZero: true, max: Math.max(...ratios, baseline) * 1.3}}}
 });
+
+const barLabels = ["行业一组", "行业二组", "行业三组", "行业四组", "行业五组", "行业六组", "行业七组", "行业八组", "行业九组", "行业十组", "行业十一组", "行业十二组", "平台专家一组", "平台专家二组", "平台专家三组", "平台专家四组", "平台专家五组", "平台专家六组", "平台专家七组", "平台专家八组", "平台专家九组", "平台专家十组", "平台专家十一组", "平台专家十二组", "行业策略组"];
+const barValues = [9.1, 10, 12.5, 20, 16.7, 11.1, 20, 16.7, 16.7, 22.2, 20, 25, 28.6, 12.5, 14.3, 25, 0, 16.7, 50, 16.7, 14.3, 12.5, 0, 60, 0];
+const barColors = ["#52c41a", "#52c41a", "#52c41a", "#52c41a", "#52c41a", "#52c41a", "#52c41a", "#52c41a", "#52c41a", "#52c41a", "#52c41a", "#ff4d4f", "#ff4d4f", "#52c41a", "#52c41a", "#ff4d4f", "#52c41a", "#52c41a", "#ff4d4f", "#52c41a", "#52c41a", "#52c41a", "#52c41a", "#ff4d4f", "#52c41a"];
 
 new Chart(document.getElementById('barChart'), {
   type: 'bar',
   data: {
-    labels: ["\u884c\u4e1a\u4e00\u7ec4", "\u884c\u4e1a\u4e8c\u7ec4", "\u884c\u4e1a\u4e09\u7ec4", "\u884c\u4e1a\u56db\u7ec4", "\u884c\u4e1a\u4e94\u7ec4", "\u884c\u4e1a\u516d\u7ec4", "\u884c\u4e1a\u4e03\u7ec4", "\u884c\u4e1a\u516b\u7ec4", "\u884c\u4e1a\u4e5d\u7ec4", "\u884c\u4e1a\u5341\u7ec4", "\u884c\u4e1a\u5341\u4e00\u7ec4", "\u884c\u4e1a\u5341\u4e8c\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u4e00\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u4e8c\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u4e09\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u56db\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u4e94\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u516d\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u4e03\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u516b\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u4e5d\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u5341\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u5341\u4e00\u7ec4", "\u5e73\u53f0\u4e13\u5bb6\u5341\u4e8c\u7ec4", "\u884c\u4e1a\u7b56\u7565\u7ec4"],
-    datasets: [{
-      data: [9.1, 10, 12.5, 25, 16.7, 11.1, 20, 16.7, 18.2, 11.1, 20, 25, 28.6, 12.5, 14.3, 25, 0, 16.7, 37.5, 16.7, 14.3, 12.5, 0, 40, 0],
-      backgroundColor: ["#52c41a", "#52c41a", "#52c41a", "#ff4d4f", "#52c41a", "#52c41a", "#52c41a", "#52c41a", "#52c41a", "#52c41a", "#52c41a", "#ff4d4f", "#ff4d4f", "#52c41a", "#52c41a", "#ff4d4f", "#52c41a", "#52c41a", "#ff4d4f", "#52c41a", "#52c41a", "#52c41a", "#52c41a", "#ff4d4f", "#52c41a"]
-    }]
+    labels: barLabels,
+    datasets: [{data: barValues, backgroundColor: barColors, borderRadius: 4}]
   },
   options: {
     indexAxis: 'y',
     responsive: true,
     plugins: {
-      annotation: {
-        annotations: {
-          line1: {
-            type: 'line',
-            xMin: baseline,
-            xMax: baseline,
-            borderColor: '#ff4d4f',
-            borderWidth: 2,
-            borderDash: [5,5]
-          }
-        }
-      }
+      annotation: {annotations: {line1: {type: 'line', xMin: baseline, xMax: baseline, borderColor: '#ff4d4f', borderWidth: 2, borderDash: [5,5], label: {display: true, content: '基准值 ' + baseline + '%', position: 'start'}}}}
     },
-    scales: {
-      x: {
-        beginAtZero: true,
-        max: 80,
-        ticks: {callback: v => v + '%'}
-      }
-    }
+    scales: {x: {beginAtZero: true, max: Math.max(...barValues, baseline) * 1.3}}
   }
 });
 </script>
