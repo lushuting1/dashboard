@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>实习生比例监测 2026-10-25</title>
+<title>实习生比例监测 2026-10-26</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -40,7 +40,7 @@
 </head>
 <body>
 <div class="container">
-  <h1>实习生比例监测 · 2026-10-25</h1>
+  <h1>实习生比例监测 · 2026-10-26</h1>
 
   <div class="summary">
     <div class="card">
@@ -107,12 +107,15 @@
 <div class="bar-row"><div class="bar-label">平台专家十一组</div><div class="bar-track"><div class="bar-fill" style="width:0.0%;background:#22c55e"></div></div><div class="bar-value" style="color:#22c55e">0.0%</div><div class="bar-people">实习0 / 正式3</div></div>
 <div class="bar-row"><div class="bar-label">平台专家十二组</div><div class="bar-track"><div class="bar-fill" style="width:80.0%;background:#ef4444"></div><div class="baseline-line" style="left:49.4%"></div></div><div class="bar-value" style="color:#ef4444">40.0%</div><div class="bar-people">实习2 / 正式5</div></div>
       </div>
-      <div class="group-section"><h3>行业策略组</h3><div class="bar-row"><div class="bar-label">行业策略组</div><div class="bar-track"><div class="bar-fill" style="width:50.0%;background:#ef4444"></div><div class="baseline-line" style="left:49.4%"></div></div><div class="bar-value" style="color:#ef4444">25.0%</div><div class="bar-people">实习1 / 正式4</div></div></div>
-      
+      <div class="group-section">
+        <h3>行业策略组</h3>
+        <div class="bar-row"><div class="bar-label">行业策略组</div><div class="bar-track"><div class="bar-fill" style="width:50.0%;background:#ef4444"></div><div class="baseline-line" style="left:49.4%"></div></div><div class="bar-value" style="color:#ef4444">25.0%</div><div class="bar-people">实习1 / 正式4</div></div>
+      </div>
+
     </div>
   </div>
 
-  <footer>数据更新时间：2026-10-25 | 基准值：24.7% | 由招财自动生成</footer>
+  <footer>数据更新时间：2026-10-26 | 基准值：24.7% | 由招财自动生成</footer>
 </div>
 
 <script>
@@ -120,11 +123,11 @@ const ctx = document.getElementById('trendChart').getContext('2d');
 new Chart(ctx, {
   type: 'line',
   data: {
-    labels: ["2026-04-01", "2026-04-02", "2026-04-04", "2026-04-06", "2026-04-07", "2026-04-08", "2026-04-11", "2026-04-12", "2026-04-13", "2026-08-25", "2026-09-17", "2026-09-18", "2026-09-24", "2026-09-26", "2026-10-03", "2026-10-05", "2026-10-06", "2026-10-09", "2026-10-10", "2026-10-11", "2026-10-12", "2026-10-13", "2026-10-14", "2026-10-15", "2026-10-16", "2026-10-17", "2026-10-18", "2026-10-19", "2026-10-20", "2026-10-21", "2026-10-22", "2026-10-23", "2026-10-24", "2026-10-25"],
+    labels: ["2026-04-01", "2026-04-02", "2026-04-04", "2026-04-06", "2026-04-07", "2026-04-08", "2026-04-11", "2026-04-12", "2026-04-13", "2026-08-25", "2026-09-17", "2026-09-18", "2026-09-24", "2026-09-26", "2026-10-03", "2026-10-05", "2026-10-06", "2026-10-09", "2026-10-10", "2026-10-11", "2026-10-12", "2026-10-13", "2026-10-14", "2026-10-15", "2026-10-16", "2026-10-17", "2026-10-18", "2026-10-19", "2026-10-20", "2026-10-21", "2026-10-22", "2026-10-23", "2026-10-24", "2026-10-25", "2026-10-26"],
     datasets: [
       {
         label: '实习生比例(%)',
-        data: [24.1, 23.4, 24.1, 24.1, 24.1, 24.2, 23.5, 23.5, 23.5, 21.8, 20.3, 16.3, 17.8, 17.8, 17.8, 17.8, 17.8, 17.3, 17.9, 18.0, 18.0, 17.9, 17.8, 17.3, 17.3, 17.9, 17.9, 17.8, 17.8, 17.8, 18.4, 18.4, 17.8, 17.8],
+        data: [24.1, 23.4, 24.1, 24.1, 24.1, 24.2, 23.5, 23.5, 23.5, 21.8, 20.3, 16.3, 17.8, 17.8, 17.8, 17.8, 17.8, 17.3, 17.9, 18.0, 18.0, 17.9, 17.8, 17.3, 17.3, 17.9, 17.9, 17.8, 17.8, 17.8, 18.4, 18.4, 17.8, 17.8, 17.8],
         borderColor: '#3b82f6',
         backgroundColor: 'rgba(59,130,246,0.1)',
         fill: true,
@@ -134,7 +137,7 @@ new Chart(ctx, {
       },
       {
         label: '基准线 24.7%',
-        data: Array(34).fill(24.7),
+        data: Array(35).fill(24.7),
         borderColor: '#f59e0b',
         borderDash: [8, 4],
         borderWidth: 2,
